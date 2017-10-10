@@ -1,0 +1,58 @@
+package application;
+	
+import java.io.IOException;
+import java.io.InputStream;
+
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.fxml.JavaFXBuilderFactory;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+
+
+public class Main extends Application {
+	private MainController mainController;
+	private Stage mainStage;
+	private Stage currentStage;
+	
+	
+	@Override
+	public void start(Stage primaryStage) throws IOException {
+		
+		mainStage = primaryStage;
+		currentStage = mainStage;
+		mainController = (MainController) organizeStage(mainStage, "MainForm.fxml", MainController.class);
+		mainStage.setResizable(false);
+		mainStage.show();
+	}
+	
+	 private Initializable organizeStage(Stage stage, String fxml, @SuppressWarnings("rawtypes") Class c) throws IOException{
+	        FXMLLoader loader = new FXMLLoader();
+	        InputStream in = c.getResourceAsStream(fxml);
+	        loader.setBuilderFactory(new JavaFXBuilderFactory());
+	        loader.setLocation(c.getResource(fxml));
+	        VBox page;
+	        try {
+	            page = (BorderPane) loader.load(in);
+	        } finally {
+	            in.close();
+	        } 
+	        Scene scene = new Scene(page);
+	        stage.setScene(scene);
+	        stage.sizeToScene();
+	        return (Initializable) loader.getController();
+	    }
+	 
+	public static void main(String[] args) {
+		launch(args); 
+	}
+
+	public Window getPrimaryStage() {
+		// TODO Auto-generated method stub
+		return mainStage;
+	}
+}

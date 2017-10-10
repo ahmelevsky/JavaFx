@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane minHeight="205.0" minWidth="391.0" prefHeight="321.0" prefWidth="392.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
+   <children>
+      <Label layoutX="14.0" layoutY="14.0" text="Проверять каждые, сек:" />
+      <TextField fx:id="periodInput" layoutX="204.0" layoutY="9.0" onAction="#setCheckPeriod" prefHeight="31.0" prefWidth="95.0" />
+      <Label layoutX="14.0" layoutY="88.0" text="Последня проверка была:" />
+      <Label fx:id="lastLabel" layoutX="204.0" layoutY="88.0" />
+      <Label layoutX="14.0" layoutY="124.0" text="Статус:" />
+      <Label fx:id="statusLabel" layoutX="75.0" layoutY="124.0" />
+      <Label layoutX="14.0" layoutY="158.0" text="Информация:" />
+      <TextArea fx:id="information" editable="false" layoutX="14.0" layoutY="182.0" prefHeight="133.0" prefWidth="367.0" wrapText="true" />
+      <Button fx:id="setBtn" layoutX="316.0" layoutY="9.0" mnemonicParsing="false" onMouseClicked="#setCheckPeriod" text="Задать" />
+      <Label layoutX="14.0" layoutY="51.0" text="Предупреждать за, мин:" />
+      <TextField fx:id="alertTimeInput" layoutX="204.0" layoutY="46.0" onAction="#setAlertTimePeriod" prefHeight="31.0" prefWidth="95.0" />
+      <Button fx:id="alertTimeBtn" layoutX="316.0" layoutY="46.0" mnemonicParsing="false" onMouseClicked="#setAlertTimePeriod" text="Задать" />
+      <Button fx:id="okBtn" layoutX="245.0" layoutY="120.0" mnemonicParsing="false" onMouseClicked="#stopAlarm" prefHeight="56.0" prefWidth="137.0" text="Я понял" />
+   </children>
+</AnchorPane>

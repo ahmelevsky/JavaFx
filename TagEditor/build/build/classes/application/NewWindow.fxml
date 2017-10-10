@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="435.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.NewController">
+   <children>
+      <TextArea fx:id="text1" layoutX="14.0" layoutY="14.0" prefHeight="49.0" prefWidth="467.0" wrapText="true" />
+      <ComboBox fx:id="selector1" layoutX="509.0" layoutY="14.0" onAction="#addSelectionToSelector1" prefHeight="31.0" prefWidth="478.0" />
+      <ComboBox fx:id="selector2" layoutX="509.0" layoutY="70.0" onAction="#addSelectionToSelector2" prefHeight="31.0" prefWidth="478.0" />
+      <TextArea fx:id="text2" layoutX="14.0" layoutY="70.0" prefHeight="49.0" prefWidth="467.0" wrapText="true" />
+      <ComboBox fx:id="selector3" layoutX="509.0" layoutY="128.0" onAction="#addSelectionToSelector3" prefHeight="31.0" prefWidth="478.0" />
+      <TextArea fx:id="text3" layoutX="14.0" layoutY="128.0" prefHeight="49.0" prefWidth="467.0" wrapText="true" />
+      <ComboBox fx:id="selector4" layoutX="509.0" layoutY="188.0" onAction="#addSelectionToSelector4" prefHeight="31.0" prefWidth="478.0" />
+      <TextArea fx:id="text4" layoutX="14.0" layoutY="188.0" prefHeight="49.0" prefWidth="467.0" wrapText="true" />
+      <ComboBox fx:id="selector5" layoutX="509.0" layoutY="249.0" onAction="#addSelectionToSelector5" prefHeight="31.0" prefWidth="478.0" />
+      <TextArea fx:id="text5" layoutX="14.0" layoutY="249.0" prefHeight="49.0" prefWidth="467.0" wrapText="true" />
+      <TextArea fx:id="resultText" layoutX="160.0" layoutY="333.0" prefHeight="79.0" prefWidth="676.0" wrapText="true" />
+      <Button fx:id="generateBtn" layoutX="17.0" layoutY="343.0" mnemonicParsing="false" onAction="#generate" prefHeight="60.0" prefWidth="120.0" text="GENERATE" />
+      <Button fx:id="clearBtn" layoutX="864.0" layoutY="343.0" mnemonicParsing="false" onAction="#clearForms" prefHeight="60.0" prefWidth="120.0" text="CLEAR" />
+      <Label fx:id="countLabel" layoutX="509.0" layoutY="295.0" prefHeight="31.0" prefWidth="342.0" text="Label" />
+   </children>
+</AnchorPane>

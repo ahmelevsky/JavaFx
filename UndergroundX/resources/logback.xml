@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+  <appender name="FILELOG" class="ch.qos.logback.core.FileAppender">
+    <file>.\logs\app.log</file>
+	<append>false</append>
+    <encoder>
+      <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%logger{10} %msg%n</pattern>
+    </encoder>
+  </appender>
+
+   <logger name="application">
+    <appender-ref ref="FILELOG" />
+  </logger>
+  
+  <root level="DEBUG" >
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>

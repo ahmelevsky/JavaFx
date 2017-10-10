@@ -1,0 +1,3 @@
+2014-09-23 22:25:27,070 DEBUG [JavaFX Application Thread] a.Main [Main.java:44] Старт!
+2014-09-23 22:25:27,292 DEBUG [JavaFX Application Thread] a.u.LoginController [LoginController.java:56] Окно логина
+2014-09-23 22:25:31,583 DEBUG [JavaFX Application Thread] a.u.ContactListController [ContactListController.java:71] Окно контактов

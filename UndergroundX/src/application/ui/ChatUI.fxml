@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.embed.swing.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.scene.canvas.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="500.0" prefHeight="529.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ui.ChatController">
+   <children>
+      <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="489.0" prefWidth="600.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+             <WebView fx:id="display" minHeight="50.0" minWidth="100.0" prefHeight="266.0" prefWidth="600.0" />
+            <Pane prefHeight="42.0" prefWidth="601.0">
+               <children>
+                  <Button fx:id="clearBtn" layoutX="473.0" layoutY="6.0" mnemonicParsing="false" onAction="#clearWindow" prefHeight="31.0" prefWidth="120.0" text="Очистить" />
+               </children>
+            </Pane>
+            <TextArea fx:id="textInput" onKeyPressed="#pressEnter" onKeyReleased="#typeSomething" prefHeight="180.0" prefWidth="600.0" wrapText="true">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></TextArea>
+         </children>
+      </VBox>
+      <Button fx:id="sendBtn" layoutX="478.0" layoutY="489.0" mnemonicParsing="false" onAction="#sendBtnPressed" prefHeight="40.0" prefWidth="120.0" text="Отправить" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+   </children>
+</AnchorPane>

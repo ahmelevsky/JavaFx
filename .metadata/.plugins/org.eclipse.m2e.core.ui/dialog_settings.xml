@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.m2e.core.pom.dependencies">
+	</section>
+	<section name="org.eclipse.m2e.core.pom.overview">
+		<list key="ciManagementUrl">
+		</list>
+		<list key="ciManagementSystem">
+		</list>
+		<list key="issueManagementSystem">
+		</list>
+		<list key="issueManagementUrl">
+		</list>
+	</section>
+	<section name="MavenProjectImportWizardPage">
+		<list key="rootDirectory">
+			<item value="C:\JavaFX\workspace\javafx-draggable-tags-panel-sample-master"/>
+			<item value="C:\JavaFX\workspace\CanvasImageGrid"/>
+			<item value="D:\Downloads\gettyimages-api_java-master\gettyimagesapi-examples"/>
+			<item value="D:\Downloads\gettyimages-api_java-master\gettyimagesapi-sdk"/>
+			<item value="D:\Downloads\gettyimages-api_java-master"/>
+			<item value="C:\JavaFX\workspace\IStock"/>
+		</list>
+		<list key="projectNameTemplate">
+			<item value="[artifactId]"/>
+			<item value="[artifactId]-TRUNK"/>
+			<item value="[artifactId]-[version]"/>
+			<item value="[groupId].[artifactId]"/>
+			<item value="[groupId].[artifactId]-[version]"/>
+			<item value="[name]"/>
+		</list>
+	</section>
+</section>

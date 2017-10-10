@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="568.0" prefWidth="392.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ui.RegisterUserController">
+   <children>
+      <VBox layoutX="21.0" layoutY="63.0" prefHeight="317.0" prefWidth="82.0">
+         <children>
+            <Label prefHeight="21.0" prefWidth="68.0" text="Имя" />
+            <Region prefHeight="32.0" prefWidth="70.0" />
+            <Label prefHeight="33.0" prefWidth="199.0" text="Пароль" />
+            <Region prefHeight="32.0" prefWidth="71.0" />
+            <Label prefHeight="21.0" prefWidth="74.0" text="Пол" />
+            <Region prefHeight="81.0" prefWidth="74.0" />
+            <Label prefHeight="21.0" prefWidth="73.0" text="О себе" />
+            <Region prefHeight="32.0" prefWidth="72.0" />
+         </children>
+      </VBox>
+      <VBox layoutX="103.0" layoutY="63.0" prefHeight="317.0" prefWidth="257.0">
+         <children>
+            <TextField fx:id="username" />
+            <Region prefHeight="19.0" prefWidth="275.0" />
+            <TextField fx:id="password" />
+            <Region prefHeight="17.0" prefWidth="275.0" />
+            <Pane prefHeight="60.0" prefWidth="275.0">
+               <children>
+                  <RadioButton layoutY="4.0" mnemonicParsing="false" text="Мужчина" />
+                  <RadioButton layoutY="36.0" mnemonicParsing="false" text="Женщина" />
+               </children>
+            </Pane>
+            <Region prefHeight="12.0" prefWidth="275.0" />
+            <TextArea fx:id="aboutText" prefHeight="146.0" prefWidth="275.0" />
+         </children>
+      </VBox>
+      <Label fx:id="headerText" layoutX="27.0" layoutY="14.0" prefHeight="35.0" prefWidth="361.0" text="Регистрация нового пользователя">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="profilePic" fitHeight="150.0" fitWidth="150.0" layoutX="14.0" layoutY="400.0" pickOnBounds="true" preserveRatio="true" />
+      <Button fx:id="selectPicBtn" layoutX="183.0" layoutY="415.0" mnemonicParsing="false" onAction="#loadPicture" prefHeight="60.0" prefWidth="92.0" text="Выбрать картинку" textAlignment="CENTER" wrapText="true" />
+      <Button fx:id="okBtn" layoutX="183.0" layoutY="503.0" mnemonicParsing="false" onAction="#registerUser" prefHeight="48.0" prefWidth="82.0" text="OK" />
+      <Button fx:id="cancelBtn" layoutX="296.0" layoutY="503.0" mnemonicParsing="false" onAction="#cancel" prefHeight="48.0" prefWidth="82.0" text="Отмена" />
+   </children>
+</AnchorPane>

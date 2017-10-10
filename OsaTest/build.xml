@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<project name="OsaTest" default="bundle-buttonDemo" basedir=".">        
+    <taskdef name="bundleapp"
+             classname="com.oracle.appbundler.AppBundlerTask"   
+             classpath="appbundler-1.0.jar" />
+    <!-- See the lib reference here, this is why you need to use the lib directory! -->
+
+    <target name="bundle-buttonDemo">
+        <!--  <delete dir="BatchEditor" failonerror="false"/>
+			  <mkdir dir="BatchEditor"/> -->
+        <bundleapp outputdirectory="."
+            name="OsaTest"
+            displayname="OsaScriptTest"
+			icon="icon.icns"
+            identifier="be.Main"
+            mainclassname="be.Main">
+            <!-- The following is important and should point to your build -->
+            <classpath file="deploy/OsaTest.jar" />
+			<option value="-Duser.dir=$APP_ROOT/Contents/Resources"/>
+            <!-- You can have multiple instance of classpath if you 3rd party or
+                 dependent jars in different locations -->
+        </bundleapp>
+    </target>
+</project>

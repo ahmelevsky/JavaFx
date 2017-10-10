@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.shape.Circle?>
+
+<HBox alignment="CENTER_LEFT" spacing="5.0" stylesheets="@../application.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.view.SourceLayoutController">
+   <children>
+      <Circle fx:id="statusCircle" fill="WHITE" radius="15.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <TextField fx:id="captionText" minWidth="150.0" prefWidth="150.0" />
+      <Label text="Растр:" />
+      <CheckBox fx:id="isJpgOnly" mnemonicParsing="false" />
+      <Hyperlink fx:id="sourcePath" onAction="#selectPath" text="&lt;SELECT FOLDER&gt;" HBox.hgrow="SOMETIMES" />
+      <Region HBox.hgrow="ALWAYS" />
+      <Label fx:id="filesInfo" />
+      <Spinner fx:id="filesCount" editable="true" prefWidth="80.0" />
+      <Button fx:id="removeBtn" mnemonicParsing="false" onAction="#remove" prefHeight="30.0" prefWidth="30.0" stylesheets="@../application.css" text="-" />
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</HBox>

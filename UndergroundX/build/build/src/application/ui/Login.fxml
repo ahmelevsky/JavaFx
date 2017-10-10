@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.ui.LoginController">
+   <children>
+      <VBox layoutX="348.0" layoutY="22.0" prefHeight="346.0" prefWidth="231.0">
+         <children>
+            <Label prefHeight="38.0" prefWidth="230.0" text="Логин:" />
+            <TextField id="usernameInput" fx:id="usernameInput" prefHeight="41.0" prefWidth="231.0" />
+            <Region prefHeight="29.0" prefWidth="231.0" />
+            <Label prefHeight="40.0" prefWidth="230.0" text="Пароль:" />
+            <PasswordField fx:id="passwordInput" />
+            <Label fx:id="errorMessage" prefHeight="60.0" prefWidth="230.0" textFill="#e83232" wrapText="true" />
+            <Region prefHeight="33.0" prefWidth="231.0" />
+            <Button id="loginBtn" fx:id="loginBtn" mnemonicParsing="false" onAction="#processLogin" prefHeight="78.0" prefWidth="243.0" text="Вход" />
+            <Region prefHeight="29.0" prefWidth="231.0" />
+            <Button id="registerBtn" fx:id="registerBtn" mnemonicParsing="false" onAction="#processRegister" prefHeight="72.0" prefWidth="231.0" text="Регистрация" />
+         </children>
+      </VBox>
+      <VBox layoutX="31.0" layoutY="22.0" prefHeight="346.0" prefWidth="247.0">
+         <children>
+            <Label prefHeight="35.0" prefWidth="255.0" text="Выберите профиль:" />
+            <ComboBox id="profileMenu" fx:id="profileMenu" onAction="#profileSelector" prefHeight="31.0" prefWidth="252.0" />
+            <Region prefHeight="25.0" prefWidth="250.0" />
+            <ImageView id="profilePic" fx:id="profilePic" fitHeight="250.0" fitWidth="251.0" pickOnBounds="true" preserveRatio="true">
+            </ImageView>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
