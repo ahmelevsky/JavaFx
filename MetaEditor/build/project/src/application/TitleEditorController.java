@@ -17,6 +17,7 @@ public class TitleEditorController implements Initializable {
 	@FXML
 	private Label countLabel;
 	
+	private String title;
 	
 
 	@Override
@@ -27,6 +28,13 @@ public class TitleEditorController implements Initializable {
 		
 	}
 	
+	public void saveTitleSource(){
+		title = titleText.getText();
+	}
+	
+	public String getTitleForMetadata(){
+		return title;
+	}
 	
 	private int getWordsCount(String text){
 		return text.split("\\s+").length;

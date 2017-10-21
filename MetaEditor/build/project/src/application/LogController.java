@@ -23,7 +23,8 @@ public class LogController implements Initializable {
 	}
 	
 	public void log(String text){
-		logInput.appendText(text + "\n");
+		if (null!=text)
+			logInput.appendText(text + "\n");
 	}
 	
 	@Override

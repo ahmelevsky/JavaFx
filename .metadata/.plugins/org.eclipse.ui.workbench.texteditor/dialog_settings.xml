@@ -6,22 +6,23 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="listFiles" key="selection"/>
+		<item value="Печать" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="Печать"/>
+			<item value="os"/>
+			<item value="TagEditor2"/>
 			<item value="listFiles"/>
 			<item value="step"/>
 			<item value="sourceControllers"/>
 			<item value="all"/>
 			<item value="platform"/>
-			<item value="runtime"/>
-			<item value="&lt;fx:bundleArgument "/>
-			<item value="&lt;fx:platfor"/>
 		</list>
 		<list key="replacehistory">
+			<item value="MetaEditor"/>
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">

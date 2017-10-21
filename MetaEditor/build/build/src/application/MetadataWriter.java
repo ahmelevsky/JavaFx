@@ -66,8 +66,6 @@ public class MetadataWriter {
        	
            String xmpXml = new JpegImageParser().getXmpXml(byteSource, new HashMap());
            String xmlToWrite = changeTitleInXMP(xmpXml, title);
-           System.out.println("File " + toFile.getName() + ", BEFORE: " + xmpXml);
-           System.out.println("File " + toFile.getName() + ", TOWRITE: " + xmlToWrite);
        for (String key:keys)
        	newRecords.add(new IptcRecord(IptcTypes.KEYWORDS, key));
        if (!title.isEmpty())

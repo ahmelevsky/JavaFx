@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="MetaEditor.jar" size="25142" download="eager" />
+    <jar href="MetaEditor.jar" size="28620" download="eager" />
     <jar href="libs\commons-imaging-1.0.jar" size="750886" download="eager" />
     <jar href="libs\commons-io-2.4.jar" size="185140" download="eager" />
     <jar href="libs\commons-lang3-3.5.jar" size="479881" download="eager" />

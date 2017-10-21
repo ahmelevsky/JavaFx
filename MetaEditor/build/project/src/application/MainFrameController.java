@@ -52,12 +52,14 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Alert.AlertType;
@@ -73,55 +75,111 @@ public class MainFrameController implements Initializable{
 	@FXML
 	private Hyperlink folderPath;
 	
+	
 	@FXML
 	private TabPane tabs;
+	
+	@FXML
+	private ProgressBar progress;
+	
+	private Task<Integer> task;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
+		
+			
 	}
 	
 	public void addTab(String tabTitle, Node node){
 		tabs.getTabs().add(new Tab(tabTitle, node));
 	}
+	
+	
 	@FXML
 	public void writeMetadata() throws SAXException, ParserConfigurationException, TransformerException{
-		int done = 0;
-		if (folder!=null && folder.exists()){
-		File[] images=	folder.listFiles(new FileFilter() {
-		        public boolean accept(File f) {
-		        	 return f.isFile() && f.getName().toLowerCase().endsWith(".jpg");
-		        }
-		    });
 		
-		if (images.length==0)
-			app.showAlert("В заданной папке нет файлов .jpg");
-		else{
-			try{
-				
-			for (File image:images){
-			MetadataWriter.writeMetadataToFile (image, app.keysEditorController.generateKeywords(), app.titleEditorController.getTitle(), app.descriptionEditorController.generateRandomDescription());
-			done++;
-			}
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setTitle("Done!");
-			alert.setHeaderText("Done!");
-			alert.setContentText("Метаданные успешно записаны, количество файлов: " + done);
-			alert.showAndWait();
-			
-			} catch (ImageReadException e) {
-				app.showAlert("Невозможно прочитать файл, ошибка: " + e.getMessage());
-			} catch (ImageWriteException e) {
-				app.showAlert("Невозможно записать файл, ошибка: " + e.getMessage());
-			} catch (IOException e) {
-				app.showAlert(e.getMessage());
-			}
-		}
 		
-		}
-		else{
+		if (folder==null && !folder.exists()){
 			app.showAlert("Папка не выбрана или не существует");
+			return;
 		}
+    	File[] images =	folder.listFiles(new FileFilter() {
+			        public boolean accept(File f) {
+			        	 return f.isFile() && f.getName().toLowerCase().endsWith(".jpg");
+			        }
+			    });
+			
+			if (images.length==0) {
+				app.showAlert("В заданной папке нет файлов .jpg");
+				return;
+			}
+			
+		app.keysEditorController.saveKeywordsSource();
+		app.descriptionEditorController.add();
+		app.descriptionEditorController.saveDescriptionsSource();
+		app.titleEditorController.saveTitleSource();
+		
+       		
+		 task = new Task<Integer>() {
+			    @Override public Integer call() {
+			    	int done = 0;
+			       try{ 
+			    	for (File image:images){
+						MetadataWriter.writeMetadataToFile (image, app.keysEditorController.generateKeywordsForMetadata(), app.titleEditorController.getTitleForMetadata(), app.descriptionEditorController.generateRandomDescriptionForMetadata());
+						done++;
+						updateProgress(done, images.length);
+						}
+					
+						
+						} catch (ImageReadException e) {
+							app.showAlert("Невозможно прочитать файл, ошибка: " + e.getMessage());
+						} catch (ImageWriteException e) {
+							app.showAlert("Невозможно записать файл, ошибка: " + e.getMessage());
+						} catch (IOException e) {
+							app.showAlert(e.getMessage());
+						} catch (SAXException e) {
+							app.showAlert(e.getMessage());
+						} catch (ParserConfigurationException e) {
+							app.showAlert(e.getMessage());
+						} catch (TransformerException e) {
+							app.showAlert(e.getMessage());
+						}
+			        return done;
+			    }
+			};
+			
+			task.setOnFailed(e -> {
+				writeBtn.setDisable(false);
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Ошибка");
+				alert.setHeaderText("Ошибка");
+				alert.setContentText("Запись метаданных прошла неуспешно");
+				alert.showAndWait();
+			});
+			
+			task.setOnCancelled(e -> {
+				writeBtn.setDisable(false);
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Отмена");
+				alert.setHeaderText("Отмена");
+				alert.setContentText("Запись метаданных была отменена");
+				alert.showAndWait();
+			});
+			
+			task.setOnSucceeded(e -> {
+				writeBtn.setDisable(false);
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Done!");
+				alert.setHeaderText("Done!");
+				alert.setContentText("Метаданные успешно записаны, количество файлов: " + task.getValue());
+				alert.showAndWait();
+			});
+			
+	      progress.progressProperty().bind(task.progressProperty());
+	     
+	    writeBtn.setDisable(true);
+		new Thread(task).start();
 			
 	}
 	

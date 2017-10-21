@@ -101,7 +101,10 @@ public class Main extends Application {
 	}
 	
 	public void log(String text){
+		 Platform.runLater(new Runnable() {
+             public void run() {
 		logController.log(text);
+             }});
 	}
 	
 }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.fxml.JavaFXBuilderFactory;
@@ -88,15 +89,22 @@ public class Main extends Application {
 	}
 	
 	public void showAlert(String text){
+		 Platform.runLater(new Runnable() {
+             public void run() {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("ERROR");
 		alert.setHeaderText("ERROR");
 		alert.setContentText(text);
 		alert.showAndWait();
+             }
+		 });
 	}
 	
 	public void log(String text){
+		 Platform.runLater(new Runnable() {
+             public void run() {
 		logController.log(text);
+             }});
 	}
 	
 }

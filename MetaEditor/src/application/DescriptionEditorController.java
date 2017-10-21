@@ -85,6 +85,13 @@ public class DescriptionEditorController implements Initializable {
 	private List<TextArea> textFields = new ArrayList<TextArea>();
 	private List<ObservableList<String>> options = new ArrayList<ObservableList<String>>();
 	
+	List<String> descriptions1 = new ArrayList<String>();
+	List<String> descriptions2 = new ArrayList<String>();
+	List<String> descriptions3 = new ArrayList<String>();
+	List<String> descriptions4 = new ArrayList<String>();
+	List<String> descriptions5 = new ArrayList<String>();
+	 
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		selector1.setItems(options1);
@@ -165,6 +172,42 @@ public class DescriptionEditorController implements Initializable {
 		
 	}
 	
+	public void saveDescriptionsSource(){
+		descriptions1.clear();
+		descriptions1.addAll(options1);
+		
+		descriptions2.clear();
+		descriptions2.addAll(options2);
+		
+		descriptions3.clear();
+		descriptions3.addAll(options3);
+		
+		descriptions4.clear();
+		descriptions4.addAll(options4);
+		
+		descriptions5.clear();
+		descriptions5.addAll(options5);
+	}
+	
+	public String generateRandomDescriptionForMetadata(){
+		StringBuilder sb = new StringBuilder();
+		String text = getRandomOption(descriptions1);
+		sb.append(text);
+		text = getRandomOption(descriptions2);
+		if (!text.isEmpty()) 
+			sb.append(" " + text);
+		text = getRandomOption(descriptions3);
+		if (!text.isEmpty()) 
+			sb.append(" " + text);
+		text = getRandomOption(descriptions4);
+		if (!text.isEmpty()) 
+			sb.append(" " + text);
+		text = getRandomOption(descriptions5);
+		if (!text.isEmpty()) 
+			sb.append(" " + text);
+		return sb.toString();
+	}
+	
 	
 	public String generateRandomDescription(){
 		StringBuilder sb = new StringBuilder();
@@ -185,7 +228,7 @@ public class DescriptionEditorController implements Initializable {
 		return sb.toString();
 	}
 	
-	private String getRandomOption(ObservableList<String> variants){
+	private String getRandomOption(List<String> variants){
 		if (variants.isEmpty()) return "";
 		return variants.get(new Random().nextInt(variants.size()));
 	}

@@ -114,6 +114,15 @@ public class KeysEditorController implements Initializable {
 	
 	public Main app;
 	
+	private String obligatoryKeys;
+	private String formKeys;
+	private String backgroundKeys;
+	private String kindKeys;
+	private String highKeys;
+	private String lowKeys;
+	private int lCount;
+	private int hCount;
+	
 	ObservableList<String> formOptions =    FXCollections.observableArrayList();
 	ObservableList<String> backgroundOptions =    FXCollections.observableArrayList();
 	ObservableList<String> kindOptions =    FXCollections.observableArrayList();
@@ -178,7 +187,7 @@ public class KeysEditorController implements Initializable {
 		});
 	}
 	@FXML
-	public void clearForms(){
+	private void clearForms(){
 		obligatoryText.clear();
 		highText.clear();
 		lowText.clear();
@@ -203,6 +212,44 @@ public class KeysEditorController implements Initializable {
 	
 		return keys;
 	}
+	
+public List<String> generateKeywordsForMetadata(){
+	    List<String> keys = new ArrayList<String>();
+		
+		addToList(obligatoryKeys, keys);
+		addToList(formKeys, keys);
+		addToList(backgroundKeys, keys);
+		addToList(kindKeys, keys);
+		
+		addNRandomToList(highKeys, keys, hCount);
+		addNRandomToList(lowKeys, keys, lCount);
+		
+		keys = keys.stream().distinct().collect(Collectors.toList());
+		
+		cutList(keys, 50);
+	
+		return keys;
+	}
+	
+	public void saveKeywordsSource(){
+		obligatoryKeys = obligatoryText.getText();
+		formKeys = formText.getText();
+		backgroundKeys = backgroundText.getText();
+		kindKeys = kindText.getText();
+		highKeys = highText.getText();
+		lowKeys = lowText.getText();
+		
+		hCount = 0;
+		lCount = 0;
+		try{
+			hCount = Integer.parseInt(highCount.getText());
+			lCount = Integer.parseInt(lowCount.getText());
+		}
+		catch (Exception e){
+		}
+	}
+	
+	
 	
 	private List<String> getKeysFromUI(){
         List<String> keys = new ArrayList<String>();
@@ -283,7 +330,7 @@ public class KeysEditorController implements Initializable {
 	
 	
 		
-	public static Set<String> findDuplicates(List<String> listContainingDuplicates) {
+	private static Set<String> findDuplicates(List<String> listContainingDuplicates) {
 		 
 		final Set<String> setToReturn = new HashSet<String>();
 		final Set<String> set1 = new HashSet<String>();
@@ -297,19 +344,19 @@ public class KeysEditorController implements Initializable {
 	}
 	
 	@FXML
-	public void addSelectionToFormText(){
+	private void addSelectionToFormText(){
 		if (formSelector.getSelectionModel().getSelectedItem() != null && !formSelector.getSelectionModel().getSelectedItem().isEmpty())
 			formText.setText(formSelector.getSelectionModel().getSelectedItem());
 	}
 	
 	@FXML
-	public void addSelectionToBackgroundText(){
+	private void addSelectionToBackgroundText(){
 		if (backgroundSelector.getSelectionModel().getSelectedItem() != null && !backgroundSelector.getSelectionModel().getSelectedItem().isEmpty())
 			backgroundText.setText(backgroundSelector.getSelectionModel().getSelectedItem());
 	}
 	
 	@FXML
-	public void addSelectionToKindText(){
+	private void addSelectionToKindText(){
 		if (kindSelector.getSelectionModel().getSelectedItem() != null && !kindSelector.getSelectionModel().getSelectedItem().isEmpty())
 			kindText.setText(kindSelector.getSelectionModel().getSelectedItem());
 	}
