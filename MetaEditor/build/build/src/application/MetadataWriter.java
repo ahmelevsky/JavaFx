@@ -65,7 +65,9 @@ public class MetadataWriter {
        	newBlocks = metadata.photoshopApp13Data.getNonIptcBlocks();
        	
            String xmpXml = new JpegImageParser().getXmpXml(byteSource, new HashMap());
-           String xmlToWrite = changeTitleInXMP(xmpXml, title);
+           String xmlToWrite = null;
+           if (xmpXml!=null) 
+        	   xmlToWrite = changeTitleInXMP(xmpXml, title);
        for (String key:keys)
        	newRecords.add(new IptcRecord(IptcTypes.KEYWORDS, key));
        if (!title.isEmpty())
@@ -74,15 +76,21 @@ public class MetadataWriter {
        	newRecords.add(new IptcRecord(IptcTypes.CAPTION_ABSTRACT, description));
        final PhotoshopApp13Data newData = new PhotoshopApp13Data(newRecords,
                newBlocks);
-       writeIptcXMP(byteSource, newData, xmlToWrite, toFile);
+       
        app.log("");
        app.log("Запись метаданных в файл "  + toFile.getAbsolutePath());
-       app.log("Title: " + title);
+       if (xmlToWrite!=null) {
+    	   writeIptcXMP(byteSource, newData, xmlToWrite, toFile);
+    	   app.log("Title (xml): " + title);
+       }
+       else {
+    	   writeIptc(byteSource, newData, toFile);
+    	   app.log("Title: " + title);
+       }
+       
        app.log("Decription: " + description);
        app.log("Keys: " + StringUtils.join(keys, ", "));
               
-      //writeIptc(byteSource, newData, toFile);
-     // writeXMP(byteSource, xmlToWrite, toFile);
 	}
 	
 public static File writeIptc(final ByteSource byteSource, final PhotoshopApp13Data newData, final File updated) throws IOException, ImageReadException, ImageWriteException {
@@ -91,9 +99,9 @@ try (FileOutputStream fos = new FileOutputStream(updated);
        OutputStream os = new BufferedOutputStream(fos)) {
    new JpegIptcRewriter().writeIPTC(bytes, os, newData);
 }
-catch  (Exception e){
+/*catch  (Exception e){
 	app.log("ОШИБКА: Не могу записать данные в файл " +  updated.getAbsolutePath() + " ,возможно после этой попытки файл будет повережден (проверьте его размер)");
-}
+}*/
 return updated;
 }
 
@@ -211,6 +219,11 @@ public static void removeXMP(ByteSource byteSource, File file) throws FileNotFou
 		  transformer.transform(new DOMSource(doc), new StreamResult(writer));
 		  String output = writer.getBuffer().toString().replaceAll("\n|\r", "");
 		  return output;
+	  }
+	  
+	  
+	  public static boolean isCorrectKey(String text){
+		 return text.trim().isEmpty() || text.matches("\\A\\p{ASCII}*\\z");//|| text.replaceAll("\\s+","").matches("\\w+");
 	  }
 	  
 }

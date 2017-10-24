@@ -45,4 +45,9 @@ public class TitleEditorController implements Initializable {
 		return titleText.getText();
 	}
 	
+	public boolean checkDataIsCorrect(){
+		return MetadataWriter.isCorrectKey(this.getTitleForMetadata());
+	}
+
+	
 }

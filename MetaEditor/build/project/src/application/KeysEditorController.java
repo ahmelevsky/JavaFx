@@ -98,15 +98,6 @@ public class KeysEditorController implements Initializable {
 	private TextField highCount;
 	
 	@FXML
-	private ComboBox<String> formSelector;
-	
-	@FXML
-	private ComboBox<String> backgroundSelector;
-	
-	@FXML
-	private ComboBox<String> kindSelector;
-	
-	@FXML
 	private Button clearBtn;
 	
 	@FXML
@@ -137,29 +128,6 @@ public class KeysEditorController implements Initializable {
 		
 		highCount.setText("12");
 		lowCount.setText("5");
-		formSelector.setItems(formOptions);
-		backgroundSelector.setItems(backgroundOptions);
-		kindSelector.setItems(kindOptions);
-		
-		backgroundSelector.showingProperty().addListener((obs, wasShowing, isShowing) -> {
-		    if (! isShowing) {
-		    	addSelectionToBackgroundText();
-		    }
-		});
-		formSelector.showingProperty().addListener((obs, wasShowing, isShowing) -> {
-		    if (! isShowing) {
-		    	addSelectionToFormText();
-		    }
-		});
-		kindSelector.showingProperty().addListener((obs, wasShowing, isShowing) -> {
-		    if (! isShowing) {
-		    	addSelectionToKindText();
-		    }
-		});
-		
-		Utils.addDeleteButtonToCombobox(backgroundSelector);
-		Utils.addDeleteButtonToCombobox(formSelector);
-		Utils.addDeleteButtonToCombobox(kindSelector);
 		
 		obligatoryText.textProperty().addListener((observable, oldValue, newValue) -> {
 			countLabel.setText("Слов: " + getKeysFromUI().size());
@@ -342,23 +310,14 @@ public List<String> generateKeywordsForMetadata(){
 		}
 		return setToReturn;
 	}
-	
-	@FXML
-	private void addSelectionToFormText(){
-		if (formSelector.getSelectionModel().getSelectedItem() != null && !formSelector.getSelectionModel().getSelectedItem().isEmpty())
-			formText.setText(formSelector.getSelectionModel().getSelectedItem());
-	}
-	
-	@FXML
-	private void addSelectionToBackgroundText(){
-		if (backgroundSelector.getSelectionModel().getSelectedItem() != null && !backgroundSelector.getSelectionModel().getSelectedItem().isEmpty())
-			backgroundText.setText(backgroundSelector.getSelectionModel().getSelectedItem());
-	}
-	
-	@FXML
-	private void addSelectionToKindText(){
-		if (kindSelector.getSelectionModel().getSelectedItem() != null && !kindSelector.getSelectionModel().getSelectedItem().isEmpty())
-			kindText.setText(kindSelector.getSelectionModel().getSelectedItem());
+	public boolean checkDataIsCorrect(){
+		return 
+		MetadataWriter.isCorrectKey(this.obligatoryKeys) &&
+		MetadataWriter.isCorrectKey(this.formKeys) &&
+		MetadataWriter.isCorrectKey(this.backgroundKeys) &&
+		MetadataWriter.isCorrectKey(this.kindKeys) &&
+		MetadataWriter.isCorrectKey(this.lowKeys) &&
+		MetadataWriter.isCorrectKey(this.highKeys);
 	}
 	
 

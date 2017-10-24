@@ -3,6 +3,10 @@ package application;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,9 +30,18 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 public class DescriptionEditorController implements Initializable {
 
@@ -68,12 +82,16 @@ public class DescriptionEditorController implements Initializable {
 	private Button clearBtn;
 	
 	@FXML
-	private Label countLabel;
+	private Text countLabel;
 	
 	@FXML
 	private TextArea resultText;
 	
+	@FXML
+	private Text addedTexts;
+	
 	private final int LIMIT = 200;
+	
 	
 	
 	ObservableList<String> options1 =    FXCollections.observableArrayList();
@@ -94,6 +112,20 @@ public class DescriptionEditorController implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		ImageView imageView = new ImageView( new Image(new File("resources/add.png").toURI().toString()));
+
+		imageView.setFitWidth(50);
+
+		imageView.setFitHeight(50);
+
+		generateBtn.setGraphic(imageView);
+		
+		//Background background = new Background(backgroundImage);
+	    //generateBtn.setBackground(background);
+		
+		
+		
 		selector1.setItems(options1);
 		selector2.setItems(options2);
 		selector3.setItems(options3);
@@ -117,8 +149,40 @@ public class DescriptionEditorController implements Initializable {
 		options.add(options3);
 		options.add(options4);
 		options.add(options5);
+		
+		
+		for (TextArea tf:textFields)
+			tf.textProperty().addListener((observable, oldValue, newValue) -> {
+				
+				countLabel.setText("Символов: " + recount());
+			});
+		
 	}
 
+	
+	
+	
+	private int recount(){
+		StringJoiner field = new StringJoiner(" ");
+		for (TextArea tf:textFields)
+			if (!tf.getText().trim().isEmpty())
+				field.add(tf.getText().trim());
+		
+		resultText.setText(field.toString());
+		
+		if (field.toString().length() > this.LIMIT){
+			generateBtn.setDisable(true);
+			countLabel.setFill(Color.RED);
+		}
+		else{
+			generateBtn.setDisable(false);
+			countLabel.setFill(Color.BLACK);
+		}
+			
+		
+		return field.toString().length();
+	}
+	
 	@FXML
 	public void clearForms(){
 		text1.clear();
@@ -165,7 +229,6 @@ public class DescriptionEditorController implements Initializable {
 		if (text5.getText()!=null && !text5.getText().isEmpty() && !options5.contains(text5.getText()))
 			options5.add(text5.getText());
 		
-		resultText.setText(sb.toString());
 		//addToClipboad(sb.toString());
 		countLabel.setText("Символов: " + sb.toString().length());
 		return sb.toString();
@@ -241,8 +304,12 @@ public class DescriptionEditorController implements Initializable {
 	
 	
 	private boolean checkLimit(){
+
+		int longest = 0;
+		int current = getCurrentLength();
 		
 		for (int i=0;i<textFields.size();i++ ){
+			
 			int newTextlength = textFields.get(i).getText().trim().length();
 			if (newTextlength==0) continue;
 			
@@ -254,6 +321,18 @@ public class DescriptionEditorController implements Initializable {
 					newTextlength+=optstringlength;
 				}
 			}
+			
+			if (newTextlength>longest) longest = newTextlength;
+			if (current>longest) longest = current;
+			addedTexts.setText("Наиболее длинная комбинация, символов: " + longest);
+			
+			if (longest > this.LIMIT){
+				addedTexts.setFill(Color.RED);
+			}
+			else{
+				addedTexts.setFill(Color.BLACK);
+			}
+			
 			if (newTextlength>this.LIMIT){
 			
 				Alert alert = new Alert(AlertType.ERROR);
@@ -272,9 +351,27 @@ public class DescriptionEditorController implements Initializable {
 		return true;
 	}
 	
+	private int getCurrentLength(){
+		StringJoiner field = new StringJoiner(" ");
+		for (TextArea tf:textFields)
+			if (!tf.getText().trim().isEmpty())
+				field.add(tf.getText().trim());
+		
+		return field.toString().length();
+	}
+	
 	private int longestString(List<String> list){
 		if (list.isEmpty()) return 0;
 		return Collections.max(list, Comparator.comparing(s -> s.length())).length();
 	}
 	
+	
+	public boolean checkDataIsCorrect(){
+		return 
+		descriptions1.stream().allMatch(s -> MetadataWriter.isCorrectKey(s)) &&
+		descriptions2.stream().allMatch(s -> MetadataWriter.isCorrectKey(s)) &&
+		descriptions3.stream().allMatch(s -> MetadataWriter.isCorrectKey(s)) &&
+		descriptions4.stream().allMatch(s -> MetadataWriter.isCorrectKey(s)) &&
+		descriptions5.stream().allMatch(s -> MetadataWriter.isCorrectKey(s));
+	}
 }

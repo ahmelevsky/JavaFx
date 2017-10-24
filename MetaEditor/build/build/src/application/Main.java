@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -42,6 +43,7 @@ public class Main extends Application {
 		titleEditorController = (TitleEditorController) addTab("Заголовки", "TitleEditorWindow.fxml", TitleEditorController.class);
 		logController = (LogController) addTab("Лог", "LogWindow.fxml", LogController.class);
 		mainStage.setTitle("Meta Editor");
+		mainStage.getIcons().add(new Image("file:resources/icon.png"));
 		mainStage.show();
 	}
 	

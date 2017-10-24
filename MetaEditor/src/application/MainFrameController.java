@@ -1,69 +1,32 @@
 package application;
 
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.StringJoiner;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import org.apache.commons.imaging.ImageReadException;
-import org.apache.commons.imaging.ImageWriteException;
-import org.apache.commons.imaging.Imaging;
-import org.apache.commons.imaging.ImagingConstants;
-import org.apache.commons.imaging.common.ImageMetadata;
-import org.apache.commons.imaging.common.ImageMetadata.ImageMetadataItem;
-import org.apache.commons.imaging.common.RationalNumber;
-import org.apache.commons.imaging.common.bytesource.ByteSource;
-import org.apache.commons.imaging.common.bytesource.ByteSourceFile;
-import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
-import org.apache.commons.imaging.formats.jpeg.JpegImageParser;
-import org.apache.commons.imaging.formats.jpeg.JpegPhotoshopMetadata;
-import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
-import org.apache.commons.imaging.formats.jpeg.iptc.IptcBlock;
-import org.apache.commons.imaging.formats.jpeg.iptc.IptcRecord;
-import org.apache.commons.imaging.formats.jpeg.iptc.IptcTypes;
-import org.apache.commons.imaging.formats.jpeg.iptc.JpegIptcRewriter;
-import org.apache.commons.imaging.formats.jpeg.iptc.PhotoshopApp13Data;
-import org.apache.commons.imaging.formats.jpeg.xmp.JpegRewriter;
-import org.apache.commons.imaging.formats.jpeg.xmp.JpegXmpRewriter;
-import org.apache.commons.imaging.formats.tiff.TiffImageMetadata;
-import org.apache.commons.imaging.formats.tiff.constants.ExifTagConstants;
-import org.apache.commons.imaging.formats.tiff.write.TiffOutputDirectory;
-import org.apache.commons.imaging.formats.tiff.write.TiffOutputSet;
-import org.apache.commons.io.IOUtils;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.Alert.AlertType;
 import javafx.stage.DirectoryChooser;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.ImageWriteException;
+import org.xml.sax.SAXException;
 
 public class MainFrameController implements Initializable{
 
@@ -100,7 +63,7 @@ public class MainFrameController implements Initializable{
 	public void writeMetadata() throws SAXException, ParserConfigurationException, TransformerException{
 		
 		
-		if (folder==null && !folder.exists()){
+		if (folder==null || !folder.exists()){
 			app.showAlert("Папка не выбрана или не существует");
 			return;
 		}
@@ -120,9 +83,24 @@ public class MainFrameController implements Initializable{
 		app.descriptionEditorController.saveDescriptionsSource();
 		app.titleEditorController.saveTitleSource();
 		
+		StringJoiner validationErrors = new StringJoiner("\n");
+		//List<String> validationErrors = new ArrayList<String>();
+		if (!app.keysEditorController.checkDataIsCorrect())
+			validationErrors.add("Ключи содержат недопустимые символы.");
+		if (!app.descriptionEditorController.checkDataIsCorrect())
+			validationErrors.add("Описания содержат недопустимые символы.");
+		if (!app.titleEditorController.checkDataIsCorrect())
+			validationErrors.add("Заголовок содержит недопустимые символы.");
        		
+		if (validationErrors.length()>0){ 
+			validationErrors.add("Операция отменена.");
+			app.showAlert(validationErrors.toString());
+			return;
+		}
+		
+		
 		 task = new Task<Integer>() {
-			    @Override public Integer call() {
+			    @Override public Integer call() throws ImageReadException, ImageWriteException, IOException, SAXException, ParserConfigurationException, TransformerException {
 			    	int done = 0;
 			       try{ 
 			    	for (File image:images){
@@ -130,20 +108,25 @@ public class MainFrameController implements Initializable{
 						done++;
 						updateProgress(done, images.length);
 						}
-					
 						
 						} catch (ImageReadException e) {
 							app.showAlert("Невозможно прочитать файл, ошибка: " + e.getMessage());
+							throw e;
 						} catch (ImageWriteException e) {
 							app.showAlert("Невозможно записать файл, ошибка: " + e.getMessage());
+							throw e;
 						} catch (IOException e) {
 							app.showAlert(e.getMessage());
+							throw e;
 						} catch (SAXException e) {
 							app.showAlert(e.getMessage());
+							throw e;
 						} catch (ParserConfigurationException e) {
 							app.showAlert(e.getMessage());
+							throw e;
 						} catch (TransformerException e) {
 							app.showAlert(e.getMessage());
+							throw e;
 						}
 			        return done;
 			    }
@@ -151,6 +134,7 @@ public class MainFrameController implements Initializable{
 			
 			task.setOnFailed(e -> {
 				writeBtn.setDisable(false);
+				stopProgress();
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Ошибка");
 				alert.setHeaderText("Ошибка");
@@ -160,6 +144,7 @@ public class MainFrameController implements Initializable{
 			
 			task.setOnCancelled(e -> {
 				writeBtn.setDisable(false);
+				stopProgress();
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Отмена");
 				alert.setHeaderText("Отмена");
@@ -201,8 +186,14 @@ public class MainFrameController implements Initializable{
 	}
 	
 	
-	
-
+	public void stopProgress(){
+		 Platform.runLater(new Runnable() {
+            public void run() {
+            	progress.progressProperty().unbind();
+            	progress.setProgress(0.0);
+            }
+		 });
+	}
 
 
 }

@@ -118,6 +118,7 @@
 		<fx:resources id="appRes">
 			<fx:fileset dir="dist" includes="MetaEditor.jar"/>
 			<fx:fileset dir="dist" includes="libs/*"/>
+			<fx:fileset dir="dist" includes="resources/**"/>
 		</fx:resources> 
 		
 		<fx:application id="fxApplication"
@@ -137,9 +138,9 @@
 			<fx:resources refid="appRes"/>
 			
 			<manifest>
-				<attribute name="Implementation-Vendor" value="Artiom"/>
-				<attribute name="Implementation-Title" value="TagsEditor2"/>
-				<attribute name="Implementation-Version" value="2.0"/>
+				<attribute name="Implementation-Vendor" value="AH"/>
+				<attribute name="Implementation-Title" value="MetaEditor"/>
+				<attribute name="Implementation-Version" value="1.0"/>
 				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>
@@ -184,6 +185,9 @@
 		        </bundleapp>
 				<copy todir="MetaEditor.app/Contents/Java/libs" >  
                           <fileset dir="deploy/libs" includes="**"/>  
+                    </copy> 
+				<copy todir="MetaEditor.app/Contents/Resources/resources" >  
+                          <fileset dir="deploy/resources" includes="**"/>  
                     </copy> 
 		    </target>
 </project>
