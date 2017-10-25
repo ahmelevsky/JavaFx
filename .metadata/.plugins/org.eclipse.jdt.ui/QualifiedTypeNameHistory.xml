@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="javafx.scene.control.ButtonType"/>
-<fullyQualifiedTypeName name="javafx.scene.control.ButtonBar.ButtonData"/>
-<fullyQualifiedTypeName name="javafx.scene.control.TabPane"/>
-<fullyQualifiedTypeName name="javafx.scene.layout.Pane"/>
-<fullyQualifiedTypeName name="javafx.scene.control.Tab"/>
-<fullyQualifiedTypeName name="javafx.scene.Node"/>
-<fullyQualifiedTypeName name="application.DescriptionEditorController"/>
-<fullyQualifiedTypeName name="java.util.Random"/>
-<fullyQualifiedTypeName name="java.util.List"/>
-<fullyQualifiedTypeName name="org.apache.commons.imaging.common.ImageMetadata.ImageMetadataItem"/>
-<fullyQualifiedTypeName name="org.apache.commons.imaging.formats.jpeg.xmp.JpegRewriter"/>
 <fullyQualifiedTypeName name="org.apache.commons.imaging.formats.tiff.write.TiffOutputDirectory"/>
 <fullyQualifiedTypeName name="org.apache.commons.imaging.formats.tiff.constants.ExifTagConstants"/>
 <fullyQualifiedTypeName name="org.apache.commons.imaging.formats.tiff.write.TiffOutputSet"/>
@@ -26,7 +15,6 @@
 <fullyQualifiedTypeName name="java.io.OutputStream"/>
 <fullyQualifiedTypeName name="java.util.Map"/>
 <fullyQualifiedTypeName name="java.util.HashMap"/>
-<fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="jdk.internal.org.xml.sax.InputSource"/>
 <fullyQualifiedTypeName name="java.util.regex.Pattern"/>
 <fullyQualifiedTypeName name="java.util.regex.Matcher"/>
@@ -47,7 +35,6 @@
 <fullyQualifiedTypeName name="javax.xml.transform.TransformerException"/>
 <fullyQualifiedTypeName name="org.w3c.dom.Element"/>
 <fullyQualifiedTypeName name="java.io.ByteArrayOutputStream"/>
-<fullyQualifiedTypeName name="application.MetadataWriter"/>
 <fullyQualifiedTypeName name="java.util.Collections"/>
 <fullyQualifiedTypeName name="java.util.Comparator"/>
 <fullyQualifiedTypeName name="application.LogController"/>
@@ -56,8 +43,21 @@
 <fullyQualifiedTypeName name="javafx.scene.control.Button"/>
 <fullyQualifiedTypeName name="javafx.fxml.Initializable"/>
 <fullyQualifiedTypeName name="javafx.scene.control.TextArea"/>
-<fullyQualifiedTypeName name="org.apache.commons.lang3.StringUtils"/>
 <fullyQualifiedTypeName name="javafx.application.Platform"/>
 <fullyQualifiedTypeName name="javafx.concurrent.Task"/>
 <fullyQualifiedTypeName name="javafx.scene.control.ProgressBar"/>
+<fullyQualifiedTypeName name="application.MetadataWriter"/>
+<fullyQualifiedTypeName name="org.apache.commons.lang3.StringUtils"/>
+<fullyQualifiedTypeName name="java.util.StringJoiner"/>
+<fullyQualifiedTypeName name="javafx.scene.layout.BackgroundImage"/>
+<fullyQualifiedTypeName name="javafx.scene.layout.Background"/>
+<fullyQualifiedTypeName name="javafx.scene.layout.BackgroundRepeat"/>
+<fullyQualifiedTypeName name="javafx.scene.image.Image"/>
+<fullyQualifiedTypeName name="javafx.scene.layout.BackgroundPosition"/>
+<fullyQualifiedTypeName name="javafx.scene.layout.BackgroundSize"/>
+<fullyQualifiedTypeName name="javafx.scene.image.ImageView"/>
+<fullyQualifiedTypeName name="javafx.scene.paint.Color"/>
+<fullyQualifiedTypeName name="javafx.scene.text.Text"/>
+<fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="java.net.URI"/>
 </qualifiedTypeNameHistroy>
