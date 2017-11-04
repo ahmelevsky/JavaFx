@@ -23,6 +23,6 @@
       <TextField fx:id="highCount" layoutX="354.0" layoutY="425.0" prefHeight="31.0" prefWidth="94.0" />
       <TextField fx:id="lowCount" layoutX="694.0" layoutY="425.0" prefHeight="31.0" prefWidth="94.0" />
       <Button fx:id="clearBtn" layoutX="828.0" layoutY="424.0" mnemonicParsing="false" onMouseClicked="#clearForms" prefHeight="60.0" prefWidth="152.0" text="ОЧИСТИТЬ" />
-      <Label fx:id="countLabel" layoutX="355.0" layoutY="433.0" prefHeight="21.0" prefWidth="202.0" />
+      <Label fx:id="countLabel" layoutX="22.0" layoutY="430.0" prefHeight="21.0" prefWidth="202.0" />
    </children>
 </AnchorPane>

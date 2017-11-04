@@ -22,6 +22,8 @@ public class Utils {
 	private static List<String> ignoreTemplate = new ArrayList<String>(){{
 		add("\\._.*");
 	}};
+	private static final int limit = 100;
+	
 	
 	public static void hackTooltipStartTiming(Tooltip tooltip) {
 	    try {
@@ -41,7 +43,7 @@ public class Utils {
 	}
 	
 	
-	public static boolean selectFilesAndMove(File inputFolder, File outputFolder, int filesToMoveCount, boolean isJpgOnly, StringBuffer sb){
+	public static int selectFilesAndMove(File inputFolder, File outputFolder, int filesToMoveCount, boolean isJpgOnly, StringBuffer sb, int movedcount){
 			
 		List<File> subfolders = getSubdirsInCorrectOrder(inputFolder);
 		l.debug("Start enumerating source subfloders for batch source item, subfolders count: " + subfolders.size());
@@ -53,16 +55,20 @@ public class Utils {
 		int step = 0;
 		int errcount = 0;
 		while (filesToMoveCount>0){
+			
+			if (!outputFolder.getAbsolutePath().endsWith("_add") && movedcount>=limit-1)
+				outputFolder = new File(outputFolder.getAbsolutePath() + "_add");
+			
 			l.debug("filesToMoveCount left " + filesToMoveCount);
 			if (errcount>10) {
 				l.error("ОШИБКА: Слишком много ошибок, операция над папкой прервана.");
 				sb.append("ОШИБКА: Слишком много ошибок, операция над папкой прервана.\n");
-				return false;
+				return movedcount;
 			}
 			if (countFilesInDirectories(subfolders, ".jpg")==0){
 				l.debug("ПРЕДУПРЕЖДЕНИЕ: В папке " + inputFolder.getAbsolutePath() + " больше нет файлов.\n");
 				sb.append("ПРЕДУПРЕЖДЕНИЕ: В папке " + inputFolder.getAbsolutePath() + " больше нет файлов.");
-				return true;		
+				return movedcount;		
 			}
 			if (step==subfolders.size())
 				step=0;
@@ -86,9 +92,10 @@ public class Utils {
 					}
 					l.debug("Found EPS file: " + eps.getAbsolutePath());
 					try {
-						if (!createBatchFolder(outputFolder)) return false;
+						if (!createBatchFolder(outputFolder)) return movedcount;
 						Files.move(eps.toPath(), new File(outputFolder.getAbsolutePath() + File.separator + eps.getName()).toPath());
 						l.log("FILE successully moved. From: " + eps.getAbsolutePath() + " To " + outputFolder.getAbsolutePath() + File.separator + eps.getName());
+						movedcount++;
 					} catch (IOException e) {
 						l.error("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + eps.getAbsolutePath() + " Error message: " + e.getMessage());
 						sb.append("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + eps.getAbsolutePath() + "\n");
@@ -96,9 +103,10 @@ public class Utils {
 					}
 				}
 				try {
-					if (!createBatchFolder(outputFolder)) return false;
+					if (!createBatchFolder(outputFolder)) return movedcount;
 					Files.move(jpg.toPath(), new File(outputFolder.getAbsolutePath() + File.separator + jpg.getName()).toPath());
 					l.log("FILE successully moved. From: " + jpg.getAbsolutePath() + " To " + outputFolder.getAbsolutePath() + File.separator + jpg.getName());
+					movedcount++;
 				} catch (IOException e) {
 					l.error("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + jpg.getAbsolutePath() + " Error message: " + e.getMessage());
 					sb.append("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + jpg.getAbsolutePath() + "\n");
@@ -107,11 +115,11 @@ public class Utils {
 				filesToMoveCount--;
 			}
 		}
-		return true;
+		return movedcount;
 	}
 	
 	
-	public static boolean selectFilesAndMoveRandom(File inputFolder, File outputFolder, int filesToMoveCount, boolean isJpgOnly, StringBuffer sb){
+	public static int selectFilesAndMoveRandom(File inputFolder, File outputFolder, int filesToMoveCount, boolean isJpgOnly, StringBuffer sb, int movedcount){
 		l.debug("Start RANDOM enumerating source subfolders for batch source item");
 		l.debug("Input folder: " + inputFolder.getAbsolutePath());
 		l.debug("Output folder: " + outputFolder.getAbsolutePath());
@@ -119,17 +127,21 @@ public class Utils {
 		
 		int errcount = 0;
 		while (filesToMoveCount>0){
+			
+			if (!outputFolder.getAbsolutePath().endsWith("_add") && movedcount>=limit-1)
+				outputFolder = new File(outputFolder.getAbsolutePath() + "_add");
+			
 			l.debug("filesToMoveCount left " + filesToMoveCount);
 			if (errcount>10) {
 				l.error("ОШИБКА: Слишком много ошибок, операция над папкой прервана.");
 				sb.append("ОШИБКА: Слишком много ошибок, операция над папкой прервана.\n");
-				return false;
+				return movedcount;
 			}
 			int countFilesInLastFolders = countFilesInDirectoryIfNoSubDirectories(inputFolder, ".jpg");
 			if (countFilesInLastFolders==0){
 				l.debug("ПРЕДУПРЕЖДЕНИЕ: В конечных подпапках директории " + inputFolder.getAbsolutePath() + " больше нет подходящих файлов");
 				sb.append("ПРЕДУПРЕЖДЕНИЕ: В конечных подпапках директории " + inputFolder.getAbsolutePath() + " больше нет подходящих файлов.\n");
-				return true;		
+				return movedcount;		
 			}
 			else 
 				l.debug("Количество файлов jpeg в конечных папках: " + countFilesInLastFolders);
@@ -165,9 +177,10 @@ public class Utils {
 					}
 					l.debug("Found EPS file: " + eps.getAbsolutePath());
 					try {
-						if (!createBatchFolder(outputFolder)) return false;
+						if (!createBatchFolder(outputFolder)) return movedcount;
 						Files.move(eps.toPath(), new File(outputFolder.getAbsolutePath() + File.separator + eps.getName()).toPath());
 						l.log("FILE successully moved. From: " + eps.getAbsolutePath() + " To " + outputFolder.getAbsolutePath() + File.separator + eps.getName());
+						movedcount++;
 					} catch (IOException e) {
 						l.error("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + eps.getAbsolutePath() + " Error message: " + e.getMessage());
 						sb.append("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + eps.getAbsolutePath() + "\n");
@@ -175,9 +188,10 @@ public class Utils {
 					}
 				}
 				try {
-					if (!createBatchFolder(outputFolder)) return false;
+					if (!createBatchFolder(outputFolder)) return movedcount;
 					Files.move(jpg.toPath(), new File(outputFolder.getAbsolutePath() + File.separator + jpg.getName()).toPath());
 					l.log("FILE successully moved. From: " + jpg.getAbsolutePath() + " To " + outputFolder.getAbsolutePath() + File.separator + jpg.getName());
+					movedcount++;
 				} catch (IOException e) {
 					l.error("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + jpg.getAbsolutePath() + " Error message: " + e.getMessage());
 					sb.append("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + jpg.getAbsolutePath() + "\n");
@@ -186,7 +200,7 @@ public class Utils {
 				filesToMoveCount--;
 			}
 		}
-		return true;
+		return movedcount;
 	}
 	
 	private static File getRandomFolder(File directory){

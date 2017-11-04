@@ -59,6 +59,7 @@ public class RootLayoutController {
 	private Logger l = Logger.getLogger();
 	private Main app;
 	
+	
 	@FXML
     private void initialize() {
 		this.valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50, 1);
@@ -221,6 +222,7 @@ public class RootLayoutController {
       String datePrefix = ld.format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss"));
       for (int batchNumber=1;batchNumber<=app.gs.getBatchescount();batchNumber++){
     		File batchFolder = new File(outputFolder.getAbsolutePath() + File.separator + datePrefix + "_" + batchNumber);
+    		int movedcount = 0;
     		
     	    for (BatchSource bs:app.sources){
     	    	StringBuffer sb = new StringBuffer();
@@ -231,22 +233,18 @@ public class RootLayoutController {
     	    		continue;
     	    	}
     	    	
-    	    	boolean result = false;
     	    	if (this.isRandom.isSelected())
-    	    		result = Utils.selectFilesAndMoveRandom(sourceFolder, batchFolder, bs.getFilesCount(), bs.isIsJpgOnly(), sb);
+    	    		movedcount = Utils.selectFilesAndMoveRandom(sourceFolder, batchFolder, bs.getFilesCount(), bs.isIsJpgOnly(), sb, movedcount);
     	    	else 
-    	    		result = Utils.selectFilesAndMove(sourceFolder, batchFolder, bs.getFilesCount(), bs.isIsJpgOnly(), sb);
-    			if (!result){
-    				globalsb.append("-=" + bs.getCaption() + "=-\n" + sb.toString() + "\n");
-    				bs.setStatus("error");
-    			}
-    			else if (!sb.toString().isEmpty()){
+    	    		movedcount = Utils.selectFilesAndMove(sourceFolder, batchFolder, bs.getFilesCount(), bs.isIsJpgOnly(), sb, movedcount);
+    				
+    			 if (!sb.toString().isEmpty()){
     				globalsb.append("-=" + bs.getCaption() + "=-\n" + sb.toString() + "\n");
     				bs.setStatus("warning");
     			}
-    			else
+    			 else
     				bs.setStatus("success");
-    	    }
+    			}
   	}
       			for (SourceLayoutController slc:app.sourceControllers)
       				slc.countImages();
