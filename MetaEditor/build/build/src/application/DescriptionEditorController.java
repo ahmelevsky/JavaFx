@@ -4,9 +4,6 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,33 +12,26 @@ import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.StringJoiner;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+
+import com.sun.javafx.scene.control.behavior.TextAreaBehavior;
+import com.sun.javafx.scene.control.skin.TextAreaSkin;
 
 public class DescriptionEditorController implements Initializable {
 
@@ -151,12 +141,13 @@ public class DescriptionEditorController implements Initializable {
 		options.add(options5);
 		
 		
-		for (TextArea tf:textFields)
+		for (TextArea tf:textFields) {
 			tf.textProperty().addListener((observable, oldValue, newValue) -> {
 				
 				countLabel.setText("Символов: " + recount());
 			});
-		
+			denyTab(tf);
+		}
 	}
 
 	
@@ -374,4 +365,27 @@ public class DescriptionEditorController implements Initializable {
 		descriptions4.stream().allMatch(s -> MetadataWriter.isCorrectKey(s)) &&
 		descriptions5.stream().allMatch(s -> MetadataWriter.isCorrectKey(s));
 	}
+	
+	
+	private void denyTab(TextArea textArea){
+	textArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+        @Override
+        public void handle(KeyEvent event) {
+            if (event.getCode() == KeyCode.TAB) {
+            	 TextAreaSkin skin = (TextAreaSkin) textArea.getSkin();
+                if (skin.getBehavior() instanceof TextAreaBehavior) {
+                    TextAreaBehavior behavior = (TextAreaBehavior) skin.getBehavior();
+                    if (event.isControlDown()) {
+                        behavior.callAction("InsertTab");
+                    } else {
+                        behavior.callAction("TraverseNext");
+                    }
+                    event.consume();
+                }
+
+            }
+        }
+    });
+	}
+	
 }

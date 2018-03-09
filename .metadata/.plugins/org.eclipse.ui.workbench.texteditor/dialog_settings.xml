@@ -6,12 +6,13 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="countLabel" key="selection"/>
+		<item value="Version" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="version"/>
 			<item value="countLabel"/>
 			<item value="resources"/>
 			<item value="Печать"/>
@@ -19,7 +20,6 @@
 			<item value="TagEditor2"/>
 			<item value="listFiles"/>
 			<item value="step"/>
-			<item value="sourceControllers"/>
 		</list>
 		<list key="replacehistory">
 			<item value="MetaEditor"/>

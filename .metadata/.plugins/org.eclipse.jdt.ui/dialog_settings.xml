@@ -8,11 +8,12 @@
 	<item value="false" key="delegateUpdating"/>
 	<item value="1" key="SearchScopeActionGroup.search_scope_type"/>
 	<item value="500" key="CallHierarchyViewPart.ratio3"/>
-	<item value="jdk1.7.0_25" key="org.eclipse.jdt.ui.last.selected.project.jre"/>
+	<item value="jdk1.8.0_73" key="org.eclipse.jdt.ui.last.selected.project.jre"/>
 	<item value="false" key="TypeHierarchyViewPart.qualifiednames"/>
 	<item value="0" key="CallHierarchyViewPart.call_mode"/>
 	<item value="3" key="CallHierarchyViewPart.orientation"/>
-	<item value="0" key="org.eclipse.jdt.ui.last.selected.jre.kind2"/>
+	<item value="filter_imports;" key="filters_last_used"/>
+	<item value="1" key="org.eclipse.jdt.ui.last.selected.jre.kind2"/>
 	<list key="SearchScopeActionGroup.working_set">
 	</list>
 	<section name="SelfEncapsulateFieldWizard">
@@ -67,17 +68,22 @@
 		</section>
 	</section>
 	<section name="FatJarPackageWizard">
-		<item value="C:\JavaFX\workspace\AIA\build.xml" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
-		<item value="Main (17) - FolderSplitter" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
-		<item value="FolderSplitter\AIA.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
+		<item value="C:\JavaFX\workspace\SortFilesByEnd\build.xml" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
+		<item value="Main (22) - SortFilesByEnd" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
+		<item value="SortFilesByEnd\SortFilesByEnding.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
 		<item value="true" key="FatJarPackageWizardPage.ANTSCRIPT_SAVE"/>
 		<item value="2" key="FatJarPackageWizardPage.LIBRARY_HANDLING"/>
 		<list key="FatJarPackageWizardPage.DESTINATION_NAMES_ID">
-			<item value="FolderSplitter/AIA.jar"/>
-			<item value="AIA/AIA.jar"/>
-			<item value="IDLastMicro/idlastMicro.jar"/>
+			<item value="SortFilesByEnd/SortFilesByEnding.jar"/>
+			<item value="FileRemover/FTPUploader.jar"/>
+			<item value="FTPUploader/FTPUploader.jar"/>
+			<item value="OddAndEven\OddAndEven.jar"/>
+			<item value="OddAndEven/OddAndEven.jar"/>
 		</list>
 		<list key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION_HISTORY">
+			<item value="C:\JavaFX\workspace\SortFilesByEnd\build.xml"/>
+			<item value="C:\JavaFX\workspace\FileRemover\build.xml"/>
+			<item value="C:\JavaFX\workspace\FTPUploader\build.xml"/>
 			<item value="C:\JavaFX\workspace\AIA\build.xml"/>
 			<item value="C:\JavaFX\workspace\IDLastMicro\build.xml"/>
 		</list>

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -29,6 +30,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
 
 import org.apache.commons.imaging.ImageReadException;
@@ -63,6 +66,9 @@ import org.apache.commons.imaging.formats.jpeg.iptc.IptcRecord;
 import org.apache.commons.imaging.formats.jpeg.iptc.IptcTypes;
 import org.apache.commons.imaging.formats.jpeg.iptc.JpegIptcRewriter;
 import org.apache.commons.imaging.formats.jpeg.iptc.PhotoshopApp13Data;
+
+import com.sun.javafx.scene.control.behavior.TextAreaBehavior;
+import com.sun.javafx.scene.control.skin.TextAreaSkin;
 
 
 public class KeysEditorController implements Initializable {
@@ -153,6 +159,13 @@ public class KeysEditorController implements Initializable {
 		lowCount.textProperty().addListener((observable, oldValue, newValue) -> {
 			countLabel.setText("Слов: " + getKeysFromUI().size());
 		});
+		
+		denyTab(obligatoryText);
+		denyTab(formText);
+		denyTab(backgroundText);
+		denyTab(kindText);
+		denyTab(highText);
+		denyTab(lowText);
 	}
 	@FXML
 	private void clearForms(){
@@ -249,7 +262,7 @@ public List<String> generateKeywordsForMetadata(){
 	
 	private void addToList(String string, List<String> list){
 		if (string==null) return;
-		String[] array = string.split(",");
+		String[] array = string.split(",|;");
 		for (String s:array)
 			if (!s.trim().isEmpty()) list.add(s.trim());
 	}
@@ -257,7 +270,7 @@ public List<String> generateKeywordsForMetadata(){
 	
 	private void addNRandomToList(String string, List<String> list, int N){
 		Random random = new Random();
-		String[] array = string.split(",");
+		String[] array = string.split(",|;");
 		List<String> l = new ArrayList<String>(Arrays.asList(array));
 		while (N>0){
 			if (l.isEmpty())
@@ -320,6 +333,27 @@ public List<String> generateKeywordsForMetadata(){
 		MetadataWriter.isCorrectKey(this.highKeys);
 	}
 	
+	
+	private void denyTab(TextArea textArea){
+		textArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+	        @Override
+	        public void handle(KeyEvent event) {
+	            if (event.getCode() == KeyCode.TAB) {
+	            	 TextAreaSkin skin = (TextAreaSkin) textArea.getSkin();
+	                if (skin.getBehavior() instanceof TextAreaBehavior) {
+	                    TextAreaBehavior behavior = (TextAreaBehavior) skin.getBehavior();
+	                    if (event.isControlDown()) {
+	                        behavior.callAction("InsertTab");
+	                    } else {
+	                        behavior.callAction("TraverseNext");
+	                    }
+	                    event.consume();
+	                }
+
+	            }
+	        }
+	    });
+		}
 
 	}
 

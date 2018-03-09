@@ -33,6 +33,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		MetadataWriter.app = this;
+		ExiftoolRunner.app = this;
 		mainStage = primaryStage;
 		currentStage = mainStage;
 		mainFrameController = organizeStage("MainFrameWindow.fxml");
@@ -42,7 +43,7 @@ public class Main extends Application {
 		descriptionEditorController = (DescriptionEditorController) addTab("Описания", "DescriptionEditorWindow.fxml", DescriptionEditorController.class);
 		titleEditorController = (TitleEditorController) addTab("Заголовки", "TitleEditorWindow.fxml", TitleEditorController.class);
 		logController = (LogController) addTab("Лог", "LogWindow.fxml", LogController.class);
-		mainStage.setTitle("Meta Editor");
+		mainStage.setTitle("Meta Editor v2.0");
 		mainStage.getIcons().add(new Image("file:resources/icon.png"));
 		mainStage.show();
 	}

@@ -104,21 +104,23 @@ public class MainFrameController implements Initializable{
 			    	int done = 0;
 			       try{ 
 			    	for (File image:images){
-						MetadataWriter.writeMetadataToFile (image, app.keysEditorController.generateKeywordsForMetadata(), app.titleEditorController.getTitleForMetadata(), app.descriptionEditorController.generateRandomDescriptionForMetadata());
+						//MetadataWriter.writeMetadataToFile (image, app.keysEditorController.generateKeywordsForMetadata(), app.titleEditorController.getTitleForMetadata(), app.descriptionEditorController.generateRandomDescriptionForMetadata());
+						ExiftoolRunner.writeMetadataToFile (image, app.keysEditorController.generateKeywordsForMetadata(), app.titleEditorController.getTitleForMetadata(), app.descriptionEditorController.generateRandomDescriptionForMetadata());
+						
 						done++;
 						updateProgress(done, images.length);
 						}
 						
-						} catch (ImageReadException e) {
+					/*	} catch (ImageReadException e) {
 							app.showAlert("Невозможно прочитать файл, ошибка: " + e.getMessage());
 							throw e;
 						} catch (ImageWriteException e) {
 							app.showAlert("Невозможно записать файл, ошибка: " + e.getMessage());
-							throw e;
+							throw e;*/
 						} catch (IOException e) {
 							app.showAlert(e.getMessage());
 							throw e;
-						} catch (SAXException e) {
+						/*} catch (SAXException e) {
 							app.showAlert(e.getMessage());
 							throw e;
 						} catch (ParserConfigurationException e) {
@@ -126,7 +128,7 @@ public class MainFrameController implements Initializable{
 							throw e;
 						} catch (TransformerException e) {
 							app.showAlert(e.getMessage());
-							throw e;
+							throw e;*/
 						}
 			        return done;
 			    }

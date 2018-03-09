@@ -36,6 +36,7 @@ import org.apache.commons.imaging.formats.jpeg.iptc.IptcRecord;
 import org.apache.commons.imaging.formats.jpeg.iptc.IptcTypes;
 import org.apache.commons.imaging.formats.jpeg.iptc.JpegIptcRewriter;
 import org.apache.commons.imaging.formats.jpeg.iptc.PhotoshopApp13Data;
+import org.apache.commons.imaging.formats.jpeg.xmp.JpegXmpParser;
 import org.apache.commons.imaging.formats.jpeg.xmp.JpegXmpRewriter;
 import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.CharacterData;
@@ -65,6 +66,7 @@ public class MetadataWriter {
        	newBlocks = metadata.photoshopApp13Data.getNonIptcBlocks();
        	
            String xmpXml = new JpegImageParser().getXmpXml(byteSource, new HashMap());
+           System.out.println(xmpXml);
            String xmlToWrite = null;
            if (xmpXml!=null) 
         	   xmlToWrite = changeTitleInXMP(xmpXml, title);
@@ -111,8 +113,8 @@ byte[] bytes = byteSource.getAll();
 ByteArrayOutputStream baos = new ByteArrayOutputStream();
 try (FileOutputStream fos = new FileOutputStream(updated);
        OutputStream os = new BufferedOutputStream(fos)) {
-new JpegIptcRewriter().writeIPTC(bytes, baos, newData);
 new JpegXmpRewriter().updateXmpXml(baos.toByteArray(), os, newXML);
+new JpegIptcRewriter().writeIPTC(bytes, baos, newData);
 }
 return updated;
 }

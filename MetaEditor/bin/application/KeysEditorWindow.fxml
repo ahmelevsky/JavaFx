@@ -14,9 +14,9 @@
       <TextArea fx:id="formText" layoutX="352.0" layoutY="38.0" prefHeight="180.0" prefWidth="287.0" wrapText="true" />
       <Label layoutX="699.0" layoutY="9.0" prefHeight="21.0" prefWidth="269.0" text="Бэкграунд" />
       <TextArea fx:id="backgroundText" layoutX="693.0" layoutY="38.0" prefHeight="180.0" prefWidth="287.0" wrapText="true" />
+      <TextArea fx:id="kindText" editable="true" layoutX="22.0" layoutY="256.0" prefHeight="154.0" prefWidth="287.0" wrapText="true" />
       <TextArea fx:id="highText" editable="true" layoutX="352.0" layoutY="256.0" prefHeight="154.0" prefWidth="287.0" wrapText="true" />
       <TextArea fx:id="lowText" editable="true" layoutX="694.0" layoutY="256.0" prefHeight="154.0" prefWidth="287.0" wrapText="true" />
-      <TextArea fx:id="kindText" editable="true" layoutX="22.0" layoutY="256.0" prefHeight="154.0" prefWidth="287.0" wrapText="true" />
       <Label layoutX="357.0" layoutY="232.0" prefHeight="21.0" prefWidth="269.0" text="Высокочастотные" />
       <Label layoutX="698.0" layoutY="232.0" prefHeight="21.0" prefWidth="269.0" text="Низкочастотные" />
       <Label layoutX="27.0" layoutY="232.0" prefHeight="21.0" prefWidth="269.0" text="Качество" />

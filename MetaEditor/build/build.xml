@@ -5,6 +5,7 @@
 			<filelist>
 				<file name="${java.home}\..\lib\ant-javafx.jar"/>
 				<file name="${java.home}\lib\jfxrt.jar"/>
+				<file name="${basedir}"/>
 			</filelist>
 		</path>
 	
@@ -72,6 +73,7 @@
 				<include name="commons-io-2.4.jar"/>
 				<include name="commons-logging-1.2.jar"/>
 				<include name="hamcrest-core-1.3.jar"/>
+				<include name="exiftool.exe"/>
 			</fileset>
 		</copy>
 	
@@ -125,6 +127,7 @@
 			name="TagsEditor2"
 			mainClass="application.Main"
 			toolkit="fx"
+			version="2.0"
 		/>
 	
 		<mkdir dir="build/classes/META-INF" />
@@ -140,7 +143,7 @@
 			<manifest>
 				<attribute name="Implementation-Vendor" value="AH"/>
 				<attribute name="Implementation-Title" value="MetaEditor"/>
-				<attribute name="Implementation-Version" value="1.0"/>
+				<attribute name="Implementation-Version" value="2.0"/>
 				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>
