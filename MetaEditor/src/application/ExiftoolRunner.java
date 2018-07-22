@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 public class ExiftoolRunner {
-	static String exifpath = "libs/exiftool.exe";
+	static String exifpath = "lib/exiftool.exe";
 	public static Main app;
 	static boolean isWindows;
 	static boolean isLinux;

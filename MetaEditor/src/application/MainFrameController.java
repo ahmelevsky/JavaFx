@@ -106,7 +106,6 @@ public class MainFrameController implements Initializable{
 			    	for (File image:images){
 						//MetadataWriter.writeMetadataToFile (image, app.keysEditorController.generateKeywordsForMetadata(), app.titleEditorController.getTitleForMetadata(), app.descriptionEditorController.generateRandomDescriptionForMetadata());
 						ExiftoolRunner.writeMetadataToFile (image, app.keysEditorController.generateKeywordsForMetadata(), app.titleEditorController.getTitleForMetadata(), app.descriptionEditorController.generateRandomDescriptionForMetadata());
-						
 						done++;
 						updateProgress(done, images.length);
 						}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="480.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="te.view.DescriptionEditorController">
+   <children>
+      <VBox layoutX="524.0" layoutY="5.0" prefHeight="350.0" prefWidth="456.0" spacing="10.0">
+         <children>
+            <TextArea fx:id="text1" prefHeight="60.0" prefWidth="456.0" wrapText="true" />
+            <TextArea fx:id="text2" prefHeight="60.0" prefWidth="456.0" wrapText="true" />
+            <TextArea fx:id="text3" prefHeight="60.0" prefWidth="456.0" wrapText="true" />
+            <TextArea fx:id="text4" prefHeight="60.0" prefWidth="456.0" wrapText="true" />
+            <TextArea fx:id="text5" prefHeight="60.0" prefWidth="456.0" wrapText="true" />
+         </children>
+      </VBox>
+      <VBox layoutX="14.0" layoutY="7.0" spacing="45.0" AnchorPane.topAnchor="5.0">
+         <children>
+            <ComboBox fx:id="selector1" prefHeight="31.0" prefWidth="415.0" />
+            <ComboBox fx:id="selector2" prefHeight="31.0" prefWidth="415.0" />
+            <ComboBox fx:id="selector3" prefHeight="31.0" prefWidth="415.0" />
+            <ComboBox fx:id="selector4" prefHeight="31.0" prefWidth="415.0" />
+            <ComboBox fx:id="selector5" prefHeight="31.0" prefWidth="415.0" />
+         </children>
+      </VBox>
+      <TextArea fx:id="resultText" layoutX="14.0" layoutY="391.0" prefHeight="82.0" prefWidth="966.0" wrapText="true" />
+      <Text fx:id="countLabel" layoutX="14.0" layoutY="373.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="456.0000021010637" />
+      <Text fx:id="addedTexts" layoutX="572.0" layoutY="373.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="414.99999165534973" />
+   </children>
+</AnchorPane>

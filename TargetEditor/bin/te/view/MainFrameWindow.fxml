@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="te.view.MainFrameController">
+   <children>
+      <TabPane fx:id="tabs" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="60.0">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <padding>
+            <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+         </padding>
+      </TabPane>
+      <HBox maxWidth="2000.0" prefWidth="1000.0">
+         <children>
+            <Button fx:id="writeBtn" mnemonicParsing="false" onAction="#writeMetadata" prefHeight="61.0" prefWidth="177.0" text="Записать метаданные в файлы" textAlignment="CENTER" wrapText="true">
+               <HBox.margin>
+                  <Insets bottom="15.0" left="15.0" right="5.0" top="15.0" />
+               </HBox.margin></Button>
+            <VBox maxWidth="2000.0" prefWidth="800.0" spacing="10.0">
+               <children>
+                  <Hyperlink fx:id="folderPath" onAction="#selectPath" prefHeight="29.0" prefWidth="751.0" text="&lt;Выберите папку с файлами&gt;">
+                     <VBox.margin>
+                        <Insets top="15.0" />
+                     </VBox.margin>
+                  </Hyperlink>
+                  <ProgressBar fx:id="progress" prefHeight="23.0" prefWidth="689.0" progress="0.0">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </ProgressBar>
+               </children>
+               <HBox.margin>
+                  <Insets left="15.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

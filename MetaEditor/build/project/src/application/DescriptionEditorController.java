@@ -296,52 +296,43 @@ public class DescriptionEditorController implements Initializable {
 	
 	private boolean checkLimit(){
 
-		int longest = 0;
-		int current = getCurrentLength();
-		
-		for (int i=0;i<textFields.size();i++ ){
-			
-			int newTextlength = textFields.get(i).getText().trim().length();
-			if (newTextlength==0) continue;
-			
-			for  (int j=0;j<options.size();j++ ){
-				if (j==i) continue;
-				int optstringlength = longestString(options.get(j));
-				if (optstringlength>0){
-					newTextlength++;
-					newTextlength+=optstringlength;
-				}
+		int partsCount = 0;
+		int longest = 0; 
+		for (int i=0;i<textFields.size();i++ ) {
+			List<String> variants = new ArrayList<String>();
+			variants.addAll(options.get(i));
+			if (!textFields.get(i).getText().trim().isEmpty())
+				variants.add(textFields.get(i).getText().trim());
+			int optstringlength = longestString(variants);
+			if (optstringlength>0) {
+				partsCount++;
+			    longest +=optstringlength;
 			}
-			
-			if (newTextlength>longest) longest = newTextlength;
-			if (current>longest) longest = current;
+		}
+		if (partsCount>1) {
+			longest += (partsCount-1);
+		}
+		
 			addedTexts.setText("Наиболее длинная комбинация, символов: " + longest);
 			
 			if (longest > this.LIMIT){
 				addedTexts.setFill(Color.RED);
-			}
-			else{
-				addedTexts.setFill(Color.BLACK);
-			}
-			
-			if (newTextlength>this.LIMIT){
-			
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error!");
 				alert.setHeaderText("Ошибка добавления");
-				alert.setContentText("Текст <" + textFields.get(i).getText() + "> в некоторых комбинациях приводит к превышению ограничения в " + this.LIMIT + " символов.");
+				alert.setContentText("Некоторые комбинации приводит к превышению ограничения в " + this.LIMIT + " символов.");
 				alert.showAndWait();
-				textFields.get(i).setStyle("-fx-border-color: red ; -fx-border-width: 2px ;");
 				
-			return false;
+			 return false;
 			}
-			else {
-				textFields.get(i).setStyle("-fx-border-color: black ; -fx-border-width: 0px ;");
+			else{
+				addedTexts.setFill(Color.BLACK);
+			    return true;
 			}
-		}
-		return true;
+		  
 	}
 	
+/*	
 	private int getCurrentLength(){
 		StringJoiner field = new StringJoiner(" ");
 		for (TextArea tf:textFields)
@@ -350,6 +341,7 @@ public class DescriptionEditorController implements Initializable {
 		
 		return field.toString().length();
 	}
+	*/
 	
 	private int longestString(List<String> list){
 		if (list.isEmpty()) return 0;

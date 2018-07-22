@@ -51,8 +51,11 @@ SpinnerValueFactory<Integer> valueFactory;
 @FXML
 private Button splitBtn;
 
-Main app;
+@FXML
+private TextArea namesArea;
 
+Main app;
+String[] folderNames;
 
 @Override
 public void initialize(URL arg0, ResourceBundle arg1) {
@@ -85,6 +88,7 @@ private void selectPath(){
 private void split(){
 	
 	File folder = new File(path.getText());
+	readFoldersNames();
 	if (!folder.exists()) return;
 	
 	File[] filearray = folder.listFiles(new FileFilter(){
@@ -154,7 +158,7 @@ private int SplitRandom(File folder, List<File> files) throws IOException{
 		
 		File file = files.remove(new Random().nextInt(files.size()));
 		
-		File destFolder =  new File(folder.getAbsolutePath() + File.separator + i);
+		File destFolder =  new File(folder.getAbsolutePath() + File.separator + this.getFolderNameByIndex(i));
 		if (!destFolder.exists()) destFolder.mkdir();
 	 	String dest = destFolder.getAbsolutePath() + File.separator + file.getName();
     	moveFileRenameTo(file, dest);
@@ -169,7 +173,7 @@ private int SplitOrder(File folder, List<File> files) throws IOException{
 	for (File file:files){
 		i++;
 		if (i>valueFactory.getValue()) i=1;
-		File destFolder =  new File(folder.getAbsolutePath() + File.separator + i);
+		File destFolder =  new File(folder.getAbsolutePath() + File.separator + this.getFolderNameByIndex(i));
 		if (!destFolder.exists()) destFolder.mkdir();
 	 	String dest = destFolder.getAbsolutePath() + File.separator + file.getName();
     	moveFileRenameTo(file, dest);
@@ -193,7 +197,7 @@ private int SplitRandomPair(File folder, List<File> files) throws IOException{
 		if (of.equals(Optional.empty())) continue; 
 		File eps = of.get();
 		
-		File destFolder =  new File(folder.getAbsolutePath() + File.separator + i);
+		File destFolder =  new File(folder.getAbsolutePath() + File.separator + this.getFolderNameByIndex(i));
 		if (!destFolder.exists()) destFolder.mkdir();
 	 	String destjpg = destFolder.getAbsolutePath() + File.separator + jpg.getName();
 	 	String desteps = destFolder.getAbsolutePath() + File.separator + eps.getName();
@@ -214,7 +218,7 @@ private int SplitOrderPair(File folder, List<File> files) throws IOException{
 	for (File jpg:jpgs){
 		i++;
 		if (i>valueFactory.getValue()) i=1;
-		File destFolder =  new File(folder.getAbsolutePath() + File.separator + i);
+		File destFolder =  new File(folder.getAbsolutePath() + File.separator + this.getFolderNameByIndex(i));
 		
 		Optional<File> of = files.stream().filter(f -> f.getName().toLowerCase().equals(
     			nameWithoutExtension(jpg.getName()).toLowerCase() + ".eps")).findFirst();
@@ -280,6 +284,18 @@ public void setMainApp(Main app) {
 		this.app = app;
 	}
 
+private void readFoldersNames(){
+	List<String> names = new ArrayList<String>();
+	String data = namesArea.getText().trim();
+	this.folderNames = data.split("[\\r\\n]+");
+}
 
+private String getFolderNameByIndex(int index){
+	int i = index-1;
+	if (this.folderNames == null || this.folderNames.length < index || this.folderNames[i].trim().isEmpty())
+		 return String.valueOf(index);
+	else
+		return this.folderNames[i].trim();
+}
 	
 }

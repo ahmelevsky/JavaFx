@@ -22,7 +22,7 @@ public class Utils {
 	private static List<String> ignoreTemplate = new ArrayList<String>(){{
 		add("\\._.*");
 	}};
-	private static final int limit = 100;
+	private static final int limit = 1000000;
 	
 	
 	public static void hackTooltipStartTiming(Tooltip tooltip) {

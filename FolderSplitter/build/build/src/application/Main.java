@@ -18,14 +18,12 @@ import javafx.scene.layout.VBox;
 public class Main extends Application {
 	private MainController mainController;
 	private Stage mainStage;
-	private Stage currentStage;
 	
 	
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		
 		mainStage = primaryStage;
-		currentStage = mainStage;
 		mainController = (MainController) organizeStage(mainStage, "MainForm.fxml", MainController.class);
 		mainController.setMainApp(this);
 		mainStage.setResizable(false);
