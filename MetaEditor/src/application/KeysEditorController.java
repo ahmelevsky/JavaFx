@@ -3,11 +3,6 @@ package application;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,49 +18,14 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.DirectoryChooser;
 
-import org.apache.commons.imaging.ImageReadException;
-import org.apache.commons.imaging.ImageWriteException;
-import org.apache.commons.imaging.common.bytesource.ByteSource;
-import org.apache.commons.imaging.formats.jpeg.iptc.JpegIptcRewriter;
-import org.apache.commons.imaging.formats.jpeg.iptc.PhotoshopApp13Data;
 import org.apache.commons.lang3.StringUtils;
-
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.imaging.ImageReadException;
-import org.apache.commons.imaging.ImageWriteException;
-import org.apache.commons.imaging.ImagingConstants;
-import org.apache.commons.imaging.common.bytesource.ByteSource;
-import org.apache.commons.imaging.common.bytesource.ByteSourceFile;
-import org.apache.commons.imaging.formats.jpeg.JpegImageParser;
-import org.apache.commons.imaging.formats.jpeg.JpegPhotoshopMetadata;
-import org.apache.commons.imaging.formats.jpeg.iptc.IptcBlock;
-import org.apache.commons.imaging.formats.jpeg.iptc.IptcRecord;
-import org.apache.commons.imaging.formats.jpeg.iptc.IptcTypes;
-import org.apache.commons.imaging.formats.jpeg.iptc.JpegIptcRewriter;
-import org.apache.commons.imaging.formats.jpeg.iptc.PhotoshopApp13Data;
 
 import com.sun.javafx.scene.control.behavior.TextAreaBehavior;
 import com.sun.javafx.scene.control.skin.TextAreaSkin;
@@ -325,12 +285,12 @@ public List<String> generateKeywordsForMetadata(){
 	}
 	public boolean checkDataIsCorrect(){
 		return 
-		MetadataWriter.isCorrectKey(this.obligatoryKeys) &&
-		MetadataWriter.isCorrectKey(this.formKeys) &&
-		MetadataWriter.isCorrectKey(this.backgroundKeys) &&
-		MetadataWriter.isCorrectKey(this.kindKeys) &&
-		MetadataWriter.isCorrectKey(this.lowKeys) &&
-		MetadataWriter.isCorrectKey(this.highKeys);
+		app.isCorrectKey(this.obligatoryKeys) &&
+		app.isCorrectKey(this.formKeys) &&
+		app.isCorrectKey(this.backgroundKeys) &&
+		app.isCorrectKey(this.kindKeys) &&
+		app.isCorrectKey(this.lowKeys) &&
+		app.isCorrectKey(this.highKeys);
 	}
 	
 	

@@ -1,0 +1,18 @@
+_____Для MacOS_____
+
+ - Сначала установите ExifTool
+   с официального сайта разработчика: https://www.sno.phy.queensu.ca/~phil/exiftool/
+   или прилагающийся ExifTool-10.79.dmg
+ - Распакуйте MetaEditor.app.zip
+ - Запускайте MetaEditor.app
+ Если ничего не запустилось - убедитесь что у вас установлена java. Установите отсюда https://java.com/ или отсюда http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html
+ 
+ 
+ 
+_____Для Windows____
+
+ - Если у вас установлена java, используйте легкий вариант из папки MetaEditor.zip
+ - Если java не установлена и вы не хотите устанавливать, попробуйте вариант MetaEditorNoJavaNeeded.zip (тяжелее, java внутри).
+ - Распаковывайте архив и запускайте MetaEditor\MetaEditor.exe
+ (В отличие от MacOS exiftool не надо устанавливать, он лежит в виде отдельного exe файла в папке libs.)
+  

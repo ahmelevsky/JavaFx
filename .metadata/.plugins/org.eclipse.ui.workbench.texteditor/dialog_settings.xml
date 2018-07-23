@@ -6,20 +6,20 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="preview" key="selection"/>
+		<item value="META" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="Meta"/>
+			<item value="MetadataWriter"/>
+			<item value="TargetEditor"/>
+			<item value="allImagesCount"/>
+			<item value="png"/>
 			<item value="preview"/>
 			<item value="currentFolder"/>
 			<item value="Utils"/>
-			<item value="isTar"/>
-			<item value="isT"/>
-			<item value="is"/>
-			<item value="selector1"/>
-			<item value="app"/>
 		</list>
 		<list key="replacehistory">
 			<item value="MetaEditor"/>

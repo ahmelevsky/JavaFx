@@ -24,8 +24,6 @@ import javafx.stage.DirectoryChooser;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import org.apache.commons.imaging.ImageReadException;
-import org.apache.commons.imaging.ImageWriteException;
 import org.xml.sax.SAXException;
 
 public class MainFrameController implements Initializable{
@@ -45,7 +43,7 @@ public class MainFrameController implements Initializable{
 	@FXML
 	private ProgressBar progress;
 	
-	private Task<Integer> task;
+	private Task<String> task;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -99,43 +97,34 @@ public class MainFrameController implements Initializable{
 		}
 		
 		
-		 task = new Task<Integer>() {
-			    @Override public Integer call() throws ImageReadException, ImageWriteException, IOException, SAXException, ParserConfigurationException, TransformerException {
+		 task = new Task<String>() {
+			    @Override public String call() throws IOException {
+			    	int success = 0;
+			    	int failures = 0;
 			    	int done = 0;
-			       try{ 
-			    	for (File image:images){
-						//MetadataWriter.writeMetadataToFile (image, app.keysEditorController.generateKeywordsForMetadata(), app.titleEditorController.getTitleForMetadata(), app.descriptionEditorController.generateRandomDescriptionForMetadata());
-						ExiftoolRunner.writeMetadataToFile (image, app.keysEditorController.generateKeywordsForMetadata(), app.titleEditorController.getTitleForMetadata(), app.descriptionEditorController.generateRandomDescriptionForMetadata());
-						done++;
-						updateProgress(done, images.length);
-						}
-						
-					/*	} catch (ImageReadException e) {
-							app.showAlert("Невозможно прочитать файл, ошибка: " + e.getMessage());
-							throw e;
-						} catch (ImageWriteException e) {
-							app.showAlert("Невозможно записать файл, ошибка: " + e.getMessage());
-							throw e;*/
-						} catch (IOException e) {
-							app.showAlert(e.getMessage());
-							throw e;
-						/*} catch (SAXException e) {
-							app.showAlert(e.getMessage());
-							throw e;
-						} catch (ParserConfigurationException e) {
-							app.showAlert(e.getMessage());
-							throw e;
-						} catch (TransformerException e) {
-							app.showAlert(e.getMessage());
-							throw e;*/
-						}
-			        return done;
+			      
+			    	 for (File image:images){
+			    		 try{ 
+			    			 ExiftoolRunner.writeMetadataToFile (image, app.keysEditorController.generateKeywordsForMetadata(), app.titleEditorController.getTitleForMetadata(), app.descriptionEditorController.generateRandomDescriptionForMetadata());
+			    			 success++;
+					       } catch (InterruptedException |IOException e) {
+					    	   app.log("ERROR: failed writing metadata to " + image.getAbsolutePath() + ", exception: " + e.getMessage());
+		   	        	 	   failures++;
+					       } finally {
+					    	   updateProgress(++done, images.length);
+					       }
+			    	 }
+			    	 String result = (failures==0)  ? 	("ГОТОВО! Записаны метаданные для файлов: " + success) : ("ПРЕДУПРЕЖДЕНИЕ! Записаны метаданные для файлов: " + success + ", неуспешно для файлов: " + failures);
+					 return result;
 			    }
 			};
 			
 			task.setOnFailed(e -> {
 				writeBtn.setDisable(false);
 				stopProgress();
+				app.log(task.getException().getMessage());
+				for (StackTraceElement ste:task.getException().getStackTrace())
+					app.log(ste.getClassName() + "." + ste.getMethodName() + "("+ste.getLineNumber()+")");
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Ошибка");
 				alert.setHeaderText("Ошибка");
@@ -158,7 +147,7 @@ public class MainFrameController implements Initializable{
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("Done!");
 				alert.setHeaderText("Done!");
-				alert.setContentText("Метаданные успешно записаны, количество файлов: " + task.getValue());
+				alert.setContentText(task.getValue());
 				alert.showAndWait();
 			});
 			

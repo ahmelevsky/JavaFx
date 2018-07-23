@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="MetaEditor.jnlp">
+  <information>
+    <title>MetaEditor</title>
+    <vendor>AH</vendor>
+    <description>MetaEditor</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="MetaEditor.jar" size="31123" download="eager" />
+    <jar href="libs\commons-lang3-3.5.jar" size="479881" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="0" height="0" main-class="application.Main"  name="MetaEditor" />
+  <update check="background"/>
+</jnlp>

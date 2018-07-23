@@ -32,7 +32,7 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		MetadataWriter.app = this;
+		Utils.app = this;
 		ExiftoolRunner.app = this;
 		mainStage = primaryStage;
 		currentStage = mainStage;
@@ -42,8 +42,11 @@ public class Main extends Application {
 		keysEditorController = (KeysEditorController) addTab("Ключи", "KeysEditorWindow.fxml", KeysEditorController.class);
 		descriptionEditorController = (DescriptionEditorController) addTab("Описания", "DescriptionEditorWindow.fxml", DescriptionEditorController.class);
 		titleEditorController = (TitleEditorController) addTab("Заголовки", "TitleEditorWindow.fxml", TitleEditorController.class);
+		descriptionEditorController.app = this;
+		titleEditorController.app = this;
+		keysEditorController.app = this;
 		logController = (LogController) addTab("Лог", "LogWindow.fxml", LogController.class);
-		mainStage.setTitle("Meta Editor v2.0");
+		mainStage.setTitle("Meta Editor v3.0");
 		mainStage.getIcons().add(new Image("file:resources/icon.png"));
 		mainStage.show();
 	}
@@ -110,4 +113,8 @@ public class Main extends Application {
              }});
 	}
 	
+	 public boolean isCorrectKey(String text){
+		  if (text == null) return true;
+		 return text.trim().isEmpty() || text.matches("\\A\\p{ASCII}*\\z");//|| text.replaceAll("\\s+","").matches("\\w+");
+	  }
 }

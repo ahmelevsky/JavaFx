@@ -1,0 +1,60 @@
+
+
+Version:	3.10
+CmdLine:	C:\JavaFX\workspace\MetaEditor\build\dist\MetaEditor.exe --l4j-debug
+WOW64:		yes
+Working dir:	C:\JavaFX\workspace\MetaEditor\build\dist\.
+Java min ver:	1.7.0
+Java max ver:	1.9.0
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8
+Check launcher:	C:\Program Files\Java\jre1.8.0_181\bin\javaw.exe (OK)
+Match:		1.8
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8.0_181
+Check launcher:	C:\Program Files\Java\jre1.8.0_181\bin\javaw.exe (OK)
+Match:		1.8.0_181
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_73
+Ignore:		1.8.0_073
+64-bit search:	SOFTWARE\JavaSoft\JRE...
+64-bit search:	SOFTWARE\JavaSoft\JDK...
+Runtime used:	1.8.0_181 (64-bit)
+Main class:	application.Main
+Add classpath:	MetaEditor.jar
+Add classpath:	libs\commons-lang3-3.5.jar
+Launcher:	C:\Program Files\Java\jre1.8.0_181\bin\javaw.exe
+Launcher args:	-classpath "C:\JavaFX\workspace\MetaEditor\build\dist\MetaEditor.exe;MetaEditor.jar;libs\commons-lang3-3.5.jar" application.Main
+Args length:	128/32768 chars
+Exit code:	0
+
+
+Version:	3.10
+CmdLine:	C:\JavaFX\workspace\MetaEditor\build\dist\MetaEditor.exe --l4j-debug
+WOW64:		yes
+Working dir:	C:\JavaFX\workspace\MetaEditor\build\dist\.
+Java min ver:	1.7.0
+Java max ver:	1.9.0
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8
+Check launcher:	C:\Program Files\Java\jre1.8.0_181\bin\javaw.exe (OK)
+Match:		1.8
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8.0_181
+Check launcher:	C:\Program Files\Java\jre1.8.0_181\bin\javaw.exe (OK)
+Match:		1.8.0_181
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_73
+Ignore:		1.8.0_073
+64-bit search:	SOFTWARE\JavaSoft\JRE...
+64-bit search:	SOFTWARE\JavaSoft\JDK...
+Runtime used:	1.8.0_181 (64-bit)
+Main class:	application.Main
+Add classpath:	MetaEditor.jar
+Add classpath:	libs\commons-lang3-3.5.jar
+Launcher:	C:\Program Files\Java\jre1.8.0_181\bin\javaw.exe
+Launcher args:	-classpath "C:\JavaFX\workspace\MetaEditor\build\dist\MetaEditor.exe;MetaEditor.jar;libs\commons-lang3-3.5.jar" application.Main
+Args length:	128/32768 chars
+Exit code:	0

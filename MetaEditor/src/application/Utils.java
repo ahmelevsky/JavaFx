@@ -12,6 +12,8 @@ import javafx.scene.layout.Priority;
 
 public class Utils {
 
+	public static Main app;
+	
 	public static void addDeleteButtonToCombobox(ComboBox<String> cb){
 		  cb.setCellFactory(lv ->
           new ListCell<String>() {
@@ -35,12 +37,12 @@ public class Utils {
                           {
                               // Since the ListView reuses cells, we need to get the item first, before making changes.  
                               String item = getItem();
-                              System.out.println("Clicked cross on " + item);
                               if (isSelected()) {
                                   // Not entirely sure if this is needed. 
                                   cb.getSelectionModel().select(null);
                               }
                               cb.getItems().remove(item);
+                              app.descriptionEditorController.checkLimit(false);
                           }
                   );
                   // Arrange controls in a HBox, and set display to graphic only (the text is included in the graphic in this implementation). 

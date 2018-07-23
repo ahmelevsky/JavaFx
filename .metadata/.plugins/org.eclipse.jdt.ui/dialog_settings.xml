@@ -88,6 +88,8 @@
 			<item value="C:\JavaFX\workspace\IDLastMicro\build.xml"/>
 		</list>
 	</section>
+	<section name="BreadcrumbItemDropDown">
+	</section>
 	<section name="OverrideMethodDialog">
 		<item value="true" key="showtypes"/>
 	</section>
@@ -109,7 +111,7 @@
 	</section>
 	<section name="completion_proposal_size">
 		<item value="555" key="size.y"/>
-		<item value="778" key="size.x"/>
+		<item value="779" key="size.x"/>
 		<item value="277" key="contextSelector.size.y"/>
 		<item value="337" key="contextSelector.size.x"/>
 	</section>

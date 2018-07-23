@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 public class ExiftoolRunner {
-	static String exifpath = "lib/exiftool.exe";
+	static String exifpath = "libs/exiftool.exe";
 	public static Main app;
 	static boolean isWindows;
 	static boolean isLinux;
@@ -21,7 +21,7 @@ public class ExiftoolRunner {
 	}
 
 	public static void writeMetadataToFile(File toFile, List<String> keys,
-			String title, String description) throws IOException {
+			String title, String description) throws InterruptedException, IOException {
 
 		List<String> sb = new ArrayList<String>();
 		
@@ -56,13 +56,16 @@ public class ExiftoolRunner {
 		
 		try {
 			 app.log("Exiftool exit code: " +runCommand(sb)); 
+			 app.log("Title: " + title);
+			 app.log("Decription: " + description);
+			 app.log("Keys: " + StringUtils.join(keys, ", "));
 		} catch (InterruptedException | IOException e) {
 			app.log("Exiftool process interrupted on file "
 					+ toFile.getAbsolutePath());
 			app.log(e.getMessage());
+			throw e;
 		}
-		app.log("Decription: " + description);
-		app.log("Keys: " + StringUtils.join(keys, ", "));
+		
 
 	}
 
