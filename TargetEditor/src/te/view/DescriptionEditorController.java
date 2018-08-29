@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,6 +16,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -24,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import te.Main;
 import te.model.Target;
+import te.model.Variable;
 
 import com.sun.javafx.scene.control.behavior.TextAreaBehavior;
 import com.sun.javafx.scene.control.skin.TextAreaSkin;
@@ -91,11 +95,6 @@ public class DescriptionEditorController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		selector1.setItems(options1);
-		selector2.setItems(options2);
-		selector3.setItems(options3);
-		selector4.setItems(options4);
-		selector5.setItems(options5);
 		countLabel.setText("");
 		
 		textFields.add(text1);
@@ -117,38 +116,59 @@ public class DescriptionEditorController implements Initializable {
 		
 		for (int i=0;i<selectors.size();i++) {
 			final int final_i = i;
+			selectors.get(i).setItems(options.get(i));
+			options.get(i).add("<текст>");
+			selectors.get(i).getSelectionModel().select("<текст>");
 			selectors.get(i).valueProperty().addListener((observable, oldValue, newValue) -> {
 				if (newValue==null || newValue.isEmpty() || newValue.equals("<текст>")) 
 					textFields.get(final_i).setEditable(true);
 				else 
 					textFields.get(final_i).setEditable(false);
-				String maxLengthDescription = getMaxLengthDescription();
-				countLabel.setText("Символов: " + maxLengthDescription.length());
+				updateForm();
 			});
 		}
 		
 		for (TextArea tf:textFields) {
 			tf.textProperty().addListener((observable, oldValue, newValue) -> {
-				String maxLengthDescription = getMaxLengthDescription();
-				countLabel.setText("Символов: " + maxLengthDescription.length());
+				updateForm();
 			});
 			denyTab(tf);
 		}
 	}
+	
+	public void updateForm(){
+		String maxLengthDescription = getMaxLengthDescription();
+		countLabel.setText("Символов: " + maxLengthDescription.length());
+	}
 
 	public void updateLists(){
-		for (ObservableList<String> ol : options){
-			fillListWithStartValues(ol);
-			ol.addAll(app.variables.keySet());
+		for (int i=0; i<selectors.size();i++){
+			
+			SingleSelectionModel<String> selected = selectors.get(i).selectionModelProperty().getValue();
+			String selectedValue = null;
+			if (selected!=null && !selected.isEmpty())
+				selectedValue = selected.getSelectedItem();
+			ObservableList<String> ol = options.get(i);
+			ol.clear();
+			ol.add("<текст>");
+			if (!app.getTargetsData().isEmpty()){
+				ol.add("Таргет");
+				ol.add("Таргет1");
+				ol.add("Таргет2");
+			}
+			ol.addAll(app.variables.stream().map(Variable::getName)
+		              .collect(Collectors.toList()));
+			if (selectedValue!=null){
+				if	(ol.contains(selectedValue))
+					selectors.get(i).getSelectionModel().select(selectedValue);
+				else {
+					selectors.get(i).getSelectionModel().select("<текст>");
+					textFields.get(i).setText("");
+				}
+			}
 		}
 	}
 	
-	private void fillListWithStartValues(List<String> list){
-		list.add("<текст>");
-		list.add("Таргет");
-		list.add("Таргет1");
-		list.add("Таргет2");
-	}
 	
 	
 	public String getMaxLengthDescription(){
@@ -156,38 +176,46 @@ public class DescriptionEditorController implements Initializable {
 		List<String> result = new ArrayList<String>();
 		for (int i=0; i<selectors.size();i++){
 			String d =  selectors.get(i).getSelectionModel().getSelectedItem();
-			Target maxTarget = app.getTargetWithMaxLength();
+			//Target maxTarget = app.getTargetWithMaxLength();
 			if (d == null || d.isEmpty() || d.equals("<текст>")){
 			    String 	t = textFields.get(i).getText().trim();
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
 			else if (d.equals("Таргет")) {
-				String t = maxTarget.getTarget();
+				//String t = maxTarget.getTarget();
+				List<String> res = app.getTargetsData().stream().map(Target::getTarget).collect(Collectors.toList());
+				String t = Collections.max(res, Comparator.comparing(s -> s.length()));
 				textFields.get(i).setText(t);
 				if (!t.isEmpty())
 				    	result.add(t);
 				    
 			}
 			else if (d.equals("Таргет1")) {
-				String t = maxTarget.getTarget1();
+				//String t = maxTarget.getTarget1();
+				List<String> res = app.getTargetsData().stream().map(Target::getTarget1).collect(Collectors.toList());
+				String t = Collections.max(res, Comparator.comparing(s -> s.length()));
 				textFields.get(i).setText(t);
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
 			else if (d.equals("Таргет2")){
-				String t = maxTarget.getTarget2();
+				//String t = maxTarget.getTarget2();
+				List<String> res = app.getTargetsData().stream().map(Target::getTarget2).collect(Collectors.toList());
+				String t = Collections.max(res, Comparator.comparing(s -> s.length()));
 				textFields.get(i).setText(t);
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
-			else {
-				List<String> list = app.variables.get(d);
-				if (list!=null && !list.isEmpty()){
-					String t = Collections.max(list, Comparator.comparing(s -> s.length()));
-					textFields.get(i).setText(t);
-				    if (!t.isEmpty())
-				    	result.add(t);
+			else if (app.variables.stream().anyMatch( v -> d.equals(v.getName()))){
+				Optional<Variable> vo = app.variables.stream().filter(v -> d.equals(v.getName())).findFirst();
+				if (vo !=null && vo.isPresent()) {
+					String variableValue = "";
+					if (!vo.get().getValues().isEmpty())
+						variableValue = Collections.max(vo.get().getValues(), Comparator.comparing(s -> s.length()));
+					textFields.get(i).setText(variableValue);
+				    if (!variableValue.isEmpty())
+				    	result.add(variableValue);
 				}
 			}
 		}
@@ -208,35 +236,37 @@ public class DescriptionEditorController implements Initializable {
 	public String generateRandomDescription(){
 		List<String> result = new ArrayList<String>();
 		for (int i=0; i<data.size();i++){
-			if (data.get(i) == null || data.get(i).equals("<текст>")){
+			final String dataValue = data.get(i);
+			if (dataValue == null || dataValue.equals("<текст>")){
 			    String 	t = textFieldsStored.get(i);
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
-			else if (data.get(i).equals("Таргет")){
+			else if (dataValue.equals("Таргет")){
 				String t = app.mainFrameController.currentTarget.getTarget();
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
 				
-			else if (data.get(i).equals("Таргет1")){
+			else if (dataValue.equals("Таргет1")){
 				String t = app.mainFrameController.currentTarget.getTarget1();
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
-			else if (data.get(i).equals("Таргет2")){
+			else if (dataValue.equals("Таргет2")){
 				String t = app.mainFrameController.currentTarget.getTarget2();
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
-			else {
-				List<String> list = app.variables.get(data.get(i));
-				if (list!=null && !list.isEmpty()){
-					String t = list.get(ThreadLocalRandom.current().nextInt(list.size()));
-				    if (!t.isEmpty())
-				    	result.add(t);
-			}
-		}
+			
+   		    else if (app.variables.stream().anyMatch( v -> dataValue.equals(v.getName()))){
+					Optional<Variable> vo = app.variables.stream().filter(v -> dataValue.equals(v.getName())).findFirst();
+					if (vo !=null && vo.isPresent()) {
+						String variableValue = vo.get().getRandomValue();
+					    if (!variableValue.isEmpty())
+					    	result.add(variableValue);
+					}
+				}
 		}
 		this.currentDescription = StringUtils.join(result, " ");
 		return this.currentDescription;
@@ -301,11 +331,15 @@ public class DescriptionEditorController implements Initializable {
 				app.log("Недопустимые символы в одном из полей Таргет2");
 				result = false;
 			}
-		
-		for (String b:data.stream().filter(a->app.variables.keySet().contains(a)).toArray(String[]::new)){
-			if (!app.variables.get(b).stream().allMatch(t->app.isCorrectKey(t))){
-				app.log("Недопустимые символы в значениях Переменной " + b);
-				result = false;
+		for (String d:data){
+		if (app.variables.stream().anyMatch( v -> d.equals(v.getName()))){
+			Optional<Variable> vo = app.variables.stream().filter(v -> d.equals(v.getName())).findFirst();
+		    if (vo !=null && vo.isPresent()) {
+		    	if(!vo.get().getValues().stream().allMatch(v->app.isCorrectKey(v))) {
+		    		app.log("Недопустимые символы в одном значений переменной " + vo.get().getName());
+		    		result = false;
+		    	}
+		   }
 		}
 		}
 		return result;

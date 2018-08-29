@@ -23,7 +23,7 @@
       <TextField fx:id="lowCount" layoutX="694.0" layoutY="425.0" prefHeight="31.0" prefWidth="94.0" />
       <Button fx:id="clearBtn" layoutX="828.0" layoutY="424.0" mnemonicParsing="false" onMouseClicked="#clearForms" prefHeight="60.0" prefWidth="152.0" text="ОЧИСТИТЬ" />
       <Label fx:id="countLabel" layoutX="22.0" layoutY="463.0" prefHeight="21.0" prefWidth="202.0" />
-      <CheckBox fx:id="isTarget" layoutX="26.0" layoutY="232.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="277.0" text="Использовать Таргет (имя папки)" />
+      <CheckBox fx:id="isTarget" layoutX="26.0" layoutY="232.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="277.0" text="Добавить Таргет (имя папки)" />
       <TextArea fx:id="preview" editable="false" layoutX="26.0" layoutY="263.0" opacity="0.72" prefHeight="193.0" prefWidth="287.0" wrapText="true" />
    </children>
 </AnchorPane>

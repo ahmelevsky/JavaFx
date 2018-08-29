@@ -2,6 +2,7 @@ package te;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import te.model.Target;
+import te.model.Variable;
 import te.util.ExiftoolRunner;
 import te.view.DescriptionEditorController;
 import te.view.KeysEditorController;
@@ -28,6 +30,8 @@ import te.view.LogController;
 import te.view.MainFrameController;
 import te.view.TargetsWindowController;
 import te.view.TitleEditorController;
+import te.view.VariableLayoutController;
+import te.view.VariablesEditorContainerController;
 
 
 public class Main extends Application {
@@ -36,13 +40,15 @@ public class Main extends Application {
 	public DescriptionEditorController descriptionEditorController;
 	public MainFrameController mainFrameController;
 	public TitleEditorController titleEditorController;
+	public VariablesEditorContainerController variableEditorContainerController;
 	public LogController logController;
 	private Stage mainStage;
 	private Stage currentStage;
 	private VBox rootLayout;
 	private ObservableList<Target> targetsData = FXCollections.observableArrayList();
-	public Map<String, List<String>> variables = new HashMap<String, List<String>>();
-	
+	//public Map<String, List<String>> variables = new HashMap<String, List<String>>();
+	public List<Variable> variables = new ArrayList<Variable>();
+	public List<VariableLayoutController> variableControllers = new ArrayList<VariableLayoutController>();
 	
 	@Override
 	public void start(Stage primaryStage) throws IOException {
@@ -52,6 +58,8 @@ public class Main extends Application {
 		mainFrameController = organizeStage("view/MainFrameWindow.fxml");
 		mainFrameController.app = this;
 		mainStage.setResizable(false);
+		variableEditorContainerController = (VariablesEditorContainerController) addTab("Переменные", "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
+		variableEditorContainerController.app = this;
 		targetsController = (TargetsWindowController) addTab("Таргеты", "view/TargetsWindow.fxml", TargetsWindowController.class);
 		targetsController.setMainApp(this);
 		keysEditorController = (KeysEditorController) addTab("Ключи", "view/KeysEditorWindow.fxml", KeysEditorController.class);

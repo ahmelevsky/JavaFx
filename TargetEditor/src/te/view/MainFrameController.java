@@ -7,11 +7,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.StringJoiner;
 
+import java.util.stream.Collectors;
+
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,13 +29,17 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.DirectoryChooser;
 
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+
 import org.xml.sax.SAXException;
+
 
 import te.Main;
 import te.model.Target;
+import te.model.Variable;
 import te.util.ExiftoolRunner;
 
 public class MainFrameController implements Initializable{
@@ -55,7 +63,35 @@ public class MainFrameController implements Initializable{
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+		tabs.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
+			if (oldTab!=null && oldTab.getText().equals("Переменные")){
+				for (int i=app.variableControllers.size(); i>0; i--) {
+					Variable v = app.variableControllers.get(i-1).getVariable();
+					if ( v == null || v.getName().isEmpty())
+						   app.variableEditorContainerController.removeVariableLayout(app.variableControllers.get(i-1));
+				}
+				if (!app.variables.stream().map(Variable::getName)
+			              .collect(Collectors.toList()).stream().allMatch(new HashSet<>()::add)){
+					tabs.getSelectionModel().select(oldTab);
+					Alert alert = new Alert(AlertType.WARNING);
+					alert.setTitle("ОШИБКА!");
+					alert.setContentText("Имена переменных не должны повторяться, исправьте прежде чем продолжить.");
+					alert.showAndWait();
+				}
+			}
+			switch (newTab.getText()) {
+			case "Описания":
+				app.descriptionEditorController.updateLists();
+				//app.descriptionEditorController.updateForm();
+				break;
+			case "Заголовки":
+				app.titleEditorController.updateLists();
+				app.titleEditorController.updateCounter();
+				break;
+			default:
+				break;
+			} 
+	    });
 			
 	}
 	
@@ -71,9 +107,29 @@ public class MainFrameController implements Initializable{
 			app.showAlert("Папка не выбрана или не существует");
 			return;
 		}
+		 int allImagesCounter = 0;
+		 File[] directoriesToWalk = rootFolder.listFiles(new FilenameFilter() {
+	           @Override
+	          public boolean accept(File current, String name) {
+	          return new File(current, name).isDirectory();
+	          }
+	       });
+		 for (File d:directoriesToWalk){
+			 allImagesCounter = allImagesCounter + d.listFiles(new FileFilter() {
+              public boolean accept(File f) {
+              	return f.isFile() && f.getName().toLowerCase().endsWith(".jpg");
+              }
+ 	        }).length;
+		 }
+		 
+		 if (allImagesCounter==0){
+				app.showAlert("В выбранной корневой папке нет папок с файлами изображений jpg");
+				return;
+			}
+		 
+	   	 final long allImagesCount = allImagesCounter;
 		
-		long allImagesCount = Files.walk(Paths.get(rootFolder.getPath())).parallel()
-				.filter(p -> p.toFile().getName().endsWith(".jpg")).count();
+		
 		
 		app.keysEditorController.saveKeywordsSource();
 		app.descriptionEditorController.saveDescriptionsSource();
@@ -81,14 +137,14 @@ public class MainFrameController implements Initializable{
 		
 		StringJoiner validationErrors = new StringJoiner("\n");
 		if (!app.keysEditorController.checkDataIsCorrect())
-			validationErrors.add("Ключи содержат недопустимые символы.");
+			validationErrors.add("Unallowed symbols are in the keywords.");
 		if (!app.descriptionEditorController.checkDataIsCorrect())
-			validationErrors.add("Описания содержат недопустимые символы.");
+			validationErrors.add("Unallowed symbols are in the description.");
 		if (!app.titleEditorController.checkDataIsCorrect())
-			validationErrors.add("Заголовок содержит недопустимые символы.");
+			validationErrors.add("Unallowed symbols are in the title.");
        		
 		if (validationErrors.length()>0){ 
-			validationErrors.add("Операция отменена.");
+			validationErrors.add("Operation cancelled.");
 			app.showAlert(validationErrors.toString());
 			return;
 		}
@@ -114,7 +170,7 @@ public class MainFrameController implements Initializable{
 			   	        });
 			
 			   	        if (images.length==0) {
-			   	        	app.log("В заданной папке нет файлов .jpg: " + dir.getAbsolutePath());
+			   	        	app.log("There is no .jpg files in the folder: " + dir.getAbsolutePath());
 			   	        }
 		    	   
 			   	        for (File image:images){
@@ -134,7 +190,7 @@ public class MainFrameController implements Initializable{
 			   	        	}
 			   	            }
 		        }
-			    String result = (failures==0)  ? 	("ГОТОВО! Записаны метаданные для файлов: " + success) : ("ПРЕДУПРЕЖДЕНИЕ! Записаны метаданные для файлов: " + success + ", неуспешно для файлов: " + failures);
+			    String result = (failures==0)  ? 	("DONE! The metadata was written for files number: " + success) : ("WARNING! The metadata was written for files number: " + success + ", failed for files number: " + failures);
 			    return result;
 			   	}
 		 };
@@ -146,9 +202,9 @@ public class MainFrameController implements Initializable{
 				writeBtn.setDisable(false);
 				stopProgress();
 				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Ошибка");
-				alert.setHeaderText("Ошибка");
-				alert.setContentText("Запись метаданных прошла неуспешно. Смотрите ошибку в логе.");
+				alert.setTitle("Error");
+				alert.setHeaderText("Error");
+				alert.setContentText("The metadata write operation failed. See Log for error messages.");
 				alert.showAndWait();
 			});
 			
@@ -156,9 +212,9 @@ public class MainFrameController implements Initializable{
 				writeBtn.setDisable(false);
 				stopProgress();
 				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Отмена");
-				alert.setHeaderText("Отмена");
-				alert.setContentText("Запись метаданных была отменена");
+				alert.setTitle("Cancel");
+				alert.setHeaderText("Cancel");
+				alert.setContentText("The metadata write operation was cancelled");
 				alert.showAndWait();
 			});
 			
@@ -182,7 +238,7 @@ public class MainFrameController implements Initializable{
     private void selectPath(){
 		  DirectoryChooser directoryChooser = new DirectoryChooser(); 
 
-          directoryChooser.setTitle("Выберите корневую папку для батчей");
+          directoryChooser.setTitle("Select root folder for batches");
           File selected = new File(this.folderPath.getText());
           if (selected.exists())
         	  directoryChooser.setInitialDirectory(selected.getParentFile());

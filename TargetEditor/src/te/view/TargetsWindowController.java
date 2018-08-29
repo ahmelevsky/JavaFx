@@ -104,8 +104,6 @@ public class TargetsWindowController implements Initializable {
 		 for (File dir:directories){
 			 app.getTargetsData().add(new Target(dir));
 		 }
-		 app.descriptionEditorController.updateLists();
-		 app.titleEditorController.updateLists();
 	 }
 	
 	  private void setTableEditable() {
