@@ -2,6 +2,8 @@ package te.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -64,5 +66,9 @@ public class Variable {
 	public String getRandomValue(){
 		if (this.values.isEmpty()) return "";
 		return this.values.get(ThreadLocalRandom.current().nextInt(this.values.size()));
+	}
+	
+	public String getMaxValue(){
+		return Collections.max(this.values, Comparator.comparing(s -> s.length()));
 	}
 }

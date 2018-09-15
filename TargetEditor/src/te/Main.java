@@ -16,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Tab;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -24,10 +25,12 @@ import javafx.stage.Stage;
 import te.model.Target;
 import te.model.Variable;
 import te.util.ExiftoolRunner;
+import te.util.SyntaxParser;
 import te.view.DescriptionEditorController;
 import te.view.KeysEditorController;
 import te.view.LogController;
 import te.view.MainFrameController;
+import te.view.TargetEditorController;
 import te.view.TargetsWindowController;
 import te.view.TitleEditorController;
 import te.view.VariableLayoutController;
@@ -53,6 +56,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		ExiftoolRunner.app = this;
+		SyntaxParser.app = this;
 		mainStage = primaryStage;
 		currentStage = mainStage;
 		mainFrameController = organizeStage("view/MainFrameWindow.fxml");
@@ -79,17 +83,21 @@ public class Main extends Application {
 	        loader.setLocation(Main.class.getResource(fxml));
 	        VBox page = (VBox) loader.load();
 	        Scene scene = new Scene(page);
+	        scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 	        this.mainStage.setScene(scene);
 	        this.mainStage.sizeToScene();
 	        return loader.getController();
 	    }
 	 
-	private Initializable addTab(String tabTitle, String fxml, @SuppressWarnings("rawtypes") Class c) throws IOException{
+	private TargetEditorController addTab(String tabTitle, String fxml, @SuppressWarnings("rawtypes") Class c) throws IOException{
 		 FXMLLoader loader = new FXMLLoader();
 	        loader.setLocation(Main.class.getResource(fxml));
 	        AnchorPane page = (AnchorPane) loader.load();
-	        mainFrameController.addTab(tabTitle, page);
-	        return (Initializable) loader.getController();
+	        Tab tab = new Tab(tabTitle, page);
+	        mainFrameController.addTab(tab);
+	        TargetEditorController controller = loader.getController();
+	        controller.tab = tab;
+	        return controller;
 	}
 	 
 	 

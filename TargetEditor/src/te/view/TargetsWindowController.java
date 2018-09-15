@@ -19,7 +19,7 @@ import javafx.util.converter.DefaultStringConverter;
 import te.Main;
 import te.model.Target;
 
-public class TargetsWindowController implements Initializable {
+public class TargetsWindowController extends TargetEditorController implements Initializable {
 
 	 @FXML
 	 private TableView<Target> targetsTable;

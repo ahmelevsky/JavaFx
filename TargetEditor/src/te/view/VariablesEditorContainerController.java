@@ -16,7 +16,7 @@ import javafx.scene.shape.Circle;
 import te.Main;
 import te.model.Variable;
 
-public class VariablesEditorContainerController  implements Initializable {
+public class VariablesEditorContainerController  extends TargetEditorController implements Initializable {
 
 	@FXML
 	private Button addVarBtn;

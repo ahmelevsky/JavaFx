@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.StringJoiner;
-
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
@@ -30,16 +29,20 @@ import javafx.scene.control.TabPane;
 import javafx.stage.DirectoryChooser;
 
 
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+
 
 
 import org.xml.sax.SAXException;
 
 
+
 import te.Main;
 import te.model.Target;
 import te.model.Variable;
+import te.util.DataException;
 import te.util.ExiftoolRunner;
 
 public class MainFrameController implements Initializable{
@@ -86,7 +89,7 @@ public class MainFrameController implements Initializable{
 				break;
 			case "Заголовки":
 				app.titleEditorController.updateLists();
-				app.titleEditorController.updateCounter();
+				//app.titleEditorController.updateCounter();
 				break;
 			default:
 				break;
@@ -95,8 +98,8 @@ public class MainFrameController implements Initializable{
 			
 	}
 	
-	public void addTab(String tabTitle, Node node){
-		tabs.getTabs().add(new Tab(tabTitle, node));
+	public void addTab(Tab tab){
+		tabs.getTabs().add(tab);
 	}
 	
 	
@@ -129,11 +132,14 @@ public class MainFrameController implements Initializable{
 		 
 	   	 final long allImagesCount = allImagesCounter;
 		
-		
-		
-		app.keysEditorController.saveKeywordsSource();
-		app.descriptionEditorController.saveDescriptionsSource();
-		app.titleEditorController.saveTitleSource();
+		try {
+			app.keysEditorController.saveKeywordsSource();
+			app.descriptionEditorController.saveDescriptionsSource();
+			app.titleEditorController.saveTitleSource();
+		} catch (DataException e1) {
+			tabs.getSelectionModel().select(e1.errorTab);
+			return;
+		}
 		
 		StringJoiner validationErrors = new StringJoiner("\n");
 		if (!app.keysEditorController.checkDataIsCorrect())

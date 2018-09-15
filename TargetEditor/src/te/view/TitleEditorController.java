@@ -20,8 +20,12 @@ import javafx.scene.control.TextArea;
 import te.Main;
 import te.model.Target;
 import te.model.Variable;
+import te.util.DataException;
+import te.util.SyntaxParser;
+import te.util.TextAreaException;
+import te.util.TextException;
 
-public class TitleEditorController implements Initializable {
+public class TitleEditorController extends TargetEditorController implements Initializable {
 	public Main app;
 	
 	@FXML
@@ -47,12 +51,24 @@ public class TitleEditorController implements Initializable {
 				titleText.setEditable(true);
 			else 
 				titleText.setEditable(false);
-			updateCounter();
-		});
+			 setError(titleText, false, null);
+			 try {	
+				 updateCounter();
+				 }
+				 catch (TextAreaException e) {
+					setError(e.textArea, true, e.getMessage());
+				 }
+				});
 		titleBox.getSelectionModel().select("<текст>");
 		
 		titleText.textProperty().addListener((observable, oldValue, newValue) -> {
-			countLabel.setText("(" + getWordsCount(newValue) + "/" + newValue.length() + ")");
+			setError(titleText, false, null);
+			 try {	
+				 updateCounter();
+				 }
+				 catch (TextAreaException e) {
+					setError(e.textArea, true, e.getMessage());
+				 }
 		});
 		
 		isTakeFromDescriptionBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -64,9 +80,47 @@ public class TitleEditorController implements Initializable {
 				titleText.setDisable(false);
 				titleBox.setDisable(false);
 			}
-			updateCounter();
+			setError(titleText, false, null);
+			 try {	
+				 updateCounter();
+				 }
+				 catch (TextAreaException e) {
+					setError(e.textArea, true, e.getMessage());
+				 }
 		});
 		
+	}
+	
+	private String parseVariablesInText(TextArea tf, boolean isMax) throws TextAreaException{
+		String result = null;
+		try{
+			result = SyntaxParser.pasteVariables(tf.getText(), isMax, " ");	
+		}
+		catch (TextException e) {
+			throw new TextAreaException (tf, e.getMessage());
+		}
+		return result;
+	}
+
+	private void setError(TextArea tf, boolean setOrUnset, String errorText){
+		 ObservableList<String> styleClass = tf.getStyleClass();
+		 ObservableList<String> styleClassresultText = countLabel.getStyleClass();
+		 if (setOrUnset) {
+			 if (! styleClass.contains("red")) {
+	                styleClass.add("red");
+	            }
+			 if (errorText!=null){
+				 if (! styleClassresultText.contains("redText")) {
+					 styleClassresultText.add("redText");
+		            }
+				 countLabel.setText(errorText);
+			 }
+	        } 
+		 else {
+	            styleClass.removeAll(Collections.singleton("red"));          
+	            styleClassresultText.removeAll(Collections.singleton("redText"));
+	            countLabel.setText("");
+	        }
 	}
 	
 	
@@ -92,13 +146,15 @@ public class TitleEditorController implements Initializable {
 			titleBox.getSelectionModel().select(selectedValue);
 	}
 	
-	public void updateCounter() {
+	public void updateCounter() throws TextAreaException {
 		String title = "";
 		String data = titleBox.getSelectionModel().getSelectedItem();
 		if (isTakeFromDescriptionBox.isSelected()) 
 			title = app.descriptionEditorController.getMaxLengthDescription();
-		else if (data==null || data.equals("<текст>"))
-		    title = titleText.getText().trim();
+		else if (data==null || data.equals("<текст>")){
+			    	title  = parseVariablesInText(titleText, true);
+		}
+			
 		else if (data.equals("Таргет")) {
 			List<String> res = app.getTargetsData().stream().map(Target::getTarget).collect(Collectors.toList());
 			title = Collections.max(res, Comparator.comparing(s -> s.length()));
@@ -124,9 +180,15 @@ public class TitleEditorController implements Initializable {
 		countLabel.setText("(" + getWordsCount(title) + "/" + title.length() + ")");
 	}
 	
-	public void saveTitleSource(){
+	public void saveTitleSource() throws DataException{
 		isTakeFromDescription = isTakeFromDescriptionBox.isSelected();
-		titleTextSetting = titleText.getText();
+		  try {
+			  titleTextSetting  = parseVariablesInText(titleText, false);
+		    }
+		    catch (TextException e) {
+		    	setError(titleText, true, e.getMessage());
+				throw new DataException(this.tab);
+		    }
 		titleBoxSetting = titleBox.getSelectionModel().getSelectedItem()==null ? "" : titleBox.getSelectionModel().getSelectedItem();
 	}
 	

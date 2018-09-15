@@ -3,6 +3,7 @@ package te.view;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -27,11 +28,16 @@ import javafx.scene.input.KeyEvent;
 import org.apache.commons.lang3.StringUtils;
 
 import te.Main;
+import te.util.DataException;
+import te.util.SyntaxParser;
+import te.util.TextAreaException;
+import te.util.TextException;
+
 import com.sun.javafx.scene.control.behavior.TextAreaBehavior;
 import com.sun.javafx.scene.control.skin.TextAreaSkin;
 
 
-public class KeysEditorController implements Initializable {
+public class KeysEditorController extends TargetEditorController implements Initializable {
 
 	@FXML
 	private TextArea obligatoryText;
@@ -95,18 +101,23 @@ public class KeysEditorController implements Initializable {
 			update();
 		});
 		obligatoryText.textProperty().addListener((observable, oldValue, newValue) -> {
+			setError(obligatoryText, false, null);
 			update();
 		});
 		highText.textProperty().addListener((observable, oldValue, newValue) -> {
+			setError(highText, false, null);
 			update();
 		});
 		lowText.textProperty().addListener((observable, oldValue, newValue) -> {
+			setError(lowText, false, null);
 			update();
 		});
 		kindText.textProperty().addListener((observable, oldValue, newValue) -> {
+			setError(kindText, false, null);
 			update();
 		});
 		backgroundText.textProperty().addListener((observable, oldValue, newValue) -> {
+			setError(backgroundText, false, null);
 			update();
 		});
 		highCount.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -132,8 +143,15 @@ public class KeysEditorController implements Initializable {
 	}
 	
 private void update(){
-	preview.setText(StringUtils.join(getKeysFromUI(), ", "));
-	countLabel.setText("Слов: " + getKeysFromUI().size());
+	try{
+		List<String> keys = getKeysFromUI();
+		preview.setText(StringUtils.join(keys, ", "));
+		countLabel.setText("Слов: " + keys.size());
+	}
+	catch (TextAreaException e){
+		setError(e.textArea, true, e.getMessage());
+	}
+	
 }
 
 public List<String> generateKeywordsForMetadata(){
@@ -157,12 +175,42 @@ public List<String> generateKeywordsForMetadata(){
 		return keys;
 	}
 	
-	public void saveKeywordsSource(){
-		obligatoryKeys = obligatoryText.getText();
-		backgroundKeys = backgroundText.getText();
-		kindKeys = kindText.getText();
-		highKeys = highText.getText();
-		lowKeys = lowText.getText();
+	public void saveKeywordsSource() throws DataException{
+		try{
+		obligatoryKeys = parseVariablesInText(obligatoryText, false);
+		}
+		catch (TextAreaException e) {
+			setError(obligatoryText, true, e.getMessage());
+			throw new DataException(this.tab);
+		}
+		try {
+		backgroundKeys = parseVariablesInText(backgroundText, false);
+		}
+		catch (TextAreaException e) {
+			setError(backgroundText, true, e.getMessage());
+			throw new DataException(this.tab);
+		}
+		try {
+		kindKeys = parseVariablesInText(kindText, false);
+		}
+		catch (TextAreaException e) {
+			setError(kindText, true, e.getMessage());
+			throw new DataException(this.tab);
+		}
+		try {
+		highKeys = parseVariablesInText(highText, false);
+		}
+		catch (TextAreaException e) {
+			setError(highText, true, e.getMessage());
+			throw new DataException(this.tab);
+		}
+		try {
+		lowKeys = parseVariablesInText(lowText, false);
+		}
+		catch (TextAreaException e) {
+			setError(lowText, true, e.getMessage());
+			throw new DataException(this.tab);
+		}
 		isT = isTarget.isSelected();
 		hCount = 0;
 		lCount = 0;
@@ -176,12 +224,12 @@ public List<String> generateKeywordsForMetadata(){
 	
 	
 	
-	private List<String> getKeysFromUI(){
+	private List<String> getKeysFromUI() throws TextAreaException{
         List<String> keys = new ArrayList<String>();
 		
-		addToList(obligatoryText.getText(), keys);
-		addToList(backgroundText.getText(), keys);
-		addToList(kindText.getText(), keys);
+		addToList(parseVariablesInText(obligatoryText, false), keys);
+		addToList(parseVariablesInText(backgroundText, false), keys);
+		addToList(parseVariablesInText(kindText, false), keys);
 		
 		if (isTarget.isSelected())
 			addToList(app.getRandomTarget(), keys);
@@ -195,8 +243,8 @@ public List<String> generateKeywordsForMetadata(){
 		catch (Exception e){
 			//return null;
 		}
-		addNRandomToList(highText.getText(), keys, nh);
-		addNRandomToList(lowText.getText(), keys, nl);
+		addNRandomToList(parseVariablesInText(highText,false), keys, nh);
+		addNRandomToList(parseVariablesInText(lowText,false), keys, nl);
 		
 		keys = keys.stream().distinct().collect(Collectors.toList());
 		cutList(keys, 50);
@@ -269,6 +317,41 @@ public List<String> generateKeywordsForMetadata(){
 	    });
 		}
 
+	
+	
+	private String parseVariablesInText(TextArea tf, boolean isMax) throws TextAreaException{
+		String result = null;
+		try{
+			result = SyntaxParser.pasteVariables(tf.getText(), isMax, ", ");	
+		}
+		catch (TextException e) {
+			throw new TextAreaException (tf, e.getMessage());
+		}
+		return result;
+	}
+	
+	private void setError(TextArea tf, boolean setOrUnset, String errorText){
+		 ObservableList<String> styleClass = tf.getStyleClass();
+		 ObservableList<String> styleClassresultText = countLabel.getStyleClass();
+		 if (setOrUnset) {
+			 if (! styleClass.contains("red")) {
+	                styleClass.add("red");
+	            }
+			 if (errorText!=null){
+				 if (! styleClassresultText.contains("redText")) {
+					 styleClassresultText.add("redText");
+		            }
+				 countLabel.setText(errorText);
+			 }
+	        } 
+		 else {
+	            styleClass.removeAll(Collections.singleton("red"));          
+	            styleClassresultText.removeAll(Collections.singleton("redText"));
+	            countLabel.setText("");
+	        }
+	}
+	
+	
 	}
 
 					

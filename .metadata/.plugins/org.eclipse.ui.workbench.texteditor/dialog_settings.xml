@@ -6,12 +6,13 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="maxTarget" key="selection"/>
+		<item value="isMaxLengthValues" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="isMaxLengthValues"/>
 			<item value="maxTarget"/>
 			<item value="dataValue"/>
 			<item value="textFields.get(i).setText"/>
@@ -19,7 +20,6 @@
 			<item value="variables"/>
 			<item value="addedTexts"/>
 			<item value="Наиболее"/>
-			<item value="StringU"/>
 		</list>
 		<list key="replacehistory">
 			<item value="MetaEditor"/>

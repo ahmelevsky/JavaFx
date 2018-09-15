@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,11 +29,15 @@ import org.apache.commons.lang3.StringUtils;
 import te.Main;
 import te.model.Target;
 import te.model.Variable;
+import te.util.DataException;
+import te.util.SyntaxParser;
+import te.util.TextAreaException;
+import te.util.TextException;
 
 import com.sun.javafx.scene.control.behavior.TextAreaBehavior;
 import com.sun.javafx.scene.control.skin.TextAreaSkin;
 
-public class DescriptionEditorController implements Initializable {
+public class DescriptionEditorController extends TargetEditorController implements Initializable {
 	
 	public Main app;
 	@FXML
@@ -124,19 +129,70 @@ public class DescriptionEditorController implements Initializable {
 					textFields.get(final_i).setEditable(true);
 				else 
 					textFields.get(final_i).setEditable(false);
-				updateForm();
-			});
+				setError(textFields.get(final_i), false, null);
+				 try {	
+						updateForm();
+					 }
+					 catch (TextAreaException e) {
+						setError(e.textArea, true, e.getMessage());
+					 }
+					});
 		}
 		
 		for (TextArea tf:textFields) {
 			tf.textProperty().addListener((observable, oldValue, newValue) -> {
+				setError(tf, false, null);
+			 try {	
 				updateForm();
+			 }
+			 catch (TextAreaException e) {
+				setError(e.textArea, true, e.getMessage());
+			 }
 			});
 			denyTab(tf);
 		}
 	}
 	
-	public void updateForm(){
+	private String parseVariablesInText(TextArea tf, boolean isMax) throws TextAreaException{
+		String result = null;
+		try{
+			result = SyntaxParser.pasteVariables(tf.getText(), isMax, " ");	
+		}
+		catch (TextException e) {
+			throw new TextAreaException (tf, e.getMessage());
+		}
+		return result;
+	}
+	
+	
+	
+	private void setError(TextArea tf, boolean setOrUnset, String errorText){
+		 ObservableList<String> styleClass = tf.getStyleClass();
+		 ObservableList<String> styleClassresultText = resultText.getStyleClass();
+		 if (setOrUnset) {
+			 if (! styleClass.contains("red")) {
+	                styleClass.add("red");
+	            }
+			 if (errorText!=null){
+				 if (! styleClassresultText.contains("redText")) {
+					 styleClassresultText.add("redText");
+		            }
+				 resultText.setText(errorText);
+			 }
+	        } 
+		 else {
+	            styleClass.removeAll(Collections.singleton("red"));          
+	            styleClassresultText.removeAll(Collections.singleton("redText"));
+	            //resultText.setText("");
+	        }
+	}
+	
+	private boolean checkNoSquareBrackets(String text, int fromIndex){
+		return !(text.substring(fromIndex).contains("[") || text.substring(fromIndex).contains("]"));
+	}
+	
+
+	public void updateForm() throws TextAreaException{
 		String maxLengthDescription = getMaxLengthDescription();
 		countLabel.setText("Символов: " + maxLengthDescription.length());
 	}
@@ -171,14 +227,14 @@ public class DescriptionEditorController implements Initializable {
 	
 	
 	
-	public String getMaxLengthDescription(){
+	public String getMaxLengthDescription() throws TextAreaException{
 		
 		List<String> result = new ArrayList<String>();
 		for (int i=0; i<selectors.size();i++){
 			String d =  selectors.get(i).getSelectionModel().getSelectedItem();
 			//Target maxTarget = app.getTargetWithMaxLength();
 			if (d == null || d.isEmpty() || d.equals("<текст>")){
-			    String 	t = textFields.get(i).getText().trim();
+			    String t = parseVariablesInText(textFields.get(i), true);
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
@@ -294,7 +350,7 @@ public class DescriptionEditorController implements Initializable {
     });
 	}
 
-	public void saveDescriptionsSource() {
+	public void saveDescriptionsSource() throws DataException {
 		data.clear();
 		for (ComboBox<String> sel:selectors){
 			String item = sel.getSelectionModel().getSelectedItem();
@@ -304,8 +360,13 @@ public class DescriptionEditorController implements Initializable {
 				data.add(item);
 		}
 		textFieldsStored.clear();
-		for (int i=0;i<textFields.size();i++) 
-			textFieldsStored.add(textFields.get(i).getText().trim());
+		for (int i=0;i<textFields.size();i++)
+			try {
+				textFieldsStored.add(parseVariablesInText(textFields.get(i), false));
+			} catch (TextException e) {
+				setError(textFields.get(i), true, e.getMessage());
+				throw new DataException(this.tab);
+			}
 	}
 
 	public boolean checkDataIsCorrect() {

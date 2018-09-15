@@ -8,7 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 
-public class LogController implements Initializable {
+public class LogController extends TargetEditorController implements Initializable {
 
 	@FXML
 	private Button cleanBtn;
