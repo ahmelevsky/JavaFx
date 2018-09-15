@@ -29,8 +29,6 @@ public class TargetsWindowController extends TargetEditorController implements I
 	 private TableColumn<Target, String> target1Column;
 	 @FXML
 	 private TableColumn<Target, String> target2Column;
-	 private Main app;
-	
 	 
      public TargetsWindowController() {
 	    }
@@ -84,8 +82,7 @@ public class TargetsWindowController extends TargetEditorController implements I
 	        );
 	}
 
-	 public void setMainApp(Main app) {
-	        this.app = app;
+	 public void setup() {
 	        targetsTable.setItems(app.getTargetsData());
 	    }
 	

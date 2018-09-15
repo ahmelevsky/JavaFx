@@ -1,15 +1,13 @@
 package te.view;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
@@ -19,15 +17,21 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.shape.Circle;
+import javafx.util.StringConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
-import te.Main;
+import te.model.Variable;
 import te.util.DataException;
 import te.util.SyntaxParser;
 import te.util.TextAreaException;
@@ -40,31 +44,22 @@ import com.sun.javafx.scene.control.skin.TextAreaSkin;
 public class KeysEditorController extends TargetEditorController implements Initializable {
 
 	@FXML
-	private TextArea obligatoryText;
-	
-	@FXML
-	private TextArea backgroundText;
-	
-	@FXML
-	private TextArea kindText;
-	
-	@FXML
-	private TextArea highText;
-	
-	@FXML
-	private TextArea lowText;
+	private TextArea keysField;
 	
 	@FXML
 	private TextArea preview;
-
-	@FXML
-	private TextField lowCount;
 	
 	@FXML
-	private TextField highCount;
+	private ComboBox<Variable> variablesCombo;
 	
 	@FXML
 	private Button clearBtn;
+	
+	@FXML
+	private Button addBtn;
+	
+	@FXML
+	private Spinner keyCountBox;
 	
 	@FXML
 	private Label countLabel;
@@ -72,75 +67,52 @@ public class KeysEditorController extends TargetEditorController implements Init
 	@FXML
 	private CheckBox isTarget;
 	
-	public Main app;
-	
-	private String obligatoryKeys;
-	private String backgroundKeys;
-	private String kindKeys;
-	private String highKeys;
-	private String lowKeys;
 	private boolean isT;
-	private int lCount;
-	private int hCount;
-	
-	ObservableList<String> backgroundOptions =    FXCollections.observableArrayList();
-	ObservableList<String> kindOptions =    FXCollections.observableArrayList();
-	
-
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		//obligatoryText.setText("shampoo, bubble, bubbly, blue, invite, flyer, background, swimming, pool, foam, soap, liquid, cool, bath, shower, cleaning, wash, sea, deep, 3d, oxygen, water, transparent");
-		//highText.setText("abstract, closeup, wet, nature, clean, fresh, bright, drop, drink, light, air, macro, hygiene, bathroom, template, vector, splash, color, rainbow, sphere, shine, orb, circle, glossy, ball, realistic, blowing, reflection");
-		//lowText.setText("fizz, flow, froth, close-up, blow, ripple, wave, purity, beverage, underwater, freshness, powder, washing powder, detergent, diving, aqua park");
 		
-		highCount.setText("12");
-		lowCount.setText("5");
+		variablesCombo.setConverter(new StringConverter<Variable>(){
+
+			@Override
+			public String toString(Variable object) {
+				// TODO Auto-generated method stub
+				return object.getName();
+			}
+
+			@Override
+			public Variable fromString(String string) {
+				return variablesCombo.getItems().stream().filter(v -> v.getName().equals(string)).findFirst().orElse(null);
+			}
+			
+		});
+
 		
+		ImageView imageView = new ImageView(new Image(new File(
+				"resources/add.png").toURI().toString()));
+		imageView.setFitWidth(40);
+		imageView.setFitHeight(22);
+		addBtn.setGraphic(imageView);
+		variablesCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
+			update();
+		});
 		isTarget.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			update();
 		});
-		obligatoryText.textProperty().addListener((observable, oldValue, newValue) -> {
-			setError(obligatoryText, false, null);
-			update();
-		});
-		highText.textProperty().addListener((observable, oldValue, newValue) -> {
-			setError(highText, false, null);
-			update();
-		});
-		lowText.textProperty().addListener((observable, oldValue, newValue) -> {
-			setError(lowText, false, null);
-			update();
-		});
-		kindText.textProperty().addListener((observable, oldValue, newValue) -> {
-			setError(kindText, false, null);
-			update();
-		});
-		backgroundText.textProperty().addListener((observable, oldValue, newValue) -> {
-			setError(backgroundText, false, null);
-			update();
-		});
-		highCount.textProperty().addListener((observable, oldValue, newValue) -> {
-			update();
-		});
-		lowCount.textProperty().addListener((observable, oldValue, newValue) -> {
+		keysField.textProperty().addListener((observable, oldValue, newValue) -> {
 			update();
 		});
 		
-		denyTab(obligatoryText);
-		denyTab(backgroundText);
-		denyTab(kindText);
-		denyTab(highText);
-		denyTab(lowText);
+		denyTab(keysField);
 	}
 	@FXML
 	private void clearForms(){
-		obligatoryText.clear();
-		highText.clear();
-		lowText.clear();
-		kindText.clear();
-		backgroundText.clear();
+		keysField.clear();
 	}
+	
+public void setup(){
+	variablesCombo.setItems(app.keyVariableEditorContainerController.variables);
+}
 	
 private void update(){
 	try{
@@ -157,16 +129,11 @@ private void update(){
 public List<String> generateKeywordsForMetadata(){
 	    List<String> keys = new ArrayList<String>();
 		
-		addToList(obligatoryKeys, keys);
-		addToList(backgroundKeys, keys);
-		addToList(kindKeys, keys);
 		if (isT) {
 			String target = app.mainFrameController.currentTarget.getTarget();
 			if (app.isCorrectKey(target))
 				addToList(target, keys);
 		}
-		addNRandomToList(highKeys, keys, hCount);
-		addNRandomToList(lowKeys, keys, lCount);
 		
 		keys = keys.stream().distinct().collect(Collectors.toList());
 		
@@ -176,50 +143,6 @@ public List<String> generateKeywordsForMetadata(){
 	}
 	
 	public void saveKeywordsSource() throws DataException{
-		try{
-		obligatoryKeys = parseVariablesInText(obligatoryText, false);
-		}
-		catch (TextAreaException e) {
-			setError(obligatoryText, true, e.getMessage());
-			throw new DataException(this.tab);
-		}
-		try {
-		backgroundKeys = parseVariablesInText(backgroundText, false);
-		}
-		catch (TextAreaException e) {
-			setError(backgroundText, true, e.getMessage());
-			throw new DataException(this.tab);
-		}
-		try {
-		kindKeys = parseVariablesInText(kindText, false);
-		}
-		catch (TextAreaException e) {
-			setError(kindText, true, e.getMessage());
-			throw new DataException(this.tab);
-		}
-		try {
-		highKeys = parseVariablesInText(highText, false);
-		}
-		catch (TextAreaException e) {
-			setError(highText, true, e.getMessage());
-			throw new DataException(this.tab);
-		}
-		try {
-		lowKeys = parseVariablesInText(lowText, false);
-		}
-		catch (TextAreaException e) {
-			setError(lowText, true, e.getMessage());
-			throw new DataException(this.tab);
-		}
-		isT = isTarget.isSelected();
-		hCount = 0;
-		lCount = 0;
-		try{
-			hCount = Integer.parseInt(highCount.getText());
-			lCount = Integer.parseInt(lowCount.getText());
-		}
-		catch (Exception e){
-		}
 	}
 	
 	
@@ -227,24 +150,11 @@ public List<String> generateKeywordsForMetadata(){
 	private List<String> getKeysFromUI() throws TextAreaException{
         List<String> keys = new ArrayList<String>();
 		
-		addToList(parseVariablesInText(obligatoryText, false), keys);
-		addToList(parseVariablesInText(backgroundText, false), keys);
-		addToList(parseVariablesInText(kindText, false), keys);
+		addToList(parseVariablesInText(keysField, false), keys);
 		
 		if (isTarget.isSelected())
 			addToList(app.getRandomTarget(), keys);
 		
-		int nh = 0;
-		int nl = 0;
-		try{
-			nh = Integer.parseInt(highCount.getText());
-			nl = Integer.parseInt(lowCount.getText());
-		}
-		catch (Exception e){
-			//return null;
-		}
-		addNRandomToList(parseVariablesInText(highText,false), keys, nh);
-		addNRandomToList(parseVariablesInText(lowText,false), keys, nl);
 		
 		keys = keys.stream().distinct().collect(Collectors.toList());
 		cutList(keys, 50);
@@ -285,16 +195,6 @@ public List<String> generateKeywordsForMetadata(){
 	}
 	
 	
-	public boolean checkDataIsCorrect(){
-		return 
-		app.isCorrectKey(this.obligatoryKeys) &&
-		app.isCorrectKey(this.backgroundKeys) &&
-		app.isCorrectKey(this.kindKeys) &&
-		app.isCorrectKey(this.lowKeys) &&
-		app.isCorrectKey(this.highKeys);
-	}
-	
-	
 	
 	private void denyTab(TextArea textArea){
 		textArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
@@ -322,7 +222,7 @@ public List<String> generateKeywordsForMetadata(){
 	private String parseVariablesInText(TextArea tf, boolean isMax) throws TextAreaException{
 		String result = null;
 		try{
-			result = SyntaxParser.pasteVariables(tf.getText(), isMax, ", ");	
+			result = SyntaxParser.pasteVariables(app.keyVariableEditorContainerController.variables, tf.getText(), isMax, ", ");	
 		}
 		catch (TextException e) {
 			throw new TextAreaException (tf, e.getMessage());
@@ -350,7 +250,6 @@ public List<String> generateKeywordsForMetadata(){
 	            countLabel.setText("");
 	        }
 	}
-	
 	
 	}
 

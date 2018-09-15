@@ -5,14 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,7 +23,6 @@ import javafx.scene.text.Text;
 
 import org.apache.commons.lang3.StringUtils;
 
-import te.Main;
 import te.model.Target;
 import te.model.Variable;
 import te.util.DataException;
@@ -39,62 +35,43 @@ import com.sun.javafx.scene.control.skin.TextAreaSkin;
 
 public class DescriptionEditorController extends TargetEditorController implements Initializable {
 	
-	public Main app;
 	@FXML
 	private TextArea text1;
-	
 	@FXML
 	private TextArea text2;
-	
 	@FXML
 	private TextArea text3;
-	
 	@FXML
 	private TextArea text4;
-	
 	@FXML
 	private TextArea text5;
 	
 	@FXML
 	private ComboBox<String> selector1;
-	
 	@FXML
 	private ComboBox<String> selector2;
-	
 	@FXML
 	private ComboBox<String> selector3;
-	
 	@FXML
 	private ComboBox<String> selector4;
-	
 	@FXML
 	private ComboBox<String> selector5;
 	
 	@FXML
 	private Text countLabel;
-	
 	@FXML
 	private TextArea resultText;
-	
 	@FXML
 	private Text addedTexts;
 	
 	private final int LIMIT = 200;
-	
 	public String currentDescription;
-	
-	ObservableList<String> options1 =    FXCollections.observableArrayList();
-	ObservableList<String> options2 =    FXCollections.observableArrayList();
-	ObservableList<String> options3 =    FXCollections.observableArrayList();
-	ObservableList<String> options4 =    FXCollections.observableArrayList();
-	ObservableList<String> options5 =    FXCollections.observableArrayList();
 	
 	private List<TextArea> textFields = new ArrayList<TextArea>();
 	private List<ComboBox<String>> selectors = new ArrayList<ComboBox<String>>();
 	private List<ObservableList<String>> options = new ArrayList<ObservableList<String>>();
 	
-	private List<String> textFieldsStored = new ArrayList<String>();
-	
+	public List<String> textFieldsStored = new ArrayList<String>();
 	private List<String> data = new ArrayList<String>();
 	
 	@Override
@@ -107,31 +84,32 @@ public class DescriptionEditorController extends TargetEditorController implemen
 		textFields.add(text3);
 		textFields.add(text4);
 		textFields.add(text5);
-		
-		options.add(options1);
-		options.add(options2);
-		options.add(options3);
-		options.add(options4);
-		options.add(options5);
 		selectors.add(selector1);
 		selectors.add(selector2);
 		selectors.add(selector3);
 		selectors.add(selector4);
 		selectors.add(selector5);
 		
+		
 		for (int i=0;i<selectors.size();i++) {
+			options.add(FXCollections.observableArrayList());
 			final int final_i = i;
 			selectors.get(i).setItems(options.get(i));
 			options.get(i).add("<текст>");
 			selectors.get(i).getSelectionModel().select("<текст>");
+			
 			selectors.get(i).valueProperty().addListener((observable, oldValue, newValue) -> {
-				if (newValue==null || newValue.isEmpty() || newValue.equals("<текст>")) 
+				if (newValue==null) return;
+				if (newValue.equals("<текст>")) {
 					textFields.get(final_i).setEditable(true);
+					if (oldValue!=null && !oldValue.equals("<текст>"))
+						textFields.get(final_i).setText("");
+				}
 				else 
 					textFields.get(final_i).setEditable(false);
 				setError(textFields.get(final_i), false, null);
 				 try {	
-						updateForm();
+						getMaxLengthDescription();
 					 }
 					 catch (TextAreaException e) {
 						setError(e.textArea, true, e.getMessage());
@@ -140,23 +118,26 @@ public class DescriptionEditorController extends TargetEditorController implemen
 		}
 		
 		for (TextArea tf:textFields) {
+			
+			denyTab(tf);
+			
 			tf.textProperty().addListener((observable, oldValue, newValue) -> {
 				setError(tf, false, null);
 			 try {	
-				updateForm();
+				getMaxLengthDescription();
 			 }
 			 catch (TextAreaException e) {
 				setError(e.textArea, true, e.getMessage());
 			 }
 			});
-			denyTab(tf);
+			
 		}
 	}
 	
 	private String parseVariablesInText(TextArea tf, boolean isMax) throws TextAreaException{
 		String result = null;
 		try{
-			result = SyntaxParser.pasteVariables(tf.getText(), isMax, " ");	
+			result = SyntaxParser.pasteVariables(app.descriptionVariableEditorContainerController.variables, tf.getText(), isMax, " ");	
 		}
 		catch (TextException e) {
 			throw new TextAreaException (tf, e.getMessage());
@@ -183,20 +164,9 @@ public class DescriptionEditorController extends TargetEditorController implemen
 		 else {
 	            styleClass.removeAll(Collections.singleton("red"));          
 	            styleClassresultText.removeAll(Collections.singleton("redText"));
-	            //resultText.setText("");
 	        }
 	}
 	
-	private boolean checkNoSquareBrackets(String text, int fromIndex){
-		return !(text.substring(fromIndex).contains("[") || text.substring(fromIndex).contains("]"));
-	}
-	
-
-	public void updateForm() throws TextAreaException{
-		String maxLengthDescription = getMaxLengthDescription();
-		countLabel.setText("Символов: " + maxLengthDescription.length());
-	}
-
 	public void updateLists(){
 		for (int i=0; i<selectors.size();i++){
 			
@@ -212,7 +182,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 				ol.add("Таргет1");
 				ol.add("Таргет2");
 			}
-			ol.addAll(app.variables.stream().map(Variable::getName)
+			ol.addAll(app.descriptionVariableEditorContainerController.variables.stream().map(Variable::getName)
 		              .collect(Collectors.toList()));
 			if (selectedValue!=null){
 				if	(ol.contains(selectedValue))
@@ -263,18 +233,16 @@ public class DescriptionEditorController extends TargetEditorController implemen
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
-			else if (app.variables.stream().anyMatch( v -> d.equals(v.getName()))){
-				Optional<Variable> vo = app.variables.stream().filter(v -> d.equals(v.getName())).findFirst();
-				if (vo !=null && vo.isPresent()) {
-					String variableValue = "";
-					if (!vo.get().getValues().isEmpty())
-						variableValue = Collections.max(vo.get().getValues(), Comparator.comparing(s -> s.length()));
-					textFields.get(i).setText(variableValue);
-				    if (!variableValue.isEmpty())
+			else {
+				String variableValue = Variable.getMaxValueByName(app.descriptionVariableEditorContainerController.variables, d);
+			    if (d!=null) {
+			    	textFields.get(i).setText(variableValue);
+			        if (!variableValue.isEmpty())
 				    	result.add(variableValue);
-				}
+				    }
 			}
 		}
+		
 		String resultString = StringUtils.join(result, " ");
         resultText.setText(resultString);
 		
@@ -284,6 +252,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 		else{
 			countLabel.setFill(Color.BLACK);
 		}
+		countLabel.setText("Символов: " + resultString.length());
 		
 		return resultString;
 	}
@@ -294,7 +263,13 @@ public class DescriptionEditorController extends TargetEditorController implemen
 		for (int i=0; i<data.size();i++){
 			final String dataValue = data.get(i);
 			if (dataValue == null || dataValue.equals("<текст>")){
-			    String 	t = textFieldsStored.get(i);
+			    String t = "";
+				try {
+					t = SyntaxParser.pasteVariables(app.descriptionVariableEditorContainerController.variables, textFieldsStored.get(i), false, " ");
+				} catch (TextException e) {
+					app.log("ERROR: Ошибка вставки переменных в строку: " + textFieldsStored.get(i));
+					app.isProblem = true;
+				}
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
@@ -315,14 +290,11 @@ public class DescriptionEditorController extends TargetEditorController implemen
 			    	result.add(t);
 			}
 			
-   		    else if (app.variables.stream().anyMatch( v -> dataValue.equals(v.getName()))){
-					Optional<Variable> vo = app.variables.stream().filter(v -> dataValue.equals(v.getName())).findFirst();
-					if (vo !=null && vo.isPresent()) {
-						String variableValue = vo.get().getRandomValue();
-					    if (!variableValue.isEmpty())
+   		    else {
+ 				String variableValue = Variable.getRandomValueByName(app.descriptionVariableEditorContainerController.variables, dataValue);
+					    if (variableValue!=null && !variableValue.isEmpty())
 					    	result.add(variableValue);
 					}
-				}
 		}
 		this.currentDescription = StringUtils.join(result, " ");
 		return this.currentDescription;
@@ -362,48 +334,12 @@ public class DescriptionEditorController extends TargetEditorController implemen
 		textFieldsStored.clear();
 		for (int i=0;i<textFields.size();i++)
 			try {
-				textFieldsStored.add(parseVariablesInText(textFields.get(i), false));
+				SyntaxParser.checkVariables(app.descriptionVariableEditorContainerController.variables, textFields.get(i).getText());
+				textFieldsStored.add(textFields.get(i).getText());
 			} catch (TextException e) {
 				setError(textFields.get(i), true, e.getMessage());
 				throw new DataException(this.tab);
 			}
 	}
 
-	public boolean checkDataIsCorrect() {
-		boolean result = true;
-		
-		if (!textFields.stream().allMatch(t->app.isCorrectKey(t.getText()))){
-			app.log("Недопустимые символы в одном из текстовых полей вкладки Описание");
-			result = false;
-		}
-		
-		if (data.stream().anyMatch(d->d.equals("Таргет")))
-			if (!app.getTargetsData().stream().allMatch(t->app.isCorrectKey(t.getTarget()))){
-				app.log("Недопустимые символы в одном из полей Таргет");
-				result = false;
-			}
-		if (data.stream().anyMatch(d->d.equals("Таргет1")))
-			if (!app.getTargetsData().stream().allMatch(t->app.isCorrectKey(t.getTarget1()))){
-				app.log("Недопустимые символы в одном из полей Таргет1");
-				result = false;
-			}
-		if (data.stream().anyMatch(d->d.equals("Таргет2")))
-			if (!app.getTargetsData().stream().allMatch(t->app.isCorrectKey(t.getTarget1()))){
-				app.log("Недопустимые символы в одном из полей Таргет2");
-				result = false;
-			}
-		for (String d:data){
-		if (app.variables.stream().anyMatch( v -> d.equals(v.getName()))){
-			Optional<Variable> vo = app.variables.stream().filter(v -> d.equals(v.getName())).findFirst();
-		    if (vo !=null && vo.isPresent()) {
-		    	if(!vo.get().getValues().stream().allMatch(v->app.isCorrectKey(v))) {
-		    		app.log("Недопустимые символы в одном значений переменной " + vo.get().getName());
-		    		result = false;
-		    	}
-		   }
-		}
-		}
-		return result;
-	}
-	
 }

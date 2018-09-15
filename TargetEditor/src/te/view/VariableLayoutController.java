@@ -89,7 +89,7 @@ public class VariableLayoutController implements Initializable {
 	
 	@FXML
     private void remove(){
-		app.variableEditorContainerController.removeVariableLayout(this);
+		app.keyVariableEditorContainerController.removeVariableLayout(this);
 	}
 
 

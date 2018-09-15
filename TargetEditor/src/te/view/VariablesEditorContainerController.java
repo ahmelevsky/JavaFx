@@ -2,8 +2,12 @@ package te.view;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,11 +24,11 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 
 	@FXML
 	private Button addVarBtn;
-	public Main app;
 	
 	@FXML
 	private VBox variableLayouts;
 	
+	public ObservableList<Variable> variables =    FXCollections.observableArrayList();
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -37,7 +41,7 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	@FXML
 	public void addVariableLayout(){
 		 Variable var = new Variable("", "", "");
-		 app.variables.add(var); 
+		 this.variables.add(var); 
 		 addVariableLayout(var);
 	}
 	
@@ -52,7 +56,7 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	         controller.app = this.app;
 	         controller.setVariable(variable);
 	         controller.layout = sourceLayout;
-	         app.variableControllers.add(controller);
+	         app.keyVariableControllers.add(controller);
 	        
 			} catch (IOException e) {
 				  Alert alert = new Alert(AlertType.ERROR);
@@ -68,8 +72,8 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 		 try {
 			 
 			 variableLayouts.getChildren().remove(controller.layout);
-			 app.variables.remove(controller.getVariable());
-			 app.variableControllers.remove(controller);
+			 variables.remove(controller.getVariable());
+			 app.keyVariableControllers.remove(controller);
 			 //app.getPrimaryStage().sizeToScene();
 		 }
 		 catch (Exception e) {
@@ -85,8 +89,10 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	
 	public void clear() {
 		variableLayouts.getChildren().clear();
-		app.variableControllers.clear();
+		app.keyVariableControllers.clear();
 		app.getPrimaryStage().sizeToScene();
 	}
+
+
 
 }

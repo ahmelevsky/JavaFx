@@ -5,8 +5,6 @@ import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -14,11 +12,9 @@ import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -28,16 +24,10 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.DirectoryChooser;
 
-
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-
-
 import org.xml.sax.SAXException;
-
-
 
 import te.Main;
 import te.model.Target;
@@ -50,30 +40,33 @@ public class MainFrameController implements Initializable{
 	public Main app;
 	private File rootFolder;
 	public Target currentTarget;
+	private Task<String> task;
+	
 	@FXML
 	private Button writeBtn;
 	@FXML
 	private Hyperlink folderPath;
-	
-	
 	@FXML
 	private TabPane tabs;
-	
 	@FXML
 	private ProgressBar progress;
 	
-	private Task<String> task;
+	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+			
+	}
+	
+	public void setup(){
 		tabs.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
-			if (oldTab!=null && oldTab.getText().equals("Переменные")){
-				for (int i=app.variableControllers.size(); i>0; i--) {
-					Variable v = app.variableControllers.get(i-1).getVariable();
+			if (oldTab!=null && oldTab.equals(app.keyVariableEditorContainerController.tab)){
+				for (int i=app.keyVariableControllers.size(); i>0; i--) {
+					Variable v = app.keyVariableControllers.get(i-1).getVariable();
 					if ( v == null || v.getName().isEmpty())
-						   app.variableEditorContainerController.removeVariableLayout(app.variableControllers.get(i-1));
+						   app.keyVariableEditorContainerController.removeVariableLayout(app.keyVariableControllers.get(i-1));
 				}
-				if (!app.variables.stream().map(Variable::getName)
+				if (!app.keyVariableEditorContainerController.variables.stream().map(Variable::getName)
 			              .collect(Collectors.toList()).stream().allMatch(new HashSet<>()::add)){
 					tabs.getSelectionModel().select(oldTab);
 					Alert alert = new Alert(AlertType.WARNING);
@@ -82,21 +75,30 @@ public class MainFrameController implements Initializable{
 					alert.showAndWait();
 				}
 			}
-			switch (newTab.getText()) {
-			case "Описания":
+			if (oldTab!=null && oldTab.equals(app.descriptionVariableEditorContainerController.tab)){
+				for (int i=app.descriptionVariableControllers.size(); i>0; i--) {
+					Variable v = app.descriptionVariableControllers.get(i-1).getVariable();
+					if ( v == null || v.getName().isEmpty())
+						   app.descriptionVariableEditorContainerController.removeVariableLayout(app.descriptionVariableControllers.get(i-1));
+				}
+				if (!app.descriptionVariableEditorContainerController.variables.stream().map(Variable::getName)
+			              .collect(Collectors.toList()).stream().allMatch(new HashSet<>()::add)){
+					tabs.getSelectionModel().select(oldTab);
+					Alert alert = new Alert(AlertType.WARNING);
+					alert.setTitle("ОШИБКА!");
+					alert.setContentText("Имена переменных не должны повторяться, исправьте прежде чем продолжить.");
+					alert.showAndWait();
+				}
+			}
+			if (newTab.equals(app.descriptionEditorController.tab)){
 				app.descriptionEditorController.updateLists();
-				//app.descriptionEditorController.updateForm();
-				break;
-			case "Заголовки":
+			}
+			else if (newTab.equals(app.titleEditorController.tab)){
 				app.titleEditorController.updateLists();
-				//app.titleEditorController.updateCounter();
-				break;
-			default:
-				break;
-			} 
+			}
 	    });
-			
 	}
+	
 	
 	public void addTab(Tab tab){
 		tabs.getTabs().add(tab);
@@ -106,6 +108,7 @@ public class MainFrameController implements Initializable{
 	
 	@FXML
 	public void writeMetadata() throws SAXException, ParserConfigurationException, TransformerException, IOException{
+		app.isProblem = false;
 		if (rootFolder==null || !rootFolder.exists() || !rootFolder.isDirectory()){
 			app.showAlert("Папка не выбрана или не существует");
 			return;
@@ -140,18 +143,9 @@ public class MainFrameController implements Initializable{
 			tabs.getSelectionModel().select(e1.errorTab);
 			return;
 		}
-		
-		StringJoiner validationErrors = new StringJoiner("\n");
-		if (!app.keysEditorController.checkDataIsCorrect())
-			validationErrors.add("Unallowed symbols are in the keywords.");
-		if (!app.descriptionEditorController.checkDataIsCorrect())
-			validationErrors.add("Unallowed symbols are in the description.");
-		if (!app.titleEditorController.checkDataIsCorrect())
-			validationErrors.add("Unallowed symbols are in the title.");
-       		
-		if (validationErrors.length()>0){ 
-			validationErrors.add("Operation cancelled.");
-			app.showAlert(validationErrors.toString());
+		       		
+		if (!app.checkDataIsCorrect()){ 
+			app.showAlert("Некорректные входные данные, невозможно осуществить запись. Подробности на вкладке Лог.");
 			return;
 		}
 		 task = new Task<String>() {
@@ -188,7 +182,7 @@ public class MainFrameController implements Initializable{
 			   	         		success++;
 			   	        	}
 			   	        	catch (IOException ex) {
-			   	        		app.log("ERROR: failed writing metadata to " + image.getAbsolutePath() + ", exception: " + ex.getMessage());
+			   	        		app.log("ERROR: ошибка записи метаданных в " + image.getAbsolutePath() + ", текст ошибки: " + ex.getMessage());
 			   	        		failures++;
 			   	        	}
 			   	        	finally{
@@ -196,7 +190,9 @@ public class MainFrameController implements Initializable{
 			   	        	}
 			   	            }
 		        }
-			    String result = (failures==0)  ? 	("DONE! The metadata was written for files number: " + success) : ("WARNING! The metadata was written for files number: " + success + ", failed for files number: " + failures);
+			    String result = (failures==0)  ? 	("ГОТОВО: Метеданные были записаны для файлов: " + success) : ("WARNING! Метеданные были записаны для файлов: " + success + ", не получилось записать файлов: " + failures);
+			    if (app.isProblem)
+			    	result += "\nВо время вычисления метаданных были проблемы, обратите внимание на вкладку Лог";
 			    return result;
 			   	}
 		 };
@@ -210,7 +206,7 @@ public class MainFrameController implements Initializable{
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error");
 				alert.setHeaderText("Error");
-				alert.setContentText("The metadata write operation failed. See Log for error messages.");
+				alert.setContentText("Запись метаданных завершена с ошибкой. Смотрите вкладку Лог для пояснения.");
 				alert.showAndWait();
 			});
 			
@@ -220,7 +216,7 @@ public class MainFrameController implements Initializable{
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Cancel");
 				alert.setHeaderText("Cancel");
-				alert.setContentText("The metadata write operation was cancelled");
+				alert.setContentText("Запись методанных была отменена");
 				alert.showAndWait();
 			});
 			
@@ -244,7 +240,7 @@ public class MainFrameController implements Initializable{
     private void selectPath(){
 		  DirectoryChooser directoryChooser = new DirectoryChooser(); 
 
-          directoryChooser.setTitle("Select root folder for batches");
+          directoryChooser.setTitle("Выберите корневую папку (в ней должны быть папки с вашими файлами)");
           File selected = new File(this.folderPath.getText());
           if (selected.exists())
         	  directoryChooser.setInitialDirectory(selected.getParentFile());

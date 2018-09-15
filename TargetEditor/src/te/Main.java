@@ -3,9 +3,8 @@ package te;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javafx.application.Application;
@@ -13,19 +12,23 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Tab;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import te.model.Target;
 import te.model.Variable;
 import te.util.ExiftoolRunner;
 import te.util.SyntaxParser;
+import te.util.TextException;
 import te.view.DescriptionEditorController;
 import te.view.KeysEditorController;
 import te.view.LogController;
@@ -36,22 +39,21 @@ import te.view.TitleEditorController;
 import te.view.VariableLayoutController;
 import te.view.VariablesEditorContainerController;
 
-
 public class Main extends Application {
 	public TargetsWindowController targetsController;
 	public KeysEditorController keysEditorController;
 	public DescriptionEditorController descriptionEditorController;
 	public MainFrameController mainFrameController;
 	public TitleEditorController titleEditorController;
-	public VariablesEditorContainerController variableEditorContainerController;
+	public VariablesEditorContainerController keyVariableEditorContainerController;
+	public VariablesEditorContainerController descriptionVariableEditorContainerController;
 	public LogController logController;
 	private Stage mainStage;
 	private Stage currentStage;
-	private VBox rootLayout;
 	private ObservableList<Target> targetsData = FXCollections.observableArrayList();
-	//public Map<String, List<String>> variables = new HashMap<String, List<String>>();
-	public List<Variable> variables = new ArrayList<Variable>();
-	public List<VariableLayoutController> variableControllers = new ArrayList<VariableLayoutController>();
+	public List<VariableLayoutController> keyVariableControllers = new ArrayList<VariableLayoutController>();
+	public List<VariableLayoutController> descriptionVariableControllers = new ArrayList<VariableLayoutController>();
+	public boolean isProblem;
 	
 	@Override
 	public void start(Stage primaryStage) throws IOException {
@@ -62,17 +64,16 @@ public class Main extends Application {
 		mainFrameController = organizeStage("view/MainFrameWindow.fxml");
 		mainFrameController.app = this;
 		mainStage.setResizable(false);
-		variableEditorContainerController = (VariablesEditorContainerController) addTab("Переменные", "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
-		variableEditorContainerController.app = this;
+		keyVariableEditorContainerController = (VariablesEditorContainerController) addTab("Переменные \nключей", "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
+		descriptionVariableEditorContainerController = (VariablesEditorContainerController) addTab("Переменные \nописаний", "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
 		targetsController = (TargetsWindowController) addTab("Таргеты", "view/TargetsWindow.fxml", TargetsWindowController.class);
-		targetsController.setMainApp(this);
+		targetsController.setup();
 		keysEditorController = (KeysEditorController) addTab("Ключи", "view/KeysEditorWindow.fxml", KeysEditorController.class);
-		keysEditorController.app = this;
 		descriptionEditorController = (DescriptionEditorController) addTab("Описания", "view/DescriptionEditorWindow.fxml", DescriptionEditorController.class);
-		descriptionEditorController.app = this;
 		titleEditorController = (TitleEditorController) addTab("Заголовки", "view/TitleEditorWindow.fxml", TitleEditorController.class);
-		titleEditorController.app = this;
 		logController = (LogController) addTab("Лог", "view/LogWindow.fxml", LogController.class);
+		mainFrameController.setup();
+		keysEditorController.setup();
 		mainStage.setTitle("Target Editor v1.0");
 		mainStage.getIcons().add(new Image("file:resources/icon.png"));
 		mainStage.show();
@@ -94,9 +95,18 @@ public class Main extends Application {
 	        loader.setLocation(Main.class.getResource(fxml));
 	        AnchorPane page = (AnchorPane) loader.load();
 	        Tab tab = new Tab(tabTitle, page);
+	        tab.setStyle("-fx-padding: 15 0 15 0;-fx-min-height: 30px;-fx-focus-color: transparent;");
+	        Label label = new Label(tabTitle);
+	        label.setStyle("-fx-padding: 20px;-fx-min-height: 100px;-fx-focus-color: transparent;");
+	        label.setWrapText(true);
+	        label.setAlignment(Pos.CENTER);
+	        label.setTextAlignment(TextAlignment.CENTER);
+	        tab.setText(null);
+	        tab.setGraphic(label);
 	        mainFrameController.addTab(tab);
 	        TargetEditorController controller = loader.getController();
 	        controller.tab = tab;
+	        controller.app = this;
 	        return controller;
 	}
 	 
@@ -157,4 +167,70 @@ public class Main extends Application {
 		  if (text == null) return true;
 		 return text.trim().isEmpty() || text.matches("\\A\\p{ASCII}*\\z");//|| text.replaceAll("\\s+","").matches("\\w+");
 	  }
+	 
+	 private boolean isCorrectTextIncludingVariablesSyntax(List<String> list, List<Variable> variables){
+		 for (String l:list){
+			 try {
+				if (!isCorrectKey(SyntaxParser.checkVariables(variables, l))){
+					return false;
+				}
+					
+			} catch (TextException e) {
+				log("ERROR: " + e.getMessage());
+				return false;
+			}
+		 }
+		return true; 
+	 }
+	 
+	 public boolean checkDataIsCorrect() {
+			boolean result = true;
+			//Description Tab
+			
+			if (!isCorrectTextIncludingVariablesSyntax(descriptionEditorController.textFieldsStored, descriptionVariableEditorContainerController.variables)){
+				log("Недопустимые символы в одном из текстовых полей вкладки Описание");
+				result = false;
+			}
+			//Title Tab
+			try {
+				if (!isCorrectKey(SyntaxParser.checkVariables(descriptionVariableEditorContainerController.variables, titleEditorController.titleTextSetting))){
+					log("Недопустимые символы в текстовом поле вкладки Заголовок");
+					result = false;
+				}
+			} catch (TextException e) {
+				log("ERROR: " + e.getMessage());
+				return false;
+			}
+			
+			//Targets
+			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTarget()))){
+				log("Недопустимые символы в одном из полей Таргет");
+				result = false;
+				}
+			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTarget1()))){
+				log("Недопустимые символы в одном из полей Таргет1");
+				result = false;
+				}
+			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTarget1()))){
+				log("Недопустимые символы в одном из полей Таргет2");
+				result = false;
+				}
+			
+			//Variables
+			for (Variable v:descriptionVariableEditorContainerController.variables){  
+				if(!v.getValues().stream().allMatch(vv->isCorrectKey(vv))) {
+			    		log("Недопустимые символы в одном значений переменной " + v.getName());
+			    		result = false;
+				}
+			}
+			for (Variable v:keyVariableEditorContainerController.variables){  
+				if(!v.getValues().stream().allMatch(vv->isCorrectKey(vv))) {
+			    		log("Недопустимые символы в одном значений переменной " + v.getName());
+			    		result = false;
+				}
+			}
+			return result;
+		}
+		
+	 
 }

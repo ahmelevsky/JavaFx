@@ -2,5 +2,7 @@
 <typeInfoHistroy>
 <typeInfo handle="=TargetEditor/C:\/Program Files \(x86)\/Java\/jdk1.8.0_73\/jre\/lib\/rt.jar&lt;java.lang(Exception.class[Exception" modifiers="33" timestamp="1456817703555"/>
 <typeInfo handle="=TargetEditor/C:\/Program Files \(x86)\/Java\/jdk1.8.0_73\/jre\/lib\/ext\/jfxrt.jar&lt;javafx.fxml(Initializable.class[Initializable" modifiers="1537" timestamp="1456817704331"/>
-<typeInfo handle="=TargetEditor/src&lt;te.util{TextException.java[TextException" modifiers="1" timestamp="1536951511017"/>
+<typeInfo handle="=TargetEditor/src&lt;te.util{TextException.java[TextException" modifiers="1" timestamp="1536951558833"/>
+<typeInfo handle="=TargetEditor/C:\/Program Files \(x86)\/Java\/jdk1.8.0_73\/jre\/lib\/rt.jar&lt;java.awt(TextField.class[TextField" modifiers="33" timestamp="1456817703555"/>
+<typeInfo handle="=TargetEditor/C:\/Program Files \(x86)\/Java\/jdk1.8.0_73\/jre\/lib\/ext\/jfxrt.jar&lt;javafx.scene.control(TextField.class[TextField" modifiers="33" timestamp="1456817704331"/>
 </typeInfoHistroy>

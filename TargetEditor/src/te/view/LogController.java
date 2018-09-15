@@ -32,9 +32,6 @@ public class LogController extends TargetEditorController implements Initializab
 		// TODO Auto-generated method stub
 		
 	}
-	
-	
-	
-	
+
 	
 }

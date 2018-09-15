@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -17,7 +16,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextArea;
-import te.Main;
 import te.model.Target;
 import te.model.Variable;
 import te.util.DataException;
@@ -26,7 +24,6 @@ import te.util.TextAreaException;
 import te.util.TextException;
 
 public class TitleEditorController extends TargetEditorController implements Initializable {
-	public Main app;
 	
 	@FXML
 	private TextArea titleText;
@@ -37,7 +34,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	@FXML
 	private  CheckBox isTakeFromDescriptionBox;
 	private String titleBoxSetting;
-	private String titleTextSetting;
+	public String titleTextSetting;
 	
 	private boolean isTakeFromDescription;
 	
@@ -46,20 +43,26 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		titleBox.setItems(options1);
+		titleBox.getSelectionModel().select("<текст>");
+		
+		
 		titleBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue==null || newValue.isEmpty() || newValue.equals("<текст>")) 
+			if (newValue==null || newValue.isEmpty() || newValue.equals("<текст>")) {
 				titleText.setEditable(true);
+				if (oldValue!=null && !oldValue.equals("<текст>"))
+					titleText.setText("");
+			}
 			else 
 				titleText.setEditable(false);
-			 setError(titleText, false, null);
-			 try {	
+			setError(titleText, false, null);
+			try {	
 				 updateCounter();
 				 }
 				 catch (TextAreaException e) {
 					setError(e.textArea, true, e.getMessage());
 				 }
 				});
-		titleBox.getSelectionModel().select("<текст>");
+		
 		
 		titleText.textProperty().addListener((observable, oldValue, newValue) -> {
 			setError(titleText, false, null);
@@ -94,7 +97,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	private String parseVariablesInText(TextArea tf, boolean isMax) throws TextAreaException{
 		String result = null;
 		try{
-			result = SyntaxParser.pasteVariables(tf.getText(), isMax, " ");	
+			result = SyntaxParser.pasteVariables(app.descriptionVariableEditorContainerController.variables, tf.getText(), isMax, " ");	
 		}
 		catch (TextException e) {
 			throw new TextAreaException (tf, e.getMessage());
@@ -139,7 +142,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 			options1.add("Таргет1");
 			options1.add("Таргет2");
 		}
-		options1.addAll(app.variables.stream().map(Variable::getName)
+		options1.addAll(app.descriptionVariableEditorContainerController.variables.stream().map(Variable::getName)
 	              .collect(Collectors.toList()));
 		
 		if (options1.contains(selectedValue))
@@ -170,12 +173,12 @@ public class TitleEditorController extends TargetEditorController implements Ini
 			title = Collections.max(res, Comparator.comparing(s -> s.length()));
 			titleText.setText(title);
 		}	
-	    else if (app.variables.stream().anyMatch( v -> data.equals(v.getName()))){
-			Optional<Variable> vo = app.variables.stream().filter(v -> data.equals(v.getName())).findFirst();
-			if (vo !=null && vo.isPresent()) {
-				title = Collections.max(vo.get().getValues(), Comparator.comparing(s -> s.length()));
-				titleText.setText(title);
-			}
+	    else {
+	    	String variableValue = Variable.getMaxValueByName(app.descriptionVariableEditorContainerController.variables, data);
+		    if (variableValue==null) 
+		    	titleText.setText("");
+		    else
+		    	titleText.setText(variableValue);
 		}
 		countLabel.setText("(" + getWordsCount(title) + "/" + title.length() + ")");
 	}
@@ -183,7 +186,8 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	public void saveTitleSource() throws DataException{
 		isTakeFromDescription = isTakeFromDescriptionBox.isSelected();
 		  try {
-			  titleTextSetting  = parseVariablesInText(titleText, false);
+			  SyntaxParser.checkVariables(app.descriptionVariableEditorContainerController.variables, titleText.getText());
+			  titleTextSetting = titleText.getText();
 		    }
 		    catch (TextException e) {
 		    	setError(titleText, true, e.getMessage());
@@ -203,59 +207,17 @@ public class TitleEditorController extends TargetEditorController implements Ini
 			return app.mainFrameController.currentTarget.getTarget1();
 		else if (titleBoxSetting.equals("Таргет2"))
 			return app.mainFrameController.currentTarget.getTarget2();
-		else if (app.variables.stream().anyMatch( v -> titleBoxSetting.equals(v.getName()))){
-			String result = "";
-			Optional<Variable> vo = app.variables.stream().filter(v -> titleBoxSetting.equals(v.getName())).findFirst();
-			if (vo !=null && vo.isPresent()) {
-				result = vo.get().getRandomValue();
-			}
-			return result;
-		}
 		else {
-			app.log("ERROR: Can't get TITLE. TitleBox value is: " + titleBoxSetting);
-			return "";
+			String variableValue = Variable.getRandomValueByName(app.descriptionVariableEditorContainerController.variables, titleBoxSetting);
+			if (variableValue==null)
+				return "";
+			else
+				return variableValue;
 		}
 	}
 	
 	private int getWordsCount(String text){
 		return text.split("\\s+").length;
-	}
-	
-	
-	public boolean checkDataIsCorrect(){
-		
-boolean result = true;
-		
-		if (!app.isCorrectKey(titleTextSetting)){
-			app.log("Недопустимые символы в текстовом поле вкладки Назавание");
-			result = false;
-		}
-		
-		if (titleBoxSetting.equals("Таргет"))
-			if (!app.getTargetsData().stream().allMatch(t->app.isCorrectKey(t.getTarget()))){
-				app.log("Недопустимые символы в одном из полей Таргет");
-				result = false;
-			}
-		if (titleBoxSetting.equals("Таргет1"))
-			if (!app.getTargetsData().stream().allMatch(t->app.isCorrectKey(t.getTarget1()))){
-				app.log("Недопустимые символы в одном из полей Таргет1");
-				result = false;
-			}
-		if (titleBoxSetting.equals("Таргет2"))
-			if (!app.getTargetsData().stream().allMatch(t->app.isCorrectKey(t.getTarget1()))){
-				app.log("Недопустимые символы в одном из полей Таргет2");
-				result = false;
-			}
-		if (app.variables.stream().anyMatch( v -> titleBoxSetting.equals(v.getName()))){
-			Optional<Variable> vo = app.variables.stream().filter(v -> titleBoxSetting.equals(v.getName())).findFirst();
-		    if (vo !=null && vo.isPresent()) {
-		    	if(!vo.get().getValues().stream().allMatch(v->app.isCorrectKey(v))) {
-		    		app.log("Недопустимые символы в одном значений переменной " + vo.get().getName());
-		    		result = false;
-		    	}
-		   }
-		}
-		return result;
 	}
 
 	
