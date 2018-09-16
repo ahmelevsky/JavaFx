@@ -33,6 +33,7 @@ import te.view.DescriptionEditorController;
 import te.view.KeysEditorController;
 import te.view.LogController;
 import te.view.MainFrameController;
+import te.view.PresetsController;
 import te.view.TargetEditorController;
 import te.view.TargetsWindowController;
 import te.view.TitleEditorController;
@@ -45,12 +46,14 @@ public class Main extends Application {
 	public DescriptionEditorController descriptionEditorController;
 	public MainFrameController mainFrameController;
 	public TitleEditorController titleEditorController;
+	public PresetsController presetsController;
 	public VariablesEditorContainerController keyVariableEditorContainerController;
 	public VariablesEditorContainerController descriptionVariableEditorContainerController;
 	public LogController logController;
 	private Stage mainStage;
 	private Stage currentStage;
 	private ObservableList<Target> targetsData = FXCollections.observableArrayList();
+	private ObservableList<Target> savedTargetsData = FXCollections.observableArrayList();
 	public List<VariableLayoutController> keyVariableControllers = new ArrayList<VariableLayoutController>();
 	public List<VariableLayoutController> descriptionVariableControllers = new ArrayList<VariableLayoutController>();
 	public boolean isProblem;
@@ -64,6 +67,7 @@ public class Main extends Application {
 		mainFrameController = organizeStage("view/MainFrameWindow.fxml");
 		mainFrameController.app = this;
 		mainStage.setResizable(false);
+		presetsController = (PresetsController) addTab("Пресеты", "view/PresetsWindow.fxml", PresetsController.class);
 		keyVariableEditorContainerController = (VariablesEditorContainerController) addTab("Переменные \nключей", "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
 		descriptionVariableEditorContainerController = (VariablesEditorContainerController) addTab("Переменные \nописаний", "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
 		targetsController = (TargetsWindowController) addTab("Таргеты", "view/TargetsWindow.fxml", TargetsWindowController.class);
@@ -144,6 +148,15 @@ public class Main extends Application {
 	        return targetsData;
 	    }
 	  
+	public ObservableList<Target> getSavedTargetsData() {
+        return savedTargetsData;
+    }
+	
+	public void saveTargetsData(){
+		savedTargetsData.clear();
+		savedTargetsData.addAll(targetsData);
+	}
+	
 	public String getRandomTarget(){
 			if (getTargetsData()==null || getTargetsData().isEmpty()) return null;
 			return getTargetsData().get(ThreadLocalRandom.current().nextInt(0, getTargetsData().size())).getTarget();
@@ -232,5 +245,25 @@ public class Main extends Application {
 			return result;
 		}
 		
+	 public void updateAllForms(){
+		 keysEditorController.update();
+		 descriptionEditorController.updateLists();
+		 titleEditorController.updateLists();
+	 }
+	 
+	 /** Clears all but not Targets (selected folder), and not saved data -
+	  *     to allow use clear function during writing metadata. 
+	  */
+	 public void clearAllData(){
+		 keyVariableEditorContainerController.clear();
+		 descriptionVariableEditorContainerController.clear();
+		 keysEditorController.clearAll();
+		 keysEditorController.setup();
+		 descriptionEditorController.clearAll();
+		 titleEditorController.clearAll();
+		 keyVariableControllers = new ArrayList<VariableLayoutController>();
+		 descriptionVariableControllers = new ArrayList<VariableLayoutController>();
+	 }
+	 
 	 
 }

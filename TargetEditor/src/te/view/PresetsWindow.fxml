@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="482.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="te.view.PresetsController">
+   <children>
+      <Button fx:id="loadBtn" layoutX="24.0" layoutY="28.0" mnemonicParsing="false" onAction="#loadVariables" prefHeight="59.0" prefWidth="202.0" text="Загрузить переменные" />
+      <Button fx:id="saveBtn" layoutX="24.0" layoutY="126.0" mnemonicParsing="false" onAction="#saveVariables" prefHeight="59.0" prefWidth="202.0" text="Сохранить переменные" />
+      <Button fx:id="clearBtn" layoutX="24.0" layoutY="223.0" mnemonicParsing="false" onAction="#clearAllData" prefHeight="59.0" prefWidth="202.0" text="Очистить все данные" />
+   </children>
+</AnchorPane>

@@ -29,6 +29,7 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	private VBox variableLayouts;
 	
 	public ObservableList<Variable> variables =    FXCollections.observableArrayList();
+	public ObservableList<Variable> savedVariables =    FXCollections.observableArrayList();
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -37,6 +38,10 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 		
 	}
 	
+	public void saveVariables(){
+		savedVariables.clear();
+		savedVariables.addAll(variables);
+	}
 	
 	@FXML
 	public void addVariableLayout(){
@@ -91,6 +96,7 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 		variableLayouts.getChildren().clear();
 		app.keyVariableControllers.clear();
 		app.getPrimaryStage().sizeToScene();
+		variables =  FXCollections.observableArrayList();
 	}
 
 

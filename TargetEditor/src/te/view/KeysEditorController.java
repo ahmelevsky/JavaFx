@@ -3,10 +3,8 @@ package te.view;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -20,13 +18,12 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.shape.Circle;
 import javafx.util.StringConverter;
 
 import org.apache.commons.lang3.StringUtils;
@@ -59,7 +56,7 @@ public class KeysEditorController extends TargetEditorController implements Init
 	private Button addBtn;
 	
 	@FXML
-	private Spinner keyCountBox;
+	private Spinner<String> keyCountBox;
 	
 	@FXML
 	private Label countLabel;
@@ -67,6 +64,8 @@ public class KeysEditorController extends TargetEditorController implements Init
 	@FXML
 	private CheckBox isTarget;
 	
+	private ObservableList<String> items = FXCollections.observableArrayList("Все");
+	private String savedKeywordsTemplate;
 	private boolean isT;
 	
 	@Override
@@ -87,15 +86,20 @@ public class KeysEditorController extends TargetEditorController implements Init
 			
 		});
 
+		for (int i=1;i<=50;i++)
+			items.add(String.valueOf(i));
+		
+		SpinnerValueFactory<String> valueFactory =   new SpinnerValueFactory.ListSpinnerValueFactory<String>(items);
+		keyCountBox.setValueFactory(valueFactory);
+		keyCountBox.focusedProperty().addListener((arg, oldVal, newVal) -> { if (newVal) return; correctSpinnerValue();});
+		keyCountBox.valueProperty().addListener((arg, oldVal, newVal) -> correctSpinnerValue());
 		
 		ImageView imageView = new ImageView(new Image(new File(
 				"resources/add.png").toURI().toString()));
 		imageView.setFitWidth(40);
 		imageView.setFitHeight(22);
 		addBtn.setGraphic(imageView);
-		variablesCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
-			update();
-		});
+		
 		isTarget.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			update();
 		});
@@ -105,17 +109,57 @@ public class KeysEditorController extends TargetEditorController implements Init
 		
 		denyTab(keysField);
 	}
+	
+	
 	@FXML
 	private void clearForms(){
 		keysField.clear();
 	}
 	
+private void correctSpinnerValue(){
+	 String text = keyCountBox.getEditor().getText();
+     SpinnerValueFactory.ListSpinnerValueFactory<String> vFactory = (SpinnerValueFactory.ListSpinnerValueFactory<String>) keyCountBox.getValueFactory();
+     if (!vFactory.getItems().contains(text)) {
+  		   vFactory.setValue("1");
+     } else {
+  		   vFactory.setValue(text);
+     }
+     keyCountBox.increment(0);
+}
+	
 public void setup(){
 	variablesCombo.setItems(app.keyVariableEditorContainerController.variables);
 }
+
+
+@FXML
+private void addVariable(){
+	Variable d =  variablesCombo.getSelectionModel().getSelectedItem();
+	if (d==null)
+		return;
+	String previous = keysField.getText().trim();
+	StringBuilder sb = new StringBuilder(previous);
+	if (!previous.isEmpty())
+		sb.append(", ");
+	sb.append("<");
+	sb.append(d.getName());
+	sb.append(">");
 	
-private void update(){
+	String repeat = keyCountBox.getValueFactory().getValue();
+	if (repeat != null) {
+		sb.append("[");
+		if (!repeat.equals("Все"))
+			sb.append(repeat);
+		sb.append("]");
+	}
+	
+	keysField.setText(sb.toString());
+}
+
+
+public void update(){
 	try{
+		setError(keysField, false, null);
 		List<String> keys = getKeysFromUI();
 		preview.setText(StringUtils.join(keys, ", "));
 		countLabel.setText("Слов: " + keys.size());
@@ -129,20 +173,30 @@ private void update(){
 public List<String> generateKeywordsForMetadata(){
 	    List<String> keys = new ArrayList<String>();
 		
-		if (isT) {
-			String target = app.mainFrameController.currentTarget.getTarget();
-			if (app.isCorrectKey(target))
-				addToList(target, keys);
+	    try {
+	    	if (isT)
+	 			addToList(app.mainFrameController.currentTarget.getTarget(), keys);
+			addToList(SyntaxParser.pasteVariablesUnique(app.keyVariableEditorContainerController.savedVariables, this.savedKeywordsTemplate, false, ", "), keys);
+			keys = keys.stream().distinct().collect(Collectors.toList());
+			cutList(keys, 50);
+		} catch (TextException e) {
+			app.log("ERROR: Ошибка вставки переменных в строку: " + this.savedKeywordsTemplate);
+			app.isProblem = true;
 		}
 		
-		keys = keys.stream().distinct().collect(Collectors.toList());
-		
-		cutList(keys, 50);
-	
 		return keys;
 	}
 	
 	public void saveKeywordsSource() throws DataException{
+		try {
+			SyntaxParser.checkVariables(app.keyVariableEditorContainerController.variables, keysField.getText());
+			this.isT = isTarget.isSelected();
+			this.savedKeywordsTemplate = keysField.getText().trim();
+			
+		} catch (TextException e) {
+			setError(keysField, true, e.getMessage());
+			throw new DataException(this.tab);
+		}
 	}
 	
 	
@@ -150,11 +204,10 @@ public List<String> generateKeywordsForMetadata(){
 	private List<String> getKeysFromUI() throws TextAreaException{
         List<String> keys = new ArrayList<String>();
 		
-		addToList(parseVariablesInText(keysField, false), keys);
-		
-		if (isTarget.isSelected())
+        if (isTarget.isSelected())
 			addToList(app.getRandomTarget(), keys);
-		
+        
+		addToList(parseVariablesInText(keysField, false), keys);
 		
 		keys = keys.stream().distinct().collect(Collectors.toList());
 		cutList(keys, 50);
@@ -170,23 +223,6 @@ public List<String> generateKeywordsForMetadata(){
 		for (String s:array)
 			if (!s.trim().isEmpty()) list.add(s.trim());
 	}
-	
-	
-	private void addNRandomToList(String string, List<String> list, int N){
-		Random random = new Random();
-		String[] array = string.split(",|;");
-		List<String> l = new ArrayList<String>(Arrays.asList(array));
-		while (N>0){
-			if (l.isEmpty())
-				break;
-			String s = l.remove(random.nextInt(l.size()));
-			if (!s.trim().isEmpty() && !list.contains(s.trim())){
-			list.add(s.trim());
-			N--;
-			}
-		}
-	}
-	
 	
 	private List<String> cutList(List<String>list, int size){
 		if (list.size() > size)
@@ -222,7 +258,7 @@ public List<String> generateKeywordsForMetadata(){
 	private String parseVariablesInText(TextArea tf, boolean isMax) throws TextAreaException{
 		String result = null;
 		try{
-			result = SyntaxParser.pasteVariables(app.keyVariableEditorContainerController.variables, tf.getText(), isMax, ", ");	
+			result = SyntaxParser.pasteVariablesUnique(app.keyVariableEditorContainerController.variables, tf.getText(), isMax, ", ");	
 		}
 		catch (TextException e) {
 			throw new TextAreaException (tf, e.getMessage());
@@ -249,6 +285,11 @@ public List<String> generateKeywordsForMetadata(){
 	            styleClassresultText.removeAll(Collections.singleton("redText"));
 	            countLabel.setText("");
 	        }
+	}
+	
+	public void clearAll(){
+		//variablesCombo.getSelectionModel().select(0);
+		keysField.clear();
 	}
 	
 	}

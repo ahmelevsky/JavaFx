@@ -96,6 +96,9 @@ public class MainFrameController implements Initializable{
 			else if (newTab.equals(app.titleEditorController.tab)){
 				app.titleEditorController.updateLists();
 			}
+			else if (newTab.equals(app.keysEditorController.tab)){
+				app.keysEditorController.update();
+			}
 	    });
 	}
 	
@@ -136,6 +139,9 @@ public class MainFrameController implements Initializable{
 	   	 final long allImagesCount = allImagesCounter;
 		
 		try {
+			app.saveTargetsData();
+			app.keyVariableEditorContainerController.saveVariables();
+			app.descriptionVariableEditorContainerController.saveVariables();
 			app.keysEditorController.saveKeywordsSource();
 			app.descriptionEditorController.saveDescriptionsSource();
 			app.titleEditorController.saveTitleSource();
@@ -162,7 +168,7 @@ public class MainFrameController implements Initializable{
 		             
 		             
 		           for (File dir:directories){
-			            currentTarget = app.getTargetsData().stream().filter(t->t.getFolder().equals(dir)).findFirst().get();
+			            currentTarget = app.getSavedTargetsData().stream().filter(t->t.getFolder().equals(dir)).findFirst().get();
 			   	        File[] images =	dir.listFiles(new FileFilter() {
 			                public boolean accept(File f) {
 			                	return f.isFile() && f.getName().toLowerCase().endsWith(".jpg");
@@ -176,7 +182,7 @@ public class MainFrameController implements Initializable{
 			   	        for (File image:images){
 			   	        	try{
 			   	        		List<String> keywords = app.keysEditorController.generateKeywordsForMetadata();
-			   	        		String description  =  app.descriptionEditorController.generateRandomDescription();
+			   	        		String description  =  app.descriptionEditorController.generateDescriptionForMetadata();
 			   	        		String title = app.titleEditorController.getTitleForMetadata();
 			   	        		ExiftoolRunner.writeMetadataToFile (image, keywords, title, description);
 			   	         		success++;
@@ -251,6 +257,7 @@ public class MainFrameController implements Initializable{
         	 this.rootFolder = file;
         	 this.folderPath.setText(file.getAbsolutePath());
         	 app.targetsController.fillTargets(file);
+        	 app.updateAllForms();
          }
 	}
 	

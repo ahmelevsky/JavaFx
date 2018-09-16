@@ -19,7 +19,7 @@
       <CheckBox fx:id="isTarget" layoutX="26.0" layoutY="232.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="277.0" text="Добавить Таргет (имя папки)" />
       <TextArea fx:id="preview" editable="false" layoutX="26.0" layoutY="263.0" opacity="0.72" prefHeight="193.0" prefWidth="746.0" wrapText="true" />
       <ComboBox fx:id="variablesCombo" layoutX="22.0" layoutY="52.0" prefHeight="31.0" prefWidth="277.0" />
-      <Button fx:id="addBtn" layoutX="453.0" layoutY="52.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="40.0" text=" " />
+      <Button fx:id="addBtn" layoutX="453.0" layoutY="52.0" maxWidth="40.0" mnemonicParsing="false" onAction="#addVariable" prefHeight="25.0" prefWidth="40.0" text=" " />
       <Label layoutX="26.0" layoutY="23.0" prefHeight="21.0" prefWidth="269.0" text="Переменные ключей" />
       <Label layoutX="328.0" layoutY="23.0" prefHeight="21.0" prefWidth="116.0" text="Число ключей" />
       <Spinner fx:id="keyCountBox" editable="true" layoutX="328.0" layoutY="52.0" prefHeight="31.0" prefWidth="96.0" />

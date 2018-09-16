@@ -208,7 +208,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		else if (titleBoxSetting.equals("Таргет2"))
 			return app.mainFrameController.currentTarget.getTarget2();
 		else {
-			String variableValue = Variable.getRandomValueByName(app.descriptionVariableEditorContainerController.variables, titleBoxSetting);
+			String variableValue = Variable.getRandomValueByName(app.descriptionVariableEditorContainerController.savedVariables, titleBoxSetting);
 			if (variableValue==null)
 				return "";
 			else
@@ -220,5 +220,9 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		return text.split("\\s+").length;
 	}
 
-	
+	public void clearAll(){
+		titleBox.getSelectionModel().select("<текст>");
+		titleText.clear();
+		isTakeFromDescriptionBox.setSelected(false);
+	}
 }

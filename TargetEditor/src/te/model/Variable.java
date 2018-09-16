@@ -1,7 +1,6 @@
 package te.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -72,6 +71,22 @@ public class Variable {
 	}
 	
 	
+	public String getRandomValueExcluding(List<String> excludeList){
+		if (this.values.isEmpty()) return "";
+		List<String> result = new ArrayList<String>();
+		result.addAll(this.values);
+		result.removeAll(excludeList);
+		if (result.isEmpty()) return "";
+		int index = ThreadLocalRandom.current().nextInt(result.size());
+		int i=0;
+		for (String v:result){
+			if (i==index)
+				return v;
+			i++;
+		}
+		return null;
+	}
+	
 	public String getRandomValueFromCollection(Collection<String> c){
 		if (c.isEmpty()) return "";
 		int index = ThreadLocalRandom.current().nextInt(c.size());
@@ -89,6 +104,15 @@ public class Variable {
 		return Collections.max(this.values, Comparator.comparing(s -> s.length()));
 	}
 	
+	public String getMaxValueExcluding(List<String> excludeList){
+		if (this.values.isEmpty()) return "";
+		List<String> result = new ArrayList<String>();
+		result.addAll(this.values);
+		result.removeAll(excludeList);
+		if (result.isEmpty()) return "";
+		return Collections.max(result, Comparator.comparing(s -> s.length()));
+	}
+	
 	public List<String> getNRandomValues(int n){
 		List<String> result = new ArrayList<String>();
 		result.addAll(this.values);
@@ -98,9 +122,31 @@ public class Variable {
 		return result;
 	}
 	
+	public List<String> getNRandomValuesExcluding(int n, List<String> excludeList){
+		List<String> result = new ArrayList<String>();
+		result.addAll(this.values);
+		result.removeAll(excludeList);
+		if (result.isEmpty()) return result;
+		Collections.shuffle(result);
+		while (result.size()>n)
+			result.remove(0);
+		return result;
+	}
+	
 	public List<String> getNMaxValues(int n){
 		List<String> result = new ArrayList<String>();
 		result.addAll(this.values);
+		Collections.sort(result, Comparator.comparing(s -> s.length()));
+		while (result.size()>n)
+			result.remove(0);
+		return result;
+	}
+	
+	public List<String> getNMaxValuesExcluding(int n, List<String> excludeList){
+		List<String> result = new ArrayList<String>();
+		result.addAll(this.values);
+		result.removeAll(excludeList);
+		if (result.isEmpty()) return result;
 		Collections.sort(result, Comparator.comparing(s -> s.length()));
 		while (result.size()>n)
 			result.remove(0);

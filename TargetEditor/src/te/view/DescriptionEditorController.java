@@ -258,14 +258,14 @@ public class DescriptionEditorController extends TargetEditorController implemen
 	}
 	
 			
-	public String generateRandomDescription(){
+	public String generateDescriptionForMetadata(){
 		List<String> result = new ArrayList<String>();
 		for (int i=0; i<data.size();i++){
 			final String dataValue = data.get(i);
 			if (dataValue == null || dataValue.equals("<текст>")){
 			    String t = "";
 				try {
-					t = SyntaxParser.pasteVariables(app.descriptionVariableEditorContainerController.variables, textFieldsStored.get(i), false, " ");
+					t = SyntaxParser.pasteVariables(app.descriptionVariableEditorContainerController.savedVariables, textFieldsStored.get(i), false, " ");
 				} catch (TextException e) {
 					app.log("ERROR: Ошибка вставки переменных в строку: " + textFieldsStored.get(i));
 					app.isProblem = true;
@@ -291,7 +291,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 			}
 			
    		    else {
- 				String variableValue = Variable.getRandomValueByName(app.descriptionVariableEditorContainerController.variables, dataValue);
+ 				String variableValue = Variable.getRandomValueByName(app.descriptionVariableEditorContainerController.savedVariables, dataValue);
 					    if (variableValue!=null && !variableValue.isEmpty())
 					    	result.add(variableValue);
 					}
@@ -324,13 +324,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 
 	public void saveDescriptionsSource() throws DataException {
 		data.clear();
-		for (ComboBox<String> sel:selectors){
-			String item = sel.getSelectionModel().getSelectedItem();
-			if (item==null)
-				data.add("<текст>");
-			else 
-				data.add(item);
-		}
+		selectors.forEach(sel -> data.add(sel.getSelectionModel().getSelectedItem()));
 		textFieldsStored.clear();
 		for (int i=0;i<textFields.size();i++)
 			try {
@@ -340,6 +334,11 @@ public class DescriptionEditorController extends TargetEditorController implemen
 				setError(textFields.get(i), true, e.getMessage());
 				throw new DataException(this.tab);
 			}
+	}
+	
+	public void clearAll(){
+		selectors.forEach(sel -> sel.getSelectionModel().select("<текст>"));
+		textFields.forEach(tf -> tf.clear());
 	}
 
 }
