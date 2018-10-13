@@ -8,7 +8,6 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
@@ -30,6 +29,7 @@ import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 
 import te.Main;
+import te.model.FolderVariable;
 import te.model.Target;
 import te.model.Variable;
 import te.util.DataException;
@@ -39,6 +39,7 @@ public class MainFrameController implements Initializable{
 
 	public Main app;
 	private File rootFolder;
+	public FolderVariable currentFolder;
 	public Target currentTarget;
 	private Task<String> task;
 	
@@ -50,6 +51,8 @@ public class MainFrameController implements Initializable{
 	private TabPane tabs;
 	@FXML
 	private ProgressBar progress;
+	@FXML
+	private Button clearBtn;
 	
 	
 	
@@ -168,7 +171,7 @@ public class MainFrameController implements Initializable{
 		             
 		             
 		           for (File dir:directories){
-			            currentTarget = app.getSavedTargetsData().stream().filter(t->t.getFolder().equals(dir)).findFirst().get();
+			            currentFolder = app.getSavedFolderVariableData().stream().filter(t->t.getFolder().equals(dir)).findFirst().get();
 			   	        File[] images =	dir.listFiles(new FileFilter() {
 			                public boolean accept(File f) {
 			                	return f.isFile() && f.getName().toLowerCase().endsWith(".jpg");
@@ -181,6 +184,7 @@ public class MainFrameController implements Initializable{
 		    	   
 			   	        for (File image:images){
 			   	        	try{
+			   	        		currentTarget = app.getRandomTarget();
 			   	        		List<String> keywords = app.keysEditorController.generateKeywordsForMetadata();
 			   	        		String description  =  app.descriptionEditorController.generateDescriptionForMetadata();
 			   	        		String title = app.titleEditorController.getTitleForMetadata();
@@ -256,7 +260,7 @@ public class MainFrameController implements Initializable{
          if(file!=null){
         	 this.rootFolder = file;
         	 this.folderPath.setText(file.getAbsolutePath());
-        	 app.targetsController.fillTargets(file);
+        	 app.folderVariableController.fillFolderVariables(file);
         	 app.updateAllForms();
          }
 	}
@@ -271,5 +275,9 @@ public class MainFrameController implements Initializable{
 		 });
 	}
 
+	@FXML
+	private void clearAllData(){
+		app.clearAllData();
+	}
 
 }

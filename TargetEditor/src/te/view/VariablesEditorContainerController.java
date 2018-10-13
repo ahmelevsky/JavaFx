@@ -1,10 +1,12 @@
 package te.view;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import org.apache.commons.lang3.StringUtils;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,9 +16,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
 import te.Main;
 import te.model.Variable;
 
@@ -24,18 +28,23 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 
 	@FXML
 	private Button addVarBtn;
-	
+	@FXML
+	private Button loadBtn;
+	@FXML
+	private Button saveBtn;
 	@FXML
 	private VBox variableLayouts;
 	
 	public ObservableList<Variable> variables =    FXCollections.observableArrayList();
 	public ObservableList<Variable> savedVariables =    FXCollections.observableArrayList();
+	public List<VariableLayoutController> controllersList; 
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		this.addVarBtn.setShape(new Circle(25));
-		
+		loadBtn.setTooltip(new Tooltip("Загрузить из файла набор переменных \n(и ключей и описаний)"));
+		saveBtn.setTooltip(new Tooltip("Сохранить в файл набор переменных \n(и ключей и описаний)"));
 	}
 	
 	public void saveVariables(){
@@ -45,13 +54,14 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	
 	@FXML
 	public void addVariableLayout(){
-		 Variable var = new Variable("", "", "");
+		 Variable var = new Variable("", ",", "");
 		 this.variables.add(var); 
 		 addVariableLayout(var);
 	}
 	
 	public void addVariableLayout(Variable variable){
 		try {
+			
 			 FXMLLoader loader = new FXMLLoader();
 	         loader.setLocation(Main.class.getResource("view/VariableLayout.fxml"));
 		     HBox sourceLayout = (HBox) loader.load();
@@ -61,8 +71,8 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	         controller.app = this.app;
 	         controller.setVariable(variable);
 	         controller.layout = sourceLayout;
-	         app.keyVariableControllers.add(controller);
-	        
+	         controllersList.add(controller);
+	         
 			} catch (IOException e) {
 				  Alert alert = new Alert(AlertType.ERROR);
 		            alert.setTitle("Ошибка");
@@ -75,10 +85,10 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	
 	public void removeVariableLayout(VariableLayoutController controller){
 		 try {
-			 
+			 if (!controllersList.contains(controller)) return;
 			 variableLayouts.getChildren().remove(controller.layout);
 			 variables.remove(controller.getVariable());
-			 app.keyVariableControllers.remove(controller);
+			 controllersList.remove(controller);
 			 //app.getPrimaryStage().sizeToScene();
 		 }
 		 catch (Exception e) {
@@ -99,6 +109,47 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 		variables =  FXCollections.observableArrayList();
 	}
 
+	@Override
+	public void loadData() {
+		for (Variable v:this.variables) {
+			addVariableLayout(v);
+		}
+		
+	}
 
+
+
+	@FXML
+	private void loadVariablesFromFile(){
+		 FileChooser fileChooser = new FileChooser(); 
+
+		 fileChooser.setTitle("Выберите файл с источниками");
+		 File lastFile = app.getKeysFilePath();
+		 if (lastFile!=null)
+			 fileChooser.setInitialDirectory(lastFile.getParentFile());
+		 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (.xml)", "*.xml"));
+         File file = fileChooser.showOpenDialog(app.getPrimaryStage());
+        if(file!=null)
+       	   app.loadKeysDataFromFile(file);
+	}
+	
+	@FXML
+	private void saveVariablesToFile(){
+		 FileChooser fileChooser = new FileChooser(); 
+
+		 fileChooser.setTitle("Сохраните файл с источниками");
+		 File lastFile = app.getKeysFilePath();
+		 if (lastFile!=null)
+			 fileChooser.setInitialDirectory(lastFile.getParentFile());
+         File file = fileChooser.showSaveDialog(app.getPrimaryStage());
+
+        if(file!=null){
+        	if(!file.getName().contains(".")) {
+        		file = new File(file.getAbsolutePath() + ".xml");
+        		}
+       	  app.saveKeysDataToFile(file);
+        }
+	}
+	
 
 }

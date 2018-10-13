@@ -9,4 +9,5 @@ public abstract class TargetEditorController implements Initializable {
 	public Tab tab;
 	public Main app;
 	
+	public abstract void loadData();
 }

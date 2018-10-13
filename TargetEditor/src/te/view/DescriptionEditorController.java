@@ -74,6 +74,10 @@ public class DescriptionEditorController extends TargetEditorController implemen
 	public List<String> textFieldsStored = new ArrayList<String>();
 	private List<String> data = new ArrayList<String>();
 	
+	private final String targetDescr1 = "TargetDescr1";
+	private final String targetDescr2 = "TargetDescr2";		
+	
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -178,9 +182,8 @@ public class DescriptionEditorController extends TargetEditorController implemen
 			ol.clear();
 			ol.add("<текст>");
 			if (!app.getTargetsData().isEmpty()){
-				ol.add("Таргет");
-				ol.add("Таргет1");
-				ol.add("Таргет2");
+				ol.add(this.targetDescr1);
+				ol.add(this.targetDescr2);
 			}
 			ol.addAll(app.descriptionVariableEditorContainerController.variables.stream().map(Variable::getName)
 		              .collect(Collectors.toList()));
@@ -208,26 +211,17 @@ public class DescriptionEditorController extends TargetEditorController implemen
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
-			else if (d.equals("Таргет")) {
-				//String t = maxTarget.getTarget();
-				List<String> res = app.getTargetsData().stream().map(Target::getTarget).collect(Collectors.toList());
-				String t = Collections.max(res, Comparator.comparing(s -> s.length()));
-				textFields.get(i).setText(t);
-				if (!t.isEmpty())
-				    	result.add(t);
-				    
-			}
-			else if (d.equals("Таргет1")) {
+			else if (d.equals(this.targetDescr1)) {
 				//String t = maxTarget.getTarget1();
-				List<String> res = app.getTargetsData().stream().map(Target::getTarget1).collect(Collectors.toList());
+				List<String> res = app.getTargetsData().stream().map(Target::getTargetDescr1).collect(Collectors.toList());
 				String t = Collections.max(res, Comparator.comparing(s -> s.length()));
 				textFields.get(i).setText(t);
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
-			else if (d.equals("Таргет2")){
+			else if (d.equals(this.targetDescr2)){
 				//String t = maxTarget.getTarget2();
-				List<String> res = app.getTargetsData().stream().map(Target::getTarget2).collect(Collectors.toList());
+				List<String> res = app.getTargetsData().stream().map(Target::getTargetDescr2).collect(Collectors.toList());
 				String t = Collections.max(res, Comparator.comparing(s -> s.length()));
 				textFields.get(i).setText(t);
 			    if (!t.isEmpty())
@@ -273,19 +267,14 @@ public class DescriptionEditorController extends TargetEditorController implemen
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
-			else if (dataValue.equals("Таргет")){
-				String t = app.mainFrameController.currentTarget.getTarget();
+			else if (dataValue.equals(this.targetDescr1)){
+				String t = app.mainFrameController.currentTarget.getTargetDescr1();
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
 				
-			else if (dataValue.equals("Таргет1")){
-				String t = app.mainFrameController.currentTarget.getTarget1();
-			    if (!t.isEmpty())
-			    	result.add(t);
-			}
-			else if (dataValue.equals("Таргет2")){
-				String t = app.mainFrameController.currentTarget.getTarget2();
+			else if (dataValue.equals(this.targetDescr2)){
+				String t = app.mainFrameController.currentTarget.getTargetDescr2();
 			    if (!t.isEmpty())
 			    	result.add(t);
 			}
@@ -339,6 +328,11 @@ public class DescriptionEditorController extends TargetEditorController implemen
 	public void clearAll(){
 		selectors.forEach(sel -> sel.getSelectionModel().select("<текст>"));
 		textFields.forEach(tf -> tf.clear());
+	}
+
+	@Override
+	public void loadData() {
+		
 	}
 
 }

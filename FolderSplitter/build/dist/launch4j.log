@@ -1,0 +1,28 @@
+
+
+Version:	3.10
+CmdLine:	C:\JavaFX\workspace\FolderSplitter\build\dist\FolderSplitter.exe --l4j-debug
+WOW64:		yes
+Working dir:	C:\JavaFX\workspace\FolderSplitter\build\dist\.
+Java min ver:	1.8.0
+Java max ver:	
+Bundled JRE:	JRE
+Check launcher:	C:\JavaFX\workspace\FolderSplitter\build\dist\JRE\bin\javaw.exe (not found)
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8.0_181
+Check launcher:	C:\Program Files\Java\jre1.8.0_181\bin\javaw.exe (OK)
+Match:		1.8.0_181
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_73
+Ignore:		1.8.0_073
+64-bit search:	SOFTWARE\JavaSoft\JRE...
+64-bit search:	SOFTWARE\JavaSoft\JDK...
+Runtime used:	1.8.0_181 (64-bit)
+Launcher:	C:\Program Files\Java\jre1.8.0_181\bin\javaw.exe
+Launcher args:	-jar "C:\JavaFX\workspace\FolderSplitter\build\dist\FolderSplitter.exe"
+Args length:	71/32768 chars
+Exit code:	0

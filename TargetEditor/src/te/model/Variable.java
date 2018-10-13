@@ -1,6 +1,11 @@
 package te.model;
 
 import java.util.ArrayList;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,14 +14,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+@XmlAccessorType(XmlAccessType.PROPERTY)
 public class Variable {
 	private final StringProperty name;
 	private final StringProperty delimiter;
-    private Set<String> values = new HashSet<String>();
+	//private final StringProperty valuesString;
+	
+    private final Set<String> values = new HashSet<String>();
 	
     
     public Variable(){
@@ -25,10 +32,11 @@ public class Variable {
 	
 	public Variable(String name, String delimiter, String values){
 		this.name =  new SimpleStringProperty(name);
+		//this.valuesString = new SimpleStringProperty(values);
 		this.delimiter = new SimpleStringProperty(delimiter);
 		setValues(values);
 	}
-	
+	@XmlElement
 	public String getName(){
 		return this.name.get();
 	}
@@ -40,11 +48,10 @@ public class Variable {
 	public void setName(String name){
 		this.name.set(name);
 	}
-	
 	public void setDelimiter(String delimiter){
 		this.delimiter.set(delimiter);
 	}
-	
+	@XmlElement
 	public String getDelimiter(){
         return this.delimiter.get();		
 	}
@@ -52,18 +59,25 @@ public class Variable {
 	public StringProperty delimiterProperty(){
 		return this.delimiter;
 	}
-	
+	@XmlElementWrapper(name = "values")
+	@XmlElement(name = "value")
 	public Set<String> getValues(){
 		return this.values;
 	}
 	
 	public void setValues(String values){
+		//this.valuesString.set(values);
 		String[] vals = values.split(this.delimiter.get());
-		this.values = new HashSet<String>();
+		this.values.clear();
 		for (String v:vals){
 			if (v!=null && !v.trim().isEmpty())
 				this.values.add(v.trim());
 		}
+	}
+	
+	public void setValues(Set<String> values){
+		this.values.clear();
+		this.values.addAll(values);
 	}
 	
 	public String getRandomValue(){
@@ -172,7 +186,20 @@ public class Variable {
 				return vo.get().getMaxValue();
 				
 	}
-    
+/*
+	public final StringProperty valuesStringProperty() {
+		return this.valuesString;
+	}
+
+	public final java.lang.String getValuesString() {
+		return this.valuesStringProperty().get();
+	}
+
+	@XmlElement
+	public final void setValuesString(final java.lang.String valuesString) {
+		this.valuesStringProperty().set(valuesString);
+	}
+  */  
     
     
 }

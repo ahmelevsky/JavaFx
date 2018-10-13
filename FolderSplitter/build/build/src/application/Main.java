@@ -10,6 +10,7 @@ import javafx.fxml.JavaFXBuilderFactory;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -27,6 +28,8 @@ public class Main extends Application {
 		mainController = (MainController) organizeStage(mainStage, "MainForm.fxml", MainController.class);
 		mainController.setMainApp(this);
 		mainStage.setResizable(false);
+		mainStage.setTitle("Folder Splitter v1.0");
+		mainStage.getIcons().add(new Image("file:resources/icon.png"));
 		mainStage.show();
 	}
 	

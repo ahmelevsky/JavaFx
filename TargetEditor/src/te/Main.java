@@ -1,11 +1,14 @@
 package te;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.prefs.Preferences;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -20,20 +23,27 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
+import te.model.FolderVariable;
+import te.model.KeysWrapper;
 import te.model.Target;
 import te.model.Variable;
 import te.util.ExiftoolRunner;
 import te.util.SyntaxParser;
 import te.util.TextException;
 import te.view.DescriptionEditorController;
+import te.view.FolderVariableController;
 import te.view.KeysEditorController;
 import te.view.LogController;
 import te.view.MainFrameController;
-import te.view.PresetsController;
 import te.view.TargetEditorController;
 import te.view.TargetsWindowController;
 import te.view.TitleEditorController;
@@ -41,22 +51,27 @@ import te.view.VariableLayoutController;
 import te.view.VariablesEditorContainerController;
 
 public class Main extends Application {
+	public Set<TargetEditorController> controllers = new HashSet<TargetEditorController>();
 	public TargetsWindowController targetsController;
 	public KeysEditorController keysEditorController;
 	public DescriptionEditorController descriptionEditorController;
+	public FolderVariableController folderVariableController;
 	public MainFrameController mainFrameController;
 	public TitleEditorController titleEditorController;
-	public PresetsController presetsController;
 	public VariablesEditorContainerController keyVariableEditorContainerController;
 	public VariablesEditorContainerController descriptionVariableEditorContainerController;
 	public LogController logController;
 	private Stage mainStage;
 	private Stage currentStage;
+	private ObservableList<FolderVariable> folderVariableData = FXCollections.observableArrayList();
+	private ObservableList<FolderVariable> savedFolderVariableData = FXCollections.observableArrayList();
 	private ObservableList<Target> targetsData = FXCollections.observableArrayList();
 	private ObservableList<Target> savedTargetsData = FXCollections.observableArrayList();
 	public List<VariableLayoutController> keyVariableControllers = new ArrayList<VariableLayoutController>();
 	public List<VariableLayoutController> descriptionVariableControllers = new ArrayList<VariableLayoutController>();
 	public boolean isProblem;
+	public File dataFile = new File(System.getProperty("user.home") + File.separator + "TargetEditor.xml");
+	public File dataFileTemp = new File(System.getProperty("user.home") + File.separator + "TargetEditor_Temp.xml");
 	
 	@Override
 	public void start(Stage primaryStage) throws IOException {
@@ -67,11 +82,14 @@ public class Main extends Application {
 		mainFrameController = organizeStage("view/MainFrameWindow.fxml");
 		mainFrameController.app = this;
 		mainStage.setResizable(false);
-		presetsController = (PresetsController) addTab("Пресеты", "view/PresetsWindow.fxml", PresetsController.class);
 		keyVariableEditorContainerController = (VariablesEditorContainerController) addTab("Переменные \nключей", "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
+		keyVariableEditorContainerController.controllersList = keyVariableControllers;
 		descriptionVariableEditorContainerController = (VariablesEditorContainerController) addTab("Переменные \nописаний", "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
+		descriptionVariableEditorContainerController.controllersList = descriptionVariableControllers;
 		targetsController = (TargetsWindowController) addTab("Таргеты", "view/TargetsWindow.fxml", TargetsWindowController.class);
 		targetsController.setup();
+		folderVariableController = (FolderVariableController) addTab("Переменные папок", "view/FolderVariablesWindow.fxml", FolderVariableController.class);
+		folderVariableController.setup();
 		keysEditorController = (KeysEditorController) addTab("Ключи", "view/KeysEditorWindow.fxml", KeysEditorController.class);
 		descriptionEditorController = (DescriptionEditorController) addTab("Описания", "view/DescriptionEditorWindow.fxml", DescriptionEditorController.class);
 		titleEditorController = (TitleEditorController) addTab("Заголовки", "view/TitleEditorWindow.fxml", TitleEditorController.class);
@@ -80,8 +98,27 @@ public class Main extends Application {
 		keysEditorController.setup();
 		mainStage.setTitle("Target Editor v1.0");
 		mainStage.getIcons().add(new Image("file:resources/icon.png"));
+		loadLastSettings();
+		for (TargetEditorController controller : this.controllers)
+			controller.loadData();
 		mainStage.show();
 	}
+	
+	 @Override
+	 public void stop(){
+		 try{
+	     saveLastSettings();
+	     this.dataFile.delete();
+	     this.dataFileTemp.renameTo(this.dataFile);
+		 }
+		 catch (Exception e) {
+			 Alert alert = new Alert(AlertType.ERROR);
+	            alert.setTitle("Ошибка");
+	            alert.setHeaderText("Ошибка сохранения данных в xml");
+	            alert.setContentText(e.getMessage());
+	            alert.showAndWait();
+		 }
+	 }
 	
 	 private MainFrameController organizeStage(String fxml) throws IOException{
 	        FXMLLoader loader = new FXMLLoader();
@@ -111,6 +148,7 @@ public class Main extends Application {
 	        TargetEditorController controller = loader.getController();
 	        controller.tab = tab;
 	        controller.app = this;
+	        this.controllers.add(controller);
 	        return controller;
 	}
 	 
@@ -157,17 +195,22 @@ public class Main extends Application {
 		savedTargetsData.addAll(targetsData);
 	}
 	
-	public String getRandomTarget(){
+	public String getRandomTargetKwd(){
 			if (getTargetsData()==null || getTargetsData().isEmpty()) return null;
-			return getTargetsData().get(ThreadLocalRandom.current().nextInt(0, getTargetsData().size())).getTarget();
+			return getTargetsData().get(ThreadLocalRandom.current().nextInt(0, getTargetsData().size())).getTargetKwd();
 		}
+	
+	public Target getRandomTarget(){
+		if (getTargetsData()==null || getTargetsData().isEmpty()) return null;
+		return getTargetsData().get(ThreadLocalRandom.current().nextInt(0, getTargetsData().size()));
+	}
 	
 	public Target getTargetWithMaxLength(){
 		if (getTargetsData()==null || getTargetsData().isEmpty()) return null;
 		Target resultTarget = null;
 		int max = 0;
 		for (Target t:getTargetsData()){
-			int l = t.getTarget().length() + t.getTarget1().length() + t.getTarget2().length();
+			int l = t.getTargetKwd().length() + t.getTargetDescr1().length() + t.getTargetDescr2().length();
 			if (l>max){
 				max=l;
 				resultTarget = t;
@@ -175,6 +218,23 @@ public class Main extends Application {
 		}
 		return resultTarget;
 	}
+	
+	
+	
+	
+	public ObservableList<FolderVariable> getFolderVariableData() {
+	        return folderVariableData;
+	    }
+	  
+	public ObservableList<FolderVariable> getSavedFolderVariableData() {
+        return savedFolderVariableData;
+    }
+	
+	public void saveFolderVariableData(){
+		savedFolderVariableData.clear();
+		savedFolderVariableData.addAll(folderVariableData);
+	}
+
 	
 	 public boolean isCorrectKey(String text){
 		  if (text == null) return true;
@@ -216,15 +276,15 @@ public class Main extends Application {
 			}
 			
 			//Targets
-			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTarget()))){
+			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTargetKwd()))){
 				log("Недопустимые символы в одном из полей Таргет");
 				result = false;
 				}
-			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTarget1()))){
+			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTargetDescr1()))){
 				log("Недопустимые символы в одном из полей Таргет1");
 				result = false;
 				}
-			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTarget1()))){
+			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTargetDescr1()))){
 				log("Недопустимые символы в одном из полей Таргет2");
 				result = false;
 				}
@@ -266,4 +326,117 @@ public class Main extends Application {
 	 }
 	 
 	 
+	 
+	    public File getKeysFilePath() {
+	        Preferences prefs = Preferences.userNodeForPackage(Main.class);
+	        String filePath = prefs.get("targetEditorFilePath", null);
+	        if (filePath != null) {
+	            return new File(filePath);
+	        } else {
+	            return null;
+	        }
+	    }
+
+	    public void setKeysFilePath(File file) {
+	        Preferences prefs = Preferences.userNodeForPackage(Main.class);
+	        if (file != null) {
+	            prefs.put("targetEditorFilePath", file.getPath());
+	        } else {
+	            prefs.remove("targetEditorFilePath");
+	        }
+	    }
+	 
+	    public void loadKeysDataFromFile(File file) {
+	        try {
+	            JAXBContext context = JAXBContext
+	                    .newInstance(KeysWrapper.class);
+	            Unmarshaller um = context.createUnmarshaller();
+
+	            // Чтение XML из файла и демаршализация.
+	            KeysWrapper wrapper = (KeysWrapper) um.unmarshal(file);
+
+	            
+	            this.keyVariableEditorContainerController.clear();
+	            this.descriptionVariableEditorContainerController.clear();
+	            this.keyVariableEditorContainerController.variables.addAll(wrapper.getKeyVariables());
+	            this.descriptionVariableEditorContainerController.variables.addAll(wrapper.getDescriptionVariables());
+	            this.descriptionVariableEditorContainerController.loadData();
+	            this.keyVariableEditorContainerController.loadData();
+	            // Сохраняем путь к файлу в реестре.
+	            setKeysFilePath(file);
+
+	        } catch (Exception e) { // catches ANY exception
+	            Alert alert = new Alert(AlertType.ERROR);
+	            alert.setTitle("Error");
+	            alert.setHeaderText("Could not load data");
+	            alert.setContentText("Could not load data from file:\n" + file.getPath());
+
+	            alert.showAndWait();
+	        }
+	    }
+
+	    
+	    public void saveKeysDataToFile(File file) {
+	        try {
+	            JAXBContext context = JAXBContext
+	                    .newInstance(KeysWrapper.class);
+	            Marshaller m = context.createMarshaller();
+	            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+	            // Обёртываем наши данные об адресатах.
+	            KeysWrapper wrapper = new KeysWrapper();
+	            wrapper.setKeyVariables(this.keyVariableEditorContainerController.variables);
+                wrapper.setDescriptionVariables(this.descriptionVariableEditorContainerController.variables);
+	            // Маршаллируем и сохраняем XML в файл.
+	            m.marshal(wrapper, file);
+
+	            // Сохраняем путь к файлу в реестре.
+	            setKeysFilePath(file);
+	        } catch (Exception e) { // catches ANY exception
+	            Alert alert = new Alert(AlertType.ERROR);
+	            alert.setTitle("Error");
+	            alert.setHeaderText("Could not save data");
+	            alert.setContentText("Could not save data to file:\n" + file.getPath());
+
+	            alert.showAndWait();
+	        }
+	    }
+	    public void loadLastSettings(){
+			  try {
+				   if (!this.dataFile.exists())
+					   return;
+		            JAXBContext context = JAXBContext
+		                    .newInstance(KeysWrapper.class);
+		            Unmarshaller um = context.createUnmarshaller();
+
+		            KeysWrapper wrapper = (KeysWrapper) um.unmarshal(this.dataFile);
+
+		            this.keyVariableEditorContainerController.variables.addAll(wrapper.getKeyVariables());
+		            this.descriptionVariableEditorContainerController.variables.addAll(wrapper.getDescriptionVariables());
+		        } catch (Exception e) { // catches ANY exception
+		            Alert alert = new Alert(AlertType.ERROR);
+		            alert.setTitle("Ошибка");
+		            alert.setHeaderText("Ошибка загрузки параметров");
+		            alert.setContentText("Не могу получить параметры из файла:\n" + this.dataFile.getPath());
+
+		            alert.showAndWait();
+		        }
+		 }
+	    
+		 public void saveLastSettings() throws JAXBException{
+				 
+				  JAXBContext context = JAXBContext
+		                    .newInstance(KeysWrapper.class);
+		            Marshaller m = context.createMarshaller();
+		            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+		            // Обёртываем наши данные об адресатах.
+		            KeysWrapper wrapper = new KeysWrapper();
+		            wrapper.setKeyVariables(this.keyVariableEditorContainerController.variables);
+	                wrapper.setDescriptionVariables(this.descriptionVariableEditorContainerController.variables);
+
+		            // Маршаллируем и сохраняем XML в файл.
+		            m.marshal(wrapper, this.dataFileTemp);
+				 
+		 }
 }

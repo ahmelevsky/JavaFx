@@ -175,7 +175,7 @@ public List<String> generateKeywordsForMetadata(){
 		
 	    try {
 	    	if (isT)
-	 			addToList(app.mainFrameController.currentTarget.getTarget(), keys);
+	 			addToList(app.mainFrameController.currentTarget.getTargetKwd(), keys);
 			addToList(SyntaxParser.pasteVariablesUnique(app.keyVariableEditorContainerController.savedVariables, this.savedKeywordsTemplate, false, ", "), keys);
 			keys = keys.stream().distinct().collect(Collectors.toList());
 			cutList(keys, 50);
@@ -205,7 +205,7 @@ public List<String> generateKeywordsForMetadata(){
         List<String> keys = new ArrayList<String>();
 		
         if (isTarget.isSelected())
-			addToList(app.getRandomTarget(), keys);
+			addToList(app.getRandomTargetKwd(), keys);
         
 		addToList(parseVariablesInText(keysField, false), keys);
 		
@@ -290,6 +290,13 @@ public List<String> generateKeywordsForMetadata(){
 	public void clearAll(){
 		//variablesCombo.getSelectionModel().select(0);
 		keysField.clear();
+	}
+
+
+	@Override
+	public void loadData() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	}

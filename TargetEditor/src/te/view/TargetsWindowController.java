@@ -1,22 +1,21 @@
 package te.view;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.shape.Circle;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
-import te.Main;
 import te.model.Target;
 
 public class TargetsWindowController extends TargetEditorController implements Initializable {
@@ -24,11 +23,15 @@ public class TargetsWindowController extends TargetEditorController implements I
 	 @FXML
 	 private TableView<Target> targetsTable;
 	 @FXML
-	 private TableColumn<Target, String> targetColumn;
+	 private TableColumn<Target, String> targetKwdColumn;
 	 @FXML
-	 private TableColumn<Target, String> target1Column;
+	 private TableColumn<Target, String> targetDescr1Column;
 	 @FXML
-	 private TableColumn<Target, String> target2Column;
+	 private TableColumn<Target, String> targetDescr2Column;
+	 @FXML
+	 private TableColumn<Target, Button> removeRowColumn;
+	 @FXML
+	 private Button addBtn;
 	 
      public TargetsWindowController() {
 	    }
@@ -38,7 +41,8 @@ public class TargetsWindowController extends TargetEditorController implements I
 	public void initialize(URL location, ResourceBundle resources) {
 		//targetsTable.setEditable(true);
 		setTableEditable();
-		
+		//targetsTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY); 
+		this.addBtn.setShape(new Circle(25));
 		Callback<TableColumn<Target,String>, TableCell<Target,String>> cellFactory =
 	             new Callback<TableColumn<Target,String>, TableCell<Target,String>>() {
 	                 public TableCell<Target,String> call(TableColumn<Target,String> p) {
@@ -47,36 +51,54 @@ public class TargetsWindowController extends TargetEditorController implements I
 	             };
 	             
 		
-		targetColumn.setCellValueFactory(cellData -> cellData.getValue().targetProperty());
-		target1Column.setCellValueFactory(cellData -> cellData.getValue().targetProperty1());
-		target1Column.setCellFactory(cellFactory);
-		
+		targetKwdColumn.setCellValueFactory(cellData -> cellData.getValue().targetKwdProperty());
+		targetKwdColumn.setCellFactory(cellFactory);
+		targetDescr1Column.setCellValueFactory(cellData -> cellData.getValue().targetDescr1Property());
+		targetDescr1Column.setCellFactory(cellFactory);
+		removeRowColumn.setCellFactory(ActionButtonTableCell.<Target>forTableColumn("-", (Target p) -> {
+			targetsTable.getItems().remove(p);
+		    return p;
+		})); 
+		removeRowColumn.setMaxWidth(25);
 		// Easy WAY to make Editable -  NO EDITCELL CLASS
 		//target1Column.setCellFactory(TextFieldTableCell.forTableColumn());
 		
-		target1Column.setOnEditCommit(
+		
+		targetKwdColumn.setOnEditCommit(
 	            new EventHandler<CellEditEvent<Target, String>>() {
 	                @Override
 	                public void handle(CellEditEvent<Target, String> t) {
 	                    ((Target) t.getTableView().getItems().get(
 	                            t.getTablePosition().getRow())
-	                            ).setTarget1(t.getNewValue());
+	                            ).setTargetKwd(t.getNewValue());
+	                }
+	            }
+	        );
+		
+		
+		targetDescr1Column.setOnEditCommit(
+	            new EventHandler<CellEditEvent<Target, String>>() {
+	                @Override
+	                public void handle(CellEditEvent<Target, String> t) {
+	                    ((Target) t.getTableView().getItems().get(
+	                            t.getTablePosition().getRow())
+	                            ).setTargetDescr1(t.getNewValue());
 	                }
 	            }
 	        );
 	 
-		target2Column.setCellValueFactory(cellData -> cellData.getValue().targetProperty2());
-		target2Column.setCellFactory(cellFactory);
+		targetDescr2Column.setCellValueFactory(cellData -> cellData.getValue().targetDescr2Property());
+		targetDescr2Column.setCellFactory(cellFactory);
 		
 		// Easy WAY to make Editable -  NO EDITCELL CLASS
 		//target2Column.setCellFactory(TextFieldTableCell.forTableColumn());
-		target2Column.setOnEditCommit(
+		targetDescr2Column.setOnEditCommit(
 	            new EventHandler<CellEditEvent<Target, String>>() {
 	                @Override
 	                public void handle(CellEditEvent<Target, String> t) {
 	                    ((Target) t.getTableView().getItems().get(
 	                            t.getTablePosition().getRow())
-	                            ).setTarget2(t.getNewValue());
+	                            ).setTargetDescr2(t.getNewValue());
 	                }
 	            }
 	        );
@@ -85,25 +107,13 @@ public class TargetsWindowController extends TargetEditorController implements I
 	 public void setup() {
 	        targetsTable.setItems(app.getTargetsData());
 	    }
-	
-	 public void fillTargets(File baseDir){
-		 app.getTargetsData().clear();
-		 if (!baseDir.exists())
-			 return;
-		 if (!baseDir.isDirectory())
-			 return;
-		 File[] directories = baseDir.listFiles(new FilenameFilter() {
-			  @Override
-			  public boolean accept(File current, String name) {
-			    return new File(current, name).isDirectory();
-			  }
-			});
-		 for (File dir:directories){
-			 app.getTargetsData().add(new Target(dir));
-		 }
+
+	 @FXML
+	 private void addRow(){
+		 app.getTargetsData().add(new Target());
 	 }
-	
-	  private void setTableEditable() {
+	 
+	 private void setTableEditable() {
 		  targetsTable.setEditable(true);
 	        // allows the individual cells to be selected
 		  targetsTable.getSelectionModel().cellSelectionEnabledProperty().set(true);
@@ -166,4 +176,11 @@ public class TargetsWindowController extends TargetEditorController implements I
 		        int newColumnIndex = columnIndex + offset;
 		        return targetsTable.getVisibleLeafColumn(newColumnIndex);
 		    }
+
+
+	@Override
+	public void loadData() {
+		// TODO Auto-generated method stub
+		
+	}
 }

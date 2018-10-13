@@ -35,6 +35,8 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	private  CheckBox isTakeFromDescriptionBox;
 	private String titleBoxSetting;
 	public String titleTextSetting;
+	private final String targetDescr1 = "TargetDescr1";
+	private final String targetDescr2 = "TargetDescr2";		
 	
 	private boolean isTakeFromDescription;
 	
@@ -159,17 +161,17 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		}
 			
 		else if (data.equals("Таргет")) {
-			List<String> res = app.getTargetsData().stream().map(Target::getTarget).collect(Collectors.toList());
+			List<String> res = app.getTargetsData().stream().map(Target::getTargetKwd).collect(Collectors.toList());
 			title = Collections.max(res, Comparator.comparing(s -> s.length()));
 			titleText.setText(title);
 		}
 		else if (data.equals("Таргет1")) {
-			List<String> res = app.getTargetsData().stream().map(Target::getTarget1).collect(Collectors.toList());
+			List<String> res = app.getTargetsData().stream().map(Target::getTargetDescr1).collect(Collectors.toList());
 			title = Collections.max(res, Comparator.comparing(s -> s.length()));
 			titleText.setText(title);
 		}
 		else if (data.equals("Таргет2")){
-			List<String> res = app.getTargetsData().stream().map(Target::getTarget2).collect(Collectors.toList());
+			List<String> res = app.getTargetsData().stream().map(Target::getTargetDescr2).collect(Collectors.toList());
 			title = Collections.max(res, Comparator.comparing(s -> s.length()));
 			titleText.setText(title);
 		}	
@@ -201,12 +203,10 @@ public class TitleEditorController extends TargetEditorController implements Ini
 			return app.descriptionEditorController.currentDescription;
 		else if (titleBoxSetting == null || titleBoxSetting.equals("<текст>"))
 		   return titleTextSetting;
-		else if (titleBoxSetting.equals("Таргет")) 
-			return app.mainFrameController.currentTarget.getTarget();
-		else if (titleBoxSetting.equals("Таргет1")) 
-			return app.mainFrameController.currentTarget.getTarget1();
-		else if (titleBoxSetting.equals("Таргет2"))
-			return app.mainFrameController.currentTarget.getTarget2();
+		else if (titleBoxSetting.equals(this.targetDescr1)) 
+			return app.mainFrameController.currentTarget.getTargetDescr1();
+		else if (titleBoxSetting.equals(this.targetDescr2))
+			return app.mainFrameController.currentTarget.getTargetDescr2();
 		else {
 			String variableValue = Variable.getRandomValueByName(app.descriptionVariableEditorContainerController.savedVariables, titleBoxSetting);
 			if (variableValue==null)
@@ -224,5 +224,11 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		titleBox.getSelectionModel().select("<текст>");
 		titleText.clear();
 		isTakeFromDescriptionBox.setSelected(false);
+	}
+
+	@Override
+	public void loadData() {
+		// TODO Auto-generated method stub
+		
 	}
 }
