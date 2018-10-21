@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -32,6 +33,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import te.model.DataWrapper;
 import te.model.FolderVariable;
 import te.model.KeysWrapper;
 import te.model.Target;
@@ -63,10 +65,10 @@ public class Main extends Application {
 	public LogController logController;
 	private Stage mainStage;
 	private Stage currentStage;
-	private ObservableList<FolderVariable> folderVariableData = FXCollections.observableArrayList();
-	private ObservableList<FolderVariable> savedFolderVariableData = FXCollections.observableArrayList();
-	private ObservableList<Target> targetsData = FXCollections.observableArrayList();
-	private ObservableList<Target> savedTargetsData = FXCollections.observableArrayList();
+	public ObservableList<FolderVariable> folderVariableData = FXCollections.observableArrayList();
+	public ObservableList<FolderVariable> savedFolderVariableData = FXCollections.observableArrayList();
+	public ObservableList<Target> targetsData = FXCollections.observableArrayList();
+	public ObservableList<Target> savedTargetsData = FXCollections.observableArrayList();
 	public List<VariableLayoutController> keyVariableControllers = new ArrayList<VariableLayoutController>();
 	public List<VariableLayoutController> descriptionVariableControllers = new ArrayList<VariableLayoutController>();
 	public boolean isProblem;
@@ -107,6 +109,8 @@ public class Main extends Application {
 	 @Override
 	 public void stop(){
 		 try{
+	     for (TargetEditorController controller:this.controllers)
+	    	 controller.saveData();
 	     saveLastSettings();
 	     this.dataFile.delete();
 	     this.dataFileTemp.renameTo(this.dataFile);
@@ -200,6 +204,14 @@ public class Main extends Application {
 			return getTargetsData().get(ThreadLocalRandom.current().nextInt(0, getTargetsData().size())).getTargetKwd();
 		}
 	
+	public String getRandomFolderKwd(){
+		if (getFolderVariableData()==null || getFolderVariableData().isEmpty()) return null;
+		List<FolderVariable> notEmpty = getFolderVariableData().stream().filter(f -> f.getKeyVariable()!=null && !f.getKeyVariable().trim().isEmpty()).collect(Collectors.toList());
+		if (notEmpty.isEmpty())
+			return null;
+		return notEmpty.get(ThreadLocalRandom.current().nextInt(0, notEmpty.size())).getKeyVariable();
+	}
+	
 	public Target getRandomTarget(){
 		if (getTargetsData()==null || getTargetsData().isEmpty()) return null;
 		return getTargetsData().get(ThreadLocalRandom.current().nextInt(0, getTargetsData().size()));
@@ -210,7 +222,7 @@ public class Main extends Application {
 		Target resultTarget = null;
 		int max = 0;
 		for (Target t:getTargetsData()){
-			int l = t.getTargetKwd().length() + t.getTargetDescr1().length() + t.getTargetDescr2().length();
+			int l = t.getTargetDescr1().length() + t.getTargetDescr2().length();
 			if (l>max){
 				max=l;
 				resultTarget = t;
@@ -362,6 +374,8 @@ public class Main extends Application {
 	            this.descriptionVariableEditorContainerController.variables.addAll(wrapper.getDescriptionVariables());
 	            this.descriptionVariableEditorContainerController.loadData();
 	            this.keyVariableEditorContainerController.loadData();
+	            this.targetsData.addAll(wrapper.getTarget());
+	            this.targetsController.loadData();
 	            // Сохраняем путь к файлу в реестре.
 	            setKeysFilePath(file);
 
@@ -387,6 +401,7 @@ public class Main extends Application {
 	            KeysWrapper wrapper = new KeysWrapper();
 	            wrapper.setKeyVariables(this.keyVariableEditorContainerController.variables);
                 wrapper.setDescriptionVariables(this.descriptionVariableEditorContainerController.variables);
+                wrapper.setTargets(this.targetsData);
 	            // Маршаллируем и сохраняем XML в файл.
 	            m.marshal(wrapper, file);
 
@@ -406,13 +421,21 @@ public class Main extends Application {
 				   if (!this.dataFile.exists())
 					   return;
 		            JAXBContext context = JAXBContext
-		                    .newInstance(KeysWrapper.class);
+		                    .newInstance(DataWrapper.class);
 		            Unmarshaller um = context.createUnmarshaller();
 
-		            KeysWrapper wrapper = (KeysWrapper) um.unmarshal(this.dataFile);
+		            DataWrapper wrapper = (DataWrapper) um.unmarshal(this.dataFile);
 
 		            this.keyVariableEditorContainerController.variables.addAll(wrapper.getKeyVariables());
 		            this.descriptionVariableEditorContainerController.variables.addAll(wrapper.getDescriptionVariables());
+		            this.targetsData.addAll(wrapper.getTarget());
+		            if (wrapper.getKeysPage()!=null)
+		            	this.keysEditorController.wrapper = wrapper.getKeysPage();
+		            if (wrapper.getDescriptionPage()!=null)
+		            	this.descriptionEditorController.wrapper = wrapper.getDescriptionPage();
+		            if (wrapper.getTitlePage()!=null)
+		            	this.titleEditorController.wrapper = wrapper.getTitlePage();
+		            
 		        } catch (Exception e) { // catches ANY exception
 		            Alert alert = new Alert(AlertType.ERROR);
 		            alert.setTitle("Ошибка");
@@ -426,15 +449,22 @@ public class Main extends Application {
 		 public void saveLastSettings() throws JAXBException{
 				 
 				  JAXBContext context = JAXBContext
-		                    .newInstance(KeysWrapper.class);
+		                    .newInstance(DataWrapper.class);
 		            Marshaller m = context.createMarshaller();
 		            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 		            // Обёртываем наши данные об адресатах.
-		            KeysWrapper wrapper = new KeysWrapper();
+		            DataWrapper wrapper = new DataWrapper();
 		            wrapper.setKeyVariables(this.keyVariableEditorContainerController.variables);
 	                wrapper.setDescriptionVariables(this.descriptionVariableEditorContainerController.variables);
-
+	                wrapper.setTargets(this.targetsData);
+                    if (this.descriptionEditorController.wrapper !=null)
+                    	wrapper.setDescriptionPage(this.descriptionEditorController.wrapper);
+                    if (this.keysEditorController.wrapper !=null)
+                    	wrapper.setKeysPage(this.keysEditorController.wrapper);
+                    if (this.titleEditorController.wrapper !=null)
+                    	wrapper.setTitlePage(this.titleEditorController.wrapper);
+	                
 		            // Маршаллируем и сохраняем XML в файл.
 		            m.marshal(wrapper, this.dataFileTemp);
 				 

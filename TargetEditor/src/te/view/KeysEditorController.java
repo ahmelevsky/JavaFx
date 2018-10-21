@@ -28,6 +28,7 @@ import javafx.util.StringConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import te.model.KeysEditorWrapper;
 import te.model.Variable;
 import te.util.DataException;
 import te.util.SyntaxParser;
@@ -64,9 +65,16 @@ public class KeysEditorController extends TargetEditorController implements Init
 	@FXML
 	private CheckBox isTarget;
 	
+	@FXML
+	private CheckBox isFolderVariable;
+	
 	private ObservableList<String> items = FXCollections.observableArrayList("Все");
 	private String savedKeywordsTemplate;
 	private boolean isT;
+	private boolean isF;
+	
+	public KeysEditorWrapper wrapper;
+	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -101,6 +109,9 @@ public class KeysEditorController extends TargetEditorController implements Init
 		addBtn.setGraphic(imageView);
 		
 		isTarget.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			update();
+		});
+		isFolderVariable.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			update();
 		});
 		keysField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -176,6 +187,8 @@ public List<String> generateKeywordsForMetadata(){
 	    try {
 	    	if (isT)
 	 			addToList(app.mainFrameController.currentTarget.getTargetKwd(), keys);
+	    	if (isF)
+	 			addToList(app.mainFrameController.currentFolder.getKeyVariable(), keys);
 			addToList(SyntaxParser.pasteVariablesUnique(app.keyVariableEditorContainerController.savedVariables, this.savedKeywordsTemplate, false, ", "), keys);
 			keys = keys.stream().distinct().collect(Collectors.toList());
 			cutList(keys, 50);
@@ -191,6 +204,7 @@ public List<String> generateKeywordsForMetadata(){
 		try {
 			SyntaxParser.checkVariables(app.keyVariableEditorContainerController.variables, keysField.getText());
 			this.isT = isTarget.isSelected();
+			this.isF = isFolderVariable.isSelected();
 			this.savedKeywordsTemplate = keysField.getText().trim();
 			
 		} catch (TextException e) {
@@ -206,6 +220,8 @@ public List<String> generateKeywordsForMetadata(){
 		
         if (isTarget.isSelected())
 			addToList(app.getRandomTargetKwd(), keys);
+        if (isFolderVariable.isSelected()) 
+			addToList(app.getRandomFolderKwd(), keys);
         
 		addToList(parseVariablesInText(keysField, false), keys);
 		
@@ -290,14 +306,25 @@ public List<String> generateKeywordsForMetadata(){
 	public void clearAll(){
 		//variablesCombo.getSelectionModel().select(0);
 		keysField.clear();
+		isTarget.setSelected(false);
+		isFolderVariable.setSelected(false);
 	}
 
 
 	@Override
 	public void loadData() {
-		// TODO Auto-generated method stub
+		if (this.wrapper!=null) {
+			this.keysField.setText(this.wrapper.keysField);
+			this.isTarget.setSelected(this.wrapper.isTarget);
+			this.isFolderVariable.setSelected(this.wrapper.isFolderVariable);
+		}
 		
 	}
+	
+	public void saveData() {
+		this.wrapper = new KeysEditorWrapper(this.keysField.getText(), this.isTarget.isSelected(), this.isFolderVariable.isSelected());
+	}
+	
 	
 	}
 

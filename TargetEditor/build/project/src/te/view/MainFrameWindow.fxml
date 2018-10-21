@@ -10,7 +10,7 @@
 
 <VBox xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="te.view.MainFrameController">
    <children>
-      <TabPane fx:id="tabs" tabClosingPolicy="UNAVAILABLE" tabMinHeight="40.0" tabMinWidth="60.0">
+      <TabPane fx:id="tabs" tabClosingPolicy="UNAVAILABLE" tabMinHeight="60.0" tabMinWidth="60.0" VBox.vgrow="ALWAYS">
          <VBox.margin>
             <Insets />
          </VBox.margin>
@@ -20,7 +20,7 @@
       </TabPane>
       <HBox maxWidth="2000.0" prefWidth="1000.0">
          <children>
-            <Button fx:id="writeBtn" mnemonicParsing="false" onAction="#writeMetadata" prefHeight="61.0" prefWidth="177.0" text="Записать метаданные в файлы" textAlignment="CENTER" wrapText="true">
+            <Button fx:id="writeBtn" mnemonicParsing="false" onAction="#writeMetadata" prefHeight="61.0" prefWidth="200.0" text="Записать метаданные в файлы" textAlignment="CENTER" wrapText="true">
                <HBox.margin>
                   <Insets bottom="15.0" left="15.0" right="5.0" top="15.0" />
                </HBox.margin></Button>
@@ -31,7 +31,7 @@
                         <Insets top="15.0" />
                      </VBox.margin>
                   </Hyperlink>
-                  <ProgressBar fx:id="progress" prefHeight="23.0" prefWidth="689.0" progress="0.0">
+                  <ProgressBar fx:id="progress" prefHeight="23.0" prefWidth="680.0" progress="0.0">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -41,6 +41,11 @@
                   <Insets left="15.0" />
                </HBox.margin>
             </VBox>
+            <Button fx:id="clearBtn" mnemonicParsing="false" onAction="#clearAllData" prefHeight="60.0" prefWidth="200.0" text="Очистить все">
+               <HBox.margin>
+                  <Insets bottom="15.0" left="5.0" right="15.0" top="15.0" />
+               </HBox.margin>
+            </Button>
          </children>
       </HBox>
    </children>

@@ -4,9 +4,12 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,12 +19,16 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextArea;
+import te.model.DescriptionEditorWrapper;
+import te.model.FolderVariable;
 import te.model.Target;
+import te.model.TitleEditorWrapper;
 import te.model.Variable;
 import te.util.DataException;
 import te.util.SyntaxParser;
 import te.util.TextAreaException;
 import te.util.TextException;
+import te.util.Tuple;
 
 public class TitleEditorController extends TargetEditorController implements Initializable {
 	
@@ -35,65 +42,129 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	private  CheckBox isTakeFromDescriptionBox;
 	private String titleBoxSetting;
 	public String titleTextSetting;
-	private final String targetDescr1 = "TargetDescr1";
-	private final String targetDescr2 = "TargetDescr2";		
 	
 	private boolean isTakeFromDescription;
 	
 	ObservableList<String> options1 =  FXCollections.observableArrayList();
 
+	public TitleEditorWrapper wrapper;
+	private final String targetDescr1 = "TargetDescr1";
+	private final String targetDescr2 = "TargetDescr2";		
+	private final String folderDescr = "FolderDescr";
+	private boolean isInitialized;
+	
+	private final ChangeListener<String> boxListener = new ChangeListener<String>(){
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
+				if (newValue==null || (oldValue!=null && newValue.equals(oldValue)))	return;
+				removeListeners();
+				if (newValue.equals(targetDescr1) || newValue.equals(targetDescr2) || newValue.equals(folderDescr)) {
+					titleText.setEditable(false);
+				}
+				else {
+					titleText.setEditable(true);
+					Optional<Variable> opt = app.descriptionVariableEditorContainerController.variables.stream().filter(v->v.getName().equals(newValue)).findFirst();
+					if (oldValue!=null && !oldValue.equals(newValue) && opt!=null && opt.isPresent()){
+						addVariableToText(opt.get(), titleText);
+					}
+					if (oldValue!=null && !oldValue.equals("<текст>") && newValue.equals("<текст>"))
+						titleText.setText("");
+				}
+				setError(titleText, false, null);
+				try {	
+					updateCounter();
+					 }
+					 catch (TextAreaException e) {
+						setError(e.textArea, true, e.getMessage());
+					 }
+				finally{
+					addListeners();
+				}
+			}
+			};
+	
+	   private final ChangeListener<String> textListener = new ChangeListener<String>(){
+					@Override
+					public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
+						removeListeners();
+						setError(titleText, false, null);
+						titleBox.getSelectionModel().select("<текст>");
+						 try {	
+							 updateCounter();
+							 }
+							 catch (TextAreaException e) {
+								setError(e.textArea, true, e.getMessage());
+							 }
+						 finally{
+							 addListeners();
+						 }
+					}
+					};
+					
+					private final ChangeListener<Boolean> checkBoxListener = new ChangeListener<Boolean>(){
+							@Override
+							public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue){	
+								removeListeners();
+								if (newValue == true) {
+									titleText.setDisable(true);
+									titleBox.setDisable(true);
+								}
+								else {
+									titleText.setDisable(false);
+									titleBox.setDisable(false);
+								}
+								setError(titleText, false, null);
+								 try {	
+									 updateCounter();
+									 }
+									 catch (TextAreaException e) {
+										setError(e.textArea, true, e.getMessage());
+									 }
+								 finally {
+									 addListeners();
+								 }
+							};
+					};
+					
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		titleBox.setItems(options1);
 		titleBox.getSelectionModel().select("<текст>");
+		addListeners();
 		
-		
-		titleBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue==null || newValue.isEmpty() || newValue.equals("<текст>")) {
-				titleText.setEditable(true);
-				if (oldValue!=null && !oldValue.equals("<текст>"))
-					titleText.setText("");
-			}
-			else 
-				titleText.setEditable(false);
-			setError(titleText, false, null);
-			try {	
-				 updateCounter();
-				 }
-				 catch (TextAreaException e) {
-					setError(e.textArea, true, e.getMessage());
-				 }
-				});
-		
-		
-		titleText.textProperty().addListener((observable, oldValue, newValue) -> {
-			setError(titleText, false, null);
-			 try {	
-				 updateCounter();
-				 }
-				 catch (TextAreaException e) {
-					setError(e.textArea, true, e.getMessage());
-				 }
-		});
-		
-		isTakeFromDescriptionBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			if (newValue == true) {
-				titleText.setDisable(true);
-				titleBox.setDisable(true);
-			}
-			else {
-				titleText.setDisable(false);
-				titleBox.setDisable(false);
-			}
-			setError(titleText, false, null);
-			 try {	
-				 updateCounter();
-				 }
-				 catch (TextAreaException e) {
-					setError(e.textArea, true, e.getMessage());
-				 }
-		});
-		
+	}
+	
+    private void addListeners(){
+    	titleBox.valueProperty().removeListener(boxListener);
+		isTakeFromDescriptionBox.selectedProperty().removeListener(checkBoxListener);
+		titleText.textProperty().removeListener(textListener);
+    	titleBox.valueProperty().addListener(boxListener);
+		isTakeFromDescriptionBox.selectedProperty().addListener(checkBoxListener);
+		titleText.textProperty().addListener(textListener);
+	}
+	
+	
+	private void removeListeners(){
+		titleBox.valueProperty().removeListener(boxListener);
+		isTakeFromDescriptionBox.selectedProperty().removeListener(checkBoxListener);
+		titleText.textProperty().removeListener(textListener);
+	}
+	
+	
+	
+	private void addVariableToText(Variable d, TextArea ta){
+		if (d==null)
+			return;
+		String previous = ta.getText().trim();
+		if (!this.isInitialized)
+			previous = "";
+		StringBuilder sb = new StringBuilder(previous);
+		if (!previous.isEmpty())
+			sb.append(", ");
+		sb.append("<");
+		sb.append(d.getName());
+		sb.append(">[1]");
+		ta.setText(sb.toString());
 	}
 	
 	private String parseVariablesInText(TextArea tf, boolean isMax) throws TextAreaException{
@@ -130,7 +201,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	
 	
 	public void updateLists(){
-		
+		removeListeners();
 		SingleSelectionModel<String> selected = titleBox.selectionModelProperty().getValue();
 		String selectedValue = null;
 		if (selected!=null && !selected.isEmpty())
@@ -139,17 +210,21 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		options1.clear();
 		options1.add("<текст>");
 		titleBox.getSelectionModel().select("<текст>");
+		if (!app.getFolderVariableData().isEmpty())
+			options1.add(this.folderDescr);
 		if (!app.getTargetsData().isEmpty()){
-			options1.add("Таргет");
-			options1.add("Таргет1");
-			options1.add("Таргет2");
+			options1.add(this.targetDescr1);
+			options1.add(this.targetDescr2);
 		}
 		options1.addAll(app.descriptionVariableEditorContainerController.variables.stream().map(Variable::getName)
 	              .collect(Collectors.toList()));
 		
 		if (options1.contains(selectedValue))
 			titleBox.getSelectionModel().select(selectedValue);
+		addListeners();
 	}
+	
+	
 	
 	public void updateCounter() throws TextAreaException {
 		String title = "";
@@ -159,29 +234,33 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		else if (data==null || data.equals("<текст>")){
 			    	title  = parseVariablesInText(titleText, true);
 		}
+		else if (data.equals(this.folderDescr)){
+			List<String> res = app.getFolderVariableData().stream().map(FolderVariable::getDescriptionVariable).collect(Collectors.toList());
+			title = Collections.max(res, Comparator.comparing(s -> s.length()));
+			titleText.setText(title);
+		}
+		else if (data.equals(this.targetDescr1)) {
+			Target target = app.getTargetWithMaxLength();
+			if (target!=null){
+				title = target.getTargetDescr1();
+			titleText.setText(title);
+			}
 			
-		else if (data.equals("Таргет")) {
-			List<String> res = app.getTargetsData().stream().map(Target::getTargetKwd).collect(Collectors.toList());
-			title = Collections.max(res, Comparator.comparing(s -> s.length()));
-			titleText.setText(title);
 		}
-		else if (data.equals("Таргет1")) {
-			List<String> res = app.getTargetsData().stream().map(Target::getTargetDescr1).collect(Collectors.toList());
-			title = Collections.max(res, Comparator.comparing(s -> s.length()));
+		else if (data.equals(this.targetDescr2)){
+			Target target = app.getTargetWithMaxLength();
+			if (target!=null){
+				title = target.getTargetDescr1();
 			titleText.setText(title);
+			}
 		}
-		else if (data.equals("Таргет2")){
-			List<String> res = app.getTargetsData().stream().map(Target::getTargetDescr2).collect(Collectors.toList());
-			title = Collections.max(res, Comparator.comparing(s -> s.length()));
-			titleText.setText(title);
-		}	
-	    else {
+	   /* else {
 	    	String variableValue = Variable.getMaxValueByName(app.descriptionVariableEditorContainerController.variables, data);
 		    if (variableValue==null) 
 		    	titleText.setText("");
 		    else
 		    	titleText.setText(variableValue);
-		}
+		}*/
 		countLabel.setText("(" + getWordsCount(title) + "/" + title.length() + ")");
 	}
 	
@@ -201,14 +280,21 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	public String getTitleForMetadata(){
 		if (isTakeFromDescription)
 			return app.descriptionEditorController.currentDescription;
-		else if (titleBoxSetting == null || titleBoxSetting.equals("<текст>"))
-		   return titleTextSetting;
+		else if  (titleBoxSetting.equals(this.folderDescr))
+			return app.mainFrameController.currentFolder.getDescriptionVariable();
 		else if (titleBoxSetting.equals(this.targetDescr1)) 
 			return app.mainFrameController.currentTarget.getTargetDescr1();
 		else if (titleBoxSetting.equals(this.targetDescr2))
 			return app.mainFrameController.currentTarget.getTargetDescr2();
+		
 		else {
-			String variableValue = Variable.getRandomValueByName(app.descriptionVariableEditorContainerController.savedVariables, titleBoxSetting);
+			String variableValue = null;
+			try {
+				variableValue = SyntaxParser.pasteVariablesUnique(app.descriptionVariableEditorContainerController.savedVariables, this.titleTextSetting, false, " ");
+			} catch (TextException e) {
+				app.log("ERROR: Ошибка вставки переменных в строку: " + this.titleTextSetting);
+				app.isProblem = true;
+			}
 			if (variableValue==null)
 				return "";
 			else
@@ -228,7 +314,17 @@ public class TitleEditorController extends TargetEditorController implements Ini
 
 	@Override
 	public void loadData() {
-		// TODO Auto-generated method stub
-		
+		updateLists();
+		if (this.wrapper != null){
+			titleText.setText(this.wrapper.inputValue);
+			titleBox.getSelectionModel().select(this.wrapper.comboValue);
+			isTakeFromDescriptionBox.setSelected(this.wrapper.isTakeFromDescription);
+		}
+		isInitialized = true;
+	}
+
+	@Override
+	public void saveData() {
+		this.wrapper = new TitleEditorWrapper(this.isTakeFromDescriptionBox.isSelected(), this.titleBox.getSelectionModel().getSelectedItem(), this.titleText.getText());
 	}
 }

@@ -1,71 +1,66 @@
 package te.model;
 
-import java.io.File;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
+import javafx.beans.DefaultProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+@XmlAccessorType(XmlAccessType.PROPERTY)
 public class Target {
 
-	private final File folder;
-	private final StringProperty target;
-    private final StringProperty target1;
-    private final StringProperty target2;
+	private final SimpleStringProperty targetKwd;
+    private final SimpleStringProperty targetDescr1;
+    private final SimpleStringProperty targetDescr2;
     
     public Target() {
-    	this(null);
+    	this.targetKwd = new SimpleStringProperty("");
+    	this.targetDescr1 = new SimpleStringProperty("");
+    	this.targetDescr2 = new SimpleStringProperty("");
     }
     
-    public Target(File folder){
-    	this.folder = folder;
-    	if (folder == null)
-    		this.target = new SimpleStringProperty("");
-    	else 
-    		this.target = new SimpleStringProperty(folder.getName());
-    	this.target1 = new SimpleStringProperty("");
-    	this.target2 = new SimpleStringProperty("");
+    public Target(final String targKwd, final String targDescr1, final String targDescr2) {
+    	this.targetKwd = new SimpleStringProperty(targKwd);
+    	this.targetDescr1 = new SimpleStringProperty(targDescr1);
+    	this.targetDescr2 = new SimpleStringProperty(targDescr2);
     }
 
-	public String getTarget() {
-		return target.get();
+
+	public String getTargetKwd() {
+		return targetKwd.get();
 	}
     
-    public StringProperty targetProperty(){
-    	return this.target;
+    public StringProperty targetKwdProperty(){
+    	return this.targetKwd;
     }
     
-    public void setTarget(String target){
-    	this.target.set(target);
+    public void setTargetKwd(String target){
+    	this.targetKwd.set(target);
     }
     
-    public String getTarget1() {
-		return target1.get();
+    public String getTargetDescr1() {
+		return targetDescr1.get();
 	}
     
-    public StringProperty targetProperty1(){
-    	return this.target1;
+    public StringProperty targetDescr1Property(){
+    	return this.targetDescr1;
     }
     
-    public void setTarget1(String target){
-    	this.target1.set(target);
+    public void setTargetDescr1(String target){
+    	this.targetDescr1.set(target);
     }
     
-    public String getTarget2() {
-		return target2.get();
+    public String getTargetDescr2() {
+		return targetDescr2.get();
 	}
     
-    public StringProperty targetProperty2(){
-    	return this.target2;
+    public StringProperty targetDescr2Property(){
+    	return this.targetDescr2;
     }
     
-    public void setTarget2(String target){
-    	this.target2.set(target);
+    public void setTargetDescr2(String target){
+    	this.targetDescr2.set(target);
     }
-    
-    
-    public File getFolder(){
-    	return this.folder;
-    }
-    
     
 }

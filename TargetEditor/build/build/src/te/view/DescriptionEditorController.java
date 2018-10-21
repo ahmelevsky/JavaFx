@@ -4,16 +4,29 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -22,80 +35,160 @@ import javafx.scene.text.Text;
 
 import org.apache.commons.lang3.StringUtils;
 
-import te.Main;
+import te.model.DescriptionEditorWrapper;
+import te.model.FolderVariable;
 import te.model.Target;
+import te.model.Variable;
+import te.util.DataException;
+import te.util.SyntaxParser;
+import te.util.TextAreaException;
+import te.util.TextException;
+import te.util.Tuple;
 
 import com.sun.javafx.scene.control.behavior.TextAreaBehavior;
 import com.sun.javafx.scene.control.skin.TextAreaSkin;
 
-public class DescriptionEditorController implements Initializable {
+public class DescriptionEditorController extends TargetEditorController implements Initializable {
 	
-	public Main app;
 	@FXML
 	private TextArea text1;
-	
 	@FXML
 	private TextArea text2;
-	
 	@FXML
 	private TextArea text3;
-	
 	@FXML
 	private TextArea text4;
-	
 	@FXML
 	private TextArea text5;
 	
 	@FXML
-	private ComboBox<String> selector1;
+	private Button refreshBtn;
 	
+	@FXML
+	private ComboBox<String> selector1;
 	@FXML
 	private ComboBox<String> selector2;
-	
 	@FXML
 	private ComboBox<String> selector3;
-	
 	@FXML
 	private ComboBox<String> selector4;
-	
 	@FXML
 	private ComboBox<String> selector5;
 	
 	@FXML
-	private Text countLabel;
+	private CheckBox isRandom1;
+	@FXML
+	private CheckBox isRandom2;
+	@FXML
+	private CheckBox isRandom3;
+	@FXML
+	private CheckBox isRandom4;
+	@FXML
+	private CheckBox isRandom5;
+	
 	
 	@FXML
+	private Text countLabel;
+	@FXML
 	private TextArea resultText;
-	
 	@FXML
 	private Text addedTexts;
 	
 	private final int LIMIT = 200;
-	
 	public String currentDescription;
-	
-	ObservableList<String> options1 =    FXCollections.observableArrayList();
-	ObservableList<String> options2 =    FXCollections.observableArrayList();
-	ObservableList<String> options3 =    FXCollections.observableArrayList();
-	ObservableList<String> options4 =    FXCollections.observableArrayList();
-	ObservableList<String> options5 =    FXCollections.observableArrayList();
 	
 	private List<TextArea> textFields = new ArrayList<TextArea>();
 	private List<ComboBox<String>> selectors = new ArrayList<ComboBox<String>>();
 	private List<ObservableList<String>> options = new ArrayList<ObservableList<String>>();
-	
-	private List<String> textFieldsStored = new ArrayList<String>();
-	
+	private List<CheckBox> randomBoxes  = new ArrayList<CheckBox>();
+	public List<String> textFieldsStored = new ArrayList<String>();
 	private List<String> data = new ArrayList<String>();
+	private List<Boolean> isRandomStored = new ArrayList<Boolean>();
+	
+	private final String targetDescr1 = "TargetDescr1";
+	private final String targetDescr2 = "TargetDescr2";		
+	private final String folderDescr = "FolderDescr";	
+	
+	public DescriptionEditorWrapper wrapper;
+	private boolean isInitialized;
+	
+	private final ChangeListener<String> boxListener  = new ChangeListener<String>(){
+		@Override
+		public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
+			if (newValue==null || (oldValue!=null && newValue.equals(oldValue)))	return;
+			
+			removeListeners();
+			
+			SimpleObjectProperty prop = (SimpleObjectProperty) observable ;
+	        ComboBox combo = (ComboBox) prop.getBean();
+	        int index = selectors.indexOf(combo);
+	        
+			if (newValue.equals(targetDescr1) || newValue.equals(targetDescr2) || newValue.equals(folderDescr)) {
+				textFields.get(index).setEditable(false);
+			}
+			else {
+				textFields.get(index).setEditable(true);
+				Optional<Variable> opt = app.descriptionVariableEditorContainerController.variables.stream().filter(v->v.getName().equals(newValue)).findFirst();
+				if (oldValue!=null && !oldValue.equals(newValue) && opt!=null && opt.isPresent()){
+					addVariableToText(opt.get(), textFields.get(index));
+				}
+				if (oldValue!=null && !oldValue.equals("<текст>") && newValue.equals("<текст>"))
+					textFields.get(index).setText("");
+			}
+			setError(textFields.get(index), false, null);
+			 try {	
+					getMaxLengthDescription();
+				 }
+				 catch (TextAreaException e) {
+					setError(e.textArea, true, e.getMessage());
+				 }
+			 finally{
+					addListeners();
+				}
+		}
+	};
+	
+	
+	 private final ChangeListener<String> textListener = new ChangeListener<String>(){
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
+				StringProperty prop = (StringProperty) observable ;
+		        TextArea tf = (TextArea) prop.getBean();
+		        int index = textFields.indexOf(tf);
+		        removeListeners();
+		    	setError(tf, false, null);
+		        selectors.get(index).getSelectionModel().select("<текст>");
+			
+				 try {	
+					getMaxLengthDescription();
+				 }
+				 catch (TextAreaException e) {
+					setError(e.textArea, true, e.getMessage());
+				 }
+				 finally{
+					 addListeners();
+				 }
+			}
+	 };
+	
+		private final ChangeListener<Boolean> checkBoxListener = new ChangeListener<Boolean>(){
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue){	
+				removeListeners();
+				try {
+					getMaxLengthDescription();
+				} catch (TextAreaException e) {
+					setError(e.textArea, true, e.getMessage());
+				}
+				 finally {
+					 addListeners();
+				 }
+		    }
+		};
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
-		selector1.setItems(options1);
-		selector2.setItems(options2);
-		selector3.setItems(options3);
-		selector4.setItems(options4);
-		selector5.setItems(options5);
 		countLabel.setText("");
 		
 		textFields.add(text1);
@@ -103,95 +196,189 @@ public class DescriptionEditorController implements Initializable {
 		textFields.add(text3);
 		textFields.add(text4);
 		textFields.add(text5);
-		
-		options.add(options1);
-		options.add(options2);
-		options.add(options3);
-		options.add(options4);
-		options.add(options5);
 		selectors.add(selector1);
 		selectors.add(selector2);
 		selectors.add(selector3);
 		selectors.add(selector4);
 		selectors.add(selector5);
+		randomBoxes.add(isRandom1);
+		randomBoxes.add(isRandom2);
+		randomBoxes.add(isRandom3);
+		randomBoxes.add(isRandom4);
+		randomBoxes.add(isRandom5);
 		
 		for (int i=0;i<selectors.size();i++) {
-			final int final_i = i;
-			selectors.get(i).valueProperty().addListener((observable, oldValue, newValue) -> {
-				if (newValue==null || newValue.isEmpty() || newValue.equals("<текст>")) 
-					textFields.get(final_i).setEditable(true);
-				else 
-					textFields.get(final_i).setEditable(false);
-				String maxLengthDescription = getMaxLengthDescription();
-				countLabel.setText("Символов: " + maxLengthDescription.length());
-			});
+			options.add(FXCollections.observableArrayList());
+			selectors.get(i).setItems(options.get(i));
+			options.get(i).add("<текст>");
+			selectors.get(i).getSelectionModel().select("<текст>");
+		}
+		addListeners();
+	}
+	
+	
+	 private void addListeners(){
+			for (TextArea tf:textFields) {
+				tf.textProperty().removeListener(textListener);
+				tf.textProperty().addListener(textListener);
+			}
+			for (ComboBox<String> combo:selectors){
+				combo.valueProperty().removeListener(boxListener);
+				combo.valueProperty().addListener(boxListener);
+			}
+			for (CheckBox box:randomBoxes){
+				box.selectedProperty().removeListener(checkBoxListener);
+				box.selectedProperty().addListener(checkBoxListener);
+			}
 		}
 		
-		for (TextArea tf:textFields) {
-			tf.textProperty().addListener((observable, oldValue, newValue) -> {
-				String maxLengthDescription = getMaxLengthDescription();
-				countLabel.setText("Символов: " + maxLengthDescription.length());
-			});
-			denyTab(tf);
+		
+		private void removeListeners(){
+			for (TextArea tf:textFields) {
+				tf.textProperty().removeListener(textListener);
+			}
+			for (ComboBox<String> combo:selectors){
+				combo.valueProperty().removeListener(boxListener);
+			}
+			for (CheckBox box:randomBoxes){
+				box.selectedProperty().removeListener(checkBoxListener);
+			}
 		}
+		
+		
+	private void addVariableToText(Variable d, TextArea ta){
+			if (d==null)
+				return;
+			String previous = ta.getText().trim();
+			if (!this.isInitialized)
+				previous = "";
+			StringBuilder sb = new StringBuilder(previous);
+			if (!previous.isEmpty())
+				sb.append(", ");
+			sb.append("<");
+			sb.append(d.getName());
+			sb.append(">[1]");
+			ta.setText(sb.toString());
+		}
+		
+	
+	private String parseVariablesInText(TextArea tf, boolean isMax) throws TextAreaException{
+		String result = null;
+		try{
+			result = SyntaxParser.pasteVariables(app.descriptionVariableEditorContainerController.variables, tf.getText(), isMax, " ");	
+		}
+		catch (TextException e) {
+			throw new TextAreaException (tf, e.getMessage());
+		}
+		return result;
 	}
-
+	
+	
+	
+	private void setError(TextArea tf, boolean setOrUnset, String errorText){
+		 ObservableList<String> styleClass = tf.getStyleClass();
+		 ObservableList<String> styleClassresultText = resultText.getStyleClass();
+		 if (setOrUnset) {
+			 if (! styleClass.contains("red")) {
+	                styleClass.add("red");
+	            }
+			 if (errorText!=null){
+				 if (! styleClassresultText.contains("redText")) {
+					 styleClassresultText.add("redText");
+		            }
+				 resultText.setText(errorText);
+			 }
+	        } 
+		 else {
+	            styleClass.removeAll(Collections.singleton("red"));          
+	            styleClassresultText.removeAll(Collections.singleton("redText"));
+	        }
+	}
+	
+	
 	public void updateLists(){
-		for (ObservableList<String> ol : options){
-			fillListWithStartValues(ol);
-			ol.addAll(app.variables.keySet());
-		}
-	}
-	
-	private void fillListWithStartValues(List<String> list){
-		list.add("<текст>");
-		list.add("Таргет");
-		list.add("Таргет1");
-		list.add("Таргет2");
-	}
-	
-	
-	public String getMaxLengthDescription(){
-		
-		List<String> result = new ArrayList<String>();
+		removeListeners();
 		for (int i=0; i<selectors.size();i++){
-			String d =  selectors.get(i).getSelectionModel().getSelectedItem();
-			Target maxTarget = app.getTargetWithMaxLength();
-			if (d == null || d.isEmpty() || d.equals("<текст>")){
-			    String 	t = textFields.get(i).getText().trim();
-			    if (!t.isEmpty())
-			    	result.add(t);
+			
+			SingleSelectionModel<String> selected = selectors.get(i).selectionModelProperty().getValue();
+			String selectedValue = null;
+			if (selected!=null && !selected.isEmpty())
+				selectedValue = selected.getSelectedItem();
+			ObservableList<String> ol = options.get(i);
+			ol.clear();
+			ol.add("<текст>");
+			if (!app.getFolderVariableData().isEmpty())
+				ol.add(this.folderDescr);
+			if (!app.getTargetsData().isEmpty()){
+				ol.add(this.targetDescr1);
+				ol.add(this.targetDescr2);
 			}
-			else if (d.equals("Таргет")) {
-				String t = maxTarget.getTarget();
-				textFields.get(i).setText(t);
-				if (!t.isEmpty())
-				    	result.add(t);
-				    
-			}
-			else if (d.equals("Таргет1")) {
-				String t = maxTarget.getTarget1();
-				textFields.get(i).setText(t);
-			    if (!t.isEmpty())
-			    	result.add(t);
-			}
-			else if (d.equals("Таргет2")){
-				String t = maxTarget.getTarget2();
-				textFields.get(i).setText(t);
-			    if (!t.isEmpty())
-			    	result.add(t);
-			}
-			else {
-				List<String> list = app.variables.get(d);
-				if (list!=null && !list.isEmpty()){
-					String t = Collections.max(list, Comparator.comparing(s -> s.length()));
-					textFields.get(i).setText(t);
-				    if (!t.isEmpty())
-				    	result.add(t);
+			ol.addAll(app.descriptionVariableEditorContainerController.variables.stream().map(Variable::getName)
+		              .collect(Collectors.toList()));
+			if (selectedValue!=null){
+				if	(ol.contains(selectedValue))
+					selectors.get(i).getSelectionModel().select(selectedValue);
+				else {
+					selectors.get(i).getSelectionModel().select("<текст>");
+					textFields.get(i).setText("");
 				}
 			}
 		}
-		String resultString = StringUtils.join(result, " ");
+		addListeners();
+	}
+	
+	
+	
+	public String getMaxLengthDescription() throws TextAreaException{
+		
+		List<Tuple<Integer, String>> result = new ArrayList<Tuple<Integer, String>>();
+		for (int i=0; i<selectors.size();i++){
+			String d =  selectors.get(i).getSelectionModel().getSelectedItem();
+			int position = i;
+			if(randomBoxes.get(i).isSelected())
+				position = -1;
+			if (d == null || d.isEmpty() || d.equals("<текст>")){
+			    String t = parseVariablesInText(textFields.get(i), true);
+			    if (!t.isEmpty()) 
+			    	result.add( new Tuple<Integer, String>(position, t));
+			}
+			else if (d.equals(this.folderDescr)){
+				List<String> res = app.getFolderVariableData().stream().map(FolderVariable::getDescriptionVariable).collect(Collectors.toList());
+				String t = Collections.max(res, Comparator.comparing(s -> s.length()));
+				textFields.get(i).setText(t);
+			    if (!t.isEmpty())
+			    	result.add( new Tuple<Integer, String>(position, t));
+			}
+			else if (d.equals(this.targetDescr1)) {
+				Target target = app.getTargetWithMaxLength();
+				if (target!=null){
+					String t = target.getTargetDescr1();
+					textFields.get(i).setText(t);
+				    if (!t.isEmpty())
+				    	result.add( new Tuple<Integer, String>(position, t));
+				}
+				
+			}
+			else if (d.equals(this.targetDescr2)){
+				Target target = app.getTargetWithMaxLength();
+				if (target!=null){
+					String t = target.getTargetDescr2();
+					textFields.get(i).setText(t);
+				    if (!t.isEmpty())
+				    	result.add( new Tuple<Integer, String>(position, t));
+				}
+			}
+		/*	else {
+				String variableValue = Variable.getMaxValueByName(app.descriptionVariableEditorContainerController.variables, d);
+			    if (d!=null) {
+			    	textFields.get(i).setText(variableValue);
+			        if (!variableValue.isEmpty())
+			        	result.add( new Tuple<Integer, String>(position, variableValue));
+				    }
+			}*/
+		}
+		
+		String resultString = joinWithPositions(result);
         resultText.setText(resultString);
 		
 		if (resultString.length() > this.LIMIT){
@@ -200,45 +387,70 @@ public class DescriptionEditorController implements Initializable {
 		else{
 			countLabel.setFill(Color.BLACK);
 		}
+		countLabel.setText("Символов: " + resultString.length());
 		
 		return resultString;
 	}
 	
-			
-	public String generateRandomDescription(){
-		List<String> result = new ArrayList<String>();
-		for (int i=0; i<data.size();i++){
-			if (data.get(i) == null || data.get(i).equals("<текст>")){
-			    String 	t = textFieldsStored.get(i);
-			    if (!t.isEmpty())
-			    	result.add(t);
+	private String joinWithPositions(List<Tuple<Integer, String>> data){
+		if (data == null || data.isEmpty()) return ""; 
+		List<Integer> freePositions = new ArrayList<Integer>();
+		for (int i=0; i<data.size();i++) 
+			freePositions.add(i);
+         for (Tuple<Integer,String> tuple : data) {
+			if (tuple.x>=0)
+				freePositions.remove(tuple.x);
+		}
+         for (Tuple<Integer,String> tuple : data) {
+			if (tuple.x<0) {
+				int index = ThreadLocalRandom.current().nextInt(freePositions.size());		
+				tuple.x = freePositions.remove(index);
 			}
-			else if (data.get(i).equals("Таргет")){
-				String t = app.mainFrameController.currentTarget.getTarget();
+		}		
+		Map<Integer, String> treeMap = new TreeMap<>();
+		for (Tuple<Integer,String> tuple : data) {
+			treeMap.put(tuple.x, tuple.y);
+		}
+		return StringUtils.join(treeMap.values(), " ");
+	}
+	
+			
+	public String generateDescriptionForMetadata(){
+		List<Tuple<Integer, String>> result = new ArrayList<Tuple<Integer, String>>();
+		for (int i=0; i<data.size();i++){
+			int position = i;
+			if(isRandomStored.get(i))
+				position = -1;
+			final String dataValue = data.get(i);
+			if (dataValue.equals(this.folderDescr)){
+				String t = app.mainFrameController.currentFolder.getDescriptionVariable();
+			    if (t!=null && !t.isEmpty())
+			    	result.add( new Tuple<Integer, String>(position, t));
+			}
+			else if (dataValue.equals(this.targetDescr1)){
+				String t = app.mainFrameController.currentTarget.getTargetDescr1();
 			    if (!t.isEmpty())
-			    	result.add(t);
+			    	result.add( new Tuple<Integer, String>(position, t));
 			}
 				
-			else if (data.get(i).equals("Таргет1")){
-				String t = app.mainFrameController.currentTarget.getTarget1();
+			else if (dataValue.equals(this.targetDescr2)){
+				String t = app.mainFrameController.currentTarget.getTargetDescr2();
 			    if (!t.isEmpty())
-			    	result.add(t);
-			}
-			else if (data.get(i).equals("Таргет2")){
-				String t = app.mainFrameController.currentTarget.getTarget2();
-			    if (!t.isEmpty())
-			    	result.add(t);
+			    	result.add( new Tuple<Integer, String>(position, t));
 			}
 			else {
-				List<String> list = app.variables.get(data.get(i));
-				if (list!=null && !list.isEmpty()){
-					String t = list.get(ThreadLocalRandom.current().nextInt(list.size()));
-				    if (!t.isEmpty())
-				    	result.add(t);
+			    String t = "";
+				try {
+					t = SyntaxParser.pasteVariables(app.descriptionVariableEditorContainerController.savedVariables, textFieldsStored.get(i), false, " ");
+				} catch (TextException e) {
+					app.log("ERROR: Ошибка вставки переменных в строку: " + textFieldsStored.get(i));
+					app.isProblem = true;
+				}
+			    if (!t.isEmpty())
+			    	result.add( new Tuple<Integer, String>(position, t));
 			}
 		}
-		}
-		this.currentDescription = StringUtils.join(result, " ");
+		this.currentDescription = joinWithPositions(result);
 		return this.currentDescription;
 	}
 	
@@ -264,51 +476,49 @@ public class DescriptionEditorController implements Initializable {
     });
 	}
 
-	public void saveDescriptionsSource() {
+	public void saveDescriptionsSource() throws DataException {
 		data.clear();
-		for (ComboBox<String> sel:selectors){
-			String item = sel.getSelectionModel().getSelectedItem();
-			if (item==null)
-				data.add("<текст>");
-			else 
-				data.add(item);
-		}
+		selectors.forEach(sel -> data.add(sel.getSelectionModel().getSelectedItem()));
 		textFieldsStored.clear();
-		for (int i=0;i<textFields.size();i++) 
-			textFieldsStored.add(textFields.get(i).getText().trim());
-	}
-
-	public boolean checkDataIsCorrect() {
-		boolean result = true;
-		
-		if (!textFields.stream().allMatch(t->app.isCorrectKey(t.getText()))){
-			app.log("Недопустимые символы в одном из текстовых полей вкладки Описание");
-			result = false;
-		}
-		
-		if (data.stream().anyMatch(d->d.equals("Таргет")))
-			if (!app.getTargetsData().stream().allMatch(t->app.isCorrectKey(t.getTarget()))){
-				app.log("Недопустимые символы в одном из полей Таргет");
-				result = false;
+		for (int i=0;i<textFields.size();i++)
+			try {
+				SyntaxParser.checkVariables(app.descriptionVariableEditorContainerController.variables, textFields.get(i).getText());
+				textFieldsStored.add(textFields.get(i).getText());
+				isRandomStored.add(randomBoxes.get(i).isSelected());
+			} catch (TextException e) {
+				setError(textFields.get(i), true, e.getMessage());
+				throw new DataException(this.tab);
 			}
-		if (data.stream().anyMatch(d->d.equals("Таргет1")))
-			if (!app.getTargetsData().stream().allMatch(t->app.isCorrectKey(t.getTarget1()))){
-				app.log("Недопустимые символы в одном из полей Таргет1");
-				result = false;
-			}
-		if (data.stream().anyMatch(d->d.equals("Таргет2")))
-			if (!app.getTargetsData().stream().allMatch(t->app.isCorrectKey(t.getTarget1()))){
-				app.log("Недопустимые символы в одном из полей Таргет2");
-				result = false;
-			}
-		
-		for (String b:data.stream().filter(a->app.variables.keySet().contains(a)).toArray(String[]::new)){
-			if (!app.variables.get(b).stream().allMatch(t->app.isCorrectKey(t))){
-				app.log("Недопустимые символы в значениях Переменной " + b);
-				result = false;
-		}
-		}
-		return result;
 	}
 	
+	public void clearAll(){
+		selectors.forEach(sel -> sel.getSelectionModel().select("<текст>"));
+		textFields.forEach(tf -> tf.clear());
+		randomBoxes.forEach(b -> b.setSelected(false));
+	}
+
+	@Override
+	public void loadData() {
+		updateLists();
+		if (this.wrapper != null)
+		for (int i=0; i<this.textFields.size(); i++) {
+			if (this.wrapper.textFields.size()<=i) break;
+			this.textFields.get(i).setText(this.wrapper.textFields.get(i));
+			this.randomBoxes.get(i).setSelected(this.wrapper.isRandomBoxes.get(i));
+			if (this.wrapper.comboSelectedText.size()>i && this.selectors.get(i).getItems().contains(this.wrapper.comboSelectedText.get(i)))
+				this.selectors.get(i).getSelectionModel().select(this.wrapper.comboSelectedText.get(i));
+		}
+		isInitialized = true;
+	}
+
+	@Override
+	public void saveData() {
+		this.wrapper = new DescriptionEditorWrapper();
+		for (int i=0; i<this.textFields.size(); i++){
+			this.wrapper.textFields.add(this.textFields.get(i).getText());
+			this.wrapper.comboSelectedText.add(this.selectors.get(i).getSelectionModel().getSelectedItem());
+			this.wrapper.isRandomBoxes.add(this.randomBoxes.get(i).isSelected());
+		}
+	}
+
 }

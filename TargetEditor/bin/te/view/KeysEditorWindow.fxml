@@ -23,5 +23,6 @@
       <Label layoutX="26.0" layoutY="23.0" prefHeight="21.0" prefWidth="269.0" text="Переменные ключей" />
       <Label layoutX="328.0" layoutY="23.0" prefHeight="21.0" prefWidth="116.0" text="Число ключей" />
       <Spinner fx:id="keyCountBox" editable="true" layoutX="328.0" layoutY="52.0" prefHeight="31.0" prefWidth="96.0" />
+      <CheckBox fx:id="isFolderVariable" layoutX="26.0" layoutY="198.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="277.0" text="Добавить Переменную Папки" />
    </children>
 </AnchorPane>

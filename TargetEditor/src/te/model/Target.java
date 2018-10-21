@@ -1,9 +1,13 @@
 package te.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
 import javafx.beans.DefaultProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.property.SimpleStringProperty;
 
+@XmlAccessorType(XmlAccessType.PROPERTY)
 public class Target {
 
 	private final SimpleStringProperty targetKwd;

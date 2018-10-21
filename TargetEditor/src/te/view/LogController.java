@@ -39,5 +39,11 @@ public class LogController extends TargetEditorController implements Initializab
 		
 	}
 
+	@Override
+	public void saveData() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }

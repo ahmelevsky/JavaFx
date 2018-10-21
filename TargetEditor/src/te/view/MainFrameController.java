@@ -145,6 +145,7 @@ public class MainFrameController implements Initializable{
 			app.saveTargetsData();
 			app.keyVariableEditorContainerController.saveVariables();
 			app.descriptionVariableEditorContainerController.saveVariables();
+			app.folderVariableController.saveVariables();
 			app.keysEditorController.saveKeywordsSource();
 			app.descriptionEditorController.saveDescriptionsSource();
 			app.titleEditorController.saveTitleSource();

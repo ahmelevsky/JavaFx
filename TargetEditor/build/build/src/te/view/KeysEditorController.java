@@ -1,14 +1,11 @@
 package te.view;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
@@ -18,47 +15,49 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.util.StringConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
-import te.Main;
+import te.model.KeysEditorWrapper;
+import te.model.Variable;
+import te.util.DataException;
+import te.util.SyntaxParser;
+import te.util.TextAreaException;
+import te.util.TextException;
+
 import com.sun.javafx.scene.control.behavior.TextAreaBehavior;
 import com.sun.javafx.scene.control.skin.TextAreaSkin;
 
 
-public class KeysEditorController implements Initializable {
+public class KeysEditorController extends TargetEditorController implements Initializable {
 
 	@FXML
-	private TextArea obligatoryText;
-	
-	@FXML
-	private TextArea backgroundText;
-	
-	@FXML
-	private TextArea kindText;
-	
-	@FXML
-	private TextArea highText;
-	
-	@FXML
-	private TextArea lowText;
+	private TextArea keysField;
 	
 	@FXML
 	private TextArea preview;
-
-	@FXML
-	private TextField lowCount;
 	
 	@FXML
-	private TextField highCount;
+	private ComboBox<Variable> variablesCombo;
 	
 	@FXML
 	private Button clearBtn;
+	
+	@FXML
+	private Button addBtn;
+	
+	@FXML
+	private Spinner<String> keyCountBox;
 	
 	@FXML
 	private Label countLabel;
@@ -66,137 +65,165 @@ public class KeysEditorController implements Initializable {
 	@FXML
 	private CheckBox isTarget;
 	
-	public Main app;
+	@FXML
+	private CheckBox isFolderVariable;
 	
-	private String obligatoryKeys;
-	private String backgroundKeys;
-	private String kindKeys;
-	private String highKeys;
-	private String lowKeys;
+	private ObservableList<String> items = FXCollections.observableArrayList("Все");
+	private String savedKeywordsTemplate;
 	private boolean isT;
-	private int lCount;
-	private int hCount;
+	private boolean isF;
 	
-	ObservableList<String> backgroundOptions =    FXCollections.observableArrayList();
-	ObservableList<String> kindOptions =    FXCollections.observableArrayList();
+	public KeysEditorWrapper wrapper;
 	
-
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		//obligatoryText.setText("shampoo, bubble, bubbly, blue, invite, flyer, background, swimming, pool, foam, soap, liquid, cool, bath, shower, cleaning, wash, sea, deep, 3d, oxygen, water, transparent");
-		//highText.setText("abstract, closeup, wet, nature, clean, fresh, bright, drop, drink, light, air, macro, hygiene, bathroom, template, vector, splash, color, rainbow, sphere, shine, orb, circle, glossy, ball, realistic, blowing, reflection");
-		//lowText.setText("fizz, flow, froth, close-up, blow, ripple, wave, purity, beverage, underwater, freshness, powder, washing powder, detergent, diving, aqua park");
 		
-		highCount.setText("12");
-		lowCount.setText("5");
+		variablesCombo.setConverter(new StringConverter<Variable>(){
+
+			@Override
+			public String toString(Variable object) {
+				// TODO Auto-generated method stub
+				return object.getName();
+			}
+
+			@Override
+			public Variable fromString(String string) {
+				return variablesCombo.getItems().stream().filter(v -> v.getName().equals(string)).findFirst().orElse(null);
+			}
+			
+		});
+
+		for (int i=1;i<=50;i++)
+			items.add(String.valueOf(i));
+		
+		SpinnerValueFactory<String> valueFactory =   new SpinnerValueFactory.ListSpinnerValueFactory<String>(items);
+		keyCountBox.setValueFactory(valueFactory);
+		keyCountBox.focusedProperty().addListener((arg, oldVal, newVal) -> { if (newVal) return; correctSpinnerValue();});
+		keyCountBox.valueProperty().addListener((arg, oldVal, newVal) -> correctSpinnerValue());
+		
+		ImageView imageView = new ImageView(new Image(new File(
+				"resources/add.png").toURI().toString()));
+		imageView.setFitWidth(40);
+		imageView.setFitHeight(22);
+		addBtn.setGraphic(imageView);
 		
 		isTarget.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			update();
 		});
-		obligatoryText.textProperty().addListener((observable, oldValue, newValue) -> {
+		isFolderVariable.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			update();
 		});
-		highText.textProperty().addListener((observable, oldValue, newValue) -> {
-			update();
-		});
-		lowText.textProperty().addListener((observable, oldValue, newValue) -> {
-			update();
-		});
-		kindText.textProperty().addListener((observable, oldValue, newValue) -> {
-			update();
-		});
-		backgroundText.textProperty().addListener((observable, oldValue, newValue) -> {
-			update();
-		});
-		highCount.textProperty().addListener((observable, oldValue, newValue) -> {
-			update();
-		});
-		lowCount.textProperty().addListener((observable, oldValue, newValue) -> {
+		keysField.textProperty().addListener((observable, oldValue, newValue) -> {
 			update();
 		});
 		
-		denyTab(obligatoryText);
-		denyTab(backgroundText);
-		denyTab(kindText);
-		denyTab(highText);
-		denyTab(lowText);
-	}
-	@FXML
-	private void clearForms(){
-		obligatoryText.clear();
-		highText.clear();
-		lowText.clear();
-		kindText.clear();
-		backgroundText.clear();
+		denyTab(keysField);
 	}
 	
-private void update(){
-	preview.setText(StringUtils.join(getKeysFromUI(), ", "));
-	countLabel.setText("Слов: " + getKeysFromUI().size());
+	
+	@FXML
+	private void clearForms(){
+		keysField.clear();
+	}
+	
+private void correctSpinnerValue(){
+	 String text = keyCountBox.getEditor().getText();
+     SpinnerValueFactory.ListSpinnerValueFactory<String> vFactory = (SpinnerValueFactory.ListSpinnerValueFactory<String>) keyCountBox.getValueFactory();
+     if (!vFactory.getItems().contains(text)) {
+  		   vFactory.setValue("1");
+     } else {
+  		   vFactory.setValue(text);
+     }
+     keyCountBox.increment(0);
+}
+	
+public void setup(){
+	variablesCombo.setItems(app.keyVariableEditorContainerController.variables);
+}
+
+
+@FXML
+private void addVariable(){
+	Variable d =  variablesCombo.getSelectionModel().getSelectedItem();
+	if (d==null)
+		return;
+	String previous = keysField.getText().trim();
+	StringBuilder sb = new StringBuilder(previous);
+	if (!previous.isEmpty())
+		sb.append(", ");
+	sb.append("<");
+	sb.append(d.getName());
+	sb.append(">");
+	
+	String repeat = keyCountBox.getValueFactory().getValue();
+	if (repeat != null) {
+		sb.append("[");
+		if (!repeat.equals("Все"))
+			sb.append(repeat);
+		sb.append("]");
+	}
+	
+	keysField.setText(sb.toString());
+}
+
+
+public void update(){
+	try{
+		setError(keysField, false, null);
+		List<String> keys = getKeysFromUI();
+		preview.setText(StringUtils.join(keys, ", "));
+		countLabel.setText("Слов: " + keys.size());
+	}
+	catch (TextAreaException e){
+		setError(e.textArea, true, e.getMessage());
+	}
+	
 }
 
 public List<String> generateKeywordsForMetadata(){
 	    List<String> keys = new ArrayList<String>();
 		
-		addToList(obligatoryKeys, keys);
-		addToList(backgroundKeys, keys);
-		addToList(kindKeys, keys);
-		if (isT) {
-			String target = app.mainFrameController.currentTarget.getTarget();
-			if (app.isCorrectKey(target))
-				addToList(target, keys);
+	    try {
+	    	if (isT)
+	 			addToList(app.mainFrameController.currentTarget.getTargetKwd(), keys);
+	    	if (isF)
+	 			addToList(app.mainFrameController.currentFolder.getKeyVariable(), keys);
+			addToList(SyntaxParser.pasteVariablesUnique(app.keyVariableEditorContainerController.savedVariables, this.savedKeywordsTemplate, false, ", "), keys);
+			keys = keys.stream().distinct().collect(Collectors.toList());
+			cutList(keys, 50);
+		} catch (TextException e) {
+			app.log("ERROR: Ошибка вставки переменных в строку: " + this.savedKeywordsTemplate);
+			app.isProblem = true;
 		}
-		addNRandomToList(highKeys, keys, hCount);
-		addNRandomToList(lowKeys, keys, lCount);
 		
-		keys = keys.stream().distinct().collect(Collectors.toList());
-		
-		cutList(keys, 50);
-	
 		return keys;
 	}
 	
-	public void saveKeywordsSource(){
-		obligatoryKeys = obligatoryText.getText();
-		backgroundKeys = backgroundText.getText();
-		kindKeys = kindText.getText();
-		highKeys = highText.getText();
-		lowKeys = lowText.getText();
-		isT = isTarget.isSelected();
-		hCount = 0;
-		lCount = 0;
-		try{
-			hCount = Integer.parseInt(highCount.getText());
-			lCount = Integer.parseInt(lowCount.getText());
-		}
-		catch (Exception e){
+	public void saveKeywordsSource() throws DataException{
+		try {
+			SyntaxParser.checkVariables(app.keyVariableEditorContainerController.variables, keysField.getText());
+			this.isT = isTarget.isSelected();
+			this.isF = isFolderVariable.isSelected();
+			this.savedKeywordsTemplate = keysField.getText().trim();
+			
+		} catch (TextException e) {
+			setError(keysField, true, e.getMessage());
+			throw new DataException(this.tab);
 		}
 	}
 	
 	
 	
-	private List<String> getKeysFromUI(){
+	private List<String> getKeysFromUI() throws TextAreaException{
         List<String> keys = new ArrayList<String>();
 		
-		addToList(obligatoryText.getText(), keys);
-		addToList(backgroundText.getText(), keys);
-		addToList(kindText.getText(), keys);
-		
-		if (isTarget.isSelected())
-			addToList(app.getRandomTarget(), keys);
-		
-		int nh = 0;
-		int nl = 0;
-		try{
-			nh = Integer.parseInt(highCount.getText());
-			nl = Integer.parseInt(lowCount.getText());
-		}
-		catch (Exception e){
-			//return null;
-		}
-		addNRandomToList(highText.getText(), keys, nh);
-		addNRandomToList(lowText.getText(), keys, nl);
+        if (isTarget.isSelected())
+			addToList(app.getRandomTargetKwd(), keys);
+        if (isFolderVariable.isSelected()) 
+			addToList(app.getRandomFolderKwd(), keys);
+        
+		addToList(parseVariablesInText(keysField, false), keys);
 		
 		keys = keys.stream().distinct().collect(Collectors.toList());
 		cutList(keys, 50);
@@ -213,37 +240,10 @@ public List<String> generateKeywordsForMetadata(){
 			if (!s.trim().isEmpty()) list.add(s.trim());
 	}
 	
-	
-	private void addNRandomToList(String string, List<String> list, int N){
-		Random random = new Random();
-		String[] array = string.split(",|;");
-		List<String> l = new ArrayList<String>(Arrays.asList(array));
-		while (N>0){
-			if (l.isEmpty())
-				break;
-			String s = l.remove(random.nextInt(l.size()));
-			if (!s.trim().isEmpty() && !list.contains(s.trim())){
-			list.add(s.trim());
-			N--;
-			}
-		}
-	}
-	
-	
 	private List<String> cutList(List<String>list, int size){
 		if (list.size() > size)
 			list.subList(size, list.size()).clear();
 		return list;
-	}
-	
-	
-	public boolean checkDataIsCorrect(){
-		return 
-		app.isCorrectKey(this.obligatoryKeys) &&
-		app.isCorrectKey(this.backgroundKeys) &&
-		app.isCorrectKey(this.kindKeys) &&
-		app.isCorrectKey(this.lowKeys) &&
-		app.isCorrectKey(this.highKeys);
 	}
 	
 	
@@ -269,6 +269,63 @@ public List<String> generateKeywordsForMetadata(){
 	    });
 		}
 
+	
+	
+	private String parseVariablesInText(TextArea tf, boolean isMax) throws TextAreaException{
+		String result = null;
+		try{
+			result = SyntaxParser.pasteVariablesUnique(app.keyVariableEditorContainerController.variables, tf.getText(), isMax, ", ");	
+		}
+		catch (TextException e) {
+			throw new TextAreaException (tf, e.getMessage());
+		}
+		return result;
+	}
+	
+	private void setError(TextArea tf, boolean setOrUnset, String errorText){
+		 ObservableList<String> styleClass = tf.getStyleClass();
+		 ObservableList<String> styleClassresultText = countLabel.getStyleClass();
+		 if (setOrUnset) {
+			 if (! styleClass.contains("red")) {
+	                styleClass.add("red");
+	            }
+			 if (errorText!=null){
+				 if (! styleClassresultText.contains("redText")) {
+					 styleClassresultText.add("redText");
+		            }
+				 countLabel.setText(errorText);
+			 }
+	        } 
+		 else {
+	            styleClass.removeAll(Collections.singleton("red"));          
+	            styleClassresultText.removeAll(Collections.singleton("redText"));
+	            countLabel.setText("");
+	        }
+	}
+	
+	public void clearAll(){
+		//variablesCombo.getSelectionModel().select(0);
+		keysField.clear();
+		isTarget.setSelected(false);
+		isFolderVariable.setSelected(false);
+	}
+
+
+	@Override
+	public void loadData() {
+		if (this.wrapper!=null) {
+			this.keysField.setText(this.wrapper.keysField);
+			this.isTarget.setSelected(this.wrapper.isTarget);
+			this.isFolderVariable.setSelected(this.wrapper.isFolderVariable);
+		}
+		
+	}
+	
+	public void saveData() {
+		this.wrapper = new KeysEditorWrapper(this.keysField.getText(), this.isTarget.isSelected(), this.isFolderVariable.isSelected());
+	}
+	
+	
 	}
 
 					

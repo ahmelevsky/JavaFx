@@ -1,5 +1,6 @@
 package te.view;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -14,6 +15,7 @@ import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
 import te.model.Target;
@@ -32,7 +34,10 @@ public class TargetsWindowController extends TargetEditorController implements I
 	 private TableColumn<Target, Button> removeRowColumn;
 	 @FXML
 	 private Button addBtn;
-	 
+	 @FXML
+	 private Button loadBtn;
+	 @FXML
+	 private Button saveBtn;
      public TargetsWindowController() {
 	    }
  
@@ -180,6 +185,23 @@ public class TargetsWindowController extends TargetEditorController implements I
 
 	@Override
 	public void loadData() {
+		
+	}
+	
+	
+	@FXML
+	private void loadVariablesFromFile(){
+		 app.keyVariableEditorContainerController.loadVariablesFromFile();
+	}
+	
+	@FXML
+	private void saveVariablesToFile(){
+		 app.keyVariableEditorContainerController.saveVariablesToFile();
+	}
+
+
+	@Override
+	public void saveData() {
 		// TODO Auto-generated method stub
 		
 	}

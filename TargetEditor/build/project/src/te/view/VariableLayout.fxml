@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox spacing="10.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="te.view.VariableLayoutController">
+   <children>
+      <TextField fx:id="variableNameTxt">
+         <HBox.margin>
+            <Insets bottom="10.0" top="10.0" />
+         </HBox.margin></TextField>
+      <ComboBox fx:id="variableDelimiterBox" prefWidth="150.0">
+         <HBox.margin>
+            <Insets bottom="10.0" top="10.0" />
+         </HBox.margin></ComboBox>
+      <TextArea fx:id="variableValuesTxt" prefHeight="50.0" prefWidth="540.0" wrapText="true" />
+      <Button fx:id="removeBtn" mnemonicParsing="false" onAction="#remove" prefHeight="30.0" prefWidth="30.0" text="-">
+         <HBox.margin>
+            <Insets bottom="10.0" left="20.0" top="10.0" />
+         </HBox.margin>
+      </Button>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</HBox>
