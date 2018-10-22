@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
@@ -302,7 +303,17 @@ public class MainFrameController implements Initializable{
 
 	@FXML
 	private void clearAllData(){
-		app.clearAllData();
+		ButtonType yes = new ButtonType("Да");
+		ButtonType no = new ButtonType("Нет");
+		Alert alert = new Alert(AlertType.CONFIRMATION, "Вы уверены? Все данные в приложении будут удалены", yes, no);
+		alert.setTitle("Очистка");
+		alert.setHeaderText("Необходимо подтверждение");
+		alert.showAndWait();
+
+		if (alert.getResult() == yes) {
+			app.clearAllData();
+		}
+		
 	}
 
 }
