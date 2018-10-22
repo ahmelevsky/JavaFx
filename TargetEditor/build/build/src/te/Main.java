@@ -109,11 +109,7 @@ public class Main extends Application {
 	 @Override
 	 public void stop(){
 		 try{
-	     for (TargetEditorController controller:this.controllers)
-	    	 controller.saveData();
 	     saveLastSettings();
-	     this.dataFile.delete();
-	     this.dataFileTemp.renameTo(this.dataFile);
 		 }
 		 catch (Exception e) {
 			 Alert alert = new Alert(AlertType.ERROR);
@@ -210,6 +206,14 @@ public class Main extends Application {
 		if (notEmpty.isEmpty())
 			return null;
 		return notEmpty.get(ThreadLocalRandom.current().nextInt(0, notEmpty.size())).getKeyVariable();
+	}
+	
+	public String getRandomFolderDescr(){
+		if (getFolderVariableData()==null || getFolderVariableData().isEmpty()) return null;
+		List<FolderVariable> notEmpty = getFolderVariableData().stream().filter(f -> f.getDescriptionVariable()!=null && !f.getDescriptionVariable().trim().isEmpty()).collect(Collectors.toList());
+		if (notEmpty.isEmpty())
+			return null;
+		return notEmpty.get(ThreadLocalRandom.current().nextInt(0, notEmpty.size())).getDescriptionVariable();
 	}
 	
 	public Target getRandomTarget(){
@@ -335,6 +339,11 @@ public class Main extends Application {
 		 titleEditorController.clearAll();
 		 keyVariableControllers = new ArrayList<VariableLayoutController>();
 		 descriptionVariableControllers = new ArrayList<VariableLayoutController>();
+		 this.targetsData.clear();
+		 this.folderVariableData.forEach(v -> {
+			 v.setDescriptionVariable("");
+			 v.setKeyVariable("");
+		 });
 	 }
 	 
 	 
@@ -370,6 +379,7 @@ public class Main extends Application {
 	            
 	            this.keyVariableEditorContainerController.clear();
 	            this.descriptionVariableEditorContainerController.clear();
+	            this.targetsData.clear();
 	            this.keyVariableEditorContainerController.variables.addAll(wrapper.getKeyVariables());
 	            this.descriptionVariableEditorContainerController.variables.addAll(wrapper.getDescriptionVariables());
 	            this.descriptionVariableEditorContainerController.loadData();
@@ -435,6 +445,8 @@ public class Main extends Application {
 		            	this.descriptionEditorController.wrapper = wrapper.getDescriptionPage();
 		            if (wrapper.getTitlePage()!=null)
 		            	this.titleEditorController.wrapper = wrapper.getTitlePage();
+		            if (wrapper.getFolderWrapper() !=null)
+		            	this.folderVariableController.wrapper = wrapper.getFolderWrapper();
 		            
 		        } catch (Exception e) { // catches ANY exception
 		            Alert alert = new Alert(AlertType.ERROR);
@@ -447,7 +459,8 @@ public class Main extends Application {
 		 }
 	    
 		 public void saveLastSettings() throws JAXBException{
-				 
+			      for (TargetEditorController controller:this.controllers)
+		    	         controller.saveData();
 				  JAXBContext context = JAXBContext
 		                    .newInstance(DataWrapper.class);
 		            Marshaller m = context.createMarshaller();
@@ -464,9 +477,11 @@ public class Main extends Application {
                     	wrapper.setKeysPage(this.keysEditorController.wrapper);
                     if (this.titleEditorController.wrapper !=null)
                     	wrapper.setTitlePage(this.titleEditorController.wrapper);
-	                
+                    if (this.folderVariableController.wrapper !=null)
+                    	wrapper.setFolderWrapper(this.folderVariableController.wrapper);
 		            // Маршаллируем и сохраняем XML в файл.
 		            m.marshal(wrapper, this.dataFileTemp);
-				 
+		            this.dataFile.delete();
+		   	        this.dataFileTemp.renameTo(this.dataFile);
 		 }
 }

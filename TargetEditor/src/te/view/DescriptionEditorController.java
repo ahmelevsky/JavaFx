@@ -327,6 +327,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 				}
 			}
 		}
+		refresh();
 		addListeners();
 	}
 	
@@ -334,6 +335,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 	private void refresh(){
 		try {
 			removeListeners();
+			getMaxLengthDescription();
 			getRandomDescription();
 			addListeners();
 		} catch (TextAreaException e) {

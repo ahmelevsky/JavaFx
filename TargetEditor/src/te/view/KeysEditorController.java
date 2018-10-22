@@ -51,7 +51,7 @@ public class KeysEditorController extends TargetEditorController implements Init
 	private ComboBox<Variable> variablesCombo;
 	
 	@FXML
-	private Button clearBtn;
+	private Button refreshBtn;
 	
 	@FXML
 	private Button addBtn;
@@ -119,12 +119,6 @@ public class KeysEditorController extends TargetEditorController implements Init
 		});
 		
 		denyTab(keysField);
-	}
-	
-	
-	@FXML
-	private void clearForms(){
-		keysField.clear();
 	}
 	
 private void correctSpinnerValue(){
@@ -324,7 +318,6 @@ public List<String> generateKeywordsForMetadata(){
 	public void saveData() {
 		this.wrapper = new KeysEditorWrapper(this.keysField.getText(), this.isTarget.isSelected(), this.isFolderVariable.isSelected());
 	}
-	
 	
 	}
 

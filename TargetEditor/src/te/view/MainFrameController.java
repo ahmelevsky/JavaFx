@@ -263,6 +263,7 @@ public class MainFrameController implements Initializable{
 	}
 
 	public boolean setRootFolder(String rootFolder) {
+		if (rootFolder==null) return false;
 		this.rootFolder = new File(rootFolder);
 		if (!this.rootFolder.exists()) return false;
 		this.folderPath.setText(rootFolder);

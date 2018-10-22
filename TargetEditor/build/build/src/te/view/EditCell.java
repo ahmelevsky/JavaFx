@@ -140,7 +140,7 @@ public class EditCell < S, T > extends TextFieldTableCell < S, T > {
                 textField.setText(getConverter().toString(getItem()));
                 cancelEdit();
                 event.consume();
-            } else if (event.getCode() == KeyCode.RIGHT ||
+           /* } else if (event.getCode() == KeyCode.RIGHT ||
                 event.getCode() == KeyCode.TAB) {
                 getTableView().getSelectionModel().selectNext();
                 event.consume();
@@ -152,7 +152,7 @@ public class EditCell < S, T > extends TextFieldTableCell < S, T > {
                 event.consume();
             } else if (event.getCode() == KeyCode.DOWN) {
                 getTableView().getSelectionModel().selectBelowCell();
-                event.consume();
+                event.consume();*/
             }
         });
         return textField;

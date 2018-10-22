@@ -339,6 +339,11 @@ public class Main extends Application {
 		 titleEditorController.clearAll();
 		 keyVariableControllers = new ArrayList<VariableLayoutController>();
 		 descriptionVariableControllers = new ArrayList<VariableLayoutController>();
+		 this.targetsData.clear();
+		 this.folderVariableData.forEach(v -> {
+			 v.setDescriptionVariable("");
+			 v.setKeyVariable("");
+		 });
 	 }
 	 
 	 

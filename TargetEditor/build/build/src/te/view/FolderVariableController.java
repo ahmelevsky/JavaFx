@@ -3,21 +3,26 @@ package te.view;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Circle;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
 import te.model.FolderVariable;
+import te.model.FolderVariablesWrapper;
+import te.model.Target;
 
 public class FolderVariableController  extends TargetEditorController implements Initializable {
 
@@ -29,6 +34,14 @@ public class FolderVariableController  extends TargetEditorController implements
 	 private TableColumn<FolderVariable, String> keyVariableColumn;
 	 @FXML
 	 private TableColumn<FolderVariable, String> descriptionVariableColumn;
+	 @FXML
+	 private TextArea inputKeyVariable;
+	 @FXML
+	 private TextArea inputDescriptionVariable;
+	 @FXML 
+	 private Button addDataBtn;
+	 
+	 public FolderVariablesWrapper wrapper;
 	 
     public FolderVariableController() {
 	    }
@@ -170,14 +183,50 @@ public class FolderVariableController  extends TargetEditorController implements
 
 	@Override
 	public void loadData() {
-		// TODO Auto-generated method stub
-		
+		if (this.wrapper != null){
+         if (app.mainFrameController.setRootFolder(wrapper.rootFolderPath)){
+        	 for (FolderVariable variable:app.getFolderVariableData()){
+        		 Optional<FolderVariable> opt = wrapper.variables.stream().filter(v -> v.getFolderPath().equals(variable.getFolderPath())).findFirst();
+        		 if (opt!=null && opt.isPresent()){
+        			 FolderVariable savedVariable = opt.get();
+        			 //variable.setFolder(new File(this.wrapper.rootFolderPath + File.separator + savedVariable.getFolderPath()));
+        			 //variable.setFolderPath(savedVariable.getFolderPath());
+        			 variable.setDescriptionVariable(savedVariable.getDescriptionVariable());
+        			 variable.setKeyVariable(savedVariable.getKeyVariable());
+        		 }
+        	 }
+         }
+		}
 	}
 
+	@FXML
+    private void addData(){
+		boolean editKwds = !this.inputKeyVariable.getText().trim().isEmpty();
+		boolean editDescr = !this.inputDescriptionVariable.getText().trim().isEmpty();
+		
+    	String[] varKwds = this.inputKeyVariable.getText().split("\\r?\\n");
+		String[] varDescr = this.inputDescriptionVariable.getText().split("\\r?\\n");
+		
+		for (int i=0; i<app.folderVariableData.size();i++){
+			String varKwdsRow = varKwds.length>i ? varKwds[i] : "";
+			String varDescrRow = varDescr.length>i ? varDescr[i] : "";
+			FolderVariable variable = app.folderVariableData.get(i);
+			if (editKwds)
+				variable.setKeyVariable(varKwdsRow);
+			if (editDescr)
+				variable.setDescriptionVariable(varDescrRow);
+		}
+		this.inputKeyVariable.clear();
+		this.inputDescriptionVariable.clear();
+    }
+	
+	
 
 	@Override
 	public void saveData() {
-		// TODO Auto-generated method stub
+		this.wrapper = new FolderVariablesWrapper();
+		this.wrapper.variables = app.folderVariableData;
+		this.wrapper.rootFolderPath = app.mainFrameController.getRootFolder();
 		
 	}
 

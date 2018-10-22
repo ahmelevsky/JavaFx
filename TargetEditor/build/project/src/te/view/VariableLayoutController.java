@@ -76,7 +76,7 @@ public class VariableLayoutController implements Initializable {
 			case " ":
 				this.variableDelimiterBox.getSelectionModel().select("опнаек");
 				break;
-			case "\\r?\\n":
+			case "\r\n":
 				this.variableDelimiterBox.getSelectionModel().select("оепемня ярпнйх");
 				break;
 			default:

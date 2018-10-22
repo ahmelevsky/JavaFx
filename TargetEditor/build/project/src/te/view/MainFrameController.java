@@ -114,6 +114,16 @@ public class MainFrameController implements Initializable{
 	
 	@FXML
 	public void writeMetadata() throws SAXException, ParserConfigurationException, TransformerException, IOException{
+		try{
+			app.saveLastSettings();
+		}
+		 catch (Exception e) {
+			 Alert alert = new Alert(AlertType.ERROR);
+	            alert.setTitle("Ошибка");
+	            alert.setHeaderText("Ошибка сохранения данных в xml");
+	            alert.setContentText(e.getMessage());
+	            alert.showAndWait();
+		 }
 		app.isProblem = false;
 		if (rootFolder==null || !rootFolder.exists() || !rootFolder.isDirectory()){
 			app.showAlert("Папка не выбрана или не существует");
@@ -247,6 +257,20 @@ public class MainFrameController implements Initializable{
 		 
 	}
 	
+	public String getRootFolder() {
+		if (rootFolder==null) return null;
+		else return rootFolder.getAbsolutePath();
+	}
+
+	public boolean setRootFolder(String rootFolder) {
+		if (rootFolder==null) return false;
+		this.rootFolder = new File(rootFolder);
+		if (!this.rootFolder.exists()) return false;
+		this.folderPath.setText(rootFolder);
+		app.folderVariableController.fillFolderVariables(this.rootFolder);
+		return true;
+	}
+
 	@FXML
     private void selectPath(){
 		  DirectoryChooser directoryChooser = new DirectoryChooser(); 

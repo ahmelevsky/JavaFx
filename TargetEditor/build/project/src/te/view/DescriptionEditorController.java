@@ -138,6 +138,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 			setError(textFields.get(index), false, null);
 			 try {	
 					getMaxLengthDescription();
+					getRandomDescription();
 				 }
 				 catch (TextAreaException e) {
 					setError(e.textArea, true, e.getMessage());
@@ -161,6 +162,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 			
 				 try {	
 					getMaxLengthDescription();
+					getRandomDescription();
 				 }
 				 catch (TextAreaException e) {
 					setError(e.textArea, true, e.getMessage());
@@ -177,6 +179,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 				removeListeners();
 				try {
 					getMaxLengthDescription();
+					getRandomDescription();
 				} catch (TextAreaException e) {
 					setError(e.textArea, true, e.getMessage());
 				}
@@ -324,33 +327,44 @@ public class DescriptionEditorController extends TargetEditorController implemen
 				}
 			}
 		}
+		refresh();
 		addListeners();
 	}
 	
+	@FXML
+	private void refresh(){
+		try {
+			removeListeners();
+			getMaxLengthDescription();
+			getRandomDescription();
+			addListeners();
+		} catch (TextAreaException e) {
+			setError(e.textArea, true, e.getMessage());
+		}
+	}
 	
 	
-	public String getMaxLengthDescription() throws TextAreaException{
+	public String getRandomDescription() throws TextAreaException{
 		
+		Target target = app.getRandomTarget();
 		List<Tuple<Integer, String>> result = new ArrayList<Tuple<Integer, String>>();
 		for (int i=0; i<selectors.size();i++){
 			String d =  selectors.get(i).getSelectionModel().getSelectedItem();
 			int position = i;
 			if(randomBoxes.get(i).isSelected())
 				position = -1;
-			if (d == null || d.isEmpty() || d.equals("<текст>")){
-			    String t = parseVariablesInText(textFields.get(i), true);
-			    if (!t.isEmpty()) 
-			    	result.add( new Tuple<Integer, String>(position, t));
-			}
+			if (d == null || d.isEmpty()){
+				   continue;
+				}
 			else if (d.equals(this.folderDescr)){
-				List<String> res = app.getFolderVariableData().stream().map(FolderVariable::getDescriptionVariable).collect(Collectors.toList());
-				String t = Collections.max(res, Comparator.comparing(s -> s.length()));
-				textFields.get(i).setText(t);
-			    if (!t.isEmpty())
-			    	result.add( new Tuple<Integer, String>(position, t));
+				String t = app.getRandomFolderDescr();
+				if (t!=null){
+					textFields.get(i).setText(t);
+					if (!t.isEmpty())
+						result.add( new Tuple<Integer, String>(position, t));
+				}
 			}
 			else if (d.equals(this.targetDescr1)) {
-				Target target = app.getTargetWithMaxLength();
 				if (target!=null){
 					String t = target.getTargetDescr1();
 					textFields.get(i).setText(t);
@@ -360,7 +374,6 @@ public class DescriptionEditorController extends TargetEditorController implemen
 				
 			}
 			else if (d.equals(this.targetDescr2)){
-				Target target = app.getTargetWithMaxLength();
 				if (target!=null){
 					String t = target.getTargetDescr2();
 					textFields.get(i).setText(t);
@@ -368,18 +381,62 @@ public class DescriptionEditorController extends TargetEditorController implemen
 				    	result.add( new Tuple<Integer, String>(position, t));
 				}
 			}
-		/*	else {
-				String variableValue = Variable.getMaxValueByName(app.descriptionVariableEditorContainerController.variables, d);
-			    if (d!=null) {
-			    	textFields.get(i).setText(variableValue);
-			        if (!variableValue.isEmpty())
-			        	result.add( new Tuple<Integer, String>(position, variableValue));
-				    }
-			}*/
+			else {
+				 String t = parseVariablesInText(textFields.get(i), false);
+				    if (!t.isEmpty()) 
+				    	result.add( new Tuple<Integer, String>(position, t));
+			}
 		}
 		
 		String resultString = joinWithPositions(result);
         resultText.setText(resultString);
+		
+		return resultString;
+	}
+	
+	public String getMaxLengthDescription() throws TextAreaException{
+		Target target = app.getTargetWithMaxLength();
+		List<Tuple<Integer, String>> result = new ArrayList<Tuple<Integer, String>>();
+		for (int i=0; i<selectors.size();i++){
+			String d =  selectors.get(i).getSelectionModel().getSelectedItem();
+			int position = i;
+			if(randomBoxes.get(i).isSelected())
+				position = -1;
+			if (d == null || d.isEmpty()){
+			   continue;
+			}
+			else if (d.equals(this.folderDescr)){
+				List<String> res = app.getFolderVariableData().stream().map(FolderVariable::getDescriptionVariable).collect(Collectors.toList());
+				String t = Collections.max(res, Comparator.comparing(s -> s.length()));
+				textFields.get(i).setText(t);
+			    if (!t.isEmpty())
+			    	result.add( new Tuple<Integer, String>(position, t));
+			}
+			else if (d.equals(this.targetDescr1)) {
+				if (target!=null){
+					String t = target.getTargetDescr1();
+					textFields.get(i).setText(t);
+				    if (!t.isEmpty())
+				    	result.add( new Tuple<Integer, String>(position, t));
+				}
+				
+			}
+			else if (d.equals(this.targetDescr2)){
+				if (target!=null){
+					String t = target.getTargetDescr2();
+					textFields.get(i).setText(t);
+				    if (!t.isEmpty())
+				    	result.add( new Tuple<Integer, String>(position, t));
+				}
+			}
+			else {
+				 String t = parseVariablesInText(textFields.get(i), true);
+			    if (!t.isEmpty()) 
+			    	result.add( new Tuple<Integer, String>(position, t));
+			}
+		}
+		
+		String resultString = joinWithPositions(result);
 		
 		if (resultString.length() > this.LIMIT){
 			countLabel.setFill(Color.RED);
@@ -387,7 +444,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 		else{
 			countLabel.setFill(Color.BLACK);
 		}
-		countLabel.setText("Символов: " + resultString.length());
+		countLabel.setText("Максимальное число символов: " + resultString.length());
 		
 		return resultString;
 	}

@@ -13,6 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
@@ -22,6 +23,8 @@ import te.model.Target;
 
 public class TargetsWindowController extends TargetEditorController implements Initializable {
 
+	
+	
 	 @FXML
 	 private TableView<Target> targetsTable;
 	 @FXML
@@ -38,6 +41,16 @@ public class TargetsWindowController extends TargetEditorController implements I
 	 private Button loadBtn;
 	 @FXML
 	 private Button saveBtn;
+	 @FXML
+	 private TextArea inputTargetKwd;
+	 @FXML
+	 private TextArea inputTargetDescr1;
+	 @FXML
+	 private TextArea inputTargetDescr2;
+	 @FXML 
+	 private Button addDataBtn;
+	 
+	 
      public TargetsWindowController() {
 	    }
  
@@ -199,7 +212,24 @@ public class TargetsWindowController extends TargetEditorController implements I
 		 app.keyVariableEditorContainerController.saveVariablesToFile();
 	}
 
-
+    @FXML
+    private void addData(){
+    	String[] targetKwds = this.inputTargetKwd.getText().split("\\r?\\n");
+		String[] targetDescr1 = this.inputTargetDescr1.getText().split("\\r?\\n");
+		String[] targetDescr2 = this.inputTargetDescr2.getText().split("\\r?\\n");
+		for (int i=0; i<targetKwds.length || i<targetDescr1.length || i<targetDescr2.length;i++){
+			String targetKwdRow = targetKwds.length>i ? targetKwds[i] : "";
+			String targetDescr1Row = targetDescr1.length>i ? targetDescr1[i] : "";
+			String targetDescr2Row = targetDescr2.length>i ? targetDescr2[i] : "";
+			if (!targetKwdRow.trim().isEmpty() || !targetDescr1Row.trim().isEmpty() || !targetDescr2Row.trim().isEmpty())
+				app.targetsData.add(new Target(targetKwdRow, targetDescr1Row, targetDescr2Row));
+		}
+		this.inputTargetKwd.clear();
+		this.inputTargetDescr1.clear();
+		this.inputTargetDescr2.clear();
+    }
+	
+	
 	@Override
 	public void saveData() {
 		// TODO Auto-generated method stub

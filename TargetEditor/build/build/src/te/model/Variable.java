@@ -33,6 +33,8 @@ public class Variable {
 	public Variable(String name, String delimiter, String values){
 		this.name =  new SimpleStringProperty(name);
 		//this.valuesString = new SimpleStringProperty(values);
+		if (delimiter!=null && delimiter.equals("\r\n"))
+			delimiter = "\\r?\\n";
 		this.delimiter = new SimpleStringProperty(delimiter);
 		setValues(values);
 	}
@@ -49,11 +51,16 @@ public class Variable {
 		this.name.set(name);
 	}
 	public void setDelimiter(String delimiter){
+		if (delimiter!=null && delimiter.equals("\r\n"))
+			delimiter = "\\r?\\n";
 		this.delimiter.set(delimiter);
 	}
 	@XmlElement
 	public String getDelimiter(){
-        return this.delimiter.get();		
+		String delim = this.delimiter.get();
+		if (delim!=null && delim.equals("\\r?\\n"))
+			delim = "\r\n";
+        return delim;		
 	}
 	
 	public StringProperty delimiterProperty(){

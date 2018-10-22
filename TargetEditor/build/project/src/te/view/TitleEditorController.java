@@ -221,6 +221,13 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		
 		if (options1.contains(selectedValue))
 			titleBox.getSelectionModel().select(selectedValue);
+		
+		try {
+			updateCounter();
+		} catch (TextAreaException e) {
+			setError(e.textArea, true, e.getMessage());
+		}
+		
 		addListeners();
 	}
 	
