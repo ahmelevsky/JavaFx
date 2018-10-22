@@ -15,6 +15,7 @@ public class DataWrapper {
 	private KeysEditorWrapper keysPage;
 	private DescriptionEditorWrapper descriptionPage;
 	private TitleEditorWrapper titlePage;
+	private FolderVariablesWrapper folderWrapper;
 	
     @XmlElement(name = "keyvariable")
     public List<Variable> getKeyVariables() {
@@ -62,7 +63,12 @@ public class DataWrapper {
 	public void setTitlePage(TitleEditorWrapper titlePage) {
 		this.titlePage = titlePage;
 	}
-    
-    
+	@XmlElement(name = "folder")
+	public FolderVariablesWrapper getFolderWrapper() {
+		return folderWrapper;
+	}
+	public void setFolderWrapper(FolderVariablesWrapper folderWrapper) {
+		this.folderWrapper = folderWrapper;
+	}
     
 }

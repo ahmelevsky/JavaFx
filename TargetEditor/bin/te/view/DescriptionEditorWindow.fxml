@@ -44,6 +44,6 @@
       <Label layoutX="11.0" layoutY="7.0" text="Рандом" />
       <Label layoutX="183.0" layoutY="7.0" text="Переменные" />
       <Label layoutX="661.0" layoutY="7.0" text="Описание" />
-      <Button fx:id="refreshBtn" layoutX="876.0" layoutY="406.0" mnemonicParsing="false" onAction="#updateLists" prefHeight="52.0" prefWidth="103.0" text="Обновить" />
+      <Button fx:id="refreshBtn" layoutX="876.0" layoutY="406.0" mnemonicParsing="false" onAction="#refresh" prefHeight="52.0" prefWidth="103.0" text="Обновить" />
    </children>
 </AnchorPane>

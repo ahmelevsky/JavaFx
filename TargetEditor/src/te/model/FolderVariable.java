@@ -2,9 +2,13 @@ package te.model;
 
 import java.io.File;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+@XmlAccessorType(XmlAccessType.PROPERTY)
 public class FolderVariable {
 	private final File folder;
 	private final StringProperty keyVariable;
@@ -66,6 +70,5 @@ public class FolderVariable {
     public File getFolder(){
     	return this.folder;
     }
-    
     
 }
