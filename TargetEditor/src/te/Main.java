@@ -386,6 +386,7 @@ public class Main extends Application {
 	            this.keyVariableEditorContainerController.loadData();
 	            this.targetsData.addAll(wrapper.getTarget());
 	            this.targetsController.loadData();
+	            this.keysEditorController.setup();
 	            // Сохраняем путь к файлу в реестре.
 	            setKeysFilePath(file);
 

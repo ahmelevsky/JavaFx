@@ -10,12 +10,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javafx.fxml.FXML;
@@ -56,6 +59,8 @@ private TextArea namesArea;
 
 Main app;
 String[] folderNames;
+File folder;
+List<File> files;
 
 @Override
 public void initialize(URL arg0, ResourceBundle arg1) {
@@ -87,60 +92,68 @@ private void selectPath(){
 @FXML
 private void split(){
 	
-	File folder = new File(path.getText());
-	readFoldersNames();
-	if (!folder.exists()) return;
-	
-	File[] filearray = folder.listFiles(new FileFilter(){
-		@Override
-		public boolean accept(File arg0) {
-			return arg0.isFile() && !arg0.getName().startsWith("._") && !arg0.getName().toLowerCase().startsWith(".ds_store");
-		}
-	});
-	
-	//Arrays.sort(filearray);
-	List<File> files = new ArrayList<>(Arrays.asList(filearray));
-	
-	
-	orderByNumericName(files);
-	
 	int count = 0;
+	this.folder = new File(path.getText());
+	readFoldersNames();
+	
+	if (!this.folder.exists()) return;
 	try {
 		
-		if (isPair.isSelected()){
-			List<File> hasNoPair = checkHasNotPair(files);
-			if (!hasNoPair.isEmpty()){
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-		          alert.setTitle("Все равно продолжить?");
-		          StringBuilder sb = new StringBuilder("Файлы не имеют пары:\n");
-		          hasNoPair.forEach(f -> sb.append(f.getName()+"\n"));
-		          alert.setContentText(sb.toString());
-		          alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-		          Optional<ButtonType> result = alert.showAndWait();
-		          if (result.get() == ButtonType.NO)
-		              return;
+	List<File> folders = getFoldersRecoursively(this.folder);
+	folders.add(this.folder);
+	
+	for (File fd:folders) {
+
+		File[] filearray = fd.listFiles(new FileFilter(){
+			@Override
+			public boolean accept(File arg0) {
+				return arg0.isFile() && !arg0.getName().startsWith("._") && !arg0.getName().toLowerCase().startsWith(".ds_store");
 			}
-			if (isRandom.isSelected())
-				count = SplitRandomPair(folder, files);
-			else 
-				count = SplitOrderPair(folder, files);
-			
-			Alert alert = new Alert(AlertType.INFORMATION);
-			alert.setTitle("Готово!");
-			alert.setContentText("Перемещено " + count + " пар файлов");
-			alert.showAndWait();
-		}
-		else {
-			if (isRandom.isSelected())
-				count = SplitRandom(folder, files);
-			else 
-				count = SplitOrder(folder, files);
+		});
 		
-		Alert alert = new Alert(AlertType.INFORMATION);
+		this.files = new ArrayList<>(Arrays.asList(filearray));
+		orderByNumericName(this.files);
+		
+		
+	    if (isPair.isSelected()){
+				List<File> hasNoPair = checkHasNotPair(this.files);
+				if (!hasNoPair.isEmpty()){
+					Alert alert = new Alert(AlertType.CONFIRMATION);
+			          alert.setTitle("Все равно продолжить?");
+			          StringBuilder sb = new StringBuilder("Файлы не имеют пары:\n");
+			          hasNoPair.forEach(f -> sb.append(f.getName()+"\n"));
+			          alert.setContentText(sb.toString());
+			          alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+			          Optional<ButtonType> result = alert.showAndWait();
+			          if (result.get() == ButtonType.NO)
+			              return;
+				}
+				if (isRandom.isSelected())
+					count += SplitRandomPair();
+				else 
+					count += SplitOrderPair();
+				
+			}
+			else {
+				if (isRandom.isSelected())
+					count += SplitRandom();
+				else 
+					count += SplitOrder();
+			}
+	} 
+	
+	if (listFileTree(this.folder).isEmpty())
+		this.folder.delete();
+	
+	    Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Готово!");
-		alert.setContentText("Перемещено " + count + " файлов");
+		if (isPair.isSelected())
+			alert.setContentText("Перемещено " + count + " пар файлов");
+		else
+			alert.setContentText("Перемещено " + count + " файлов");
 		alert.showAndWait();
-		}
+		
+	
 	} catch (IOException e) {
 		  Alert alert = new Alert(AlertType.ERROR);
           alert.setTitle("Ошибка");
@@ -149,41 +162,33 @@ private void split(){
 	}
 }
 
-private int SplitRandom(File folder, List<File> files) throws IOException{
+private int SplitRandom() throws IOException{
 	int  i = 0;
 	int count = 0;
 	while (!files.isEmpty()){
 		i++;
 		if (i>valueFactory.getValue()) i=1;
-		
 		File file = files.remove(new Random().nextInt(files.size()));
-		
-		File destFolder =  new File(folder.getAbsolutePath() + File.separator + this.getFolderNameByIndex(i));
-		if (!destFolder.exists()) destFolder.mkdir();
-	 	String dest = destFolder.getAbsolutePath() + File.separator + file.getName();
-    	moveFileRenameTo(file, dest);
+		if (moveFile(file, null,this.getFolderNameByIndex(i)))
     	count++;
 	}
 	return count;
 }
 
-private int SplitOrder(File folder, List<File> files) throws IOException{
+private int SplitOrder() throws IOException{
 	int  i = 0;
 	int count = 0;
 	for (File file:files){
 		i++;
 		if (i>valueFactory.getValue()) i=1;
-		File destFolder =  new File(folder.getAbsolutePath() + File.separator + this.getFolderNameByIndex(i));
-		if (!destFolder.exists()) destFolder.mkdir();
-	 	String dest = destFolder.getAbsolutePath() + File.separator + file.getName();
-    	moveFileRenameTo(file, dest);
-    	count++;
+		if (moveFile(file, null,this.getFolderNameByIndex(i)))
+    		count++;
 	}
 	return count;
 }
 
 
-private int SplitRandomPair(File folder, List<File> files) throws IOException{
+private int SplitRandomPair() throws IOException{
 	int  i = 0;
 	int count = 0;
 	List<File> jpgs = files.stream().filter(f->f.getName().toLowerCase().endsWith(".jpg")).collect(Collectors.toList());
@@ -196,21 +201,13 @@ private int SplitRandomPair(File folder, List<File> files) throws IOException{
     			nameWithoutExtension(jpg.getName()).toLowerCase() + ".eps")).findFirst();
 		if (of.equals(Optional.empty())) continue; 
 		File eps = of.get();
-		
-		File destFolder =  new File(folder.getAbsolutePath() + File.separator + this.getFolderNameByIndex(i));
-		if (!destFolder.exists()) destFolder.mkdir();
-	 	String destjpg = destFolder.getAbsolutePath() + File.separator + jpg.getName();
-	 	String desteps = destFolder.getAbsolutePath() + File.separator + eps.getName();
-	 	
-	 	moveFileRenameTo(jpg, destjpg);
-	 	moveFileRenameTo(eps, desteps);
-    	
-    	count++;
+		if (moveFile(eps, jpg, this.getFolderNameByIndex(i)))
+			count++;
 	}
 	return count;
 }
 
-private int SplitOrderPair(File folder, List<File> files) throws IOException{
+private int SplitOrderPair() throws IOException{
 	int  i = 0;
 	int count = 0;
 	List<File> jpgs = files.stream().filter(f->f.getName().toLowerCase().endsWith(".jpg")).collect(Collectors.toList());
@@ -218,24 +215,30 @@ private int SplitOrderPair(File folder, List<File> files) throws IOException{
 	for (File jpg:jpgs){
 		i++;
 		if (i>valueFactory.getValue()) i=1;
-		File destFolder =  new File(folder.getAbsolutePath() + File.separator + this.getFolderNameByIndex(i));
 		
 		Optional<File> of = files.stream().filter(f -> f.getName().toLowerCase().equals(
     			nameWithoutExtension(jpg.getName()).toLowerCase() + ".eps")).findFirst();
 		if (of.equals(Optional.empty())) continue; 
 		File eps = of.get();
-		
-		if (!destFolder.exists()) destFolder.mkdir();
-		
-		String destjpg = destFolder.getAbsolutePath() + File.separator + jpg.getName();
-	 	String desteps = destFolder.getAbsolutePath() + File.separator + eps.getName();
-	 	
-	 	moveFileRenameTo(jpg, destjpg);
-	 	moveFileRenameTo(eps, desteps);
-    	
+		if (moveFile(eps, jpg, this.getFolderNameByIndex(i)))
     	count++;
 	}
 	return count;
+}
+
+private boolean moveFile(File eps, File jpg, String folderName) throws IOException {
+	boolean result = true;
+	File destFolder =  new File(folder.getParent() + File.separator + folderName);
+	if (!destFolder.exists()) destFolder.mkdir();
+ 	if (eps!=null) {
+ 		String desteps = destFolder.getAbsolutePath()  + eps.getAbsolutePath().replace(folder.getAbsolutePath(), "");
+ 		result = result & moveFileRenameTo(eps, desteps);
+ 	}
+ 	if (jpg!=null) {
+ 		String destjpg = destFolder.getAbsolutePath() + jpg.getAbsolutePath().replace(folder.getAbsolutePath(), "");;
+ 		result = result & moveFileRenameTo(jpg, destjpg);
+ 	}
+ 	return result;
 }
 
 
@@ -276,8 +279,12 @@ private String nameWithoutExtension(String name){
 	return name.replaceFirst("[.][^.]+$", "");
 }
 
-private void moveFileRenameTo (File file, String dest) throws IOException{
-	file.renameTo(new File(dest));
+private boolean moveFileRenameTo (File file, String dest) throws IOException{
+	File destFile  = new File(dest);
+	File destDir = destFile.getParentFile();
+	if (!destDir.exists())
+		destDir.mkdirs();
+	return file.renameTo(destFile);
 }
 
 public void setMainApp(Main app) {
@@ -298,4 +305,33 @@ private String getFolderNameByIndex(int index){
 		return this.folderNames[i].trim();
 }
 	
+private List<File> getFoldersRecoursively(File file) throws IOException{
+	  List<File> subdirs = Arrays.asList(file.listFiles(new FileFilter() {
+	        public boolean accept(File f) {
+	            return f.isDirectory();
+	        }
+	    }));
+	    subdirs = new ArrayList<File>(subdirs);
+
+	    List<File> deepSubdirs = new ArrayList<File>();
+	    for(File subdir : subdirs) {
+	        deepSubdirs.addAll(getFoldersRecoursively(subdir)); 
+	    }
+	    subdirs.addAll(deepSubdirs);
+	    return subdirs;
+}
+
+
+public static Collection<File> listFileTree(File dir) {
+    Set<File> fileTree = new HashSet<File>();
+    if(dir==null||dir.listFiles()==null){
+        return fileTree;
+    }
+    for (File entry : dir.listFiles()) {
+        if (entry.isFile()) fileTree.add(entry);
+        else fileTree.addAll(listFileTree(entry));
+    }
+    return fileTree;
+}
+
 }

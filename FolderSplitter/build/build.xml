@@ -27,7 +27,7 @@
 		
 		<mkdir dir="project" />
 		<copy todir="project">
-			<fileset dir="C:\JavaFX\workspace\FolderSplitter">
+			<fileset dir="C:\Java\JavaFX\FolderSplitter">
 				<include name="src/**" />
 			</fileset>
 		</copy>

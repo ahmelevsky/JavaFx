@@ -257,7 +257,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		else if (data.equals(this.targetDescr2)){
 			Target target = app.getTargetWithMaxLength();
 			if (target!=null){
-				title = target.getTargetDescr1();
+				title = target.getTargetDescr2();
 			titleText.setText(title);
 			}
 		}

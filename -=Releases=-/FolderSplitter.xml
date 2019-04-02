@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>C:\JavaFX\workspace\FolderSplitter\build\dist\FolderSplitter.jar</jar>
-  <outfile>C:\JavaFX\workspace\FolderSplitter\build\dist\FolderSplitter.exe</outfile>
+  <jar>C:\Java\JavaFX\FolderSplitter\build\dist\FolderSplitter.jar</jar>
+  <outfile>C:\Java\JavaFX\FolderSplitter\build\dist\FolderSplitter.exe</outfile>
   <errTitle>This application uses Java. Please install java first.</errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -13,7 +13,7 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon>C:\JavaFX\workspace\FolderSplitter\build\dist\FolderSplitter.ico</icon>
+  <icon>C:\Java\JavaFX\FolderSplitter\build\dist\FolderSplitter.ico</icon>
   <jre>
     <path>JRE</path>
     <bundledJre64Bit>false</bundledJre64Bit>

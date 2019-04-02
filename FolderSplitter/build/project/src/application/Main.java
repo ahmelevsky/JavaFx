@@ -28,7 +28,7 @@ public class Main extends Application {
 		mainController = (MainController) organizeStage(mainStage, "MainForm.fxml", MainController.class);
 		mainController.setMainApp(this);
 		mainStage.setResizable(false);
-		mainStage.setTitle("Folder Splitter v1.0");
+		mainStage.setTitle("Folder Splitter v1.1");
 		mainStage.getIcons().add(new Image("file:resources/icon.png"));
 		mainStage.show();
 	}
