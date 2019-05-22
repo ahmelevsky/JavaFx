@@ -27,27 +27,22 @@
                   <MenuItem fx:id="closeItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.data.item5" />
             </items>
           </Menu>
-          <Menu fx:id="menuWrite" mnemonicParsing="false" text="%ui.menu.write.header">
-            <items>
-                  <RadioMenuItem fx:id="writeOnlyJPGItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.write.item1">
-                     <toggleGroup>
-                        <ToggleGroup fx:id="writeToggle" />
-                     </toggleGroup></RadioMenuItem>
-                  <RadioMenuItem fx:id="writeOnlyEPSItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.write.item2" toggleGroup="$writeToggle" />
-                  <RadioMenuItem fx:id="writeAllItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.write.item3" toggleGroup="$writeToggle" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="writeMetadataItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.write.item4" />
-            </items>
-          </Menu>
           <Menu fx:id="menuSettings" mnemonicParsing="false" text="%ui.menu.settings.header">
             <items>
-                  <RadioMenuItem fx:id="languageRuItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.settings.item1">
+                  <RadioMenuItem fx:id="languageRuItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.settings.lang1">
                      <toggleGroup>
                         <ToggleGroup fx:id="languageToggle" />
                      </toggleGroup></RadioMenuItem>
-                  <RadioMenuItem fx:id="languageEnItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.settings.item2" toggleGroup="$languageToggle" />
+                  <RadioMenuItem fx:id="languageEnItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.settings.lang2" toggleGroup="$languageToggle" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="aboutItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.settings.item3" />
+                  <RadioMenuItem fx:id="writeOnlyJPGItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.settings.write1">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="writeToggle" />
+                     </toggleGroup></RadioMenuItem>
+                  <RadioMenuItem fx:id="writeOnlyEPSItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.settings.write2" toggleGroup="$writeToggle" />
+                  <RadioMenuItem fx:id="writeAllItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.settings.write3" toggleGroup="$writeToggle" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="aboutItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.settings.about" />
             </items>
           </Menu>
         </menus>
@@ -73,7 +68,7 @@
                         <Insets top="15.0" />
                      </VBox.margin>
                   </Hyperlink>
-                  <ProgressBar fx:id="progress" prefHeight="23.0" prefWidth="680.0" progress="0.0">
+                  <ProgressBar fx:id="progress" prefHeight="23.0" prefWidth="740.0" progress="0.0">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
@@ -83,11 +78,6 @@
                   <Insets left="15.0" />
                </HBox.margin>
             </VBox>
-            <Button fx:id="clearBtn" mnemonicParsing="false" onAction="#clearAllData" prefHeight="60.0" prefWidth="200.0" text="%ui.tabs.main.clearbtn">
-               <HBox.margin>
-                  <Insets bottom="15.0" left="5.0" right="15.0" top="15.0" />
-               </HBox.margin>
-            </Button>
          </children>
       </HBox>
    </children>

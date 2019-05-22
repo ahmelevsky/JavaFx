@@ -30,10 +30,6 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	@FXML
 	private Button addVarBtn;
 	@FXML
-	private Button loadBtn;
-	@FXML
-	private Button saveBtn;
-	@FXML
 	private VBox variableLayouts;
 	
 	public ObservableList<Variable> variables =    FXCollections.observableArrayList();
@@ -44,8 +40,6 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		this.addVarBtn.setShape(new Circle(25));
-		loadBtn.setTooltip(new Tooltip(Settings.bundle.getString("ui.tabs.vars.loadhint")));
-		saveBtn.setTooltip(new Tooltip(Settings.bundle.getString("ui.tabs.vars.savehint")));
 	}
 	
 	public void saveVariables(){
@@ -131,7 +125,7 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 		 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (.xml)", "*.xml"));
          File file = fileChooser.showOpenDialog(app.getPrimaryStage());
         if(file!=null)
-       	   app.loadKeysDataFromFile(file);
+       	   app.importData(file);
 	}
 	
 	@FXML
@@ -148,7 +142,7 @@ public class VariablesEditorContainerController  extends TargetEditorController 
         	if(!file.getName().contains(".")) {
         		file = new File(file.getAbsolutePath() + ".xml");
         		}
-       	  app.saveKeysDataToFile(file);
+       	  app.exportData(file);
         }
 	}
 

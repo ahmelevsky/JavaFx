@@ -7,6 +7,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 public class TitleEditorWrapper {
 
 	public boolean isTakeFromDescription;
+	public boolean doCut;
+	public int cutTo;
 	public String comboValue;
 	public String inputValue;
 	
@@ -15,10 +17,12 @@ public class TitleEditorWrapper {
 	}
 
 	public TitleEditorWrapper(boolean isTakeFromDescription, String comboValue,
-			String inputValue) {
+			String inputValue, boolean doCut, int cutTo) {
 		this.isTakeFromDescription = isTakeFromDescription;
 		this.comboValue = comboValue;
 		this.inputValue = inputValue;
+		this.doCut = doCut;
+		this.cutTo = cutTo;
 	}
 	
 	

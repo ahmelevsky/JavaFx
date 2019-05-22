@@ -13,13 +13,18 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import te.Settings;
 import te.model.DescriptionEditorWrapper;
 import te.model.FolderVariable;
@@ -42,10 +47,17 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	private Label countLabel;
 	@FXML
 	private  CheckBox isTakeFromDescriptionBox;
+	@FXML
+	private Spinner<Integer> cutToSpinner;
+	@FXML
+	private  CheckBox doCutBox;
+	
 	private String titleBoxSetting;
 	public String titleTextSetting;
 	
 	private boolean isTakeFromDescription;
+	private boolean doCut;
+	private int cutTo;
 	
 	ObservableList<String> options1 =  FXCollections.observableArrayList();
 
@@ -134,8 +146,26 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		titleBox.setItems(options1);
 		titleBox.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
 		addListeners();
-		
+		cutToSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 200, 50));
+		cutToSpinner.focusedProperty().addListener((arg, oldVal, newVal) ->correctSpinnerValue());
+		cutToSpinner.valueProperty().addListener((arg, oldVal, newVal) -> correctSpinnerValue());
 	}
+	
+	private void correctSpinnerValue(){
+		String text = cutToSpinner.getEditor().getText();
+		int val = 50; 
+	    try {
+	    	val = Integer.parseInt(text);    	
+	     }
+	    catch (NumberFormatException e) {
+	    	cutToSpinner.getEditor().setText("50");
+	    	cutToSpinner.getValueFactory().setValue(val);
+	    	cutToSpinner.increment(0);
+	    }
+	    cutToSpinner.getValueFactory().setValue(val);
+	    cutToSpinner.increment(0);
+	}
+		
 	
     private void addListeners(){
     	titleBox.valueProperty().removeListener(boxListener);
@@ -275,7 +305,9 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	}
 	
 	public void saveTitleSource() throws DataException{
-		isTakeFromDescription = isTakeFromDescriptionBox.isSelected();
+		this.isTakeFromDescription = isTakeFromDescriptionBox.isSelected();
+		this.doCut = doCutBox.isSelected();
+		this.cutTo = cutToSpinner.getValueFactory().getValue();
 		  try {
 			  SyntaxParser.checkVariables(app.descriptionVariableEditorContainerController.variables, titleText.getText());
 			  titleTextSetting = titleText.getText();
@@ -288,6 +320,23 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	}
 	
 	public String getTitleForMetadata(){
+		String uncut = getTitleForMetadataUncut();
+		if (this.doCut) {
+			String[] split = uncut.split(" ");
+			StringBuilder sb = new StringBuilder();
+			StringBuilder sbtemp = new StringBuilder();
+			for (String s:split) {
+				sbtemp.append(s + " ");
+				if (sbtemp.length()<=this.cutTo)
+					sb.append(s + " ");
+				else break;
+			}
+			return sb.toString();
+		}
+		else return uncut;
+	}
+	
+	private String getTitleForMetadataUncut(){
 		if (isTakeFromDescription)
 			return app.descriptionEditorController.currentDescription;
 		else if  (titleBoxSetting.equals(this.folderDescr))
@@ -320,6 +369,8 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		titleBox.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
 		titleText.clear();
 		isTakeFromDescriptionBox.setSelected(false);
+		doCutBox.setSelected(false);
+		cutToSpinner.getValueFactory().setValue(50);
 	}
 
 	@Override
@@ -329,12 +380,19 @@ public class TitleEditorController extends TargetEditorController implements Ini
 			titleText.setText(this.wrapper.inputValue);
 			titleBox.getSelectionModel().select(this.wrapper.comboValue);
 			isTakeFromDescriptionBox.setSelected(this.wrapper.isTakeFromDescription);
+			doCutBox.setSelected(this.wrapper.doCut);
+			cutToSpinner.getValueFactory().setValue(this.wrapper.cutTo);
 		}
 		isInitialized = true;
 	}
 
 	@Override
 	public void saveData() {
-		this.wrapper = new TitleEditorWrapper(this.isTakeFromDescriptionBox.isSelected(), this.titleBox.getSelectionModel().getSelectedItem(), this.titleText.getText());
+		this.wrapper = new TitleEditorWrapper(this.isTakeFromDescriptionBox.isSelected(), this.titleBox.getSelectionModel().getSelectedItem(), this.titleText.getText(), this.doCutBox.isSelected(), this.cutToSpinner.getValueFactory().getValue());
+	}
+	
+	@FXML
+	private void onClickDoCutOption() {
+		cutToSpinner.setDisable(!doCutBox.isSelected());
 	}
 }

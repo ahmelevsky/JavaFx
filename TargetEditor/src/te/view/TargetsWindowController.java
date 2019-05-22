@@ -38,10 +38,6 @@ public class TargetsWindowController extends TargetEditorController implements I
 	 @FXML
 	 private Button addBtn;
 	 @FXML
-	 private Button loadBtn;
-	 @FXML
-	 private Button saveBtn;
-	 @FXML
 	 private TextArea inputTargetKwd;
 	 @FXML
 	 private TextArea inputTargetDescr1;

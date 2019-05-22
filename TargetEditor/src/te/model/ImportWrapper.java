@@ -6,17 +6,17 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import te.model.Variable;
-
 @XmlRootElement(name = "keys")
-public class KeysWrapper {
+public class ImportWrapper {
 
-	
 	private List<Variable> keyvariables = new ArrayList<Variable>();
 	private List<Variable> descriptionvariables = new ArrayList<Variable>();
 	private List<Target> targets = new ArrayList<Target>();
+	private KeysEditorWrapper keysPage;
+	private DescriptionEditorWrapper descriptionPage;
+	private TitleEditorWrapper titlePage;
+	private FolderVariablesWrapper folderWrapper;
 	
-
     @XmlElement(name = "keyvariable")
     public List<Variable> getKeyVariables() {
         return keyvariables;
@@ -33,7 +33,7 @@ public class KeysWrapper {
     public void setDescriptionVariables(List<Variable> variables) {
         this.descriptionvariables = variables;
     }
-    
+	
     @XmlElement(name = "target")
     public List<Target> getTarget() {
         return targets;
@@ -41,4 +41,34 @@ public class KeysWrapper {
     public void setTargets(List<Target> targets) {
         this.targets = targets;
     }
+    
+    @XmlElement(name = "description")
+	public DescriptionEditorWrapper getDescriptionPage() {
+		return descriptionPage;
+	}
+	public void setDescriptionPage(DescriptionEditorWrapper descriptionPage) {
+		this.descriptionPage = descriptionPage;
+	}
+	  @XmlElement(name = "keys")
+	public KeysEditorWrapper getKeysPage() {
+		return keysPage;
+	}
+	public void setKeysPage(KeysEditorWrapper keysPage) {
+		this.keysPage = keysPage;
+	}
+	@XmlElement(name = "title")
+	public TitleEditorWrapper getTitlePage() {
+		return titlePage;
+	}
+	public void setTitlePage(TitleEditorWrapper titlePage) {
+		this.titlePage = titlePage;
+	}
+	@XmlElement(name = "folder")
+	public FolderVariablesWrapper getFolderWrapper() {
+		return folderWrapper;
+	}
+	public void setFolderWrapper(FolderVariablesWrapper folderWrapper) {
+		this.folderWrapper = folderWrapper;
+	}
+    
 }

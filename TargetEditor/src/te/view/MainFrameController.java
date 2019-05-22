@@ -344,7 +344,6 @@ public class MainFrameController implements Initializable{
 					LOGGER.warning(ste.getClassName() + "." + ste.getMethodName() + "("+ste.getLineNumber()+")");
 				//writeBtn.setDisable(false);
 		        writeBtn.setText(Settings.bundle.getString("ui.tabs.main.writebtn"));
-		        writeMetadataItem.setText(Settings.bundle.getString("ui.menu.write.item4"));
 				stopProgress();
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error");
@@ -356,7 +355,6 @@ public class MainFrameController implements Initializable{
 			task.setOnCancelled(e -> {
 				//writeBtn.setDisable(false);
 		        writeBtn.setText(Settings.bundle.getString("ui.tabs.main.writebtn"));
-		        writeMetadataItem.setText(Settings.bundle.getString("ui.menu.write.item4"));
 				stopProgress();
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Cancel");
@@ -368,7 +366,6 @@ public class MainFrameController implements Initializable{
 			task.setOnSucceeded(e -> {
 				//writeBtn.setDisable(false);
 			    writeBtn.setText(Settings.bundle.getString("ui.tabs.main.writebtn"));
-			    writeMetadataItem.setText(Settings.bundle.getString("ui.menu.write.item4"));  	     
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("Done!");
 				alert.setHeaderText("Done!");
@@ -378,7 +375,6 @@ public class MainFrameController implements Initializable{
 			
 	      progress.progressProperty().bind(task.progressProperty());
 	      writeBtn.setText(Settings.bundle.getString("ui.tabs.main.cancelbtn"));
-	      writeMetadataItem.setText(Settings.bundle.getString("ui.menu.write.item4cancel"));	     
 	    //writeBtn.setDisable(true);
 	      taskThread = new Thread(task);
 	      taskThread.setDaemon(true);
@@ -535,7 +531,9 @@ public class MainFrameController implements Initializable{
 		}
 		
 		private void showChangeLanguageAlert() {
-			 Alert alert = new Alert(AlertType.INFORMATION);
+			    Alert alert = new Alert(AlertType.INFORMATION);
+			    alert.setTitle("!");
+			    alert.setHeaderText("Interface Language will be changed!");
 	            alert.setContentText("Please restart TargetEditor to apply the language settings!\n\rПожалуйста перезапустите TargetEditor, чтобы применить новые языковые настройки");
 	            alert.showAndWait();
 		}
