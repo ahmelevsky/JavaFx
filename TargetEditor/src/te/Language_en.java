@@ -23,6 +23,7 @@ public class Language_en extends ListResourceBundle {
 	            { "ui.menu.write.item2"   , "Write to eps only"},
 	            { "ui.menu.write.item3"   , "Write to both eps and jpg"},
 	            { "ui.menu.write.item4"   , "Write Metadata to the files"},
+	            { "ui.menu.write.item4cancel"   , "Cancel writing Metadata"},
 	            { "ui.menu.settings.item1"   , "Interface Language: Russian"},
 	            { "ui.menu.settings.item2"   , "Interface Language: English"},
 	            { "ui.menu.settings.item3"   , "About"},
@@ -87,6 +88,7 @@ public class Language_en extends ListResourceBundle {
 	            { "ui.tabs.keys.addtarget"   , "Add Target"},
 	            { "ui.tabs.keys.refresh"   , "REFRESH"},
 	            { "ui.tabs.main.writebtn"   , "Write metadata to the files"},
+	            { "ui.tabs.main.cancelbtn"   , "Cancel writing metadata"},
 	            { "ui.tabs.main.clearbtn"   , "Clear all"},
 	            { "ui.tabs.main.selectfolder"   , "<Select root folder>"},
 	            { "ui.tabs.targets.save"   , "Save"},
@@ -97,7 +99,8 @@ public class Language_en extends ListResourceBundle {
 	            { "ui.tabs.varcont.values"   , "Values (with the delimiter)"},
 	            { "ui.tabs.varcont.delete"   , "Delete"},
 	            { "ui.tabs.varcont.save"   , "Save"},
-	            { "ui.tabs.varcont.load"   , "Load"}
+	            { "ui.tabs.varcont.load"   , "Load"},
+	            { "log.warn.epsnotfound"   , "EPS file not found for: "}
     };
 
 }

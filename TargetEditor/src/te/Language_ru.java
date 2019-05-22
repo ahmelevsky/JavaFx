@@ -23,6 +23,7 @@ public class Language_ru  extends ListResourceBundle {
             { "ui.menu.write.item2"   , "Писать только в eps"},
             { "ui.menu.write.item3"   , "Писать и в eps и в jpg"},
             { "ui.menu.write.item4"   , "Записать метаданные в файлы"},
+            { "ui.menu.write.item4cancel"   , "Остановить запись метаданных"},
             { "ui.menu.settings.item1"   , "Язык интерфейса: Русский"},
             { "ui.menu.settings.item2"   , "Язык интерфейса: Английский"},
             { "ui.menu.settings.item3"   , "О программе"},
@@ -87,6 +88,7 @@ public class Language_ru  extends ListResourceBundle {
             { "ui.tabs.keys.addtarget"   , "Добавить Таргет"},
             { "ui.tabs.keys.refresh"   , "ОБНОВИТЬ"},
             { "ui.tabs.main.writebtn"   , "Записать метаданные в файлы"},
+            { "ui.tabs.main.cancelbtn"   , "Прервать запись"},
             { "ui.tabs.main.clearbtn"   , "Очистить все"},
             { "ui.tabs.main.selectfolder"   , "<Выберите папку с файлами>"},
             { "ui.tabs.targets.save"   , "Сохранить"},
@@ -97,6 +99,7 @@ public class Language_ru  extends ListResourceBundle {
             { "ui.tabs.varcont.values"   , "Значения (через разделитель)"},
             { "ui.tabs.varcont.delete"   , "Удалить"},
             { "ui.tabs.varcont.save"   , "Сохранить"},
-            { "ui.tabs.varcont.load"   , "Загрузить"}
+            { "ui.tabs.varcont.load"   , "Загрузить"},
+            { "log.warn.epsnotfound"   , "Не найден парный eps файл для: "}
     };
 }

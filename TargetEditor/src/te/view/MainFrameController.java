@@ -8,10 +8,14 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
@@ -59,6 +63,7 @@ public class MainFrameController implements Initializable{
 	public FolderVariable currentFolder;
 	public Target currentTarget;
 	private Task<String> task;
+	private Thread taskThread;
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	@FXML
@@ -169,6 +174,11 @@ public class MainFrameController implements Initializable{
 	
 	@FXML
 	public void writeMetadata() throws SAXException, ParserConfigurationException, TransformerException, IOException{
+		if (task!=null && task.isRunning()) {
+		   task.cancel(true);
+		   taskThread.stop();
+		   return;
+		}
 		LOGGER.info("Start Writing metadata");
 		MemoryLogger.print();
 		
@@ -228,9 +238,16 @@ public class MainFrameController implements Initializable{
 		}
 		 task = new Task<String>() {
 			    @Override public String call() {
+			    	AtomicInteger success = new AtomicInteger(0);
+			    	AtomicInteger failures = new AtomicInteger(0);
+			    	AtomicInteger done = new AtomicInteger(0);
+			    	
+			    	/*
 			    	int success = 0;
 			    	int failures = 0;
 			    	int done = 0;
+			    	*/
+			    	
 		             File[] directories = rootFolder.listFiles(new FilenameFilter() {
 			           @Override
 			          public boolean accept(File current, String name) {
@@ -250,10 +267,37 @@ public class MainFrameController implements Initializable{
 			   	        if (images.length==0) {
 			   	        	LOGGER.warning("There is no " + ext + " files in the folder: " + dir.getAbsolutePath());
 			   	        }
-		    	   
-			   	        
+		    	    List<File> im = Arrays.asList(images);
+		    	    im.parallelStream().forEach( image ->  {
+		    	    	try{
+		   	        	    LOGGER.info("Current file: " + image.getName());
+		   	        		currentTarget = app.getRandomTarget();
+		   	        		List<String> keywords = app.keysEditorController.generateKeywordsForMetadata();
+		   	        		String description  =  app.descriptionEditorController.generateDescriptionForMetadata();
+		   	        		String title = app.titleEditorController.getTitleForMetadata();
+		   	        		ExiftoolRunner.writeMetadataToFile (image, keywords, title, description);
+		   	        		if (isWriteBothExtensions) {
+		   	        			File eps = new File(image.getAbsolutePath().replaceFirst("[.][^.]+$", "") + ".eps");
+		   	        			if (eps.exists())
+		   	        				ExiftoolRunner.writeMetadataToFile (eps, keywords, title, description);
+		   	        			else
+		   	        				LOGGER.warning(Settings.bundle.getString("log.warn.epsnotfound") + image.getAbsolutePath());
+		   	        		}
+		   	         		success.incrementAndGet();
+		   	         		
+		   	        	}
+		   	        	catch (IOException ex) {
+		   	        		LOGGER.warning(Settings.bundle.getString("alert.error.writeerror") + image.getAbsolutePath() + " : " + ex.getMessage());
+		   	        		failures.incrementAndGet();
+		   	        	}
+		   	        	finally{
+		   	        		updateProgress(done.incrementAndGet(), allImagesCount);
+		   	        	 MemoryLogger.print();
+		   	        	}
+		    	    });
+			   	     
 			   	      LOGGER.info("Finishing pre-oprateion, start writing files");
-			   	        
+			   	       /*
 			   	        for (File image:images){
 			   	        	try{
 			   	        	    LOGGER.info("Current file: " + image.getName());
@@ -262,6 +306,13 @@ public class MainFrameController implements Initializable{
 			   	        		String description  =  app.descriptionEditorController.generateDescriptionForMetadata();
 			   	        		String title = app.titleEditorController.getTitleForMetadata();
 			   	        		ExiftoolRunner.writeMetadataToFile (image, keywords, title, description);
+			   	        		if (isWriteBothExtensions) {
+			   	        			File eps = new File(image.getAbsolutePath().replaceFirst("[.][^.]+$", "") + ".eps");
+			   	        			if (eps.exists())
+			   	        				ExiftoolRunner.writeMetadataToFile (eps, keywords, title, description);
+			   	        			else
+			   	        				LOGGER.warning(Settings.bundle.getString("log.warn.epsnotfound") + image.getAbsolutePath());
+			   	        		}
 			   	         		success++;
 			   	         		
 			   	        	}
@@ -274,23 +325,26 @@ public class MainFrameController implements Initializable{
 			   	        	 MemoryLogger.print();
 			   	        	}
 			   	            }
+			   	            */
 		        }
 		        
 		        LOGGER.info("Finish Writing metadata");
 		        MemoryLogger.print();
-		           
-			    String result = (failures==0)  ? 	(Settings.bundle.getString("alert.info.done") + success) : (Settings.bundle.getString("alert.warn.done") + success + Settings.bundle.getString("alert.warn.done2")   + failures);
+		        String result = (failures.get()==0)  ? 	(Settings.bundle.getString("alert.info.done") + success.get()) : (Settings.bundle.getString("alert.warn.done") + success.get() + Settings.bundle.getString("alert.warn.done2")   + failures.get());
+				  
+			    //String result = (failures==0)  ? 	(Settings.bundle.getString("alert.info.done") + success) : (Settings.bundle.getString("alert.warn.done") + success + Settings.bundle.getString("alert.warn.done2")   + failures);
 			    if (app.isProblem)
 			    	result += Settings.bundle.getString("alert.problem.done");
 			    return result;
 			   	}
 		 };
-		 
 			task.setOnFailed(e -> {
 				LOGGER.warning(task.getException().getMessage());
 				for (StackTraceElement ste:task.getException().getStackTrace())
 					LOGGER.warning(ste.getClassName() + "." + ste.getMethodName() + "("+ste.getLineNumber()+")");
-				writeBtn.setDisable(false);
+				//writeBtn.setDisable(false);
+		        writeBtn.setText(Settings.bundle.getString("ui.tabs.main.writebtn"));
+		        writeMetadataItem.setText(Settings.bundle.getString("ui.menu.write.item4"));
 				stopProgress();
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error");
@@ -300,7 +354,9 @@ public class MainFrameController implements Initializable{
 			});
 			
 			task.setOnCancelled(e -> {
-				writeBtn.setDisable(false);
+				//writeBtn.setDisable(false);
+		        writeBtn.setText(Settings.bundle.getString("ui.tabs.main.writebtn"));
+		        writeMetadataItem.setText(Settings.bundle.getString("ui.menu.write.item4"));
 				stopProgress();
 				Alert alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Cancel");
@@ -310,7 +366,9 @@ public class MainFrameController implements Initializable{
 			});
 			
 			task.setOnSucceeded(e -> {
-				writeBtn.setDisable(false);
+				//writeBtn.setDisable(false);
+			    writeBtn.setText(Settings.bundle.getString("ui.tabs.main.writebtn"));
+			    writeMetadataItem.setText(Settings.bundle.getString("ui.menu.write.item4"));  	     
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("Done!");
 				alert.setHeaderText("Done!");
@@ -319,9 +377,12 @@ public class MainFrameController implements Initializable{
 			});
 			
 	      progress.progressProperty().bind(task.progressProperty());
-	      
-	    writeBtn.setDisable(true);
-		new Thread(task).start();
+	      writeBtn.setText(Settings.bundle.getString("ui.tabs.main.cancelbtn"));
+	      writeMetadataItem.setText(Settings.bundle.getString("ui.menu.write.item4cancel"));	     
+	    //writeBtn.setDisable(true);
+	      taskThread = new Thread(task);
+	      taskThread.setDaemon(true);
+	      taskThread.start();
 		 
 	}
 	
@@ -408,6 +469,7 @@ public class MainFrameController implements Initializable{
 			else if (writeOption.equals("all")) {
 				writeAllItem.setSelected(true);
 				this.isWriteBothExtensions = true;
+				this.ext = "jpg";
 			}
 			else {
 				writeOnlyJPGItem.setSelected(true);
@@ -416,35 +478,60 @@ public class MainFrameController implements Initializable{
 			}
 		}
 		
-		public void updateSettings(ActionEvent e) {
-			switch (((RadioMenuItem)e.getSource()).getId()) {
+		public void menuItemSelected(ActionEvent e) throws SAXException, ParserConfigurationException, TransformerException, IOException {
+			switch (((MenuItem)e.getSource()).getId()) {
 			
 			case "writeOnlyJPGItem":
 				Settings.setWriteOption("jpg");
 				this.isWriteBothExtensions = false;
 				this.ext = "jpg";
+				app.saveSettings();
 				break;
 			case "writeOnlyEPSItem":
 				Settings.setWriteOption("eps");
 				this.isWriteBothExtensions = false;
 				this.ext = "eps";
+				app.saveSettings();
 				break;
 			case "writeAllItem":
 				Settings.setWriteOption("all");
 				this.isWriteBothExtensions = true;
+				app.saveSettings();
 				break;
 			case "languageRuItem":
 				Settings.setLanguage("ru");
 				showChangeLanguageAlert();
+				app.saveSettings();
 				break;
 			case "languageEnItem":
 				Settings.setLanguage("en");
 				showChangeLanguageAlert();
+				app.saveSettings();
 				break;     
+			case "loadItem":
+				app.keyVariableEditorContainerController.loadVariablesFromFile();
+				break; 
+			case "saveAsItem":
+				app.keyVariableEditorContainerController.saveVariablesToFile();
+				break; 
+			case "saveStateItem":
+				app.saveLastData();
+				break; 
+			case "clearAllItem":
+				clearAllData();
+				break; 
+			case "closeItem":
+				Platform.exit();
+				break; 
+			case "writeMetadataItem":
+				writeMetadata();
+				break; 
+			case "aboutItem":
+				break; 
 			default:
 				break;
 			}
-			app.saveSettings();
+			
 		}
 		
 		private void showChangeLanguageAlert() {

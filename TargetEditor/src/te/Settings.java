@@ -33,14 +33,14 @@ public class Settings {
 			return writeOption;
 		}
 		
-		public static void setWriteOption(String writeOption) {
-			if (writeOption.equals("jpg")) {
+		public static void setWriteOption(String wo) {
+			if (wo.equals("jpg")) {
 				writeOption = "jpg";
 			}
-			else if (writeOption.equals("eps")) {
+			else if (wo.equals("eps")) {
 				writeOption = "eps";
 			}
-			else if (writeOption.equals("all")) {
+			else if (wo.equals("all")) {
 				writeOption = "all";
 			}
 			else {

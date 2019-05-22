@@ -1,0 +1,716 @@
+22/05/2019 06:16:57.016 - [te.view.MainFrameController.writeMetadata] - [INFO] - Start Writing metadata
+22/05/2019 06:16:57.023 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 24526440, More than initial: 0, dif: 24526440
+22/05/2019 06:16:57.095 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-16_19_02.jpg
+22/05/2019 06:16:57.095 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:16:57.095 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-16_19_02.jpg
+22/05/2019 06:16:57.098 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_21_02.jpg
+22/05/2019 06:16:57.098 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:16:57.099 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_21_02.jpg
+22/05/2019 06:16:57.100 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_15_02.jpg
+22/05/2019 06:16:57.100 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_9_02.jpg
+22/05/2019 06:16:57.100 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:16:57.101 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_15_02.jpg
+22/05/2019 06:16:57.102 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:16:57.102 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_9_02.jpg
+22/05/2019 06:16:58.801 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:16:58.802 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:16:58.802 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:16:58.802 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:16:58.804 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 22624096, More than initial: -1902344, dif: -1902344
+22/05/2019 06:16:58.804 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-13_17_02.jpg
+22/05/2019 06:16:58.805 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:16:58.805 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-13_17_02.jpg
+22/05/2019 06:16:58.825 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:16:58.826 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:16:58.827 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:16:58.827 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:16:58.827 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 22809832, More than initial: -1716608, dif: 185736
+22/05/2019 06:16:58.827 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_16_02.jpg
+22/05/2019 06:16:58.828 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:16:58.828 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-17_16_02.jpg
+22/05/2019 06:16:58.906 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:16:58.907 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:16:58.908 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:16:58.908 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:16:58.909 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 22899856, More than initial: -1626584, dif: 90024
+22/05/2019 06:16:58.909 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_6_02.jpg
+22/05/2019 06:16:58.910 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:16:58.910 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_6_02.jpg
+22/05/2019 06:16:58.943 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:16:58.943 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:16:58.944 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:16:58.944 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:16:58.945 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 23006400, More than initial: -1520040, dif: 106544
+22/05/2019 06:16:58.945 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_12_02.jpg
+22/05/2019 06:16:58.945 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:16:58.946 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-18_12_02.jpg
+22/05/2019 06:16:59.961 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:16:59.961 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:16:59.962 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:16:59.962 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:16:59.963 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 23112904, More than initial: -1413536, dif: 106504
+22/05/2019 06:16:59.963 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-15_20_02.jpg
+22/05/2019 06:16:59.963 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:16:59.964 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-15_20_02.jpg
+22/05/2019 06:16:59.998 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:16:59.999 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:16:59.999 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:16:59.999 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:00.000 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 23300872, More than initial: -1225568, dif: 187968
+22/05/2019 06:17:00.000 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_15_02.jpg
+22/05/2019 06:17:00.001 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:00.001 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-18_15_02.jpg
+22/05/2019 06:17:00.009 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:00.009 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:00.010 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:00.010 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:00.010 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 23415568, More than initial: -1110872, dif: 114696
+22/05/2019 06:17:00.011 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_17_02.jpg
+22/05/2019 06:17:00.011 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:00.011 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-17_17_02.jpg
+22/05/2019 06:17:00.095 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:00.096 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:00.096 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:00.097 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:00.097 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 23530232, More than initial: -996208, dif: 114664
+22/05/2019 06:17:00.973 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:00.973 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:00.974 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:00.974 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:00.975 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 23620232, More than initial: -906208, dif: 90000
+22/05/2019 06:17:00.979 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:00.979 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:00.979 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:00.979 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:00.980 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 23620288, More than initial: -906152, dif: 56
+22/05/2019 06:17:01.012 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:01.012 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:01.012 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:01.013 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:01.013 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 23710288, More than initial: -816152, dif: 90000
+22/05/2019 06:17:01.013 - [te.view.MainFrameController$3.call] - [INFO] - Finishing pre-oprateion, start writing files
+22/05/2019 06:17:01.015 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_21_02.jpg
+22/05/2019 06:17:01.015 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_18_02.jpg
+22/05/2019 06:17:01.015 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_21_02.jpg
+22/05/2019 06:17:01.016 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:01.016 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_17_02.jpg
+22/05/2019 06:17:01.016 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-18_21_02.jpg
+22/05/2019 06:17:01.016 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:01.016 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:01.016 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:01.017 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-17_21_02.jpg
+22/05/2019 06:17:01.016 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-14_18_02.jpg
+22/05/2019 06:17:01.019 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-14_17_02.jpg
+22/05/2019 06:17:02.021 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:02.022 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:02.022 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:02.022 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:02.023 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 24047504, More than initial: -478936, dif: 337216
+22/05/2019 06:17:02.023 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_8_02.jpg
+22/05/2019 06:17:02.023 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:02.024 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-18_8_02.jpg
+22/05/2019 06:17:02.104 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:02.104 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:02.104 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:02.104 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:02.105 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 24304480, More than initial: -221960, dif: 256976
+22/05/2019 06:17:02.105 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-13_21_02.jpg
+22/05/2019 06:17:02.105 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:02.106 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-13_21_02.jpg
+22/05/2019 06:17:02.147 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:02.148 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:02.148 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:02.148 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:02.149 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 24329304, More than initial: -197136, dif: 24824
+22/05/2019 06:17:02.149 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_19_02.jpg
+22/05/2019 06:17:02.149 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:02.149 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-17_19_02.jpg
+22/05/2019 06:17:02.290 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:02.291 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:02.291 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:02.291 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:02.292 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 24509176, More than initial: -17264, dif: 179872
+22/05/2019 06:17:02.293 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-15_16_02.jpg
+22/05/2019 06:17:02.293 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:02.293 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-15_16_02.jpg
+22/05/2019 06:17:03.060 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:03.060 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:03.061 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:03.061 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:03.061 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 24699392, More than initial: 172952, dif: 190216
+22/05/2019 06:17:03.061 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_19_02.jpg
+22/05/2019 06:17:03.062 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:03.062 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-18_19_02.jpg
+22/05/2019 06:17:03.242 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:03.243 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:03.243 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:03.244 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:03.244 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 24716008, More than initial: 189568, dif: 16616
+22/05/2019 06:17:03.244 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_3_02.jpg
+22/05/2019 06:17:03.245 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:03.245 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-17_3_02.jpg
+22/05/2019 06:17:03.385 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:03.386 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:03.386 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:03.386 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:03.387 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 24895792, More than initial: 369352, dif: 179784
+22/05/2019 06:17:03.387 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_22_02.jpg
+22/05/2019 06:17:03.387 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:03.388 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-17_22_02.jpg
+22/05/2019 06:17:03.459 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:03.459 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:03.459 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:03.460 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:03.460 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 24920616, More than initial: 394176, dif: 24824
+22/05/2019 06:17:03.460 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-19_16_02.jpg
+22/05/2019 06:17:03.461 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:03.461 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-19_16_02.jpg
+22/05/2019 06:17:04.086 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:04.086 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:04.087 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:04.087 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:04.087 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25102688, More than initial: 576248, dif: 182072
+22/05/2019 06:17:04.088 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_18_02.jpg
+22/05/2019 06:17:04.088 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:04.088 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-18_18_02.jpg
+22/05/2019 06:17:04.443 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:04.444 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:04.444 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:04.444 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:04.444 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25217320, More than initial: 690880, dif: 114632
+22/05/2019 06:17:04.445 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-19_15_02.jpg
+22/05/2019 06:17:04.445 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:04.446 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-19_15_02.jpg
+22/05/2019 06:17:04.506 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:04.507 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:04.507 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:04.508 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:04.508 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25340184, More than initial: 813744, dif: 122864
+22/05/2019 06:17:04.508 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-19_10_02.jpg
+22/05/2019 06:17:04.509 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:04.509 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-19_10_02.jpg
+22/05/2019 06:17:04.606 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:04.606 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:04.607 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:04.607 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:04.607 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25356800, More than initial: 830360, dif: 16616
+22/05/2019 06:17:04.608 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-19_21_02.jpg
+22/05/2019 06:17:04.609 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:04.609 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-19_21_02.jpg
+22/05/2019 06:17:05.184 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:05.184 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:05.184 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:05.185 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:05.186 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25536584, More than initial: 1010144, dif: 179784
+22/05/2019 06:17:05.511 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:05.512 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:05.512 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:05.512 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:05.513 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25628664, More than initial: 1102224, dif: 92080
+22/05/2019 06:17:05.548 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:05.548 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:05.549 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:05.549 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:05.549 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25718728, More than initial: 1192288, dif: 90064
+22/05/2019 06:17:05.583 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:05.583 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:05.583 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:05.583 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:05.584 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25808800, More than initial: 1282360, dif: 90072
+22/05/2019 06:17:05.584 - [te.view.MainFrameController$3.call] - [INFO] - Finishing pre-oprateion, start writing files
+22/05/2019 06:17:05.585 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-13_6_02.jpg
+22/05/2019 06:17:05.585 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_16_02.jpg
+22/05/2019 06:17:05.585 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-13_16_02.jpg
+22/05/2019 06:17:05.585 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_13_02.jpg
+22/05/2019 06:17:05.585 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:05.585 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:05.585 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:05.585 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\3\valentine_gold-14_16_02.jpg
+22/05/2019 06:17:05.586 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\3\valentine_gold-14_13_02.jpg
+22/05/2019 06:17:05.586 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:05.586 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\3\valentine_gold-13_16_02.jpg
+22/05/2019 06:17:05.587 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\3\valentine_gold-13_6_02.jpg
+22/05/2019 06:17:06.653 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:06.654 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:06.654 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:06.654 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:06.655 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 26054168, More than initial: 1527728, dif: 245368
+22/05/2019 06:17:06.655 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-13_15_02.jpg
+22/05/2019 06:17:06.655 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:06.656 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\3\valentine_gold-13_15_02.jpg
+22/05/2019 06:17:06.712 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:06.712 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:06.713 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:06.713 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:06.713 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 26078992, More than initial: 1552552, dif: 24824
+22/05/2019 06:17:06.713 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-13_3_02.jpg
+22/05/2019 06:17:06.714 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:17:06.714 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\3\valentine_gold-13_3_02.jpg
+22/05/2019 06:17:06.917 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:06.917 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:06.917 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:06.918 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:06.918 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 26258840, More than initial: 1732400, dif: 179848
+22/05/2019 06:17:07.009 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:07.010 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:07.010 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:07.010 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:07.011 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 26348960, More than initial: 1822520, dif: 90120
+22/05/2019 06:17:07.546 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:07.546 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:07.546 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:07.547 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:07.547 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 26439064, More than initial: 1912624, dif: 90104
+22/05/2019 06:17:07.608 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:17:07.608 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: 
+22/05/2019 06:17:07.608 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: 
+22/05/2019 06:17:07.609 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: 
+22/05/2019 06:17:07.609 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 26529040, More than initial: 2002600, dif: 89976
+22/05/2019 06:17:07.609 - [te.view.MainFrameController$3.call] - [INFO] - Finishing pre-oprateion, start writing files
+22/05/2019 06:17:07.609 - [te.view.MainFrameController$3.call] - [INFO] - Finish Writing metadata
+22/05/2019 06:17:07.609 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 26529064, More than initial: 2002624, dif: 24
+22/05/2019 06:18:19.718 - [te.view.MainFrameController.writeMetadata] - [INFO] - Start Writing metadata
+22/05/2019 06:18:19.719 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25842768, More than initial: 1316328, dif: -686296
+22/05/2019 06:18:19.766 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-16_19_02.jpg
+22/05/2019 06:18:19.766 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_21_02.jpg
+22/05/2019 06:18:19.767 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:19.767 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-16_19_02.jpg
+22/05/2019 06:18:19.767 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:19.768 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_21_02.jpg
+22/05/2019 06:18:19.769 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_15_02.jpg
+22/05/2019 06:18:19.771 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:19.772 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-13_17_02.jpg
+22/05/2019 06:18:19.772 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_15_02.jpg
+22/05/2019 06:18:19.773 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:19.773 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-13_17_02.jpg
+22/05/2019 06:18:23.820 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:23.821 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:23.821 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:23.821 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:23.821 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 29576192, More than initial: 5049752, dif: 3733424
+22/05/2019 06:18:23.822 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_9_02.jpg
+22/05/2019 06:18:23.823 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:23.823 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_9_02.jpg
+22/05/2019 06:18:23.855 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:23.855 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:23.855 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:23.855 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:23.856 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 29719264, More than initial: 5192824, dif: 143072
+22/05/2019 06:18:23.856 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_12_02.jpg
+22/05/2019 06:18:23.857 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:23.857 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-18_12_02.jpg
+22/05/2019 06:18:23.864 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:23.865 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:23.865 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:23.865 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:23.866 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 29719320, More than initial: 5192880, dif: 56
+22/05/2019 06:18:23.866 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_16_02.jpg
+22/05/2019 06:18:23.867 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:23.867 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-17_16_02.jpg
+22/05/2019 06:18:23.953 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:23.954 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:23.954 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:23.954 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:23.954 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 29964304, More than initial: 5437864, dif: 244984
+22/05/2019 06:18:23.955 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_6_02.jpg
+22/05/2019 06:18:23.956 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:23.956 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_6_02.jpg
+22/05/2019 06:18:25.816 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:25.816 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:25.817 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:25.817 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:25.817 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 30107368, More than initial: 5580928, dif: 143064
+22/05/2019 06:18:25.817 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_15_02.jpg
+22/05/2019 06:18:25.818 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:25.818 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-18_15_02.jpg
+22/05/2019 06:18:26.108 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:26.108 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:26.109 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:26.109 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:26.109 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 30311112, More than initial: 5784672, dif: 203744
+22/05/2019 06:18:26.109 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-15_20_02.jpg
+22/05/2019 06:18:26.110 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:26.110 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-15_20_02.jpg
+22/05/2019 06:18:26.276 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:26.277 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:26.277 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:26.277 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:26.277 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 30515128, More than initial: 5988688, dif: 204016
+22/05/2019 06:18:26.278 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_17_02.jpg
+22/05/2019 06:18:26.278 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:26.279 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-17_17_02.jpg
+22/05/2019 06:18:26.454 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:26.454 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:26.455 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:26.455 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:26.455 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 30731800, More than initial: 6205360, dif: 216672
+22/05/2019 06:18:27.300 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:27.300 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:27.300 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:27.300 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:27.301 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 30731992, More than initial: 6205552, dif: 192
+22/05/2019 06:18:27.571 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:27.572 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:27.573 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:27.573 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:27.573 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 30732136, More than initial: 6205696, dif: 144
+22/05/2019 06:18:27.725 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:27.726 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:27.726 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:27.726 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:27.726 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 30732304, More than initial: 6205864, dif: 168
+22/05/2019 06:18:27.726 - [te.view.MainFrameController$3.call] - [INFO] - Finishing pre-oprateion, start writing files
+22/05/2019 06:18:27.728 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_21_02.jpg
+22/05/2019 06:18:27.729 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_21_02.jpg
+22/05/2019 06:18:27.729 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:27.729 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:27.729 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_18_02.jpg
+22/05/2019 06:18:27.729 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-17_21_02.jpg
+22/05/2019 06:18:27.730 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-18_21_02.jpg
+22/05/2019 06:18:27.730 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:27.729 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-19_16_02.jpg
+22/05/2019 06:18:27.730 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-14_18_02.jpg
+22/05/2019 06:18:27.731 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:27.731 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-19_16_02.jpg
+22/05/2019 06:18:29.481 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:29.482 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:29.482 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:29.482 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:29.483 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 31241904, More than initial: 6715464, dif: 509600
+22/05/2019 06:18:29.483 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_8_02.jpg
+22/05/2019 06:18:29.484 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:29.484 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-18_8_02.jpg
+22/05/2019 06:18:29.518 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:29.519 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:29.519 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:29.519 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:29.519 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 31409536, More than initial: 6883096, dif: 167632
+22/05/2019 06:18:29.520 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_19_02.jpg
+22/05/2019 06:18:29.520 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:29.521 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-17_19_02.jpg
+22/05/2019 06:18:29.526 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:29.527 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:29.527 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:29.527 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:29.527 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 31511536, More than initial: 6985096, dif: 102000
+22/05/2019 06:18:29.528 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-19_21_02.jpg
+22/05/2019 06:18:29.528 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:29.529 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-19_21_02.jpg
+22/05/2019 06:18:29.598 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:29.598 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:29.598 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:29.599 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:29.599 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 31756296, More than initial: 7229856, dif: 244760
+22/05/2019 06:18:29.599 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-15_16_02.jpg
+22/05/2019 06:18:29.600 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:29.600 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-15_16_02.jpg
+22/05/2019 06:18:31.144 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:31.145 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:31.145 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:31.146 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:31.146 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 31960256, More than initial: 7433816, dif: 203960
+22/05/2019 06:18:31.146 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_19_02.jpg
+22/05/2019 06:18:31.147 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:31.147 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-18_19_02.jpg
+22/05/2019 06:18:31.310 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:31.310 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:31.311 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:31.311 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:31.311 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 32177072, More than initial: 7650632, dif: 216816
+22/05/2019 06:18:31.311 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_3_02.jpg
+22/05/2019 06:18:31.312 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:31.312 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-17_3_02.jpg
+22/05/2019 06:18:31.326 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:31.327 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:31.327 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:31.327 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:31.327 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 32289880, More than initial: 7763440, dif: 112808
+22/05/2019 06:18:31.328 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-19_15_02.jpg
+22/05/2019 06:18:31.328 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:31.329 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-19_15_02.jpg
+22/05/2019 06:18:31.499 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:31.499 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:31.499 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:31.500 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:31.500 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 32393912, More than initial: 7867472, dif: 104032
+22/05/2019 06:18:31.500 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_17_02.jpg
+22/05/2019 06:18:31.501 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:31.501 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-14_17_02.jpg
+22/05/2019 06:18:32.945 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:32.945 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:32.946 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:32.946 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:32.946 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 32495856, More than initial: 7969416, dif: 101944
+22/05/2019 06:18:32.946 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_18_02.jpg
+22/05/2019 06:18:32.947 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:32.947 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-18_18_02.jpg
+22/05/2019 06:18:33.028 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:33.028 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:33.031 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:33.031 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:33.031 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 32699624, More than initial: 8173184, dif: 203768
+22/05/2019 06:18:33.033 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-19_10_02.jpg
+22/05/2019 06:18:33.034 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:33.034 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-19_10_02.jpg
+22/05/2019 06:18:33.220 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:33.220 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:33.220 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:33.221 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:33.221 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 32801592, More than initial: 8275152, dif: 101968
+22/05/2019 06:18:33.221 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_22_02.jpg
+22/05/2019 06:18:33.222 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:33.222 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-17_22_02.jpg
+22/05/2019 06:18:33.313 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:33.313 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:33.314 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:33.314 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:33.314 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 33005528, More than initial: 8479088, dif: 203936
+22/05/2019 06:18:33.315 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-13_21_02.jpg
+22/05/2019 06:18:33.315 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:33.315 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\2\valentine_gold-13_21_02.jpg
+22/05/2019 06:18:34.664 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:34.665 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:34.665 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:34.665 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:34.665 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 33209488, More than initial: 8683048, dif: 203960
+22/05/2019 06:18:34.765 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:34.765 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:34.765 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:34.766 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:34.766 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 33209656, More than initial: 8683216, dif: 168
+22/05/2019 06:18:34.844 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:34.845 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:34.845 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:34.845 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:34.845 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 33311840, More than initial: 8785400, dif: 102184
+22/05/2019 06:18:35.193 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:35.194 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:35.194 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:35.194 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:35.195 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 33312032, More than initial: 8785592, dif: 192
+22/05/2019 06:18:35.195 - [te.view.MainFrameController$3.call] - [INFO] - Finishing pre-oprateion, start writing files
+22/05/2019 06:18:35.196 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-13_6_02.jpg
+22/05/2019 06:18:35.196 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-13_15_02.jpg
+22/05/2019 06:18:35.196 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-13_16_02.jpg
+22/05/2019 06:18:35.196 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_16_02.jpg
+22/05/2019 06:18:35.197 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:35.198 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:35.198 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\3\valentine_gold-13_15_02.jpg
+22/05/2019 06:18:35.198 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:35.198 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\3\valentine_gold-14_16_02.jpg
+22/05/2019 06:18:35.198 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:35.198 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\3\valentine_gold-13_6_02.jpg
+22/05/2019 06:18:35.199 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\3\valentine_gold-13_16_02.jpg
+22/05/2019 06:18:36.914 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:36.914 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:36.914 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:36.915 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:36.915 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 33762576, More than initial: 9236136, dif: 450544
+22/05/2019 06:18:36.915 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_13_02.jpg
+22/05/2019 06:18:36.916 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:36.919 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\3\valentine_gold-14_13_02.jpg
+22/05/2019 06:18:36.960 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:36.960 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:36.960 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:36.960 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:36.961 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 33966392, More than initial: 9439952, dif: 203816
+22/05/2019 06:18:36.961 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-13_3_02.jpg
+22/05/2019 06:18:36.961 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:18:36.962 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\3\valentine_gold-13_3_02.jpg
+22/05/2019 06:18:37.007 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:37.008 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:37.008 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:37.008 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:37.009 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 34068360, More than initial: 9541920, dif: 101968
+22/05/2019 06:18:37.053 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:37.053 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:37.053 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:37.054 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:37.054 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 34170352, More than initial: 9643912, dif: 101992
+22/05/2019 06:18:38.248 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:38.248 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:38.249 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:38.249 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:38.249 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 34170496, More than initial: 9644056, dif: 144
+22/05/2019 06:18:38.258 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:18:38.258 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:18:38.258 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:18:38.259 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:18:38.259 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 34170552, More than initial: 9644112, dif: 56
+22/05/2019 06:18:38.259 - [te.view.MainFrameController$3.call] - [INFO] - Finishing pre-oprateion, start writing files
+22/05/2019 06:18:38.259 - [te.view.MainFrameController$3.call] - [INFO] - Finish Writing metadata
+22/05/2019 06:18:38.260 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 34274496, More than initial: 9748056, dif: 103944
+22/05/2019 06:19:02.878 - [te.view.MainFrameController.writeMetadata] - [INFO] - Start Writing metadata
+22/05/2019 06:19:02.878 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 35197080, More than initial: 10670640, dif: 922584
+22/05/2019 06:19:02.924 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-16_19_02.jpg
+22/05/2019 06:19:02.925 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:02.925 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-16_19_02.jpg
+22/05/2019 06:19:02.925 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_21_02.jpg
+22/05/2019 06:19:02.925 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:02.926 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_21_02.jpg
+22/05/2019 06:19:02.927 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_12_02.jpg
+22/05/2019 06:19:02.933 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:02.933 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-18_12_02.jpg
+22/05/2019 06:19:02.935 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_17_02.jpg
+22/05/2019 06:19:02.941 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:02.942 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-17_17_02.jpg
+22/05/2019 06:19:04.664 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:04.664 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:04.664 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:04.664 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:04.665 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 38006112, More than initial: 13479672, dif: 2809032
+22/05/2019 06:19:04.665 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_9_02.jpg
+22/05/2019 06:19:04.667 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:04.667 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_9_02.jpg
+22/05/2019 06:19:04.697 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:04.698 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:04.698 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:04.698 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:04.698 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 38047136, More than initial: 13520696, dif: 41024
+22/05/2019 06:19:04.699 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_16_02.jpg
+22/05/2019 06:19:04.699 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:04.700 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-17_16_02.jpg
+22/05/2019 06:19:04.780 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:04.780 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:04.780 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:04.781 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:04.781 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 38253152, More than initial: 13726712, dif: 206016
+22/05/2019 06:19:04.781 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_15_02.jpg
+22/05/2019 06:19:04.783 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:04.783 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-18_15_02.jpg
+22/05/2019 06:19:05.189 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:05.189 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:05.189 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:05.189 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:05.191 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 38666552, More than initial: 14140112, dif: 413400
+22/05/2019 06:19:05.191 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-15_20_02.jpg
+22/05/2019 06:19:05.191 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:05.192 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-15_20_02.jpg
+22/05/2019 06:19:05.382 - [te.util.ExiftoolRunner.writeMetadataToFile] - [SEVERE] - Exiftool process interrupted on file H:\Olya\jpg\gold_text - копия\1\valentine_gold-17_16_02.jpg
+22/05/2019 06:19:05.383 - [te.util.ExiftoolRunner.writeMetadataToFile] - [SEVERE] - null
+22/05/2019 06:19:05.383 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:05.383 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:05.384 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:05.384 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 38809400, More than initial: 14282960, dif: 142848
+22/05/2019 06:19:05.384 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_15_02.jpg
+22/05/2019 06:19:05.385 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:05.385 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_15_02.jpg
+22/05/2019 06:19:06.437 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 24952944, More than initial: 426504, dif: -13856456
+22/05/2019 06:19:06.982 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:06.983 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:06.983 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:06.983 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:06.983 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25228864, More than initial: 702424, dif: 275920
+22/05/2019 06:19:06.984 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-13_17_02.jpg
+22/05/2019 06:19:06.984 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:06.984 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-13_17_02.jpg
+22/05/2019 06:19:07.105 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:07.106 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:07.106 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:07.106 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:07.107 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25410472, More than initial: 884032, dif: 181608
+22/05/2019 06:19:07.107 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_6_02.jpg
+22/05/2019 06:19:07.108 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:07.108 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_6_02.jpg
+22/05/2019 06:19:07.146 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:07.147 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:07.147 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:07.147 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:07.148 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25592088, More than initial: 1065648, dif: 181616
+22/05/2019 06:19:08.279 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:08.279 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:08.280 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:08.280 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:08.280 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25647064, More than initial: 1120624, dif: 54976
+22/05/2019 06:19:08.313 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:08.313 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:08.313 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:08.313 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:08.314 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25702048, More than initial: 1175608, dif: 54984
+22/05/2019 06:19:15.758 - [te.view.MainFrameController.writeMetadata] - [INFO] - Start Writing metadata
+22/05/2019 06:19:15.758 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 25702048, More than initial: 1175608, dif: 0
+22/05/2019 06:19:15.805 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_21_02.jpg
+22/05/2019 06:19:15.805 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_12_02.jpg
+22/05/2019 06:19:15.805 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:15.805 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:15.805 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-18_12_02.jpg
+22/05/2019 06:19:15.807 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_15_02.jpg
+22/05/2019 06:19:15.807 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:15.808 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_15_02.jpg
+22/05/2019 06:19:15.805 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-16_19_02.jpg
+22/05/2019 06:19:15.805 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_21_02.jpg
+22/05/2019 06:19:15.814 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:15.814 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-16_19_02.jpg
+22/05/2019 06:19:17.606 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:17.606 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:17.606 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:17.606 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:17.607 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 28312504, More than initial: 3786064, dif: 2610456
+22/05/2019 06:19:17.607 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-18_15_02.jpg
+22/05/2019 06:19:17.607 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:17.607 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-18_15_02.jpg
+22/05/2019 06:19:17.670 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:17.670 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:17.670 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:17.672 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:17.672 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 28428464, More than initial: 3902024, dif: 115960
+22/05/2019 06:19:17.673 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_9_02.jpg
+22/05/2019 06:19:17.673 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:17.673 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_9_02.jpg
+22/05/2019 06:19:17.889 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:17.889 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:17.889 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:17.889 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:17.890 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 28607472, More than initial: 4081032, dif: 179008
+22/05/2019 06:19:17.890 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-13_17_02.jpg
+22/05/2019 06:19:17.891 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:17.891 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-13_17_02.jpg
+22/05/2019 06:19:18.022 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:18.023 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:18.023 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:18.023 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:18.023 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 28733776, More than initial: 4207336, dif: 126304
+22/05/2019 06:19:18.024 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_16_02.jpg
+22/05/2019 06:19:18.029 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:18.030 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-17_16_02.jpg
+22/05/2019 06:19:18.773 - [te.util.ExiftoolRunner.writeMetadataToFile] - [SEVERE] - Exiftool process interrupted on file H:\Olya\jpg\gold_text - копия\1\valentine_gold-17_16_02.jpg
+22/05/2019 06:19:18.773 - [te.util.ExiftoolRunner.writeMetadataToFile] - [SEVERE] - null
+22/05/2019 06:19:18.773 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:18.773 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:18.773 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:18.774 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 29103648, More than initial: 4577208, dif: 369872
+22/05/2019 06:19:18.774 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-15_20_02.jpg
+22/05/2019 06:19:18.774 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:18.775 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-15_20_02.jpg
+22/05/2019 06:19:19.350 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:19.350 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:19.350 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:19.350 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:19.352 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 29559264, More than initial: 5032824, dif: 455616
+22/05/2019 06:19:19.352 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-14_6_02.jpg
+22/05/2019 06:19:19.353 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:19.353 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-14_6_02.jpg
+22/05/2019 06:19:20.052 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 29868000, More than initial: 5341560, dif: 308736
+22/05/2019 06:19:20.088 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:20.089 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:20.089 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:20.089 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:20.089 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 29931240, More than initial: 5404800, dif: 63240
+22/05/2019 06:19:20.090 - [te.view.MainFrameController$3.lambda$1] - [INFO] - Current file: valentine_gold-17_17_02.jpg
+22/05/2019 06:19:20.090 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - 
+22/05/2019 06:19:20.090 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Запись метаданных в файл H:\Olya\jpg\gold_text - копия\1\valentine_gold-17_17_02.jpg
+22/05/2019 06:19:20.164 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:20.165 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:20.165 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:20.165 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:20.165 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 30088376, More than initial: 5561936, dif: 157136
+22/05/2019 06:19:20.858 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:20.859 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:20.859 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:20.859 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:20.859 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 30143232, More than initial: 5616792, dif: 54856
+22/05/2019 06:19:21.398 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Exiftool exit code: 0
+22/05/2019 06:19:21.399 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Decription: tertyrtyrty rtyryrty
+22/05/2019 06:19:21.399 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Keywords: template, color, book, hipster, simple, blues, wave, minimal, music, futuristic, minimalist, vector, colored, dynamic, graphic, notebook, art, memphis, linear, brochure, business, texture, invitation, cool, posters, futurism, collection, halftone, flyer, folder, 4, future, geometric, geometry, 80s, invite, circle, colorful, party
+22/05/2019 06:19:21.399 - [te.util.ExiftoolRunner.writeMetadataToFile] - [INFO] - Title: tttt
+22/05/2019 06:19:21.399 - [te.MemoryLogger.print] - [INFO] - Heap Memory Usage: 30204312, More than initial: 5677872, dif: 61080

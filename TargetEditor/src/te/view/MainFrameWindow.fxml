@@ -20,34 +20,34 @@
         <menus>
           <Menu fx:id="menuData" mnemonicParsing="false" text="%ui.menu.data.header">
             <items>
-              <MenuItem fx:id="loadItem" mnemonicParsing="false" text="%ui.menu.data.item1" />
-                  <MenuItem fx:id="saveAsItem" mnemonicParsing="false" text="%ui.menu.data.item2" />
-                  <MenuItem fx:id="saveStateItem" mnemonicParsing="false" text="%ui.menu.data.item3" />
-                  <MenuItem fx:id="clearAllItem" mnemonicParsing="false" text="%ui.menu.data.item4" />
-                  <MenuItem fx:id="closeItem" mnemonicParsing="false" text="%ui.menu.data.item5" />
+              <MenuItem fx:id="loadItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.data.item1" />
+                  <MenuItem fx:id="saveAsItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.data.item2" />
+                  <MenuItem fx:id="saveStateItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.data.item3" />
+                  <MenuItem fx:id="clearAllItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.data.item4" />
+                  <MenuItem fx:id="closeItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.data.item5" />
             </items>
           </Menu>
           <Menu fx:id="menuWrite" mnemonicParsing="false" text="%ui.menu.write.header">
             <items>
-                  <RadioMenuItem fx:id="writeOnlyJPGItem" mnemonicParsing="false" onAction="#updateSettings" text="%ui.menu.write.item1">
+                  <RadioMenuItem fx:id="writeOnlyJPGItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.write.item1">
                      <toggleGroup>
                         <ToggleGroup fx:id="writeToggle" />
                      </toggleGroup></RadioMenuItem>
-                  <RadioMenuItem fx:id="writeOnlyEPSItem" mnemonicParsing="false" onAction="#updateSettings" text="%ui.menu.write.item2" toggleGroup="$writeToggle" />
-                  <RadioMenuItem fx:id="writeAllItem" mnemonicParsing="false" onAction="#updateSettings" text="%ui.menu.write.item3" toggleGroup="$writeToggle" />
+                  <RadioMenuItem fx:id="writeOnlyEPSItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.write.item2" toggleGroup="$writeToggle" />
+                  <RadioMenuItem fx:id="writeAllItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.write.item3" toggleGroup="$writeToggle" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="writeMetadataItem" mnemonicParsing="false" onAction="#writeMetadata" text="%ui.menu.write.item4" />
+                  <MenuItem fx:id="writeMetadataItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.write.item4" />
             </items>
           </Menu>
           <Menu fx:id="menuSettings" mnemonicParsing="false" text="%ui.menu.settings.header">
             <items>
-                  <RadioMenuItem fx:id="languageRuItem" mnemonicParsing="false" onAction="#updateSettings" text="%ui.menu.settings.item1">
+                  <RadioMenuItem fx:id="languageRuItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.settings.item1">
                      <toggleGroup>
                         <ToggleGroup fx:id="languageToggle" />
                      </toggleGroup></RadioMenuItem>
-                  <RadioMenuItem fx:id="languageEnItem" mnemonicParsing="false" onAction="#updateSettings" text="%ui.menu.settings.item2" toggleGroup="$languageToggle" />
+                  <RadioMenuItem fx:id="languageEnItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.settings.item2" toggleGroup="$languageToggle" />
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="aboutItem" mnemonicParsing="false" text="%ui.menu.settings.item3" />
+                  <MenuItem fx:id="aboutItem" mnemonicParsing="false" onAction="#menuItemSelected" text="%ui.menu.settings.item3" />
             </items>
           </Menu>
         </menus>
