@@ -10,28 +10,28 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="482.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="te.view.VariablesEditorContainerController">
+<AnchorPane prefHeight="482.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="te.view.VariablesEditorContainerController">
    <children>
       <VBox prefHeight="480.0" prefWidth="1000.0">
          <children>
             <AnchorPane prefHeight="50.0" prefWidth="200.0">
                <children>
-                  <Label layoutX="15.0" layoutY="1.0" prefHeight="21.0" prefWidth="159.0" text="Имя переменной">
+                  <Label layoutX="15.0" layoutY="1.0" prefHeight="21.0" prefWidth="159.0" text="%ui.tabs.varcont.name">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Label layoutX="209.0" layoutY="1.0" prefHeight="21.0" prefWidth="145.0" text="Разделитель">
+                  <Label layoutX="209.0" layoutY="1.0" prefHeight="21.0" prefWidth="145.0" text="%ui.tabs.varcont.devider">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Label layoutX="438.0" layoutY="1.0" prefHeight="21.0" prefWidth="281.0" text="Значения (через разделитель)">
+                  <Label layoutX="438.0" layoutY="1.0" prefHeight="21.0" prefWidth="281.0" text="%ui.tabs.varcont.values">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <Label layoutX="921.0" layoutY="1.0" prefHeight="21.0" prefWidth="76.0" text="Удалить">
+                  <Label layoutX="921.0" layoutY="1.0" prefHeight="21.0" prefWidth="76.0" text="%ui.tabs.varcont.delete">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
@@ -54,12 +54,12 @@
                <right>
                   <HBox spacing="20.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Button fx:id="saveBtn" lineSpacing="10.0" mnemonicParsing="false" onAction="#saveVariablesToFile" text="Сохранить">
+                        <Button fx:id="saveBtn" lineSpacing="10.0" mnemonicParsing="false" onAction="#saveVariablesToFile" text="%ui.tabs.varcont.save">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
                         </Button>
-                        <Button fx:id="loadBtn" mnemonicParsing="false" onAction="#loadVariablesFromFile" text="Загрузить" />
+                        <Button fx:id="loadBtn" mnemonicParsing="false" onAction="#loadVariablesFromFile" text="%ui.tabs.varcont.load" />
                      </children>
                      <BorderPane.margin>
                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />

@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javafx.beans.value.ChangeListener;
@@ -52,6 +53,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	private final String targetDescr2 = "TargetDescr2";		
 	private final String folderDescr = "FolderDescr";
 	private boolean isInitialized;
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	private final ChangeListener<String> boxListener = new ChangeListener<String>(){
 			@Override
@@ -257,7 +259,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		else if (data.equals(this.targetDescr2)){
 			Target target = app.getTargetWithMaxLength();
 			if (target!=null){
-				title = target.getTargetDescr1();
+				title = target.getTargetDescr2();
 			titleText.setText(title);
 			}
 		}
@@ -299,7 +301,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 			try {
 				variableValue = SyntaxParser.pasteVariablesUnique(app.descriptionVariableEditorContainerController.savedVariables, this.titleTextSetting, false, " ");
 			} catch (TextException e) {
-				app.log("ERROR: Ошибка вставки переменных в строку: " + this.titleTextSetting);
+				LOGGER.warning("ERROR: Ошибка вставки переменных в строку: " + this.titleTextSetting);
 				app.isProblem = true;
 			}
 			if (variableValue==null)

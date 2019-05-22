@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
@@ -74,7 +75,7 @@ public class KeysEditorController extends TargetEditorController implements Init
 	private boolean isF;
 	
 	public KeysEditorWrapper wrapper;
-	
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -187,7 +188,7 @@ public List<String> generateKeywordsForMetadata(){
 			keys = keys.stream().distinct().collect(Collectors.toList());
 			cutList(keys, 50);
 		} catch (TextException e) {
-			app.log("ERROR: Ошибка вставки переменных в строку: " + this.savedKeywordsTemplate);
+			LOGGER.warning("ERROR: Ошибка вставки переменных в строку: " + this.savedKeywordsTemplate);
 			app.isProblem = true;
 		}
 		

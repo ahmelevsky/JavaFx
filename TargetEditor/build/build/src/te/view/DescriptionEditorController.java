@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javafx.beans.property.SimpleObjectProperty;
@@ -111,6 +112,8 @@ public class DescriptionEditorController extends TargetEditorController implemen
 	
 	public DescriptionEditorWrapper wrapper;
 	private boolean isInitialized;
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	
 	
 	private final ChangeListener<String> boxListener  = new ChangeListener<String>(){
 		@Override
@@ -500,7 +503,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 				try {
 					t = SyntaxParser.pasteVariables(app.descriptionVariableEditorContainerController.savedVariables, textFieldsStored.get(i), false, " ");
 				} catch (TextException e) {
-					app.log("ERROR: Ошибка вставки переменных в строку: " + textFieldsStored.get(i));
+					LOGGER.warning("ERROR: Ошибка вставки переменных в строку: " + textFieldsStored.get(i));
 					app.isProblem = true;
 				}
 			    if (!t.isEmpty())

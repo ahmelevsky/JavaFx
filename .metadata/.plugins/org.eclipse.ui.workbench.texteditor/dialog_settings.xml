@@ -6,12 +6,16 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="currentFolder" key="selection"/>
+		<item value="appRes" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="appRes"/>
+			<item value="Ошибка сохране"/>
+			<item value="Ошибка сохранения"/>
+			<item value="jpg"/>
 			<item value="f"/>
 			<item value="currentFolder"/>
 			<item value="addedTexts"/>
@@ -29,7 +33,7 @@
 		<item value="305" key="DIALOG_WIDTH"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 		<item value="444" key="DIALOG_HEIGHT"/>
-		<item value="778" key="DIALOG_X_ORIGIN"/>
-		<item value="525" key="DIALOG_Y_ORIGIN"/>
+		<item value="1403" key="DIALOG_X_ORIGIN"/>
+		<item value="244" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

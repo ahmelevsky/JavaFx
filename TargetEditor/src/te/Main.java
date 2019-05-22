@@ -6,8 +6,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Handler;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
@@ -36,6 +40,7 @@ import javax.xml.bind.Unmarshaller;
 import te.model.DataWrapper;
 import te.model.FolderVariable;
 import te.model.KeysWrapper;
+import te.model.SettingsWrapper;
 import te.model.Target;
 import te.model.Variable;
 import te.util.ExiftoolRunner;
@@ -44,7 +49,6 @@ import te.util.TextException;
 import te.view.DescriptionEditorController;
 import te.view.FolderVariableController;
 import te.view.KeysEditorController;
-import te.view.LogController;
 import te.view.MainFrameController;
 import te.view.TargetEditorController;
 import te.view.TargetsWindowController;
@@ -62,7 +66,6 @@ public class Main extends Application {
 	public TitleEditorController titleEditorController;
 	public VariablesEditorContainerController keyVariableEditorContainerController;
 	public VariablesEditorContainerController descriptionVariableEditorContainerController;
-	public LogController logController;
 	private Stage mainStage;
 	private Stage currentStage;
 	public ObservableList<FolderVariable> folderVariableData = FXCollections.observableArrayList();
@@ -74,9 +77,20 @@ public class Main extends Application {
 	public boolean isProblem;
 	public File dataFile = new File(System.getProperty("user.home") + File.separator + "TargetEditor.xml");
 	public File dataFileTemp = new File(System.getProperty("user.home") + File.separator + "TargetEditor_Temp.xml");
+	public File settingsFile = new File(System.getProperty("user.home") + File.separator + "TargetEditorSettings.xml");
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	@Override
 	public void start(Stage primaryStage) throws IOException {
+		
+		try {
+            TargetLogger.setup();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Problems with creating the log files");
+        }
+		loadSettings();
+		Settings.bundle = ResourceBundle.getBundle("te.Language", Settings.locale);
 		ExiftoolRunner.app = this;
 		SyntaxParser.app = this;
 		mainStage = primaryStage;
@@ -84,23 +98,22 @@ public class Main extends Application {
 		mainFrameController = organizeStage("view/MainFrameWindow.fxml");
 		mainFrameController.app = this;
 		mainStage.setResizable(false);
-		keyVariableEditorContainerController = (VariablesEditorContainerController) addTab("Переменные \nключей", "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
+		keyVariableEditorContainerController = (VariablesEditorContainerController) addTab(Settings.bundle.getString("ui.tabs.keyvars.header"), "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
 		keyVariableEditorContainerController.controllersList = keyVariableControllers;
-		descriptionVariableEditorContainerController = (VariablesEditorContainerController) addTab("Переменные \nописаний", "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
+		descriptionVariableEditorContainerController = (VariablesEditorContainerController) addTab(Settings.bundle.getString("ui.tabs.descvars.header"), "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
 		descriptionVariableEditorContainerController.controllersList = descriptionVariableControllers;
-		targetsController = (TargetsWindowController) addTab("Таргеты", "view/TargetsWindow.fxml", TargetsWindowController.class);
+		targetsController = (TargetsWindowController) addTab(Settings.bundle.getString("ui.tabs.targets.header"), "view/TargetsWindow.fxml", TargetsWindowController.class);
 		targetsController.setup();
-		folderVariableController = (FolderVariableController) addTab("Переменные папок", "view/FolderVariablesWindow.fxml", FolderVariableController.class);
+		folderVariableController = (FolderVariableController) addTab(Settings.bundle.getString("ui.tabs.foldervars.header"), "view/FolderVariablesWindow.fxml", FolderVariableController.class);
 		folderVariableController.setup();
-		keysEditorController = (KeysEditorController) addTab("Ключи", "view/KeysEditorWindow.fxml", KeysEditorController.class);
-		descriptionEditorController = (DescriptionEditorController) addTab("Описания", "view/DescriptionEditorWindow.fxml", DescriptionEditorController.class);
-		titleEditorController = (TitleEditorController) addTab("Заголовки", "view/TitleEditorWindow.fxml", TitleEditorController.class);
-		logController = (LogController) addTab("Лог", "view/LogWindow.fxml", LogController.class);
+		keysEditorController = (KeysEditorController) addTab(Settings.bundle.getString("ui.tabs.keys.header"), "view/KeysEditorWindow.fxml", KeysEditorController.class);
+		descriptionEditorController = (DescriptionEditorController) addTab(Settings.bundle.getString("ui.tabs.descriptions.header"), "view/DescriptionEditorWindow.fxml", DescriptionEditorController.class);
+		titleEditorController = (TitleEditorController) addTab(Settings.bundle.getString("ui.tabs.titles.header"), "view/TitleEditorWindow.fxml", TitleEditorController.class);
 		mainFrameController.setup();
 		keysEditorController.setup();
-		mainStage.setTitle("Target Editor v1.0");
+		mainStage.setTitle("Target Editor v2.0");
 		mainStage.getIcons().add(new Image("file:resources/icon.png"));
-		loadLastSettings();
+		loadLastData();
 		for (TargetEditorController controller : this.controllers)
 			controller.loadData();
 		mainStage.show();
@@ -108,21 +121,19 @@ public class Main extends Application {
 	
 	 @Override
 	 public void stop(){
-		 try{
-	     saveLastSettings();
-		 }
-		 catch (Exception e) {
-			 Alert alert = new Alert(AlertType.ERROR);
-	            alert.setTitle("Ошибка");
-	            alert.setHeaderText("Ошибка сохранения данных в xml");
-	            alert.setContentText(e.getMessage());
-	            alert.showAndWait();
-		 }
+	     saveLastData();
+	     saveSettings();
+	     for(Handler h:LOGGER.getHandlers())
+	     {
+	         h.close();   
+	     }
 	 }
 	
 	 private MainFrameController organizeStage(String fxml) throws IOException{
-	        FXMLLoader loader = new FXMLLoader();
+	        FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxml));
 	        loader.setLocation(Main.class.getResource(fxml));
+	        loader.setResources(Settings.bundle);
+	      //  VBox page = (VBox) loader.load(Main.class.getResource(fxml), this.bundle);
 	        VBox page = (VBox) loader.load();
 	        Scene scene = new Scene(page);
 	        scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -132,8 +143,9 @@ public class Main extends Application {
 	    }
 	 
 	private TargetEditorController addTab(String tabTitle, String fxml, @SuppressWarnings("rawtypes") Class c) throws IOException{
-		 FXMLLoader loader = new FXMLLoader();
+		 FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxml));
 	        loader.setLocation(Main.class.getResource(fxml));
+	        loader.setResources(Settings.bundle);
 	        AnchorPane page = (AnchorPane) loader.load();
 	        Tab tab = new Tab(tabTitle, page);
 	        tab.setStyle("-fx-padding: 15 0 15 0;-fx-min-height: 30px;-fx-focus-color: transparent;");
@@ -172,13 +184,6 @@ public class Main extends Application {
 		alert.showAndWait();
              }
 		 });
-	}
-	
-	public void log(String text){
-		 Platform.runLater(new Runnable() {
-             public void run() {
-		logController.log(text);
-             }});
 	}
 	
 	
@@ -265,7 +270,7 @@ public class Main extends Application {
 				}
 					
 			} catch (TextException e) {
-				log("ERROR: " + e.getMessage());
+				LOGGER.severe("ERROR: " + e.getMessage());
 				return false;
 			}
 		 }
@@ -277,44 +282,44 @@ public class Main extends Application {
 			//Description Tab
 			
 			if (!isCorrectTextIncludingVariablesSyntax(descriptionEditorController.textFieldsStored, descriptionVariableEditorContainerController.variables)){
-				log("Недопустимые символы в одном из текстовых полей вкладки Описание");
+				LOGGER.severe(Settings.bundle.getString("log.message.unnalloweddescription"));
 				result = false;
 			}
 			//Title Tab
 			try {
 				if (!isCorrectKey(SyntaxParser.checkVariables(descriptionVariableEditorContainerController.variables, titleEditorController.titleTextSetting))){
-					log("Недопустимые символы в текстовом поле вкладки Заголовок");
+					LOGGER.severe(Settings.bundle.getString("log.message.unnallowedkeywords"));
 					result = false;
 				}
 			} catch (TextException e) {
-				log("ERROR: " + e.getMessage());
+				LOGGER.severe("ERROR: " + e.getMessage());
 				return false;
 			}
 			
 			//Targets
 			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTargetKwd()))){
-				log("Недопустимые символы в одном из полей Таргет");
+				LOGGER.severe(Settings.bundle.getString("log.message.unnallowedtarget"));
 				result = false;
 				}
 			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTargetDescr1()))){
-				log("Недопустимые символы в одном из полей Таргет1");
+				LOGGER.severe(Settings.bundle.getString("log.message.unnallowedtarget1"));
 				result = false;
 				}
-			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTargetDescr1()))){
-				log("Недопустимые символы в одном из полей Таргет2");
+			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTargetDescr2()))){
+				LOGGER.severe(Settings.bundle.getString("log.message.unnallowedtarget2"));
 				result = false;
 				}
 			
 			//Variables
 			for (Variable v:descriptionVariableEditorContainerController.variables){  
 				if(!v.getValues().stream().allMatch(vv->isCorrectKey(vv))) {
-			    		log("Недопустимые символы в одном значений переменной " + v.getName());
+					LOGGER.severe(Settings.bundle.getString("log.message.unnallowedvars") + v.getName());
 			    		result = false;
 				}
 			}
 			for (Variable v:keyVariableEditorContainerController.variables){  
 				if(!v.getValues().stream().allMatch(vv->isCorrectKey(vv))) {
-			    		log("Недопустимые символы в одном значений переменной " + v.getName());
+					LOGGER.severe(Settings.bundle.getString("log.message.unnallowedvars") + v.getName());
 			    		result = false;
 				}
 			}
@@ -427,7 +432,7 @@ public class Main extends Application {
 	            alert.showAndWait();
 	        }
 	    }
-	    public void loadLastSettings(){
+	    public void loadLastData(){
 			  try {
 				   if (!this.dataFile.exists())
 					   return;
@@ -450,16 +455,17 @@ public class Main extends Application {
 		            	this.folderVariableController.wrapper = wrapper.getFolderWrapper();
 		            
 		        } catch (Exception e) { // catches ANY exception
-		            Alert alert = new Alert(AlertType.ERROR);
-		            alert.setTitle("Ошибка");
-		            alert.setHeaderText("Ошибка загрузки параметров");
-		            alert.setContentText("Не могу получить параметры из файла:\n" + this.dataFile.getPath());
+		        	Alert alert = new Alert(AlertType.ERROR);
+		            alert.setTitle(Settings.bundle.getString("alert.error.title"));
+		            alert.setHeaderText(Settings.bundle.getString("alert.error.loaderror.header"));
+		            alert.setContentText(Settings.bundle.getString("alert.error.loaderror.content") +":\n" + this.dataFile.getPath());
 
 		            alert.showAndWait();
 		        }
 		 }
 	    
-		 public void saveLastSettings() throws JAXBException{
+		 public void saveLastData(){
+			 try {
 			      for (TargetEditorController controller:this.controllers)
 		    	         controller.saveData();
 				  JAXBContext context = JAXBContext
@@ -484,5 +490,61 @@ public class Main extends Application {
 		            m.marshal(wrapper, this.dataFileTemp);
 		            this.dataFile.delete();
 		   	        this.dataFileTemp.renameTo(this.dataFile);
+			 } catch (Exception e) { // catches ANY exception
+				 Alert alert = new Alert(AlertType.ERROR);
+		            alert.setTitle(Settings.bundle.getString("alert.error.title"));
+		            alert.setHeaderText(Settings.bundle.getString("alert.error.saveerror.header"));
+		            alert.setContentText(Settings.bundle.getString("alert.error.saveerror.content") +":\n" + this.settingsFile.getPath());
+		            alert.showAndWait();
+		        }
+		   	        
 		 }
+		 
+		 public void loadSettings(){
+			  try {
+				   if (!this.settingsFile.exists())
+					   return;
+		            JAXBContext context = JAXBContext
+		                    .newInstance(SettingsWrapper.class);
+		            Unmarshaller um = context.createUnmarshaller();
+
+		            SettingsWrapper  wrapper = (SettingsWrapper) um.unmarshal(this.settingsFile);
+                    Settings.setLanguage(wrapper.language);
+                    Settings.setWriteOption(wrapper.writeOption);
+		            
+		        } catch (Exception e) { // catches ANY exception
+		        	 Alert alert = new Alert(AlertType.ERROR);
+		        	alert.setTitle("Error");
+		            alert.setHeaderText("Error loading settings");
+		            alert.setContentText("Can't read file:\n" + this.settingsFile.getPath());
+		            alert.showAndWait();
+		        }
+		 }
+		 
+		 
+		 public void saveSettings(){
+			 try {
+		      
+			  JAXBContext context = JAXBContext
+	                    .newInstance(SettingsWrapper.class);
+	            Marshaller m = context.createMarshaller();
+	            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+	            // Обёртываем наши данные об адресатах.
+	            SettingsWrapper wrapper = new SettingsWrapper();
+	            wrapper.language = Settings.getLanguage();
+	            wrapper.writeOption = Settings.getWriteOption();
+               
+	            // Маршаллируем и сохраняем XML в файл.
+	            m.marshal(wrapper, this.settingsFile);
+			 } catch (Exception e) { // catches ANY exception
+				 Alert alert = new Alert(AlertType.ERROR);
+		            alert.setTitle(Settings.bundle.getString("alert.error.title"));
+		            alert.setHeaderText(Settings.bundle.getString("alert.error.saveerror.header"));
+		            alert.setContentText(Settings.bundle.getString("alert.error.saveerror.content") +":\n" + this.settingsFile.getPath());
+		            alert.showAndWait();
+		        }
+	 }
+		 
+		 
 }

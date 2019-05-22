@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
@@ -19,9 +22,14 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.DirectoryChooser;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,11 +38,16 @@ import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 
 import te.Main;
+import te.MemoryLogger;
 import te.model.FolderVariable;
 import te.model.Target;
 import te.model.Variable;
 import te.util.DataException;
 import te.util.ExiftoolRunner;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class MainFrameController implements Initializable{
 
@@ -43,6 +56,7 @@ public class MainFrameController implements Initializable{
 	public FolderVariable currentFolder;
 	public Target currentTarget;
 	private Task<String> task;
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	@FXML
 	private Button writeBtn;
@@ -54,12 +68,47 @@ public class MainFrameController implements Initializable{
 	private ProgressBar progress;
 	@FXML
 	private Button clearBtn;
+	@FXML
+	private MenuBar menuBar;
+	@FXML
+	private Menu menuData;
+	@FXML
+	private Menu menuWrite;
+	@FXML
+	private Menu menuSettings;
+	@FXML
+	private MenuItem loadItem;
+	@FXML
+	private MenuItem saveStateItem;
+	@FXML
+	private MenuItem saveAsItem;
+	@FXML
+	private MenuItem clearAllItem;
+	@FXML
+	private MenuItem closeItem;
+	@FXML
+	private RadioMenuItem writeOnlyEPSItem;
+	@FXML
+	private RadioMenuItem writeOnlyJPGItem;
+	@FXML
+	private RadioMenuItem writeAllItem;
+	//@FXML 
+	//private ToggleGroup writeToggle;
+	@FXML
+	private MenuItem writeMetadataItem;
+	@FXML
+	private RadioMenuItem languageRuItem;
+	@FXML
+	private RadioMenuItem languageEnItem;
+	@FXML
+	private MenuItem aboutItem;
 	
 	
+	
+	private String ext = "jpg";
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-			
 	}
 	
 	public void setup(){
@@ -115,8 +164,11 @@ public class MainFrameController implements Initializable{
 	
 	@FXML
 	public void writeMetadata() throws SAXException, ParserConfigurationException, TransformerException, IOException{
+		LOGGER.info("Start Writing metadata");
+		MemoryLogger.print();
+		
 		try{
-			app.saveLastSettings();
+			app.saveLastData();
 		}
 		 catch (Exception e) {
 			 Alert alert = new Alert(AlertType.ERROR);
@@ -140,13 +192,13 @@ public class MainFrameController implements Initializable{
 		 for (File d:directoriesToWalk){
 			 allImagesCounter = allImagesCounter + d.listFiles(new FileFilter() {
               public boolean accept(File f) {
-              	return f.isFile() && f.getName().toLowerCase().endsWith(".jpg");
+              	return f.isFile() && f.getName().toLowerCase().endsWith(ext);
               }
  	        }).length;
 		 }
 		 
 		 if (allImagesCounter==0){
-				app.showAlert("В выбранной корневой папке нет папок с файлами изображений jpg");
+				app.showAlert("В выбранной корневой папке нет папок с файлами " + this.ext);
 				return;
 			}
 		 
@@ -166,7 +218,7 @@ public class MainFrameController implements Initializable{
 		}
 		       		
 		if (!app.checkDataIsCorrect()){ 
-			app.showAlert("Некорректные входные данные, невозможно осуществить запись. Подробности на вкладке Лог.");
+			app.showAlert("Некорректные входные данные, невозможно осуществить запись. Подробности в файле лога");
 			return;
 		}
 		 task = new Task<String>() {
@@ -186,32 +238,42 @@ public class MainFrameController implements Initializable{
 			            currentFolder = app.getSavedFolderVariableData().stream().filter(t->t.getFolder().equals(dir)).findFirst().get();
 			   	        File[] images =	dir.listFiles(new FileFilter() {
 			                public boolean accept(File f) {
-			                	return f.isFile() && f.getName().toLowerCase().endsWith(".jpg");
+			                	return f.isFile() && f.getName().toLowerCase().endsWith(ext);
 			                }
 			   	        });
 			
 			   	        if (images.length==0) {
-			   	        	app.log("There is no .jpg files in the folder: " + dir.getAbsolutePath());
+			   	        	LOGGER.warning("There is no " + ext + " files in the folder: " + dir.getAbsolutePath());
 			   	        }
 		    	   
+			   	        
+			   	      LOGGER.info("Finishing pre-oprateion, start writing files");
+			   	        
 			   	        for (File image:images){
 			   	        	try{
+			   	        	    LOGGER.info("Current file: " + image.getName());
 			   	        		currentTarget = app.getRandomTarget();
 			   	        		List<String> keywords = app.keysEditorController.generateKeywordsForMetadata();
 			   	        		String description  =  app.descriptionEditorController.generateDescriptionForMetadata();
 			   	        		String title = app.titleEditorController.getTitleForMetadata();
 			   	        		ExiftoolRunner.writeMetadataToFile (image, keywords, title, description);
 			   	         		success++;
+			   	         		
 			   	        	}
 			   	        	catch (IOException ex) {
-			   	        		app.log("ERROR: ошибка записи метаданных в " + image.getAbsolutePath() + ", текст ошибки: " + ex.getMessage());
+			   	        		LOGGER.warning("ERROR: ошибка записи метаданных в " + image.getAbsolutePath() + ", текст ошибки: " + ex.getMessage());
 			   	        		failures++;
 			   	        	}
 			   	        	finally{
 			   	        		updateProgress(++done, allImagesCount);
+			   	        	 MemoryLogger.print();
 			   	        	}
 			   	            }
 		        }
+		        
+		        LOGGER.info("Finish Writing metadata");
+		        MemoryLogger.print();
+		           
 			    String result = (failures==0)  ? 	("ГОТОВО: Метеданные были записаны для файлов: " + success) : ("WARNING! Метеданные были записаны для файлов: " + success + ", не получилось записать файлов: " + failures);
 			    if (app.isProblem)
 			    	result += "\nВо время вычисления метаданных были проблемы, обратите внимание на вкладку Лог";
@@ -220,9 +282,9 @@ public class MainFrameController implements Initializable{
 		 };
 		 
 			task.setOnFailed(e -> {
-				app.log(task.getException().getMessage());
+				LOGGER.warning(task.getException().getMessage());
 				for (StackTraceElement ste:task.getException().getStackTrace())
-					app.log(ste.getClassName() + "." + ste.getMethodName() + "("+ste.getLineNumber()+")");
+					LOGGER.warning(ste.getClassName() + "." + ste.getMethodName() + "("+ste.getLineNumber()+")");
 				writeBtn.setDisable(false);
 				stopProgress();
 				Alert alert = new Alert(AlertType.ERROR);
@@ -316,4 +378,15 @@ public class MainFrameController implements Initializable{
 		
 	}
 
+	
+	public String getLanguage() {
+		if (languageRuItem.isSelected())
+			return "ru";
+		if (languageEnItem.isSelected())
+			return "en";
+		else {
+			LOGGER.warning("No language selected. English is by default");
+			return "en";
+		}
+	}
 }

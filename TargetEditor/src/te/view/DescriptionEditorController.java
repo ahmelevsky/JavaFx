@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javafx.beans.property.SimpleObjectProperty;
@@ -35,6 +36,7 @@ import javafx.scene.text.Text;
 
 import org.apache.commons.lang3.StringUtils;
 
+import te.Settings;
 import te.model.DescriptionEditorWrapper;
 import te.model.FolderVariable;
 import te.model.Target;
@@ -111,6 +113,8 @@ public class DescriptionEditorController extends TargetEditorController implemen
 	
 	public DescriptionEditorWrapper wrapper;
 	private boolean isInitialized;
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	
 	
 	private final ChangeListener<String> boxListener  = new ChangeListener<String>(){
 		@Override
@@ -132,7 +136,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 				if (oldValue!=null && !oldValue.equals(newValue) && opt!=null && opt.isPresent()){
 					addVariableToText(opt.get(), textFields.get(index));
 				}
-				if (oldValue!=null && !oldValue.equals("<текст>") && newValue.equals("<текст>"))
+				if (oldValue!=null && !oldValue.equals(Settings.bundle.getString("ui.selector.text")) && newValue.equals(Settings.bundle.getString("ui.selector.text")))
 					textFields.get(index).setText("");
 			}
 			setError(textFields.get(index), false, null);
@@ -158,7 +162,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 		        int index = textFields.indexOf(tf);
 		        removeListeners();
 		    	setError(tf, false, null);
-		        selectors.get(index).getSelectionModel().select("<текст>");
+		        selectors.get(index).getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
 			
 				 try {	
 					getMaxLengthDescription();
@@ -213,8 +217,8 @@ public class DescriptionEditorController extends TargetEditorController implemen
 		for (int i=0;i<selectors.size();i++) {
 			options.add(FXCollections.observableArrayList());
 			selectors.get(i).setItems(options.get(i));
-			options.get(i).add("<текст>");
-			selectors.get(i).getSelectionModel().select("<текст>");
+			options.get(i).add(Settings.bundle.getString("ui.selector.text"));
+			selectors.get(i).getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
 		}
 		addListeners();
 	}
@@ -309,7 +313,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 				selectedValue = selected.getSelectedItem();
 			ObservableList<String> ol = options.get(i);
 			ol.clear();
-			ol.add("<текст>");
+			ol.add(Settings.bundle.getString("ui.selector.text"));
 			if (!app.getFolderVariableData().isEmpty())
 				ol.add(this.folderDescr);
 			if (!app.getTargetsData().isEmpty()){
@@ -322,7 +326,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 				if	(ol.contains(selectedValue))
 					selectors.get(i).getSelectionModel().select(selectedValue);
 				else {
-					selectors.get(i).getSelectionModel().select("<текст>");
+					selectors.get(i).getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
 					textFields.get(i).setText("");
 				}
 			}
@@ -444,7 +448,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 		else{
 			countLabel.setFill(Color.BLACK);
 		}
-		countLabel.setText("Максимальное число символов: " + resultString.length());
+		countLabel.setText(Settings.bundle.getString("ui.tabs.descriptions.maxchars") + resultString.length());
 		
 		return resultString;
 	}
@@ -500,7 +504,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 				try {
 					t = SyntaxParser.pasteVariables(app.descriptionVariableEditorContainerController.savedVariables, textFieldsStored.get(i), false, " ");
 				} catch (TextException e) {
-					app.log("ERROR: Ошибка вставки переменных в строку: " + textFieldsStored.get(i));
+					LOGGER.warning(Settings.bundle.getString("alert.error.pastevars") + textFieldsStored.get(i));
 					app.isProblem = true;
 				}
 			    if (!t.isEmpty())
@@ -549,7 +553,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 	}
 	
 	public void clearAll(){
-		selectors.forEach(sel -> sel.getSelectionModel().select("<текст>"));
+		selectors.forEach(sel -> sel.getSelectionModel().select(Settings.bundle.getString("ui.selector.text")));
 		textFields.forEach(tf -> tf.clear());
 		randomBoxes.forEach(b -> b.setSelected(false));
 	}

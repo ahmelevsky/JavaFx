@@ -21,17 +21,18 @@
 		<delete dir="externalLibs" />
 		<delete dir="project" />
 		<delete dir="projectRefs" />
-		
+		<delete dir="resources" />
 		<mkdir dir="externalLibs" />
 		
 		<copy todir="externalLibs">
-			<fileset dir="C:\JavaFX\workspace\TargetEditor\lib">
-				<filename name="commons-lang3-3.5.jar"/>	
-			</fileset>
-		</copy>
+			<fileset dir="..\lib" includes="**" />  
+				 </copy> 
+	    <copy todir="deploy\resources">  
+		         <fileset dir="..\resources" includes="**"/>  
+         </copy> 
 		<mkdir dir="project" />
 		<copy todir="project">
-			<fileset dir="C:\JavaFX\workspace\TargetEditor">
+			<fileset dir="..\.">
 				<include name="src/**" />
 			</fileset>
 		</copy>
@@ -84,13 +85,16 @@
 		
 		<mkdir dir="dist" />
 		<mkdir dir="dist/libs" />
+		<mkdir dir="dist/resources" />
 		
 		<copy todir="dist/libs">
 			<fileset dir="externalLibs">
 				<include name="*" />
 			</fileset>
 		</copy>
-		
+		 <copy todir="dist/resources">  
+				         <fileset dir="deploy/resources" includes="**"/>  
+		         </copy> 
 		
 		<fx:resources id="appRes">
 			<fx:fileset dir="dist" includes="TargetEditor.jar"/>
@@ -138,9 +142,9 @@
 			<fx:info title="TargetEditor" vendor="Artiom"/>
 			<fx:application refId="fxApplication"/>
 			<fx:resources refid="appRes"/>
+			
 		</fx:deploy>
-		
-		
+		   
 	</target>
 	
 	

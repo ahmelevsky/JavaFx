@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="480.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="te.view.DescriptionEditorController">
+<AnchorPane prefHeight="480.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="te.view.DescriptionEditorController">
    <children>
       <VBox layoutX="430.0" layoutY="42.0" prefHeight="299.0" prefWidth="550.0" spacing="10.0">
          <children>
@@ -41,9 +41,9 @@
       <TextArea fx:id="resultText" layoutX="14.0" layoutY="391.0" prefHeight="82.0" prefWidth="847.0" wrapText="true" />
       <Text fx:id="countLabel" layoutX="25.0" layoutY="372.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="279.0000021010637" />
       <Text fx:id="addedTexts" layoutX="434.0" layoutY="372.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="549.9999895691872" />
-      <Label layoutX="11.0" layoutY="7.0" text="Рандом" />
-      <Label layoutX="183.0" layoutY="7.0" text="Переменные" />
-      <Label layoutX="661.0" layoutY="7.0" text="Описание" />
-      <Button fx:id="refreshBtn" layoutX="876.0" layoutY="406.0" mnemonicParsing="false" onAction="#refresh" prefHeight="52.0" prefWidth="103.0" text="Обновить" />
+      <Label layoutX="11.0" layoutY="7.0" text="%ui.tabs.desc.random" />
+      <Label layoutX="183.0" layoutY="7.0" text="%ui.tabs.desc.vars" />
+      <Label layoutX="661.0" layoutY="7.0" text="%ui.tabs.desc.desc" />
+      <Button fx:id="refreshBtn" layoutX="876.0" layoutY="406.0" mnemonicParsing="false" onAction="#refresh" prefHeight="52.0" prefWidth="103.0" text="%ui.tabs.desc.refresh" />
    </children>
 </AnchorPane>

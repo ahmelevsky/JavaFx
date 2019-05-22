@@ -1,28 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="javafx.scene.control.TextArea"/>
-<fullyQualifiedTypeName name="te.util.TextAreaException"/>
-<fullyQualifiedTypeName name="te.Main"/>
-<fullyQualifiedTypeName name="javafx.scene.control.Label"/>
-<fullyQualifiedTypeName name="javafx.geometry.Pos"/>
-<fullyQualifiedTypeName name="javafx.scene.text.TextAlignment"/>
-<fullyQualifiedTypeName name="javafx.scene.layout.StackPane"/>
-<fullyQualifiedTypeName name="javafx.scene.control.ComboBox"/>
-<fullyQualifiedTypeName name="javafx.scene.control.Spinner"/>
-<fullyQualifiedTypeName name="javafx.util.StringConverter"/>
-<fullyQualifiedTypeName name="javafx.scene.control.SpinnerValueFactory"/>
-<fullyQualifiedTypeName name="javafx.event.ActionEvent"/>
-<fullyQualifiedTypeName name="javafx.application.Platform"/>
-<fullyQualifiedTypeName name="javafx.scene.control.TextFormatter"/>
-<fullyQualifiedTypeName name="te.util.SyntaxParser"/>
-<fullyQualifiedTypeName name="te.view.PresetsController"/>
-<fullyQualifiedTypeName name="te.view.FolderVariableController"/>
-<fullyQualifiedTypeName name="te.model.Target"/>
-<fullyQualifiedTypeName name="javafx.beans.DefaultProperty"/>
-<fullyQualifiedTypeName name="te.view.ActionButtonTableCell"/>
-<fullyQualifiedTypeName name="javafx.scene.shape.Circle"/>
-<fullyQualifiedTypeName name="te.view.VariableLayoutController"/>
-<fullyQualifiedTypeName name="te.model.Variable"/>
 <fullyQualifiedTypeName name="te.model.KeyVariableWrapper"/>
 <fullyQualifiedTypeName name="javafx.stage.WindowEvent"/>
 <fullyQualifiedTypeName name="javafx.beans.property.SimpleStringProperty"/>
@@ -60,4 +37,27 @@
 <fullyQualifiedTypeName name="java.util.Collection"/>
 <fullyQualifiedTypeName name="java.util.Set"/>
 <fullyQualifiedTypeName name="java.util.HashSet"/>
+<fullyQualifiedTypeName name="java.util.logging.FileHandler"/>
+<fullyQualifiedTypeName name="java.util.logging.SimpleFormatter"/>
+<fullyQualifiedTypeName name="java.util.logging.Formatter"/>
+<fullyQualifiedTypeName name="java.util.logging.ConsoleHandler"/>
+<fullyQualifiedTypeName name="java.util.logging.Level"/>
+<fullyQualifiedTypeName name="java.util.logging.Logger"/>
+<fullyQualifiedTypeName name="java.text.DateFormat"/>
+<fullyQualifiedTypeName name="te.LogFormatter"/>
+<fullyQualifiedTypeName name="java.lang.management.MemoryMXBean"/>
+<fullyQualifiedTypeName name="java.lang.management.MemoryUsage"/>
+<fullyQualifiedTypeName name="java.lang.management.ManagementFactory"/>
+<fullyQualifiedTypeName name="te.MemoryLogger"/>
+<fullyQualifiedTypeName name="java.util.logging.Handler"/>
+<fullyQualifiedTypeName name="com.sun.media.jfxmedia.logging.Logger"/>
+<fullyQualifiedTypeName name="java.util.ResourceBundle"/>
+<fullyQualifiedTypeName name="javafx.scene.control.MenuBar"/>
+<fullyQualifiedTypeName name="javafx.scene.control.Menu"/>
+<fullyQualifiedTypeName name="javafx.scene.control.MenuItem"/>
+<fullyQualifiedTypeName name="javafx.scene.control.RadioMenuItem"/>
+<fullyQualifiedTypeName name="te.model.SettingsWrapper"/>
+<fullyQualifiedTypeName name="javafx.scene.control.ToggleGroup"/>
+<fullyQualifiedTypeName name="java.util.Locale"/>
+<fullyQualifiedTypeName name="java.io.IOException"/>
 </qualifiedTypeNameHistroy>

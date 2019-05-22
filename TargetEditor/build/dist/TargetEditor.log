@@ -1,0 +1,2 @@
+22/05/2019 10:50:09.756 - [te.Main.start] - [INFO] - File c:\Java\JavaFx\TargetEditor\build\dist\resources\ui.properties does exist
+22/05/2019 10:50:09.767 - [te.Main.start] - [SEVERE] - Can't find bundle for base name resources/ui.properties, locale ru_RU

@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 
 import te.Main;
+import te.Settings;
 import te.model.Variable;
 
 public class SyntaxParser {
@@ -21,7 +22,7 @@ public class SyntaxParser {
 		    	if (!matcher.group(1).isEmpty()) {
 		    		Optional<Variable> opt = variables.stream().filter(p -> p.getName().equals(matcher.group(1))).findFirst();
 		    		if (opt==null || !opt.isPresent())
-		    			throw new TextException("ѕеременна€ с именем " + matcher.group(1) + " не существует");
+		    			throw new TextException(Settings.bundle.getString("parser.unexistedvar.begin") + matcher.group(1) + Settings.bundle.getString("parser.unexistedvar.end"));
 		    		Variable var = opt.get();
 		    		
 		    		int multiplier = 1;
@@ -44,7 +45,7 @@ public class SyntaxParser {
 		    	}
 		    }
 		    if(StringUtils.containsAny(string, '[', ']', '<', '>'))
-		    		throw new TextException("¬ тексте присутствуют специальные символы <>[] вне правильного синтаксиса вставки переменной");
+		    		throw new TextException(Settings.bundle.getString("parser.badsymbols"));
 		    return string;
 	}
 		
@@ -56,7 +57,7 @@ public class SyntaxParser {
 	    	if (!matcher.group(1).isEmpty()) {
 	    		Optional<Variable> opt = variables.stream().filter(p -> p.getName().equals(matcher.group(1))).findFirst();
 	    		if (opt==null || !opt.isPresent())
-	    			throw new TextException("ѕеременна€ с именем " + matcher.group(1) + " не существует");
+	    			throw new TextException(Settings.bundle.getString("parser.unexistedvar.begin") + matcher.group(1) + Settings.bundle.getString("parser.unexistedvar.end"));
 	    		Variable var = opt.get();
 	    		
 	    		int multiplier = 1;
@@ -85,7 +86,7 @@ public class SyntaxParser {
 	    	}
 	    }
 	    if(StringUtils.containsAny(string, '[', ']', '<', '>'))
-	    		throw new TextException("¬ тексте присутствуют специальные символы <>[] вне правильного синтаксиса вставки переменной");
+	    		throw new TextException(Settings.bundle.getString("parser.badsymbols"));
 	    return string;
 }
 	
@@ -96,12 +97,12 @@ public class SyntaxParser {
 	    	if (!matcher.group(1).isEmpty()) {
 	    		Optional<Variable> opt = variables.stream().filter(p -> p.getName().equals(matcher.group(1))).findFirst();
 	    		if (opt==null || !opt.isPresent())
-	    			throw new TextException("ѕеременна€ с именем " + matcher.group(1) + " не существует");
+	    			throw new TextException(Settings.bundle.getString("parser.unexistedvar.begin") + matcher.group(1) + Settings.bundle.getString("parser.unexistedvar.end"));
 	            string = string.replace(matcher.group(0),"");
 	    	}
 	    }
 	    if(StringUtils.containsAny(string, '[', ']', '<', '>'))
-	    		throw new TextException("¬ тексте присутствуют специальные символы <>[] вне правильного синтаксиса вставки переменной");
+	    		throw new TextException(Settings.bundle.getString("parser.badsymbols"));
 	    return string;
 }
 	

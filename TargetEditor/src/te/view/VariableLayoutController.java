@@ -18,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import te.Main;
+import te.Settings;
 import te.model.Variable;
 
 public class VariableLayoutController implements Initializable {
@@ -36,8 +37,8 @@ public class VariableLayoutController implements Initializable {
 	
 	private ObservableList<String> delimiters =  FXCollections.observableArrayList(","
 			                                                                       ,";"
-			                                                                       ,"опнаек"
-			                                                                       ,"оепемня ярпнйх"
+			                                                                       ,Settings.bundle.getString("ui.tabs.vars.delimiter.space")
+			                                                                       ,Settings.bundle.getString("ui.tabs.vars.delimiter.newline")
 			                                                                       );
 	
 	
@@ -74,10 +75,10 @@ public class VariableLayoutController implements Initializable {
 				this.variableDelimiterBox.getSelectionModel().select(";");
 				break;
 			case " ":
-				this.variableDelimiterBox.getSelectionModel().select("опнаек");
+				this.variableDelimiterBox.getSelectionModel().select(Settings.bundle.getString("ui.tabs.vars.delimiter.space"));
 				break;
 			case "\r\n":
-				this.variableDelimiterBox.getSelectionModel().select("оепемня ярпнйх");
+				this.variableDelimiterBox.getSelectionModel().select(Settings.bundle.getString("ui.tabs.vars.delimiter.newline"));
 				break;
 			default:
 				break;
@@ -95,26 +96,14 @@ public class VariableLayoutController implements Initializable {
 		String delimiter = variableDelimiterBox.getSelectionModel().getSelectedItem();
 		if (delimiter==null)
 			delimiter = "";
-		else
-			switch (delimiter) {
-			case ",":
-				delimiter = ",";
-				break;
-			case ";":
-				delimiter = ";";
-				break;
-			case "опнаек":
+		else if (delimiter.equals(Settings.bundle.getString("ui.tabs.vars.delimiter.space")))
 				delimiter = " ";
-				break;
-			case "оепемня ярпнйх":
+		else if (delimiter.equals(Settings.bundle.getString("ui.tabs.vars.delimiter.newline")))
 				delimiter = "\\r?\\n";
-				break;
-			default:
-				break;
-			}
 		variable.delimiterProperty().set(delimiter);
 		variable.setValues(variableValuesTxt.getText());
 	}
+	
 	
 	@FXML
     private void remove(){

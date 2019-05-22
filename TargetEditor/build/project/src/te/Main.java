@@ -6,8 +6,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.logging.Handler;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import java.util.stream.Collectors;
 
@@ -36,6 +40,7 @@ import javax.xml.bind.Unmarshaller;
 import te.model.DataWrapper;
 import te.model.FolderVariable;
 import te.model.KeysWrapper;
+import te.model.SettingsWrapper;
 import te.model.Target;
 import te.model.Variable;
 import te.util.ExiftoolRunner;
@@ -44,7 +49,6 @@ import te.util.TextException;
 import te.view.DescriptionEditorController;
 import te.view.FolderVariableController;
 import te.view.KeysEditorController;
-import te.view.LogController;
 import te.view.MainFrameController;
 import te.view.TargetEditorController;
 import te.view.TargetsWindowController;
@@ -62,7 +66,6 @@ public class Main extends Application {
 	public TitleEditorController titleEditorController;
 	public VariablesEditorContainerController keyVariableEditorContainerController;
 	public VariablesEditorContainerController descriptionVariableEditorContainerController;
-	public LogController logController;
 	private Stage mainStage;
 	private Stage currentStage;
 	public ObservableList<FolderVariable> folderVariableData = FXCollections.observableArrayList();
@@ -74,14 +77,33 @@ public class Main extends Application {
 	public boolean isProblem;
 	public File dataFile = new File(System.getProperty("user.home") + File.separator + "TargetEditor.xml");
 	public File dataFileTemp = new File(System.getProperty("user.home") + File.separator + "TargetEditor_Temp.xml");
+	public File settingsFile = new File(System.getProperty("user.home") + File.separator + "TargetEditorSettings.xml");
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	public Locale locale = Locale.getDefault();
 	
 	@Override
 	public void start(Stage primaryStage) throws IOException {
+		
+		try {
+            TargetLogger.setup();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Problems with creating the log files");
+        }
+		try {
+			File ff = new File("resources/ui.properties");
+			if (ff.exists())
+				LOGGER.info("File " + ff.getAbsolutePath() + " does exist");
+		ResourceBundle bundle = ResourceBundle.getBundle("resources/ui.properties", this.locale);
+		}
+		catch (Throwable e) {
+			LOGGER.severe(e.getMessage());
+		}
 		ExiftoolRunner.app = this;
 		SyntaxParser.app = this;
 		mainStage = primaryStage;
 		currentStage = mainStage;
-		mainFrameController = organizeStage("view/MainFrameWindow.fxml");
+		mainFrameController = organizeStage("view/MainF	rameWindow.fxml");
 		mainFrameController.app = this;
 		mainStage.setResizable(false);
 		keyVariableEditorContainerController = (VariablesEditorContainerController) addTab("Переменные \nключей", "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
@@ -95,12 +117,11 @@ public class Main extends Application {
 		keysEditorController = (KeysEditorController) addTab("Ключи", "view/KeysEditorWindow.fxml", KeysEditorController.class);
 		descriptionEditorController = (DescriptionEditorController) addTab("Описания", "view/DescriptionEditorWindow.fxml", DescriptionEditorController.class);
 		titleEditorController = (TitleEditorController) addTab("Заголовки", "view/TitleEditorWindow.fxml", TitleEditorController.class);
-		logController = (LogController) addTab("Лог", "view/LogWindow.fxml", LogController.class);
 		mainFrameController.setup();
 		keysEditorController.setup();
 		mainStage.setTitle("Target Editor v1.0");
 		mainStage.getIcons().add(new Image("file:resources/icon.png"));
-		loadLastSettings();
+		loadLastData();
 		for (TargetEditorController controller : this.controllers)
 			controller.loadData();
 		mainStage.show();
@@ -109,7 +130,11 @@ public class Main extends Application {
 	 @Override
 	 public void stop(){
 		 try{
-	     saveLastSettings();
+	     saveLastData();
+	     for(Handler h:LOGGER.getHandlers())
+	     {
+	         h.close();   
+	     }
 		 }
 		 catch (Exception e) {
 			 Alert alert = new Alert(AlertType.ERROR);
@@ -172,13 +197,6 @@ public class Main extends Application {
 		alert.showAndWait();
              }
 		 });
-	}
-	
-	public void log(String text){
-		 Platform.runLater(new Runnable() {
-             public void run() {
-		logController.log(text);
-             }});
 	}
 	
 	
@@ -265,7 +283,7 @@ public class Main extends Application {
 				}
 					
 			} catch (TextException e) {
-				log("ERROR: " + e.getMessage());
+				LOGGER.severe("ERROR: " + e.getMessage());
 				return false;
 			}
 		 }
@@ -277,44 +295,44 @@ public class Main extends Application {
 			//Description Tab
 			
 			if (!isCorrectTextIncludingVariablesSyntax(descriptionEditorController.textFieldsStored, descriptionVariableEditorContainerController.variables)){
-				log("Недопустимые символы в одном из текстовых полей вкладки Описание");
+				LOGGER.severe("Недопустимые символы в одном из текстовых полей вкладки Описание");
 				result = false;
 			}
 			//Title Tab
 			try {
 				if (!isCorrectKey(SyntaxParser.checkVariables(descriptionVariableEditorContainerController.variables, titleEditorController.titleTextSetting))){
-					log("Недопустимые символы в текстовом поле вкладки Заголовок");
+					LOGGER.severe("Недопустимые символы в текстовом поле вкладки Заголовок");
 					result = false;
 				}
 			} catch (TextException e) {
-				log("ERROR: " + e.getMessage());
+				LOGGER.severe("ERROR: " + e.getMessage());
 				return false;
 			}
 			
 			//Targets
 			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTargetKwd()))){
-				log("Недопустимые символы в одном из полей Таргет");
+				LOGGER.severe("Недопустимые символы в одном из полей Таргет");
 				result = false;
 				}
 			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTargetDescr1()))){
-				log("Недопустимые символы в одном из полей Таргет1");
+				LOGGER.severe("Недопустимые символы в одном из полей Таргет1");
 				result = false;
 				}
 			if (!getTargetsData().stream().allMatch(t->isCorrectKey(t.getTargetDescr1()))){
-				log("Недопустимые символы в одном из полей Таргет2");
+				LOGGER.severe("Недопустимые символы в одном из полей Таргет2");
 				result = false;
 				}
 			
 			//Variables
 			for (Variable v:descriptionVariableEditorContainerController.variables){  
 				if(!v.getValues().stream().allMatch(vv->isCorrectKey(vv))) {
-			    		log("Недопустимые символы в одном значений переменной " + v.getName());
+					LOGGER.severe("Недопустимые символы в одном значений переменной " + v.getName());
 			    		result = false;
 				}
 			}
 			for (Variable v:keyVariableEditorContainerController.variables){  
 				if(!v.getValues().stream().allMatch(vv->isCorrectKey(vv))) {
-			    		log("Недопустимые символы в одном значений переменной " + v.getName());
+					LOGGER.severe("Недопустимые символы в одном значений переменной " + v.getName());
 			    		result = false;
 				}
 			}
@@ -386,6 +404,7 @@ public class Main extends Application {
 	            this.keyVariableEditorContainerController.loadData();
 	            this.targetsData.addAll(wrapper.getTarget());
 	            this.targetsController.loadData();
+	            this.keysEditorController.setup();
 	            // Сохраняем путь к файлу в реестре.
 	            setKeysFilePath(file);
 
@@ -426,7 +445,7 @@ public class Main extends Application {
 	            alert.showAndWait();
 	        }
 	    }
-	    public void loadLastSettings(){
+	    public void loadLastData(){
 			  try {
 				   if (!this.dataFile.exists())
 					   return;
@@ -458,7 +477,7 @@ public class Main extends Application {
 		        }
 		 }
 	    
-		 public void saveLastSettings() throws JAXBException{
+		 public void saveLastData() throws JAXBException{
 			      for (TargetEditorController controller:this.controllers)
 		    	         controller.saveData();
 				  JAXBContext context = JAXBContext
@@ -483,5 +502,35 @@ public class Main extends Application {
 		            m.marshal(wrapper, this.dataFileTemp);
 		            this.dataFile.delete();
 		   	        this.dataFileTemp.renameTo(this.dataFile);
+		   	        
 		 }
+		 
+		 public void saveSettings(){
+			 try {
+		      
+			  JAXBContext context = JAXBContext
+	                    .newInstance(SettingsWrapper.class);
+	            Marshaller m = context.createMarshaller();
+	            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+	            // Обёртываем наши данные об адресатах.
+	            SettingsWrapper wrapper = new SettingsWrapper();
+	            wrapper.language = this.mainFrameController.getLanguage();
+	            
+               
+	            // Маршаллируем и сохраняем XML в файл.
+	            m.marshal(wrapper, this.dataFileTemp);
+	            this.dataFile.delete();
+	   	        this.dataFileTemp.renameTo(this.dataFile);
+			 } catch (Exception e) { // catches ANY exception
+		            Alert alert = new Alert(AlertType.ERROR);
+		            alert.setTitle("Ошибка");
+		            alert.setHeaderText("Ошибка загрузки параметров");
+		            alert.setContentText("Не могу получить параметры из файла:\n" + this.dataFile.getPath());
+
+		            alert.showAndWait();
+		        }
+	 }
+		 
+		 
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,7 +18,8 @@ public class ExiftoolRunner {
 	static boolean isWindows;
 	static boolean isLinux;
 	static boolean isMac;
-
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	
 	static {
 		getOperationSystem();
 	}
@@ -53,19 +55,19 @@ public class ExiftoolRunner {
 		
 		sb.add(toFile.getAbsolutePath());
 
-		app.log("");
-		app.log("Запись метаданных в файл " + toFile.getAbsolutePath());
+		LOGGER.info("");
+		LOGGER.info("Запись метаданных в файл " + toFile.getAbsolutePath());
 		
 		try {
-			 app.log("Exiftool exit code: " +runCommand(sb)); 
+			LOGGER.info("Exiftool exit code: " +runCommand(sb)); 
 		} catch (InterruptedException | IOException e) {
-			app.log("Exiftool process interrupted on file "
+			LOGGER.severe("Exiftool process interrupted on file "
 					+ toFile.getAbsolutePath());
-			app.log(e.getMessage());
+			LOGGER.severe(e.getMessage());
 		}
-		app.log("Decription: " + description);
-		app.log("Keys: " + StringUtils.join(keys, ", "));
-		app.log("Title: " + title);
+		LOGGER.info("Decription: " + description);
+		LOGGER.info("Keys: " + StringUtils.join(keys, ", "));
+		LOGGER.info("Title: " + title);
 	}
 
 	static void getOperationSystem() {
@@ -97,7 +99,7 @@ public class ExiftoolRunner {
 					"tell application \"Terminal\" to do script \"" + command
 							+ ";exit\"" };
 		} else {
-			app.log("Error: Unsupported OS");
+			LOGGER.severe("Error: Unsupported OS");
 			return -1;
 		}
 		Process process = new ProcessBuilder(wrappedCommand)
@@ -106,7 +108,7 @@ public class ExiftoolRunner {
 				process.getInputStream()))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
-				app.log(line); // Your superior logging approach here
+				LOGGER.fine(line);
 			}
 		}
 		return process.waitFor();

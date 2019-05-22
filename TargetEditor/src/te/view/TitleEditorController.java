@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javafx.beans.value.ChangeListener;
@@ -19,6 +20,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextArea;
+import te.Settings;
 import te.model.DescriptionEditorWrapper;
 import te.model.FolderVariable;
 import te.model.Target;
@@ -52,6 +54,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	private final String targetDescr2 = "TargetDescr2";		
 	private final String folderDescr = "FolderDescr";
 	private boolean isInitialized;
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	private final ChangeListener<String> boxListener = new ChangeListener<String>(){
 			@Override
@@ -67,7 +70,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 					if (oldValue!=null && !oldValue.equals(newValue) && opt!=null && opt.isPresent()){
 						addVariableToText(opt.get(), titleText);
 					}
-					if (oldValue!=null && !oldValue.equals("<текст>") && newValue.equals("<текст>"))
+					if (oldValue!=null && !oldValue.equals(Settings.bundle.getString("ui.selector.text")) && newValue.equals(Settings.bundle.getString("ui.selector.text")))
 						titleText.setText("");
 				}
 				setError(titleText, false, null);
@@ -88,7 +91,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 					public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
 						removeListeners();
 						setError(titleText, false, null);
-						titleBox.getSelectionModel().select("<текст>");
+						titleBox.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
 						 try {	
 							 updateCounter();
 							 }
@@ -129,7 +132,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		titleBox.setItems(options1);
-		titleBox.getSelectionModel().select("<текст>");
+		titleBox.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
 		addListeners();
 		
 	}
@@ -208,8 +211,8 @@ public class TitleEditorController extends TargetEditorController implements Ini
 			selectedValue = selected.getSelectedItem();
 		
 		options1.clear();
-		options1.add("<текст>");
-		titleBox.getSelectionModel().select("<текст>");
+		options1.add(Settings.bundle.getString("ui.selector.text"));
+		titleBox.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
 		if (!app.getFolderVariableData().isEmpty())
 			options1.add(this.folderDescr);
 		if (!app.getTargetsData().isEmpty()){
@@ -238,7 +241,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		String data = titleBox.getSelectionModel().getSelectedItem();
 		if (isTakeFromDescriptionBox.isSelected()) 
 			title = app.descriptionEditorController.getMaxLengthDescription();
-		else if (data==null || data.equals("<текст>")){
+		else if (data==null || data.equals(Settings.bundle.getString("ui.selector.text"))){
 			    	title  = parseVariablesInText(titleText, true);
 		}
 		else if (data.equals(this.folderDescr)){
@@ -299,7 +302,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 			try {
 				variableValue = SyntaxParser.pasteVariablesUnique(app.descriptionVariableEditorContainerController.savedVariables, this.titleTextSetting, false, " ");
 			} catch (TextException e) {
-				app.log("ERROR: Ошибка вставки переменных в строку: " + this.titleTextSetting);
+				LOGGER.warning("ERROR: Ошибка вставки переменных в строку: " + this.titleTextSetting);
 				app.isProblem = true;
 			}
 			if (variableValue==null)
@@ -314,7 +317,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	}
 
 	public void clearAll(){
-		titleBox.getSelectionModel().select("<текст>");
+		titleBox.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
 		titleText.clear();
 		isTakeFromDescriptionBox.setSelected(false);
 	}

@@ -22,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import te.Main;
+import te.Settings;
 import te.model.Variable;
 
 public class VariablesEditorContainerController  extends TargetEditorController implements Initializable {
@@ -43,8 +44,8 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		this.addVarBtn.setShape(new Circle(25));
-		loadBtn.setTooltip(new Tooltip("Загрузить из файла набор переменных \n(и ключей и описаний)"));
-		saveBtn.setTooltip(new Tooltip("Сохранить в файл набор переменных \n(и ключей и описаний)"));
+		loadBtn.setTooltip(new Tooltip(Settings.bundle.getString("ui.tabs.vars.loadhint")));
+		saveBtn.setTooltip(new Tooltip(Settings.bundle.getString("ui.tabs.vars.savehint")));
 	}
 	
 	public void saveVariables(){
@@ -75,8 +76,8 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	         
 			} catch (IOException e) {
 				  Alert alert = new Alert(AlertType.ERROR);
-		            alert.setTitle("Ошибка");
-		            alert.setHeaderText("Не могу добавить элементы на форму");
+		            alert.setTitle(Settings.bundle.getString("alert.error.title"));
+		            alert.setHeaderText(Settings.bundle.getString("alert.error.addtoform.content"));
 		            alert.setContentText(e.getMessage());
 		            alert.showAndWait();
 			}
@@ -93,8 +94,8 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 		 }
 		 catch (Exception e) {
 			    Alert alert = new Alert(AlertType.ERROR);
-	            alert.setTitle("Ошибка");
-	            alert.setHeaderText("Не могу удалить элементы");
+	            alert.setTitle(Settings.bundle.getString("alert.error.title"));
+	            alert.setHeaderText(Settings.bundle.getString("alert.error.removeelements.content"));
 	            alert.setContentText(e.getMessage());
 	            alert.showAndWait();
 		 }
@@ -123,7 +124,7 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	public void loadVariablesFromFile(){
 		 FileChooser fileChooser = new FileChooser(); 
 
-		 fileChooser.setTitle("Выберите файл с источниками");
+		 fileChooser.setTitle(Settings.bundle.getString("alert.load.content"));
 		 File lastFile = app.getKeysFilePath();
 		 if (lastFile!=null)
 			 fileChooser.setInitialDirectory(lastFile.getParentFile());
@@ -137,7 +138,7 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	public void saveVariablesToFile(){
 		 FileChooser fileChooser = new FileChooser(); 
 
-		 fileChooser.setTitle("Сохраните файл с источниками");
+		 fileChooser.setTitle(Settings.bundle.getString("alert.save.content"));
 		 File lastFile = app.getKeysFilePath();
 		 if (lastFile!=null)
 			 fileChooser.setInitialDirectory(lastFile.getParentFile());
