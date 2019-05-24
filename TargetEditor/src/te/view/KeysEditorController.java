@@ -169,6 +169,7 @@ public void update(){
 		setError(keysField, false, null);
 		List<String> keys = getKeysFromUI();
 		preview.setText(StringUtils.join(keys, ", "));
+		app.checkSyntax(keysField);
 		countLabel.setText(Settings.bundle.getString("ui.tabs.keys.wordscount") + keys.size());
 	}
 	catch (TextAreaException e){

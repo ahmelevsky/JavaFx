@@ -24,6 +24,7 @@ public class Language_en extends ListResourceBundle {
 	            { "ui.menu.settings.write3"   , "Write to both eps and jpg"},
 	            { "ui.menu.settings.lang1"   , "Interface Language: Russian"},
 	            { "ui.menu.settings.lang2"   , "Interface Language: English"},
+	            { "ui.menu.settings.autosave"   , "Autosave every 5 minutes"},
 	            { "ui.menu.settings.about"   , "About"},
 	            { "alert.error.title", "Error" },
 	            { "alert.error.loaderror.header", "Load Error" },

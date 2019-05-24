@@ -13,7 +13,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -23,10 +22,7 @@ import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import te.Settings;
-import te.model.DescriptionEditorWrapper;
 import te.model.FolderVariable;
 import te.model.Target;
 import te.model.TitleEditorWrapper;
@@ -35,7 +31,6 @@ import te.util.DataException;
 import te.util.SyntaxParser;
 import te.util.TextAreaException;
 import te.util.TextException;
-import te.util.Tuple;
 
 public class TitleEditorController extends TargetEditorController implements Initializable {
 	
@@ -67,6 +62,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	private final String folderDescr = "FolderDescr";
 	private boolean isInitialized;
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	
 	
 	private final ChangeListener<String> boxListener = new ChangeListener<String>(){
 			@Override
@@ -116,7 +112,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 					}
 					};
 					
-					private final ChangeListener<Boolean> checkBoxListener = new ChangeListener<Boolean>(){
+	 private final ChangeListener<Boolean> checkBoxListener = new ChangeListener<Boolean>(){
 							@Override
 							public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue){	
 								removeListeners();
@@ -149,6 +145,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		cutToSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 200, 50));
 		cutToSpinner.focusedProperty().addListener((arg, oldVal, newVal) ->correctSpinnerValue());
 		cutToSpinner.valueProperty().addListener((arg, oldVal, newVal) -> correctSpinnerValue());
+		
 	}
 	
 	private void correctSpinnerValue(){
@@ -199,6 +196,9 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		sb.append(">[1]");
 		ta.setText(sb.toString());
 	}
+	
+	
+	
 	
 	private String parseVariablesInText(TextArea tf, boolean isMax) throws TextAreaException{
 		String result = null;
@@ -301,6 +301,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		    else
 		    	titleText.setText(variableValue);
 		}*/
+		app.checkSyntax(titleText);
 		countLabel.setText("(" + getWordsCount(title) + "/" + title.length() + ")");
 	}
 	
@@ -383,6 +384,12 @@ public class TitleEditorController extends TargetEditorController implements Ini
 			doCutBox.setSelected(this.wrapper.doCut);
 			cutToSpinner.getValueFactory().setValue(this.wrapper.cutTo);
 		}
+		//Fill with targetDescr1 if empty
+		if (!isTakeFromDescriptionBox.isSelected() && titleText.getText().isEmpty() && !app.getTargetsData().isEmpty()){
+			titleBox.getSelectionModel().select(this.targetDescr1);
+		}
+		
+		
 		isInitialized = true;
 	}
 

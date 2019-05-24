@@ -10,6 +10,7 @@ public class Settings {
 	private static String writeOption = "jpg";
 	public static Locale locale = Locale.getDefault();
 	public static ResourceBundle bundle;
+	public static boolean autosaveEnabled;
 
 	public static String getLanguage() {
 		return locale.getLanguage();

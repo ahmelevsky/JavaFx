@@ -15,6 +15,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -27,6 +29,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -65,6 +68,8 @@ public class MainFrameController implements Initializable{
 	private Task<String> task;
 	private Thread taskThread;
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	private  TimerTask autosaveTask;
+	private  Timer autosaveTimer = new Timer();
 	
 	@FXML
 	private Button writeBtn;
@@ -108,7 +113,8 @@ public class MainFrameController implements Initializable{
 	private RadioMenuItem languageEnItem;
 	@FXML
 	private MenuItem aboutItem;
-	
+	@FXML
+	private CheckMenuItem scheduleAutosaveItem;
 	
 	private boolean isWriteBothExtensions;
 	private String ext = "jpg";
@@ -121,6 +127,8 @@ public class MainFrameController implements Initializable{
 	public void setup(){
 		setLanguage(Settings.getLanguage());
         setWriteOption(Settings.getWriteOption());
+        scheduleAutosaveItem.setSelected(Settings.autosaveEnabled);
+       
         
 		tabs.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
 			if (oldTab!=null && oldTab.equals(app.keyVariableEditorContainerController.tab)){
@@ -163,6 +171,15 @@ public class MainFrameController implements Initializable{
 				app.keysEditorController.update();
 			}
 	    });
+		
+		autosaveTask = new TimerTask() {
+	        public void run() {
+	           app.saveLastData();
+	        }
+	    };
+	    
+	    if (Settings.autosaveEnabled)
+        	scheduleAutosave();
 	}
 	
 	
@@ -378,6 +395,11 @@ public class MainFrameController implements Initializable{
 	    //writeBtn.setDisable(true);
 	      taskThread = new Thread(task);
 	      taskThread.setDaemon(true);
+	      taskThread.setUncaughtExceptionHandler((thread, throwable) -> {
+				LOGGER.severe("Global Exception: "+ throwable.getMessage());
+				for (StackTraceElement t:throwable.getStackTrace())
+					LOGGER.severe(t.toString());
+	        });
 	      taskThread.start();
 		 
 	}
@@ -522,6 +544,18 @@ public class MainFrameController implements Initializable{
 			case "writeMetadataItem":
 				writeMetadata();
 				break; 
+			case "scheduleAutosaveItem":
+				if (scheduleAutosaveItem.isSelected()) {
+					LOGGER.info("Enable autosave");
+					scheduleAutosave();
+					Settings.autosaveEnabled = true;
+				}
+				else {
+					LOGGER.info("Disable autosave");
+					cancelAutosave();
+					Settings.autosaveEnabled = false;
+				}
+				break; 
 			case "aboutItem":
 				break; 
 			default:
@@ -537,4 +571,14 @@ public class MainFrameController implements Initializable{
 	            alert.setContentText("Please restart TargetEditor to apply the language settings!\n\rПожалуйста перезапустите TargetEditor, чтобы применить новые языковые настройки");
 	            alert.showAndWait();
 		}
+		
+		public void scheduleAutosave() {
+			autosaveTimer.scheduleAtFixedRate(autosaveTask, 1000, 300000);
+		}
+		
+		public void cancelAutosave() {
+			autosaveTimer.cancel(); 
+			autosaveTimer.purge();
+		}
+		
 }

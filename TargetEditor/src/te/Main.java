@@ -4,6 +4,7 @@ package te;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -20,6 +21,9 @@ import javax.xml.bind.Unmarshaller;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -29,6 +33,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -42,8 +48,10 @@ import te.model.Target;
 import te.model.Variable;
 import te.util.ExiftoolRunner;
 import te.util.SyntaxParser;
+import te.util.TextAreaException;
 import te.util.TextException;
 import te.view.DescriptionEditorController;
+import te.view.EditCell;
 import te.view.FolderVariableController;
 import te.view.KeysEditorController;
 import te.view.MainFrameController;
@@ -86,6 +94,14 @@ public class Main extends Application {
             e.printStackTrace();
             throw new RuntimeException("Problems with creating the log files");
         }
+		
+		/*
+		 * Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
+		 * LOGGER.severe("Global Exception: "+ throwable.getMessage()); for
+		 * (StackTraceElement t:throwable.getStackTrace()) LOGGER.severe(t.toString());
+		 * });
+		 */
+		
 		loadSettings();
 		Settings.bundle = ResourceBundle.getBundle("te.Language", Settings.locale);
 		ExiftoolRunner.app = this;
@@ -118,6 +134,7 @@ public class Main extends Application {
 	
 	 @Override
 	 public void stop(){
+		 mainFrameController.cancelAutosave();
 	     saveLastData();
 	     saveSettings();
 	     for(Handler h:LOGGER.getHandlers())
@@ -252,7 +269,21 @@ public class Main extends Application {
 		savedFolderVariableData.clear();
 		savedFolderVariableData.addAll(folderVariableData);
 	}
-
+	
+	public void checkSyntax(TextArea tf) throws TextAreaException {
+		if (!isCorrectKey(tf.getText()))
+			throw new TextAreaException (tf, Settings.bundle.getString("log.message.unnallowedsym"));
+	}
+	
+	public void checkSyntaxCell(EditCell ec){
+		ObservableList<String> styleClass = ec.getStyleClass();
+	   if (!isCorrectKey(ec.getText()) && !styleClass.contains("red")) {
+	                styleClass.add("red");
+	            }
+		else {
+	            styleClass.removeAll(Collections.singleton("red"));          
+	        }
+	}
 	
 	 public boolean isCorrectKey(String text){
 		  if (text == null) return true;
@@ -394,7 +425,7 @@ public class Main extends Application {
 		            for (TargetEditorController controller : this.controllers)
 		    			controller.loadData();
 	            setKeysFilePath(file);
- 
+	            LOGGER.fine("Data was imported to " + file.getAbsolutePath());
 	        } catch (Exception e) { // catches ANY exception
 	            Alert alert = new Alert(AlertType.ERROR);
 	            alert.setTitle("Error");
@@ -430,6 +461,7 @@ public class Main extends Application {
 	            m.marshal(wrapper, file);
 
 	            setKeysFilePath(file);
+	            LOGGER.fine("Data was exported from " + file.getAbsolutePath());
 	        } catch (Exception e) { 
 	            Alert alert = new Alert(AlertType.ERROR);
 	            alert.setTitle("Error");
@@ -460,7 +492,7 @@ public class Main extends Application {
 		            	this.titleEditorController.wrapper = wrapper.getTitlePage();
 		            if (wrapper.getFolderWrapper() !=null)
 		            	this.folderVariableController.wrapper = wrapper.getFolderWrapper();
-		            
+		            LOGGER.fine("Last data was loaded from " + this.dataFile.getAbsolutePath());
 		        } catch (Exception e) { 
 		        	Alert alert = new Alert(AlertType.ERROR);
 		            alert.setTitle(Settings.bundle.getString("alert.error.title"));
@@ -495,6 +527,7 @@ public class Main extends Application {
 		            m.marshal(wrapper, this.dataFileTemp);
 		            this.dataFile.delete();
 		   	        this.dataFileTemp.renameTo(this.dataFile);
+		   	        LOGGER.fine("Current data was saved to " + this.dataFile.getAbsolutePath());
 			 } catch (Exception e) { // catches ANY exception
 				 Alert alert = new Alert(AlertType.ERROR);
 		            alert.setTitle(Settings.bundle.getString("alert.error.title"));
@@ -516,7 +549,8 @@ public class Main extends Application {
 		            SettingsWrapper  wrapper = (SettingsWrapper) um.unmarshal(this.settingsFile);
                     Settings.setLanguage(wrapper.language);
                     Settings.setWriteOption(wrapper.writeOption);
-		            
+		            Settings.autosaveEnabled = wrapper.autosave;
+		            LOGGER.fine("Settings are loaded from " + this.settingsFile.getAbsolutePath());
 		        } catch (Exception e) { 
 		        	 Alert alert = new Alert(AlertType.ERROR);
 		        	alert.setTitle("Error");
@@ -538,8 +572,9 @@ public class Main extends Application {
 	            SettingsWrapper wrapper = new SettingsWrapper();
 	            wrapper.language = Settings.getLanguage();
 	            wrapper.writeOption = Settings.getWriteOption();
-               
+                wrapper.autosave = Settings.autosaveEnabled;
 	            m.marshal(wrapper, this.settingsFile);
+	            LOGGER.fine("Settings are saved to " + this.settingsFile.getAbsolutePath());
 			 } catch (Exception e) { // catches ANY exception
 				 Alert alert = new Alert(AlertType.ERROR);
 		            alert.setTitle(Settings.bundle.getString("alert.error.title"));
@@ -548,6 +583,8 @@ public class Main extends Application {
 		            alert.showAndWait();
 		        }
 	 }
+		 
+		 
 		 
 		 
 }

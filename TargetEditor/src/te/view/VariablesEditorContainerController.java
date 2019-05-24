@@ -120,7 +120,7 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 
 		 fileChooser.setTitle(Settings.bundle.getString("alert.load.content"));
 		 File lastFile = app.getKeysFilePath();
-		 if (lastFile!=null)
+		 if (lastFile!=null && lastFile.getParentFile()!=null && lastFile.getParentFile().exists())
 			 fileChooser.setInitialDirectory(lastFile.getParentFile());
 		 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (.xml)", "*.xml"));
          File file = fileChooser.showOpenDialog(app.getPrimaryStage());
@@ -134,7 +134,7 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 
 		 fileChooser.setTitle(Settings.bundle.getString("alert.save.content"));
 		 File lastFile = app.getKeysFilePath();
-		 if (lastFile!=null)
+		 if (lastFile!=null && lastFile.getParentFile()!=null && lastFile.getParentFile().exists())
 			 fileChooser.setInitialDirectory(lastFile.getParentFile());
          File file = fileChooser.showSaveDialog(app.getPrimaryStage());
 

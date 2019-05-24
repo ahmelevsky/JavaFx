@@ -259,12 +259,16 @@ public class DescriptionEditorController extends TargetEditorController implemen
 			String previous = ta.getText().trim();
 			if (!this.isInitialized)
 				previous = "";
+			//int cp = ta.getCaretPosition();
+			//if (!ta.isFocused()) cp = previous.length();
+			//StringBuilder sb = new StringBuilder(previous.substring(0, cp));
 			StringBuilder sb = new StringBuilder(previous);
 			if (!previous.isEmpty())
-				sb.append(", ");
+				sb.append(" ");
 			sb.append("<");
 			sb.append(d.getName());
 			sb.append(">[1]");
+			//sb.append(previous.substring(cp));
 			ta.setText(sb.toString());
 		}
 		
@@ -390,11 +394,11 @@ public class DescriptionEditorController extends TargetEditorController implemen
 				    if (!t.isEmpty()) 
 				    	result.add( new Tuple<Integer, String>(position, t));
 			}
+			app.checkSyntax(textFields.get(i));
 		}
 		
 		String resultString = joinWithPositions(result);
         resultText.setText(resultString);
-		
 		return resultString;
 	}
 	
@@ -438,6 +442,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 			    if (!t.isEmpty()) 
 			    	result.add( new Tuple<Integer, String>(position, t));
 			}
+			app.checkSyntax(textFields.get(i));
 		}
 		
 		String resultString = joinWithPositions(result);

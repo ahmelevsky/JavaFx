@@ -10,6 +10,6 @@ public class SettingsWrapper {
 
 	public String language;
 	public String writeOption;
-	
+	public boolean autosave;
 	
 }

@@ -2,8 +2,10 @@ package te.view;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,6 +22,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
 import te.model.Target;
+import te.util.TextAreaException;
 
 public class TargetsWindowController extends TargetEditorController implements Initializable {
 
@@ -64,7 +67,6 @@ public class TargetsWindowController extends TargetEditorController implements I
 	                 }
 	             };
 	             
-		
 		targetKwdColumn.setCellValueFactory(cellData -> cellData.getValue().targetKwdProperty());
 		targetKwdColumn.setCellFactory(cellFactory);
 		targetDescr1Column.setCellValueFactory(cellData -> cellData.getValue().targetDescr1Property());
@@ -116,6 +118,32 @@ public class TargetsWindowController extends TargetEditorController implements I
 	                }
 	            }
 	        );
+		
+		
+		inputTargetKwd.textProperty().addListener((observable, oldValue, newValue) ->{ 
+			    setError(inputTargetKwd, false);
+			    try {
+					app.checkSyntax(inputTargetKwd);
+				} catch (TextAreaException e) {
+					setError(e.textArea, true);
+				}
+			});
+		inputTargetDescr1.textProperty().addListener((observable, oldValue, newValue) ->{ 
+		    setError(inputTargetDescr1, false);
+		    try {
+				app.checkSyntax(inputTargetDescr1);
+			} catch (TextAreaException e) {
+				setError(e.textArea, true);
+			}
+		});
+		inputTargetDescr2.textProperty().addListener((observable, oldValue, newValue) ->{ 
+		    setError(inputTargetDescr2, false);
+		    try {
+				app.checkSyntax(inputTargetDescr2);
+			} catch (TextAreaException e) {
+				setError(e.textArea, true);
+			}
+		});
 	}
 
 	 public void setup() {
@@ -230,5 +258,17 @@ public class TargetsWindowController extends TargetEditorController implements I
 	public void saveData() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void setError(TextArea tf, boolean setOrUnset){
+		 ObservableList<String> styleClass = tf.getStyleClass();
+		 if (setOrUnset) {
+			 if (! styleClass.contains("red")) {
+	                styleClass.add("red");
+	            }
+			 }
+		 else {
+	            styleClass.removeAll(Collections.singleton("red"));          
+	        }
 	}
 }

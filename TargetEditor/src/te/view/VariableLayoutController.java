@@ -2,6 +2,7 @@ package te.view;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +21,7 @@ import javafx.stage.FileChooser;
 import te.Main;
 import te.Settings;
 import te.model.Variable;
+import te.util.TextAreaException;
 
 public class VariableLayoutController implements Initializable {
 	public Main app;
@@ -53,6 +55,12 @@ public class VariableLayoutController implements Initializable {
 		variableValuesTxt.textProperty().addListener((observable, oldValue, newValue) ->{ 
 			if (!variableValuesTxt.getText().isEmpty() && !isInitialLoad)
 			    updateVariable();
+			    setError(variableValuesTxt, false);
+			    try {
+					app.checkSyntax(variableValuesTxt);
+				} catch (TextAreaException e) {
+					setError(e.textArea, true);
+				}
 			});
 		variableDelimiterBox.valueProperty().addListener((observable, oldValue, newValue) -> {
 			if (!isInitialLoad)
@@ -116,6 +124,16 @@ public class VariableLayoutController implements Initializable {
 		return variable;
 	}
 	
-
+	private void setError(TextArea tf, boolean setOrUnset){
+		 ObservableList<String> styleClass = tf.getStyleClass();
+		 if (setOrUnset) {
+			 if (! styleClass.contains("red")) {
+	                styleClass.add("red");
+	            }
+			 }
+		 else {
+	            styleClass.removeAll(Collections.singleton("red"));          
+	        }
+	}
 	
 }

@@ -3,9 +3,11 @@ package te.view;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,6 +25,7 @@ import javafx.util.converter.DefaultStringConverter;
 import te.model.FolderVariable;
 import te.model.FolderVariablesWrapper;
 import te.model.Target;
+import te.util.TextAreaException;
 
 public class FolderVariableController  extends TargetEditorController implements Initializable {
 
@@ -93,6 +96,23 @@ public class FolderVariableController  extends TargetEditorController implements
 	                }
 	            }
 	        );
+		
+		inputKeyVariable.textProperty().addListener((observable, oldValue, newValue) ->{ 
+		    setError(inputKeyVariable, false);
+		    try {
+				app.checkSyntax(inputKeyVariable);
+			} catch (TextAreaException e) {
+				setError(e.textArea, true);
+			}
+		});
+		inputDescriptionVariable.textProperty().addListener((observable, oldValue, newValue) ->{ 
+		    setError(inputDescriptionVariable, false);
+		    try {
+				app.checkSyntax(inputDescriptionVariable);
+			} catch (TextAreaException e) {
+				setError(e.textArea, true);
+			}
+		});
 	}
 
 	 public void setup() {
@@ -236,4 +256,15 @@ public class FolderVariableController  extends TargetEditorController implements
 			app.savedFolderVariableData.addAll(app.folderVariableData);
 		}
 		
+	private void setError(TextArea tf, boolean setOrUnset){
+		 ObservableList<String> styleClass = tf.getStyleClass();
+		 if (setOrUnset) {
+			 if (! styleClass.contains("red")) {
+	                styleClass.add("red");
+	            }
+			 }
+		 else {
+	            styleClass.removeAll(Collections.singleton("red"));          
+	        }
+	}
 }
