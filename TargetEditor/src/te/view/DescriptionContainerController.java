@@ -1,19 +1,23 @@
 package te.view;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.sun.javafx.scene.control.behavior.TextAreaBehavior;
+import com.sun.javafx.scene.control.skin.TextAreaSkin;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
@@ -23,7 +27,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -31,11 +38,12 @@ import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-
-import org.apache.commons.lang3.StringUtils;
-
+import te.Main;
 import te.Settings;
 import te.model.DescriptionEditorWrapper;
 import te.model.FolderVariable;
@@ -47,47 +55,8 @@ import te.util.TextAreaException;
 import te.util.TextException;
 import te.util.Tuple;
 
-import com.sun.javafx.scene.control.behavior.TextAreaBehavior;
-import com.sun.javafx.scene.control.skin.TextAreaSkin;
+public class DescriptionContainerController  extends TargetEditorController implements Initializable {
 
-public class DescriptionEditorController extends TargetEditorController implements Initializable {
-	
-	@FXML
-	private TextArea text1;
-	@FXML
-	private TextArea text2;
-	@FXML
-	private TextArea text3;
-	@FXML
-	private TextArea text4;
-	@FXML
-	private TextArea text5;
-	
-	@FXML
-	private Button refreshBtn;
-	
-	@FXML
-	private ComboBox<String> selector1;
-	@FXML
-	private ComboBox<String> selector2;
-	@FXML
-	private ComboBox<String> selector3;
-	@FXML
-	private ComboBox<String> selector4;
-	@FXML
-	private ComboBox<String> selector5;
-	
-	@FXML
-	private CheckBox isRandom1;
-	@FXML
-	private CheckBox isRandom2;
-	@FXML
-	private CheckBox isRandom3;
-	@FXML
-	private CheckBox isRandom4;
-	@FXML
-	private CheckBox isRandom5;
-	
 	
 	@FXML
 	private Text countLabel;
@@ -95,14 +64,21 @@ public class DescriptionEditorController extends TargetEditorController implemen
 	private TextArea resultText;
 	@FXML
 	private Text addedTexts;
+	@FXML
+	private Button refreshBtn;
+	@FXML
+	private Button addLayoutBtn;
+	@FXML
+	private VBox descriptionLayouts;
+	public List<DescriptionLayoutController> controllersList = new ArrayList<DescriptionLayoutController>(); 
 	
 	private final int LIMIT = 200;
 	public String currentDescription;
 	
-	private List<TextArea> textFields = new ArrayList<TextArea>();
-	private List<ComboBox<String>> selectors = new ArrayList<ComboBox<String>>();
-	private List<ObservableList<String>> options = new ArrayList<ObservableList<String>>();
-	private List<CheckBox> randomBoxes  = new ArrayList<CheckBox>();
+	public List<TextArea> textFields = new ArrayList<TextArea>();
+	public List<ComboBox<String>> selectors = new ArrayList<ComboBox<String>>();
+	public List<ObservableList<String>> options = new ArrayList<ObservableList<String>>();
+	public List<CheckBox> randomBoxes  = new ArrayList<CheckBox>();
 	public List<String> textFieldsStored = new ArrayList<String>();
 	private List<String> data = new ArrayList<String>();
 	private List<Boolean> isRandomStored = new ArrayList<Boolean>();
@@ -114,8 +90,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 	public DescriptionEditorWrapper wrapper;
 	private boolean isInitialized;
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-	
-	
+
 	private final ChangeListener<String> boxListener  = new ChangeListener<String>(){
 		@Override
 		public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
@@ -133,11 +108,12 @@ public class DescriptionEditorController extends TargetEditorController implemen
 			else {
 				textFields.get(index).setEditable(true);
 				Optional<Variable> opt = app.descriptionVariableEditorContainerController.variables.stream().filter(v->v.getName().equals(newValue)).findFirst();
-				if (oldValue!=null && !oldValue.equals(newValue) && opt!=null && opt.isPresent()){
-					addVariableToText(opt.get(), textFields.get(index));
+				if (oldValue==null || !oldValue.equals(newValue)) {
+					if (newValue.equals(Settings.bundle.getString("ui.selector.text")))
+						textFields.get(index).setText("");
+					else 
+						addVariableToText(opt.get(), textFields.get(index));
 				}
-				if (oldValue!=null && !oldValue.equals(Settings.bundle.getString("ui.selector.text")) && newValue.equals(Settings.bundle.getString("ui.selector.text")))
-					textFields.get(index).setText("");
 			}
 			setError(textFields.get(index), false, null);
 			 try {	
@@ -193,35 +169,12 @@ public class DescriptionEditorController extends TargetEditorController implemen
 		    }
 		};
 	
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
-		countLabel.setText("");
-		
-		textFields.add(text1);
-		textFields.add(text2);
-		textFields.add(text3);
-		textFields.add(text4);
-		textFields.add(text5);
-		selectors.add(selector1);
-		selectors.add(selector2);
-		selectors.add(selector3);
-		selectors.add(selector4);
-		selectors.add(selector5);
-		randomBoxes.add(isRandom1);
-		randomBoxes.add(isRandom2);
-		randomBoxes.add(isRandom3);
-		randomBoxes.add(isRandom4);
-		randomBoxes.add(isRandom5);
-		
-		for (int i=0;i<selectors.size();i++) {
-			options.add(FXCollections.observableArrayList());
-			selectors.get(i).setItems(options.get(i));
-			options.get(i).add(Settings.bundle.getString("ui.selector.text"));
-			selectors.get(i).getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
-		}
-		addListeners();
+		this.addLayoutBtn.setShape(new Circle(25));
 	}
+	
 	
 	
 	 private void addListeners(){
@@ -304,6 +257,35 @@ public class DescriptionEditorController extends TargetEditorController implemen
 	            styleClass.removeAll(Collections.singleton("red"));          
 	            styleClassresultText.removeAll(Collections.singleton("redText"));
 	        }
+	}
+	
+	
+	private void updateSelector(ComboBox<String> selector) {
+		SingleSelectionModel<String> selected = selector.selectionModelProperty().getValue();
+		int index = selectors.indexOf(selector);
+		String selectedValue = null;
+		if (selected!=null && !selected.isEmpty())
+			selectedValue = selected.getSelectedItem();
+		ObservableList<String> ol = options.get(index);
+		ol.clear();
+		ol.add(Settings.bundle.getString("ui.selector.text"));
+		if (!app.getFolderVariableData().isEmpty())
+			ol.add(this.folderDescr);
+		if (!app.getTargetsData().isEmpty()){
+			ol.add(this.targetDescr1);
+			ol.add(this.targetDescr2);
+		}
+		ol.addAll(app.descriptionVariableEditorContainerController.variables.stream().map(Variable::getName)
+	              .collect(Collectors.toList()));
+		if (selectedValue!=null){
+			if	(ol.contains(selectedValue))
+				selector.getSelectionModel().select(selectedValue);
+			else {
+				selector.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
+				textFields.get(index).setText("");
+			}
+		}
+		
 	}
 	
 	
@@ -398,7 +380,7 @@ public class DescriptionEditorController extends TargetEditorController implemen
 		}
 		
 		String resultString = joinWithPositions(result);
-        resultText.setText(resultString);
+     resultText.setText(resultString);
 		return resultString;
 	}
 	
@@ -463,11 +445,11 @@ public class DescriptionEditorController extends TargetEditorController implemen
 		List<Integer> freePositions = new ArrayList<Integer>();
 		for (int i=0; i<data.size();i++) 
 			freePositions.add(i);
-         for (Tuple<Integer,String> tuple : data) {
+      for (Tuple<Integer,String> tuple : data) {
 			if (tuple.x>=0)
 				freePositions.remove(tuple.x);
 		}
-         for (Tuple<Integer,String> tuple : data) {
+      for (Tuple<Integer,String> tuple : data) {
 			if (tuple.x<0) {
 				int index = ThreadLocalRandom.current().nextInt(freePositions.size());		
 				tuple.x = freePositions.remove(index);
@@ -523,23 +505,23 @@ public class DescriptionEditorController extends TargetEditorController implemen
 	
 	private void denyTab(TextArea textArea){
 	textArea.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-        @Override
-        public void handle(KeyEvent event) {
-            if (event.getCode() == KeyCode.TAB) {
-            	 TextAreaSkin skin = (TextAreaSkin) textArea.getSkin();
-                if (skin.getBehavior() instanceof TextAreaBehavior) {
-                    TextAreaBehavior behavior = (TextAreaBehavior) skin.getBehavior();
-                    if (event.isControlDown()) {
-                        behavior.callAction("InsertTab");
-                    } else {
-                        behavior.callAction("TraverseNext");
-                    }
-                    event.consume();
-                }
+     @Override
+     public void handle(KeyEvent event) {
+         if (event.getCode() == KeyCode.TAB) {
+         	 TextAreaSkin skin = (TextAreaSkin) textArea.getSkin();
+             if (skin.getBehavior() instanceof TextAreaBehavior) {
+                 TextAreaBehavior behavior = (TextAreaBehavior) skin.getBehavior();
+                 if (event.isControlDown()) {
+                     behavior.callAction("InsertTab");
+                 } else {
+                     behavior.callAction("TraverseNext");
+                 }
+                 event.consume();
+             }
 
-            }
-        }
-    });
+         }
+     }
+ });
 	}
 
 	public void saveDescriptionsSource() throws DataException {
@@ -557,23 +539,128 @@ public class DescriptionEditorController extends TargetEditorController implemen
 			}
 	}
 	
+	
+	@FXML
+	public void addDecriptionLayout(){
+		try {
+			 FXMLLoader loader = new FXMLLoader();
+	         loader.setLocation(Main.class.getResource("view/DescriptionLayout.fxml"));
+		     HBox sourceLayout = (HBox) loader.load();
+		     descriptionLayouts.getChildren().add(sourceLayout);
+	         app.getPrimaryStage().sizeToScene();
+	         DescriptionLayoutController controller = loader.getController();
+	         controller.app = this.app;
+	         controller.layout = sourceLayout;
+	         controllersList.add(controller);
+	         selectors.add(controller.selector);
+	         textFields.add(controller.text);
+	         randomBoxes.add(controller.isRandom);
+	         ObservableList<String> oL = FXCollections.observableArrayList();
+	         options.add(oL);
+	         controller.selector.setItems(oL);
+	         updateSelector(controller.selector);
+	         
+	         controller.text.textProperty().removeListener(textListener);
+	         controller.text.textProperty().addListener(textListener);
+			 controller.selector.valueProperty().removeListener(boxListener);
+			 controller.selector.valueProperty().addListener(boxListener);
+			 controller.isRandom.selectedProperty().removeListener(checkBoxListener);
+			 controller.isRandom.selectedProperty().addListener(checkBoxListener);
+	         
+	         
+			} catch (IOException e) {
+				  Alert alert = new Alert(AlertType.ERROR);
+		            alert.setTitle(Settings.bundle.getString("alert.error.title"));
+		            alert.setHeaderText(Settings.bundle.getString("alert.error.addtoform.content"));
+		            alert.setContentText(e.getMessage());
+		            alert.showAndWait();
+			}
+	}
+	
+	private void removeAllLayouts() {
+		while (!controllersList.isEmpty())
+			removeDescriptionLayout(controllersList.get(0));
+	}
+	
+	
+	private void addDecriptionLayout(boolean isRandom, String selectorText, String textFieldText){
+		try {
+			 FXMLLoader loader = new FXMLLoader();
+	         loader.setLocation(Main.class.getResource("view/DescriptionLayout.fxml"));
+		     HBox sourceLayout = (HBox) loader.load();
+		     descriptionLayouts.getChildren().add(sourceLayout);
+	         app.getPrimaryStage().sizeToScene();
+	         DescriptionLayoutController controller = loader.getController();
+	         controller.app = this.app;
+	         controller.layout = sourceLayout;
+	         controllersList.add(controller);
+	         selectors.add(controller.selector);
+	         textFields.add(controller.text);
+	         randomBoxes.add(controller.isRandom);
+	         ObservableList<String> oL = FXCollections.observableArrayList();
+	         options.add(oL);
+	         controller.selector.setItems(oL);
+	         updateSelector(controller.selector);
+	         controller.isRandom.setSelected(isRandom);
+	         if (textFieldText!=null)
+	        	 controller.text.setText(textFieldText);
+	         if (selectorText!=null && controller.selector.getItems().contains(selectorText))
+	        	 controller.selector.getSelectionModel().select(selectorText);
+	         
+			} catch (IOException e) {
+				  Alert alert = new Alert(AlertType.ERROR);
+		            alert.setTitle(Settings.bundle.getString("alert.error.title"));
+		            alert.setHeaderText(Settings.bundle.getString("alert.error.addtoform.content"));
+		            alert.setContentText(e.getMessage());
+		            alert.showAndWait();
+			}
+	}
+	
+	
+	
+	public void removeDescriptionLayout(DescriptionLayoutController controller){
+		 try {
+			 if (!controllersList.contains(controller)) return;
+			 int index = selectors.indexOf(controller.selector);
+			 options.remove(index);
+			 selectors.remove(index);
+			 randomBoxes.remove(index);
+			 textFields.remove(index);
+			 descriptionLayouts.getChildren().remove(controller.layout);
+			 controllersList.remove(controller);
+			 
+			 refresh();
+		 }
+		 catch (Exception e) {
+			    Alert alert = new Alert(AlertType.ERROR);
+	            alert.setTitle(Settings.bundle.getString("alert.error.title"));
+	            alert.setHeaderText(Settings.bundle.getString("alert.error.removeelements.content"));
+	            alert.setContentText(e.getMessage());
+	            alert.showAndWait();
+		 }
+		  
+	}
+	
+	
 	public void clearAll(){
-		selectors.forEach(sel -> sel.getSelectionModel().select(Settings.bundle.getString("ui.selector.text")));
-		textFields.forEach(tf -> tf.clear());
-		randomBoxes.forEach(b -> b.setSelected(false));
+		removeAllLayouts();
+		addDecriptionLayout();
 	}
 
 	@Override
 	public void loadData() {
-		updateLists();
+		removeAllLayouts();
 		if (this.wrapper != null)
-		for (int i=0; i<this.textFields.size(); i++) {
-			if (this.wrapper.textFields.size()<=i) break;
-			this.textFields.get(i).setText(this.wrapper.textFields.get(i));
-			this.randomBoxes.get(i).setSelected(this.wrapper.isRandomBoxes.get(i));
-			if (this.wrapper.comboSelectedText.size()>i && this.selectors.get(i).getItems().contains(this.wrapper.comboSelectedText.get(i)))
-				this.selectors.get(i).getSelectionModel().select(this.wrapper.comboSelectedText.get(i));
+		for (int i=0; i<this.wrapper.textFields.size(); i++) {
+			if (this.wrapper.comboSelectedText.size()>i)
+				addDecriptionLayout(this.wrapper.isRandomBoxes.get(i), this.wrapper.comboSelectedText.get(i), this.wrapper.textFields.get(i));
+			else
+				addDecriptionLayout(this.wrapper.isRandomBoxes.get(i),null, this.wrapper.textFields.get(i));
 		}
+		if (this.wrapper == null || this.wrapper.textFields.isEmpty())
+			addDecriptionLayout();
+		
+		refresh();
 		isInitialized = true;
 	}
 
@@ -586,5 +673,4 @@ public class DescriptionEditorController extends TargetEditorController implemen
 			this.wrapper.isRandomBoxes.add(this.randomBoxes.get(i).isSelected());
 		}
 	}
-
 }

@@ -527,10 +527,10 @@ public class MainFrameController implements Initializable{
 				app.saveSettings();
 				break;     
 			case "loadItem":
-				app.keyVariableEditorContainerController.loadVariablesFromFile();
+				app.importData();
 				break; 
 			case "saveAsItem":
-				app.keyVariableEditorContainerController.saveVariablesToFile();
+				app.exportData();
 				break; 
 			case "saveStateItem":
 				app.saveLastData();

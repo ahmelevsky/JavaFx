@@ -225,17 +225,6 @@ public class TargetsWindowController extends TargetEditorController implements I
 		
 	}
 	
-	
-	@FXML
-	private void loadVariablesFromFile(){
-		 app.keyVariableEditorContainerController.loadVariablesFromFile();
-	}
-	
-	@FXML
-	private void saveVariablesToFile(){
-		 app.keyVariableEditorContainerController.saveVariablesToFile();
-	}
-
     @FXML
     private void addData(){
     	String[] targetKwds = this.inputTargetKwd.getText().split("\\r?\\n");

@@ -112,40 +112,6 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 		
 	}
 
-
-
-	@FXML
-	public void loadVariablesFromFile(){
-		 FileChooser fileChooser = new FileChooser(); 
-
-		 fileChooser.setTitle(Settings.bundle.getString("alert.load.content"));
-		 File lastFile = app.getKeysFilePath();
-		 if (lastFile!=null && lastFile.getParentFile()!=null && lastFile.getParentFile().exists())
-			 fileChooser.setInitialDirectory(lastFile.getParentFile());
-		 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (.xml)", "*.xml"));
-         File file = fileChooser.showOpenDialog(app.getPrimaryStage());
-        if(file!=null)
-       	   app.importData(file);
-	}
-	
-	@FXML
-	public void saveVariablesToFile(){
-		 FileChooser fileChooser = new FileChooser(); 
-
-		 fileChooser.setTitle(Settings.bundle.getString("alert.save.content"));
-		 File lastFile = app.getKeysFilePath();
-		 if (lastFile!=null && lastFile.getParentFile()!=null && lastFile.getParentFile().exists())
-			 fileChooser.setInitialDirectory(lastFile.getParentFile());
-         File file = fileChooser.showSaveDialog(app.getPrimaryStage());
-
-        if(file!=null){
-        	if(!file.getName().contains(".")) {
-        		file = new File(file.getAbsolutePath() + ".xml");
-        		}
-       	  app.exportData(file);
-        }
-	}
-
 	@Override
 	public void saveData() {
 		// TODO Auto-generated method stub

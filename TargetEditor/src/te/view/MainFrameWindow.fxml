@@ -58,20 +58,20 @@
             <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
          </padding>
       </TabPane>
-      <HBox maxWidth="2000.0" prefWidth="1000.0">
+      <HBox>
          <children>
-            <Button fx:id="writeBtn" mnemonicParsing="false" onAction="#writeMetadata" prefHeight="61.0" prefWidth="200.0" text="%ui.tabs.main.writebtn" textAlignment="CENTER" wrapText="true">
+            <Button fx:id="writeBtn" minWidth="70.0" mnemonicParsing="false" onAction="#writeMetadata" prefHeight="61.0" prefWidth="200.0" text="%ui.tabs.main.writebtn" textAlignment="CENTER" wrapText="true">
                <HBox.margin>
                   <Insets bottom="15.0" left="15.0" right="5.0" top="15.0" />
                </HBox.margin></Button>
-            <VBox maxWidth="2000.0" prefWidth="800.0" spacing="10.0">
+            <VBox maxWidth="2000.0" spacing="10.0">
                <children>
-                  <Hyperlink fx:id="folderPath" onAction="#selectPath" prefHeight="29.0" prefWidth="751.0" text="%ui.tabs.main.selectfolder">
+                  <Hyperlink fx:id="folderPath" minWidth="500.0" onAction="#selectPath" prefHeight="29.0" prefWidth="750.0" text="%ui.tabs.main.selectfolder">
                      <VBox.margin>
                         <Insets top="15.0" />
                      </VBox.margin>
                   </Hyperlink>
-                  <ProgressBar fx:id="progress" prefHeight="23.0" prefWidth="740.0" progress="0.0">
+                  <ProgressBar fx:id="progress" minWidth="400.0" prefHeight="23.0" progress="0.0">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>

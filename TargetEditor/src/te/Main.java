@@ -21,9 +21,6 @@ import javax.xml.bind.Unmarshaller;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -34,11 +31,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import te.model.DataWrapper;
 import te.model.FolderVariable;
@@ -50,7 +46,7 @@ import te.util.ExiftoolRunner;
 import te.util.SyntaxParser;
 import te.util.TextAreaException;
 import te.util.TextException;
-import te.view.DescriptionEditorController;
+import te.view.DescriptionContainerController;
 import te.view.EditCell;
 import te.view.FolderVariableController;
 import te.view.KeysEditorController;
@@ -65,12 +61,13 @@ public class Main extends Application {
 	public Set<TargetEditorController> controllers = new HashSet<TargetEditorController>();
 	public TargetsWindowController targetsController;
 	public KeysEditorController keysEditorController;
-	public DescriptionEditorController descriptionEditorController;
+	//public DescriptionEditorController descriptionEditorController;
 	public FolderVariableController folderVariableController;
 	public MainFrameController mainFrameController;
 	public TitleEditorController titleEditorController;
 	public VariablesEditorContainerController keyVariableEditorContainerController;
 	public VariablesEditorContainerController descriptionVariableEditorContainerController;
+	public DescriptionContainerController descriptionEditorController;
 	private Stage mainStage;
 	private Stage currentStage;
 	public ObservableList<FolderVariable> folderVariableData = FXCollections.observableArrayList();
@@ -110,7 +107,7 @@ public class Main extends Application {
 		currentStage = mainStage;
 		mainFrameController = organizeStage("view/MainFrameWindow.fxml");
 		mainFrameController.app = this;
-		mainStage.setResizable(false);
+		//mainStage.setResizable(false);
 		targetsController = (TargetsWindowController) addTab(Settings.bundle.getString("ui.tabs.targets.header"), "view/TargetsWindow.fxml", TargetsWindowController.class);
 		targetsController.setup();
 		folderVariableController = (FolderVariableController) addTab(Settings.bundle.getString("ui.tabs.foldervars.header"), "view/FolderVariablesWindow.fxml", FolderVariableController.class);
@@ -120,7 +117,8 @@ public class Main extends Application {
 		keysEditorController = (KeysEditorController) addTab(Settings.bundle.getString("ui.tabs.keys.header"), "view/KeysEditorWindow.fxml", KeysEditorController.class);
 		descriptionVariableEditorContainerController = (VariablesEditorContainerController) addTab(Settings.bundle.getString("ui.tabs.descvars.header"), "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
 		descriptionVariableEditorContainerController.controllersList = descriptionVariableControllers;
-		descriptionEditorController = (DescriptionEditorController) addTab(Settings.bundle.getString("ui.tabs.descriptions.header"), "view/DescriptionEditorWindow.fxml", DescriptionEditorController.class);
+		//descriptionEditorController = (DescriptionEditorController) addTab(Settings.bundle.getString("ui.tabs.descriptions.header"), "view/DescriptionEditorWindow.fxml", DescriptionEditorController.class);
+		descriptionEditorController = (DescriptionContainerController) addTab(Settings.bundle.getString("ui.tabs.descriptions.header"), "view/DescriptionContainerWindow.fxml", DescriptionContainerController.class);
 		titleEditorController = (TitleEditorController) addTab(Settings.bundle.getString("ui.tabs.titles.header"), "view/TitleEditorWindow.fxml", TitleEditorController.class);
 		mainFrameController.setup();
 		keysEditorController.setup();
@@ -160,7 +158,7 @@ public class Main extends Application {
 		 FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxml));
 	        loader.setLocation(Main.class.getResource(fxml));
 	        loader.setResources(Settings.bundle);
-	        AnchorPane page = (AnchorPane) loader.load();
+	        VBox page = (VBox) loader.load();
 	        Tab tab = new Tab(tabTitle, page);
 	        tab.setStyle("-fx-padding: 15 0 15 0;-fx-min-height: 30px;-fx-focus-color: transparent;");
 	        Label label = new Label(tabTitle);
@@ -400,7 +398,17 @@ public class Main extends Application {
 	        }
 	    }
 	 
-	    public void importData(File file) {
+	    public void importData() {
+	    	 FileChooser fileChooser = new FileChooser(); 
+
+			 fileChooser.setTitle(Settings.bundle.getString("alert.load.content"));
+			 File lastFile = getKeysFilePath();
+			 if (lastFile!=null && lastFile.getParentFile()!=null && lastFile.getParentFile().exists())
+				 fileChooser.setInitialDirectory(lastFile.getParentFile());
+			 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (.xml)", "*.xml"));
+	         File file = fileChooser.showOpenDialog(getPrimaryStage());
+	         if(file!=null) {
+	    	
 	        try {
 	        	 JAXBContext context = JAXBContext
 		                    .newInstance(ImportWrapper.class);
@@ -434,10 +442,25 @@ public class Main extends Application {
 
 	            alert.showAndWait();
 	        }
+	         }
 	    }
 
 	    
-	    public void exportData(File file) {
+	    public void exportData() {
+	    	
+	    	FileChooser fileChooser = new FileChooser(); 
+
+			 fileChooser.setTitle(Settings.bundle.getString("alert.save.content"));
+			 File lastFile = getKeysFilePath();
+			 if (lastFile!=null && lastFile.getParentFile()!=null && lastFile.getParentFile().exists())
+				 fileChooser.setInitialDirectory(lastFile.getParentFile());
+	         File file = fileChooser.showSaveDialog(getPrimaryStage());
+
+	        if(file!=null){
+	        	if(!file.getName().contains(".")) {
+	        		file = new File(file.getAbsolutePath() + ".xml");
+	        		}
+	    	
 	        try {
 	        	 for (TargetEditorController controller:this.controllers)
 	    	         controller.saveData();
@@ -469,6 +492,7 @@ public class Main extends Application {
 	            alert.setContentText("Could not save data to file:\n" + file.getPath());
 
 	            alert.showAndWait();
+	        }
 	        }
 	    }
 	    public void loadLastData(){
