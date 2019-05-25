@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
@@ -25,7 +26,7 @@ import te.util.TextAreaException;
 
 public class VariableLayoutController implements Initializable {
 	public Main app;
-	public HBox layout;
+	public AnchorPane layout;
 	private Variable variable;
 	public boolean isInitialLoad;
 	@FXML

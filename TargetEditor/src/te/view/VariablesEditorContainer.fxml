@@ -13,29 +13,29 @@
    <children>
       <AnchorPane prefHeight="50.0">
          <children>
-            <Label layoutX="15.0" layoutY="1.0" prefHeight="21.0" prefWidth="159.0" text="%ui.tabs.varcont.name">
+            <Label layoutX="15.0" layoutY="1.0" prefHeight="15.0" prefWidth="150.0" text="%ui.tabs.varcont.name" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label layoutX="209.0" layoutY="1.0" prefHeight="21.0" prefWidth="145.0" text="%ui.tabs.varcont.devider">
+            <Label layoutX="209.0" layoutY="1.0" prefHeight="15.0" prefWidth="145.0" text="%ui.tabs.varcont.devider" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="230.0" AnchorPane.topAnchor="5.0">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label layoutX="438.0" layoutY="1.0" prefHeight="21.0" prefWidth="281.0" text="%ui.tabs.varcont.values">
+            <Label layoutX="438.0" layoutY="1.0" prefHeight="15.0" prefWidth="300.0" text="%ui.tabs.varcont.values" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="400.0" AnchorPane.topAnchor="5.0">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <Label layoutX="921.0" layoutY="1.0" prefHeight="21.0" prefWidth="76.0" text="%ui.tabs.varcont.delete">
+            <Label layoutX="921.0" layoutY="1.0" prefHeight="15.0" prefWidth="80.0" text="%ui.tabs.varcont.delete" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="5.0">
                <font>
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
          </children>
       </AnchorPane>
-      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="450.0">
+      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="450.0" VBox.vgrow="ALWAYS">
          <content>
             <VBox fx:id="variableLayouts" />
          </content>

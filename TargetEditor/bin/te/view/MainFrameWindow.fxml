@@ -12,7 +12,7 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="te.view.MainFrameController">
@@ -58,30 +58,24 @@
             <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
          </padding>
       </TabPane>
-      <HBox>
+      <AnchorPane>
          <children>
-            <Button fx:id="writeBtn" minWidth="70.0" mnemonicParsing="false" onAction="#writeMetadata" prefHeight="61.0" prefWidth="200.0" text="%ui.tabs.main.writebtn" textAlignment="CENTER" wrapText="true">
-               <HBox.margin>
-                  <Insets bottom="15.0" left="15.0" right="5.0" top="15.0" />
-               </HBox.margin></Button>
-            <VBox maxWidth="2000.0" spacing="10.0">
+            <Button fx:id="writeBtn" minWidth="50.0" mnemonicParsing="false" onAction="#writeMetadata" prefHeight="80.0" prefWidth="150.0" text="%ui.tabs.main.writebtn" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+            <VBox maxWidth="1.7976931348623157E308" spacing="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="180.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
                <children>
-                  <Hyperlink fx:id="folderPath" minWidth="500.0" onAction="#selectPath" prefHeight="29.0" prefWidth="750.0" text="%ui.tabs.main.selectfolder">
+                  <Hyperlink fx:id="folderPath" minWidth="500.0" onAction="#selectPath" text="%ui.tabs.main.selectfolder">
                      <VBox.margin>
                         <Insets top="15.0" />
                      </VBox.margin>
                   </Hyperlink>
-                  <ProgressBar fx:id="progress" minWidth="400.0" prefHeight="23.0" progress="0.0">
+                  <ProgressBar fx:id="progress" maxWidth="1.7976931348623157E308" prefHeight="20.0" progress="0.0">
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </ProgressBar>
                </children>
-               <HBox.margin>
-                  <Insets left="15.0" />
-               </HBox.margin>
             </VBox>
          </children>
-      </HBox>
+      </AnchorPane>
    </children>
 </VBox>

@@ -6,12 +6,14 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="keyCountBox" key="selection"/>
+		<item value="controllersList" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="controllersList"/>
+			<item value="inputTargetKwd"/>
 			<item value="keyCountBox"/>
 			<item value="taskThread"/>
 			<item value="Platform"/>
@@ -25,8 +27,6 @@
 			<item value="currentFolder"/>
 			<item value="addedTexts"/>
 			<item value="textFieldsStored"/>
-			<item value="controllers"/>
-			<item value="variableValuesTxt.setText"/>
 		</list>
 		<list key="replacehistory">
 			<item value="Settings.bundle.getString(&quot;ui.selector.text&quot;)"/>

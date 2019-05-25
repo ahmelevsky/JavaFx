@@ -100,6 +100,8 @@ public class Language_en extends ListResourceBundle {
 	            { "ui.tabs.varcont.delete"   , "Delete"},
 	            { "ui.tabs.varcont.save"   , "Save"},
 	            { "ui.tabs.varcont.load"   , "Load"},
+	            { "ui.tabs.foldervars.savepreset"   , "Save theme"},
+	            { "ui.tabs.foldervars.labeltext"   , "Load theme:"},
 	            { "log.warn.epsnotfound"   , "EPS file not found for: "}
     };
 

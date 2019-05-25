@@ -5,7 +5,9 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.ResourceBundle;
 
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.ListChangeListener.Change;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -31,13 +33,13 @@ public class TargetsWindowController extends TargetEditorController implements I
 	 @FXML
 	 private TableView<Target> targetsTable;
 	 @FXML
-	 private TableColumn<Target, String> targetKwdColumn;
+	 private PTableColumn<Target, String> targetKwdColumn;
 	 @FXML
-	 private TableColumn<Target, String> targetDescr1Column;
+	 private PTableColumn<Target, String> targetDescr1Column;
 	 @FXML
-	 private TableColumn<Target, String> targetDescr2Column;
+	 private PTableColumn<Target, String> targetDescr2Column;
 	 @FXML
-	 private TableColumn<Target, Button> removeRowColumn;
+	 private PTableColumn<Target, Button> removeRowColumn;
 	 @FXML
 	 private Button addBtn;
 	 @FXML
@@ -56,9 +58,7 @@ public class TargetsWindowController extends TargetEditorController implements I
 	 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		//targetsTable.setEditable(true);
 		setTableEditable();
-		//targetsTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY); 
 		this.addBtn.setShape(new Circle(25));
 		Callback<TableColumn<Target,String>, TableCell<Target,String>> cellFactory =
 	             new Callback<TableColumn<Target,String>, TableCell<Target,String>>() {
@@ -75,7 +75,6 @@ public class TargetsWindowController extends TargetEditorController implements I
 			targetsTable.getItems().remove(p);
 		    return p;
 		})); 
-		removeRowColumn.setMaxWidth(25);
 		// Easy WAY to make Editable -  NO EDITCELL CLASS
 		//target1Column.setCellFactory(TextFieldTableCell.forTableColumn());
 		
@@ -144,12 +143,33 @@ public class TargetsWindowController extends TargetEditorController implements I
 				setError(e.textArea, true);
 			}
 		});
+		
+		setTableHeadersUnmovable();
+		
 	}
 
 	 public void setup() {
 	        targetsTable.setItems(app.getTargetsData());
 	    }
 
+	 
+	  
+	  private void setTableHeadersUnmovable() {
+		  targetsTable.getColumns().addListener(new ListChangeListener() {
+	          public boolean suspended;
+	          @Override
+	          public void onChanged(Change change) {
+	              change.next();
+	              if (change.wasReplaced() && !suspended) {
+	                  this.suspended = true;
+	                  targetsTable.getColumns().setAll(targetKwdColumn, targetDescr1Column, targetDescr2Column, removeRowColumn);
+	                  this.suspended = false;
+	              }
+	          }
+	      });
+	  }
+	 
+	 
 	 @FXML
 	 private void addRow(){
 		 app.getTargetsData().add(new Target());

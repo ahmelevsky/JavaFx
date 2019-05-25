@@ -38,6 +38,7 @@ import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -62,8 +63,6 @@ public class DescriptionContainerController  extends TargetEditorController impl
 	private Text countLabel;
 	@FXML
 	private TextArea resultText;
-	@FXML
-	private Text addedTexts;
 	@FXML
 	private Button refreshBtn;
 	@FXML
@@ -545,9 +544,9 @@ public class DescriptionContainerController  extends TargetEditorController impl
 		try {
 			 FXMLLoader loader = new FXMLLoader();
 	         loader.setLocation(Main.class.getResource("view/DescriptionLayout.fxml"));
-		     HBox sourceLayout = (HBox) loader.load();
+		     AnchorPane sourceLayout = (AnchorPane) loader.load();
 		     descriptionLayouts.getChildren().add(sourceLayout);
-	         app.getPrimaryStage().sizeToScene();
+	         //app.getPrimaryStage().sizeToScene();
 	         DescriptionLayoutController controller = loader.getController();
 	         controller.app = this.app;
 	         controller.layout = sourceLayout;
@@ -587,9 +586,9 @@ public class DescriptionContainerController  extends TargetEditorController impl
 		try {
 			 FXMLLoader loader = new FXMLLoader();
 	         loader.setLocation(Main.class.getResource("view/DescriptionLayout.fxml"));
-		     HBox sourceLayout = (HBox) loader.load();
+	         AnchorPane sourceLayout = (AnchorPane) loader.load();
 		     descriptionLayouts.getChildren().add(sourceLayout);
-	         app.getPrimaryStage().sizeToScene();
+	         //app.getPrimaryStage().sizeToScene();
 	         DescriptionLayoutController controller = loader.getController();
 	         controller.app = this.app;
 	         controller.layout = sourceLayout;

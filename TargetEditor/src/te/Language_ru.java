@@ -101,6 +101,8 @@ public class Language_ru  extends ListResourceBundle {
             { "ui.tabs.varcont.delete"   , "Удалить"},
             { "ui.tabs.varcont.save"   , "Сохранить"},
             { "ui.tabs.varcont.load"   , "Загрузить"},
+            { "ui.tabs.foldervars.savepreset"   , "Сохранить тему"},
+            { "ui.tabs.foldervars.labeltext"   , "Загрузить тему:"},
             { "log.warn.epsnotfound"   , "Не найден парный eps файл для: "}
     };
 }

@@ -105,6 +105,8 @@ public class Main extends Application {
 		SyntaxParser.app = this;
 		mainStage = primaryStage;
 		currentStage = mainStage;
+		mainStage.setMinHeight(600);
+		mainStage.setMinWidth(800);
 		mainFrameController = organizeStage("view/MainFrameWindow.fxml");
 		mainFrameController.app = this;
 		//mainStage.setResizable(false);

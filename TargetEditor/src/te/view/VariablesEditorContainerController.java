@@ -17,6 +17,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
@@ -59,9 +60,9 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 			
 			 FXMLLoader loader = new FXMLLoader();
 	         loader.setLocation(Main.class.getResource("view/VariableLayout.fxml"));
-		     HBox sourceLayout = (HBox) loader.load();
+		     AnchorPane sourceLayout = (AnchorPane) loader.load();
 	         variableLayouts.getChildren().add(sourceLayout);
-	         app.getPrimaryStage().sizeToScene();
+	         //app.getPrimaryStage().sizeToScene();
 	         VariableLayoutController controller = loader.getController();
 	         controller.app = this.app;
 	         controller.setVariable(variable);

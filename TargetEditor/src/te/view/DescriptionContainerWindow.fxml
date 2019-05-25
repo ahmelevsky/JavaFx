@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
@@ -15,40 +13,29 @@
       <AnchorPane>
          <children>
             <Label text="%ui.tabs.desc.random" AnchorPane.leftAnchor="3.0" AnchorPane.topAnchor="2.0" />
-            <Label layoutX="118.0" layoutY="2.0" prefHeight="18.0" prefWidth="157.0" text="%ui.tabs.desc.vars" />
-            <Label layoutX="440.0" layoutY="1.0" prefHeight="18.0" prefWidth="195.0" text="%ui.tabs.desc.desc" />
+            <Label layoutX="118.0" layoutY="2.0" prefHeight="18.0" prefWidth="157.0" text="%ui.tabs.desc.vars" AnchorPane.leftAnchor="70.0" AnchorPane.topAnchor="2.0" />
+            <Label layoutX="440.0" layoutY="1.0" prefHeight="18.0" prefWidth="195.0" text="%ui.tabs.desc.desc" AnchorPane.leftAnchor="350.0" />
          </children>
       </AnchorPane>
-      <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="450.0">
+      <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="1.7976931348623157E308" minHeight="100.0" prefHeight="400.0" VBox.vgrow="ALWAYS">
          <content>
-            <VBox fx:id="descriptionLayouts" />
+            <VBox fx:id="descriptionLayouts" maxHeight="1.7976931348623157E308" spacing="5.0" />
          </content>
       </ScrollPane>
-      <VBox prefHeight="200.0" prefWidth="100.0">
+      <VBox>
          <children>
-            <BorderPane>
-               <left>
-                  <Text fx:id="countLabel" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="279.0000021010637" BorderPane.alignment="CENTER" />
-               </left>
-               <center>
-                  <Text fx:id="addedTexts" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="549.9999895691872" BorderPane.alignment="CENTER" />
-               </center>
-               <right>
-                  <Button fx:id="addLayoutBtn" mnemonicParsing="false" onAction="#addDecriptionLayout" stylesheets="@../application.css" text="+" BorderPane.alignment="CENTER">
-                     <BorderPane.margin>
-                        <Insets bottom="5.0" right="20.0" top="5.0" />
-                     </BorderPane.margin>
-                  </Button>
-               </right>
-            </BorderPane>
-            <BorderPane prefHeight="200.0" prefWidth="200.0">
-               <left>
-                  <TextArea fx:id="resultText" prefHeight="82.0" prefWidth="847.0" wrapText="true" BorderPane.alignment="CENTER" />
-               </left>
-               <right>
-                  <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#refresh" prefHeight="52.0" prefWidth="103.0" text="%ui.tabs.desc.refresh" BorderPane.alignment="CENTER" />
-               </right>
-            </BorderPane>
+            <AnchorPane>
+               <children>
+                  <Text fx:id="countLabel" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="279.0000021010637" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="5.0" />
+                  <Button fx:id="addLayoutBtn" mnemonicParsing="false" onAction="#addDecriptionLayout" stylesheets="@../application.css" text="+" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane minHeight="120.0" prefHeight="200.0">
+               <children>
+                  <TextArea fx:id="resultText" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" prefHeight="200.0" wrapText="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="130.0" AnchorPane.topAnchor="10.0" />
+                  <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#refresh" prefHeight="50.0" prefWidth="100.0" text="%ui.tabs.desc.refresh" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0" />
+               </children>
+            </AnchorPane>
          </children>
       </VBox>
    </children>

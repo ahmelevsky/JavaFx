@@ -3,15 +3,19 @@ package te.view;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
@@ -32,17 +36,21 @@ public class FolderVariableController  extends TargetEditorController implements
 	 @FXML
 	 private TableView<FolderVariable> folderVariablesTable;
 	 @FXML
-	 private TableColumn<FolderVariable, String> folderPathColumn;
+	 private PTableColumn<FolderVariable, String> folderPathColumn;
 	 @FXML
-	 private TableColumn<FolderVariable, String> keyVariableColumn;
+	 private PTableColumn<FolderVariable, String> keyVariableColumn;
 	 @FXML
-	 private TableColumn<FolderVariable, String> descriptionVariableColumn;
+	 private PTableColumn<FolderVariable, String> descriptionVariableColumn;
 	 @FXML
 	 private TextArea inputKeyVariable;
 	 @FXML
 	 private TextArea inputDescriptionVariable;
 	 @FXML 
 	 private Button addDataBtn;
+	 @FXML 
+	 private Button savePresetBtn;
+	 @FXML 
+	 private ComboBox<String> selectPresetBox;
 	 
 	 public FolderVariablesWrapper wrapper;
 	 
@@ -53,17 +61,13 @@ public class FolderVariableController  extends TargetEditorController implements
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
-		
-		
 		setTableEditable();
-		
 		Callback<TableColumn<FolderVariable,String>, TableCell<FolderVariable,String>> cellFactory =
 	             new Callback<TableColumn<FolderVariable,String>, TableCell<FolderVariable,String>>() {
 	                 public TableCell<FolderVariable,String> call(TableColumn<FolderVariable,String> p) {
 	                    return new EditCell<FolderVariable,String> (new DefaultStringConverter());
 	                 }
 	             };
-	             
 		
 		folderPathColumn.setCellValueFactory(cellData -> cellData.getValue().folderPathProperty());
 		keyVariableColumn.setCellValueFactory(cellData -> cellData.getValue().keyVariableProperty());
@@ -113,6 +117,8 @@ public class FolderVariableController  extends TargetEditorController implements
 				setError(e.textArea, true);
 			}
 		});
+		
+		setTableHeadersUnmovable();
 	}
 
 	 public void setup() {
@@ -159,6 +165,21 @@ public class FolderVariableController  extends TargetEditorController implements
 	            }
 	        });
 	    }
+	  
+	  private void setTableHeadersUnmovable() {
+		  folderVariablesTable.getColumns().addListener(new ListChangeListener() {
+	          public boolean suspended;
+	          @Override
+	          public void onChanged(Change change) {
+	              change.next();
+	              if (change.wasReplaced() && !suspended) {
+	                  this.suspended = true;
+	                  folderVariablesTable.getColumns().setAll(folderPathColumn, keyVariableColumn, descriptionVariableColumn);
+	                  this.suspended = false;
+	              }
+	          }
+	      });
+	  }
 	 
 	  @SuppressWarnings("unchecked")
 	    private void editFocusedCell() {

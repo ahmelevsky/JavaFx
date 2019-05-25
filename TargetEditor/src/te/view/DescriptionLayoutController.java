@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
 import te.Main;
@@ -17,7 +18,7 @@ public class DescriptionLayoutController implements Initializable {
 	
 	
 	public Main app;
-	public HBox layout;
+	public AnchorPane layout;
 	public boolean isInitialLoad;
 	
 	@FXML
@@ -37,9 +38,6 @@ public class DescriptionLayoutController implements Initializable {
 	
 	@FXML
     private void remove(){
-		//app.descriptionEditorController.textFields.remove(text);
-		//app.descriptionEditorController.selectors.remove(selector);
-		app.descriptionEditorController.randomBoxes.remove(isRandom);
 		app.descriptionEditorController.removeDescriptionLayout(this);
 	}
 }

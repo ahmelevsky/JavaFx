@@ -20,8 +20,11 @@ public class ActionButtonTableCell<S> extends TableCell<S, Button> {
         this.actionButton.setOnAction((ActionEvent e) -> {
             function.apply(getCurrentItem());
         });
-        this.actionButton.setMaxWidth(Double.MAX_VALUE);
+        //this.actionButton.setMaxWidth(Double.MAX_VALUE);
         this.actionButton.setShape(new Circle(25));
+        this.actionButton.setMaxWidth(30);
+        this.actionButton.setMaxHeight(30);
+        
     }
 
     public S getCurrentItem() {

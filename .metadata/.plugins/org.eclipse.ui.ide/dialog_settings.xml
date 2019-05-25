@@ -8,8 +8,9 @@
 	<section name="ExternalProjectImportWizard">
 		<item value="true" key="WizardProjectsImportPage.STORE_NESTED_PROJECTS"/>
 		<item value="true" key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID"/>
-		<item value="true" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
+		<item value="false" key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED"/>
 		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="C:\Java\TargetEditor"/>
 			<item value=""/>
 			<item value="C:\JavaFX\workspace\Figmore"/>
 			<item value="C:\JavaFX\workspace\UndergroundX"/>
@@ -17,8 +18,8 @@
 			<item value="C:\JavaFX\workspace\UndergroundIM_Client"/>
 		</list>
 		<list key="WizardProjectsImportPage.STORE_ARCHIVES">
-			<item value="D:\Downloads\swt-4.6.2-cocoa-macosx-x86_64.zip"/>
 			<item value=""/>
+			<item value="D:\Downloads\swt-4.6.2-cocoa-macosx-x86_64.zip"/>
 		</list>
 	</section>
 	<section name="WORKBENCH_SETTINGS">

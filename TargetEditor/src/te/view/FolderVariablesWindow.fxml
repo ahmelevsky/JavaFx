@@ -2,42 +2,58 @@
 
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
+<?import te.view.PTableColumn?>
+<!--<?import te.view.PTableColumn?>-->
 
 <VBox xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="te.view.FolderVariableController">
    <children>
       <GridPane>
         <columnConstraints>
-          <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="40.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="80.0" prefHeight="80.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="addDataBtn" mnemonicParsing="false" onAction="#addData" prefHeight="80.0" prefWidth="40.0" text="+">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </Button>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="addDataBtn" mnemonicParsing="false" onAction="#addData" prefHeight="80.0" prefWidth="40.0" text="+" AnchorPane.rightAnchor="0.0">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
             <TextArea fx:id="inputKeyVariable" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
             <TextArea fx:id="inputDescriptionVariable" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" />
          </children>
       </GridPane>
-      <TableView fx:id="folderVariablesTable" editable="true" prefWidth="485.0">
+      <TableView fx:id="folderVariablesTable" editable="true" prefWidth="485.0" VBox.vgrow="ALWAYS">
         <columns>
-          <TableColumn fx:id="folderPathColumn" editable="false" prefWidth="75.0" text="Folder" />
-          <TableColumn fx:id="keyVariableColumn" prefWidth="75.0" text="FolderKwd" />
-          <TableColumn fx:id="descriptionVariableColumn" prefWidth="75.0" text="FolderDescr" />
+           
+          <PTableColumn fx:id="folderPathColumn" editable="false" resizable="false" text="Folder" percentageWidth="0.40"/>
+          <PTableColumn fx:id="keyVariableColumn" text="FolderKwd" resizable="false" percentageWidth="0.30"/>
+          <PTableColumn fx:id="descriptionVariableColumn" text="FolderDescr" resizable="false" percentageWidth="0.30" />
+           
+       <!--
+          <TableColumn fx:id="folderPathColumn" editable="false" resizable="false" text="Folder" />
+          <TableColumn fx:id="keyVariableColumn" resizable="false" text="FolderKwd" />
+          <TableColumn fx:id="descriptionVariableColumn" resizable="false" text="FolderDescr" />
+           -->
+        
         </columns>
          <cursor>
             <Cursor fx:constant="TEXT" />
@@ -46,5 +62,12 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
+      <AnchorPane>
+         <children>
+            <Label prefWidth="140.0" text="%ui.tabs.foldervars.labeltext" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+            <ComboBox fx:id="selectPresetBox" minWidth="150.0" prefWidth="250.0" AnchorPane.leftAnchor="160.0" AnchorPane.topAnchor="5.0"/>
+            <Button fx:id="savePresetBtn" mnemonicParsing="false" text="%ui.tabs.foldervars.savepreset" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0"/>
+         </children>
+      </AnchorPane>
    </children>
 </VBox>
