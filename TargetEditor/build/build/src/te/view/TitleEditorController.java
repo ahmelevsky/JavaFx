@@ -19,8 +19,10 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
-import te.model.DescriptionEditorWrapper;
+import te.Settings;
 import te.model.FolderVariable;
 import te.model.Target;
 import te.model.TitleEditorWrapper;
@@ -29,7 +31,6 @@ import te.util.DataException;
 import te.util.SyntaxParser;
 import te.util.TextAreaException;
 import te.util.TextException;
-import te.util.Tuple;
 
 public class TitleEditorController extends TargetEditorController implements Initializable {
 	
@@ -41,10 +42,17 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	private Label countLabel;
 	@FXML
 	private  CheckBox isTakeFromDescriptionBox;
+	@FXML
+	private Spinner<Integer> cutToSpinner;
+	@FXML
+	private  CheckBox doCutBox;
+	
 	private String titleBoxSetting;
 	public String titleTextSetting;
 	
 	private boolean isTakeFromDescription;
+	private boolean doCut;
+	private int cutTo;
 	
 	ObservableList<String> options1 =  FXCollections.observableArrayList();
 
@@ -54,6 +62,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	private final String folderDescr = "FolderDescr";
 	private boolean isInitialized;
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	
 	
 	private final ChangeListener<String> boxListener = new ChangeListener<String>(){
 			@Override
@@ -69,7 +78,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 					if (oldValue!=null && !oldValue.equals(newValue) && opt!=null && opt.isPresent()){
 						addVariableToText(opt.get(), titleText);
 					}
-					if (oldValue!=null && !oldValue.equals("<текст>") && newValue.equals("<текст>"))
+					if (oldValue!=null && !oldValue.equals(Settings.bundle.getString("ui.selector.text")) && newValue.equals(Settings.bundle.getString("ui.selector.text")))
 						titleText.setText("");
 				}
 				setError(titleText, false, null);
@@ -90,7 +99,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 					public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
 						removeListeners();
 						setError(titleText, false, null);
-						titleBox.getSelectionModel().select("<текст>");
+						titleBox.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
 						 try {	
 							 updateCounter();
 							 }
@@ -103,7 +112,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 					}
 					};
 					
-					private final ChangeListener<Boolean> checkBoxListener = new ChangeListener<Boolean>(){
+	 private final ChangeListener<Boolean> checkBoxListener = new ChangeListener<Boolean>(){
 							@Override
 							public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue){	
 								removeListeners();
@@ -131,10 +140,29 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		titleBox.setItems(options1);
-		titleBox.getSelectionModel().select("<текст>");
+		titleBox.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
 		addListeners();
+		cutToSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 200, 50));
+		cutToSpinner.focusedProperty().addListener((arg, oldVal, newVal) ->correctSpinnerValue());
+		cutToSpinner.valueProperty().addListener((arg, oldVal, newVal) -> correctSpinnerValue());
 		
 	}
+	
+	private void correctSpinnerValue(){
+		String text = cutToSpinner.getEditor().getText();
+		int val = 50; 
+	    try {
+	    	val = Integer.parseInt(text);    	
+	     }
+	    catch (NumberFormatException e) {
+	    	cutToSpinner.getEditor().setText("50");
+	    	cutToSpinner.getValueFactory().setValue(val);
+	    	cutToSpinner.increment(0);
+	    }
+	    cutToSpinner.getValueFactory().setValue(val);
+	    cutToSpinner.increment(0);
+	}
+		
 	
     private void addListeners(){
     	titleBox.valueProperty().removeListener(boxListener);
@@ -168,6 +196,9 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		sb.append(">[1]");
 		ta.setText(sb.toString());
 	}
+	
+	
+	
 	
 	private String parseVariablesInText(TextArea tf, boolean isMax) throws TextAreaException{
 		String result = null;
@@ -210,8 +241,8 @@ public class TitleEditorController extends TargetEditorController implements Ini
 			selectedValue = selected.getSelectedItem();
 		
 		options1.clear();
-		options1.add("<текст>");
-		titleBox.getSelectionModel().select("<текст>");
+		options1.add(Settings.bundle.getString("ui.selector.text"));
+		titleBox.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
 		if (!app.getFolderVariableData().isEmpty())
 			options1.add(this.folderDescr);
 		if (!app.getTargetsData().isEmpty()){
@@ -240,7 +271,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		String data = titleBox.getSelectionModel().getSelectedItem();
 		if (isTakeFromDescriptionBox.isSelected()) 
 			title = app.descriptionEditorController.getMaxLengthDescription();
-		else if (data==null || data.equals("<текст>")){
+		else if (data==null || data.equals(Settings.bundle.getString("ui.selector.text"))){
 			    	title  = parseVariablesInText(titleText, true);
 		}
 		else if (data.equals(this.folderDescr)){
@@ -270,11 +301,14 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		    else
 		    	titleText.setText(variableValue);
 		}*/
+		app.checkSyntax(titleText);
 		countLabel.setText("(" + getWordsCount(title) + "/" + title.length() + ")");
 	}
 	
 	public void saveTitleSource() throws DataException{
-		isTakeFromDescription = isTakeFromDescriptionBox.isSelected();
+		this.isTakeFromDescription = isTakeFromDescriptionBox.isSelected();
+		this.doCut = doCutBox.isSelected();
+		this.cutTo = cutToSpinner.getValueFactory().getValue();
 		  try {
 			  SyntaxParser.checkVariables(app.descriptionVariableEditorContainerController.variables, titleText.getText());
 			  titleTextSetting = titleText.getText();
@@ -287,6 +321,23 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	}
 	
 	public String getTitleForMetadata(){
+		String uncut = getTitleForMetadataUncut();
+		if (this.doCut) {
+			String[] split = uncut.split(" ");
+			StringBuilder sb = new StringBuilder();
+			StringBuilder sbtemp = new StringBuilder();
+			for (String s:split) {
+				sbtemp.append(s + " ");
+				if (sbtemp.length()<=this.cutTo)
+					sb.append(s + " ");
+				else break;
+			}
+			return sb.toString();
+		}
+		else return uncut;
+	}
+	
+	private String getTitleForMetadataUncut(){
 		if (isTakeFromDescription)
 			return app.descriptionEditorController.currentDescription;
 		else if  (titleBoxSetting.equals(this.folderDescr))
@@ -316,9 +367,11 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	}
 
 	public void clearAll(){
-		titleBox.getSelectionModel().select("<текст>");
+		titleBox.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
 		titleText.clear();
 		isTakeFromDescriptionBox.setSelected(false);
+		doCutBox.setSelected(false);
+		cutToSpinner.getValueFactory().setValue(50);
 	}
 
 	@Override
@@ -328,12 +381,25 @@ public class TitleEditorController extends TargetEditorController implements Ini
 			titleText.setText(this.wrapper.inputValue);
 			titleBox.getSelectionModel().select(this.wrapper.comboValue);
 			isTakeFromDescriptionBox.setSelected(this.wrapper.isTakeFromDescription);
+			doCutBox.setSelected(this.wrapper.doCut);
+			cutToSpinner.getValueFactory().setValue(this.wrapper.cutTo);
 		}
+		//Fill with targetDescr1 if empty
+		if (!isTakeFromDescriptionBox.isSelected() && titleText.getText().isEmpty() && !app.getTargetsData().isEmpty()){
+			titleBox.getSelectionModel().select(this.targetDescr1);
+		}
+		
+		
 		isInitialized = true;
 	}
 
 	@Override
 	public void saveData() {
-		this.wrapper = new TitleEditorWrapper(this.isTakeFromDescriptionBox.isSelected(), this.titleBox.getSelectionModel().getSelectedItem(), this.titleText.getText());
+		this.wrapper = new TitleEditorWrapper(this.isTakeFromDescriptionBox.isSelected(), this.titleBox.getSelectionModel().getSelectedItem(), this.titleText.getText(), this.doCutBox.isSelected(), this.cutToSpinner.getValueFactory().getValue());
+	}
+	
+	@FXML
+	private void onClickDoCutOption() {
+		cutToSpinner.setDisable(!doCutBox.isSelected());
 	}
 }

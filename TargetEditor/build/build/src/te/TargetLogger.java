@@ -1,5 +1,6 @@
 package te;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -31,15 +32,15 @@ public class TargetLogger {
             rootLogger.removeHandler(handlers[0]);
         }
 
-        logger.setLevel(Level.INFO);
-        fileTxt = new FileHandler("TargetEditor.log");
-        fileHTML = new FileHandler("TargetEditorLog.html");
-
+        logger.setLevel(Level.ALL);
+        fileTxt = new FileHandler(System.getProperty("user.home") + File.separator + "TargetEditor.log");
+        fileHTML = new FileHandler(System.getProperty("user.home") + File.separator + "TargetEditorLog.html");
+        fileTxt.setLevel(Level.ALL);
+        fileHTML.setLevel(Level.INFO);
         // create a TXT formatter
         formatterTxt = new LogFormatter();
         fileTxt.setFormatter(formatterTxt);
         logger.addHandler(fileTxt);
-
         // create an HTML formatter
         formatterHTML = new MyHtmlFormatter();
         fileHTML.setFormatter(formatterHTML);

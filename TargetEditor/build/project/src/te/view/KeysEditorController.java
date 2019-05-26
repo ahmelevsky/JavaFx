@@ -29,6 +29,7 @@ import javafx.util.StringConverter;
 
 import org.apache.commons.lang3.StringUtils;
 
+import te.Settings;
 import te.model.KeysEditorWrapper;
 import te.model.Variable;
 import te.util.DataException;
@@ -154,7 +155,7 @@ private void addVariable(){
 	String repeat = keyCountBox.getValueFactory().getValue();
 	if (repeat != null) {
 		sb.append("[");
-		if (!repeat.equals("Все"))
+		if (!repeat.equals(Settings.bundle.getString("ui.tabs.keys.all")))
 			sb.append(repeat);
 		sb.append("]");
 	}
@@ -168,7 +169,8 @@ public void update(){
 		setError(keysField, false, null);
 		List<String> keys = getKeysFromUI();
 		preview.setText(StringUtils.join(keys, ", "));
-		countLabel.setText("Слов: " + keys.size());
+		app.checkSyntax(keysField);
+		countLabel.setText(Settings.bundle.getString("ui.tabs.keys.wordscount") + keys.size());
 	}
 	catch (TextAreaException e){
 		setError(e.textArea, true, e.getMessage());
@@ -188,7 +190,7 @@ public List<String> generateKeywordsForMetadata(){
 			keys = keys.stream().distinct().collect(Collectors.toList());
 			cutList(keys, 50);
 		} catch (TextException e) {
-			LOGGER.warning("ERROR: Ошибка вставки переменных в строку: " + this.savedKeywordsTemplate);
+			LOGGER.warning(Settings.bundle.getString("alert.error.pastevars") + this.savedKeywordsTemplate);
 			app.isProblem = true;
 		}
 		

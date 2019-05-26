@@ -8,24 +8,48 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
+import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
+
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.shape.Circle;
+import javafx.stage.Modality;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
+import te.Settings;
+import te.model.FolderTheme;
 import te.model.FolderVariable;
 import te.model.FolderVariablesWrapper;
 import te.model.Target;
@@ -50,13 +74,67 @@ public class FolderVariableController  extends TargetEditorController implements
 	 @FXML 
 	 private Button savePresetBtn;
 	 @FXML 
-	 private ComboBox<String> selectPresetBox;
+	 private ComboBox<FolderTheme> selectPresetBox;
+	 
+	 private ObservableList<FolderTheme> themesList  = FXCollections.observableArrayList();
 	 
 	 public FolderVariablesWrapper wrapper;
+	 private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	 
     public FolderVariableController() {
 	    }
 
+    
+    final	ChangeListener<FolderTheme> selectionListener = new ChangeListener<FolderTheme>(){
+		@Override
+		public void changed(ObservableValue<? extends FolderTheme> o, FolderTheme ol, FolderTheme nw){
+			 if (nw!=null) {
+	        	  
+		        	ButtonType yes = new ButtonType(Settings.bundle.getString("alert.yes"));
+		      		ButtonType no = new ButtonType(Settings.bundle.getString("alert.no"));
+		      		Alert alert = new Alert(AlertType.CONFIRMATION, Settings.bundle.getString("alert.select.theme"), yes, no);
+		      		alert.initOwner(app.getPrimaryStage());
+    	      		alert.initModality(Modality.APPLICATION_MODAL); 
+		      		alert.showAndWait();
+
+		      		if (alert.getResult() == yes) {
+		        	  
+		      			AtomicBoolean allFoldersGotVariables = new AtomicBoolean(true);
+		        	     app.folderVariableData.forEach(v -> {
+		     			 v.setDescriptionVariable("");
+		     			 v.setKeyVariable("");
+		     			
+		     			 Optional<FolderVariable> opt = nw.getFolderVariables().stream().filter(fw -> fw.getFolderPath().equals(v.getFolderPath())).findFirst();
+		     			if (opt!=null && opt.isPresent()){
+		     				 FolderVariable presetVariable = opt.get();
+		     				 v.setDescriptionVariable(presetVariable.getDescriptionVariable());
+		         			 v.setKeyVariable(presetVariable.getKeyVariable());
+		     			}
+		     			else 
+		     				allFoldersGotVariables.set(false);
+		     		 });
+		        	  
+		        	  
+		        	  if (!allFoldersGotVariables.get()) {
+		        		  alert = new Alert(AlertType.WARNING);
+				          alert.setContentText(Settings.bundle.getString("alert.warn.missedfolvars"));
+				          alert.initOwner(app.getPrimaryStage());
+		    	      	  alert.initModality(Modality.APPLICATION_MODAL); 
+				          alert.showAndWait();
+		        	  }
+		        	//  selectPresetBox.getSelectionModel().clearSelection();
+		          }
+		      		else {
+		      			Platform.runLater(() -> {
+		      				selectPresetBox.getSelectionModel().selectedItemProperty().removeListener(selectionListener);
+		      				selectPresetBox.getSelectionModel().select(ol);
+		      				selectPresetBox.getSelectionModel().selectedItemProperty().addListener(selectionListener);
+		                });
+		      		}
+		}
+	}
+	};
+    
 	 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -119,6 +197,26 @@ public class FolderVariableController  extends TargetEditorController implements
 		});
 		
 		setTableHeadersUnmovable();
+		addDeleteButtonToCombobox(selectPresetBox);
+		//Selection Theme (Preset) functionality
+		selectPresetBox.setItems(themesList);
+		selectPresetBox.setConverter(new StringConverter<FolderTheme>() {
+		    @Override
+		    public String toString(FolderTheme object) {
+		       return object.nameProperty().get();
+		    }
+		    @Override
+		    public FolderTheme fromString(String string) {
+		       return null;
+		    }
+		});
+		
+		
+	
+		
+		selectPresetBox.getSelectionModel().selectedItemProperty().addListener(selectionListener);
+		
+		//selectPresetBox.getItems().add(null);
 	}
 
 	 public void setup() {
@@ -225,6 +323,8 @@ public class FolderVariableController  extends TargetEditorController implements
 	@Override
 	public void loadData() {
 		if (this.wrapper != null){
+	    this.themesList.clear();
+	    this.themesList.addAll(this.wrapper.themes);
          if (app.mainFrameController.setRootFolder(wrapper.rootFolderPath)){
         	 for (FolderVariable variable:app.getFolderVariableData()){
         		 Optional<FolderVariable> opt = wrapper.variables.stream().filter(v -> v.getFolderPath().equals(variable.getFolderPath())).findFirst();
@@ -267,6 +367,7 @@ public class FolderVariableController  extends TargetEditorController implements
 	public void saveData() {
 		this.wrapper = new FolderVariablesWrapper();
 		this.wrapper.variables = app.folderVariableData;
+		this.wrapper.themes = this.themesList;
 		this.wrapper.rootFolderPath = app.mainFrameController.getRootFolder();
 		
 	}
@@ -287,5 +388,110 @@ public class FolderVariableController  extends TargetEditorController implements
 		 else {
 	            styleClass.removeAll(Collections.singleton("red"));          
 	        }
+	}
+	
+	
+	
+	
+
+	public static void addDeleteButtonToCombobox(ComboBox<FolderTheme> cb){
+		  cb.setCellFactory(lv ->
+          new ListCell<FolderTheme>() {
+              // This is the node that will display the text and the cross. 
+              // I chose a hyperlink, but you can change to button, image, etc. 
+              private HBox graphic;
+
+              // this is the constructor for the anonymous class.
+              {
+                  Label label = new Label();
+                  // Bind the label text to the item property. If your ComboBox items are not Strings you should use a converter. 
+                  
+                //  label.textProperty().bind(itemProperty().getValue().nameProperty());
+                  label.textProperty().bind(Bindings.convert(itemProperty()));
+                  // Set max width to infinity so the cross is all the way to the right. 
+                  label.setMaxWidth(Double.POSITIVE_INFINITY);
+                  // We have to modify the hiding behavior of the ComboBox to allow clicking on the hyperlink, 
+                  // so we need to hide the ComboBox when the label is clicked (item selected). 
+                  label.setOnMouseClicked(event -> cb.hide());
+                  Hyperlink cross = new Hyperlink("X");
+                  cross.setVisited(true); // So it is black, and not blue. 
+                  cross.setOnAction(event ->
+                          {
+                        		ButtonType yes = new ButtonType("Да");
+                	      		ButtonType no = new ButtonType("Нет");
+                	      		Alert alert = new Alert(AlertType.CONFIRMATION, Settings.bundle.getString("alert.conf.removetheme"), yes, no);
+                	      		alert.initOwner(cb.getScene().getWindow());
+                	      		alert.initModality(Modality.APPLICATION_MODAL); 
+                	      		alert.setTitle(Settings.bundle.getString("alert.conf.clear.title"));
+                	      		alert.setHeaderText(Settings.bundle.getString("alert.conf.clear.header"));
+                	      		alert.showAndWait();
+
+                	      		if (alert.getResult() == yes) {
+                              // Since the ListView reuses cells, we need to get the item first, before making changes.  
+                        	  FolderTheme item = getItem();
+                              if (isSelected()) {
+                                  // Not entirely sure if this is needed. 
+                                  cb.getSelectionModel().select(null);
+                              }
+                              cb.getItems().remove(item);
+                	      		}
+                          }
+                  );
+                  // Arrange controls in a HBox, and set display to graphic only (the text is included in the graphic in this implementation). 
+                  graphic = new HBox(label, cross);
+                  graphic.setHgrow(label, Priority.ALWAYS);
+                  setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+              }
+
+              @Override
+              protected void updateItem(FolderTheme item, boolean empty) {
+                  super.updateItem(item, empty);
+                  if (empty) {
+                      setGraphic(null);
+                  } else {
+                      setGraphic(graphic);
+                  }
+              }
+          });
+
+  // We have to set a custom skin, otherwise the ComboBox disappears before the click on the Hyperlink is registered. 
+      cb.setSkin(new ComboBoxListViewSkin<FolderTheme>(cb) {
+      @Override
+      protected boolean isHideOnClickEnabled() {
+          return false;
+      }
+  });
+	}
+	
+	@FXML
+	private void savePreset() {
+		 TextInputDialog td = new TextInputDialog(); 
+		 td.initOwner(app.getPrimaryStage());
+		 td.initModality(Modality.APPLICATION_MODAL); 
+		  td.setHeaderText(Settings.bundle.getString("alert.save.theme")); 
+		  Optional<String> res = td.showAndWait();
+		  if (res!=null && res.isPresent() && !res.get().isEmpty()) {
+			  
+			  if (this.themesList.stream().anyMatch(t -> t.getName().equals(res.get()))) {
+				  Alert alert = new Alert(AlertType.WARNING);
+		          alert.setContentText(Settings.bundle.getString("alert.warn.existedtheme"));
+		          alert.showAndWait();
+			  }
+			  else {
+			  
+			   FolderTheme ft = new FolderTheme();
+			   ft.setName(res.get());
+			   app.folderVariableData.forEach(fv -> {
+				   FolderVariable newfv = new FolderVariable(fv.getFolder());
+				   newfv.setFolderPath(fv.getFolderPath());
+				   newfv.setDescriptionVariable(fv.getDescriptionVariable());
+				   newfv.setKeyVariable(fv.getKeyVariable());
+				   ft.getFolderVariables().add(newfv);
+			   });
+			   themesList.add(ft);
+			  }
+			  LOGGER.fine("FolderVariable Theme Preset was saved with name: " + res.get());
+		  }
+			 
 	}
 }

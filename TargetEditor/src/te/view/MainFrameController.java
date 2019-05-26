@@ -24,7 +24,10 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -40,6 +43,9 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -115,6 +121,8 @@ public class MainFrameController implements Initializable{
 	private MenuItem aboutItem;
 	@FXML
 	private CheckMenuItem scheduleAutosaveItem;
+	
+	private Stage aboutStage;
 	
 	private boolean isWriteBothExtensions;
 	private String ext = "jpg";
@@ -449,8 +457,8 @@ public class MainFrameController implements Initializable{
 
 	@FXML
 	private void clearAllData(){
-		ButtonType yes = new ButtonType("Да");
-		ButtonType no = new ButtonType("Нет");
+		ButtonType yes = new ButtonType(Settings.bundle.getString("alert.yes"));
+		ButtonType no = new ButtonType(Settings.bundle.getString("alert.no"));
 		Alert alert = new Alert(AlertType.CONFIRMATION, Settings.bundle.getString("alert.conf.clear"), yes, no);
 		alert.setTitle(Settings.bundle.getString("alert.conf.clear.title"));
 		alert.setHeaderText(Settings.bundle.getString("alert.conf.clear.header"));
@@ -557,6 +565,7 @@ public class MainFrameController implements Initializable{
 				}
 				break; 
 			case "aboutItem":
+				showAboutWindow();
 				break; 
 			default:
 				break;
@@ -579,6 +588,26 @@ public class MainFrameController implements Initializable{
 		public void cancelAutosave() {
 			autosaveTimer.cancel(); 
 			autosaveTimer.purge();
+		}
+		
+		private void showAboutWindow() {
+			if (this.aboutStage== null)
+			try {
+			aboutStage = new Stage();
+			aboutStage.initStyle(StageStyle.UNDECORATED);
+			FXMLLoader loader = new FXMLLoader(Main.class.getResource("view/AboutWindow.fxml"));
+		    loader.setLocation(Main.class.getResource("view/AboutWindow.fxml"));
+		    loader.setResources(Settings.bundle);
+		    Parent scene = loader.load();
+		    aboutStage.setScene(new Scene(scene));
+		    aboutStage.initOwner(app.getPrimaryStage());
+		    aboutStage.initModality(Modality.APPLICATION_MODAL); 
+			
+			}
+			catch(IOException e) {
+				
+			}
+			aboutStage.showAndWait();
 		}
 		
 }

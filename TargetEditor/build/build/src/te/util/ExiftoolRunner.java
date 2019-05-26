@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
 
 import te.Main;
+import te.Settings;
 
 public class ExiftoolRunner {
 	static String exifpath = "lib/exiftool.exe";
@@ -56,7 +57,7 @@ public class ExiftoolRunner {
 		sb.add(toFile.getAbsolutePath());
 
 		LOGGER.info("");
-		LOGGER.info("Запись метаданных в файл " + toFile.getAbsolutePath());
+		LOGGER.info(Settings.bundle.getString("log.message.write") + toFile.getAbsolutePath());
 		
 		try {
 			LOGGER.info("Exiftool exit code: " +runCommand(sb)); 
@@ -66,7 +67,7 @@ public class ExiftoolRunner {
 			LOGGER.severe(e.getMessage());
 		}
 		LOGGER.info("Decription: " + description);
-		LOGGER.info("Keys: " + StringUtils.join(keys, ", "));
+		LOGGER.info("Keywords: " + StringUtils.join(keys, ", "));
 		LOGGER.info("Title: " + title);
 	}
 

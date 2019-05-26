@@ -1,7 +1,10 @@
 package te.view;
 
+import java.util.Collections;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -118,7 +121,8 @@ public class EditCell < S, T > extends TextFieldTableCell < S, T > {
             @Override
             public void changed(ObservableValue <? extends Boolean > observable,
                 Boolean oldValue, Boolean newValue) {
-                if (!newValue) {
+            	if (checkSyntax(textField))
+                if (!newValue) { 
                     commitEdit(getConverter().fromString(textField.getText()));
                 }
             }
@@ -190,4 +194,23 @@ public class EditCell < S, T > extends TextFieldTableCell < S, T > {
         // TextField
         textField.requestFocus();
     }
+    
+    
+    private boolean checkSyntax(final TextField textField) {
+    	ObservableList<String> styleClass = textField.getParent().getStyleClass();
+ 	   if (!isCorrectKey(textField.getText()) && !styleClass.contains("red")) {
+ 	                styleClass.add("red");
+ 	                return false;
+ 	            }
+ 		else {
+ 	            styleClass.removeAll(Collections.singleton("red"));          
+ 	            return true;
+ 	        }
+    }
+    
+	 public boolean isCorrectKey(String text){
+		  if (text == null) return true;
+		 return text.trim().isEmpty() || text.matches("\\A\\p{ASCII}*\\z");//|| text.replaceAll("\\s+","").matches("\\w+");
+	  }
+	 
 }

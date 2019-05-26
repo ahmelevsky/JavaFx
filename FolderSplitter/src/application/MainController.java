@@ -263,13 +263,13 @@ private List<File> checkHasNotPair(List<File> files){
 private void orderByNumericName(List<File> files){
 	Collections.sort(files, new Comparator<File>() {
 	    public int compare(File o1, File o2) {
-	        return extractInt(o1) - extractInt(o2);
+	        return (int) (extractInt(o1) - extractInt(o2));
 	    }
 
-	    int extractInt(File s) {
+	    long extractInt(File s) {
 	        String num = s.getName().replaceAll("\\D", "");
 	        // return 0 if no digits found
-	        return num.isEmpty() ? 0 : Integer.parseInt(num);
+	        return num.isEmpty() ? 0 : Long.parseLong(num);
 	    }
 	});
 }

@@ -2,8 +2,12 @@ package te.view;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
 import java.util.ResourceBundle;
 
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.collections.ListChangeListener.Change;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,6 +24,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
 import te.model.Target;
+import te.util.TextAreaException;
 
 public class TargetsWindowController extends TargetEditorController implements Initializable {
 
@@ -28,19 +33,15 @@ public class TargetsWindowController extends TargetEditorController implements I
 	 @FXML
 	 private TableView<Target> targetsTable;
 	 @FXML
-	 private TableColumn<Target, String> targetKwdColumn;
+	 private PTableColumn<Target, String> targetKwdColumn;
 	 @FXML
-	 private TableColumn<Target, String> targetDescr1Column;
+	 private PTableColumn<Target, String> targetDescr1Column;
 	 @FXML
-	 private TableColumn<Target, String> targetDescr2Column;
+	 private PTableColumn<Target, String> targetDescr2Column;
 	 @FXML
-	 private TableColumn<Target, Button> removeRowColumn;
+	 private PTableColumn<Target, Button> removeRowColumn;
 	 @FXML
 	 private Button addBtn;
-	 @FXML
-	 private Button loadBtn;
-	 @FXML
-	 private Button saveBtn;
 	 @FXML
 	 private TextArea inputTargetKwd;
 	 @FXML
@@ -57,9 +58,7 @@ public class TargetsWindowController extends TargetEditorController implements I
 	 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		//targetsTable.setEditable(true);
 		setTableEditable();
-		//targetsTable.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY); 
 		this.addBtn.setShape(new Circle(25));
 		Callback<TableColumn<Target,String>, TableCell<Target,String>> cellFactory =
 	             new Callback<TableColumn<Target,String>, TableCell<Target,String>>() {
@@ -68,7 +67,6 @@ public class TargetsWindowController extends TargetEditorController implements I
 	                 }
 	             };
 	             
-		
 		targetKwdColumn.setCellValueFactory(cellData -> cellData.getValue().targetKwdProperty());
 		targetKwdColumn.setCellFactory(cellFactory);
 		targetDescr1Column.setCellValueFactory(cellData -> cellData.getValue().targetDescr1Property());
@@ -77,7 +75,6 @@ public class TargetsWindowController extends TargetEditorController implements I
 			targetsTable.getItems().remove(p);
 		    return p;
 		})); 
-		removeRowColumn.setMaxWidth(25);
 		// Easy WAY to make Editable -  NO EDITCELL CLASS
 		//target1Column.setCellFactory(TextFieldTableCell.forTableColumn());
 		
@@ -120,12 +117,59 @@ public class TargetsWindowController extends TargetEditorController implements I
 	                }
 	            }
 	        );
+		
+		
+		inputTargetKwd.textProperty().addListener((observable, oldValue, newValue) ->{ 
+			    setError(inputTargetKwd, false);
+			    try {
+					app.checkSyntax(inputTargetKwd);
+				} catch (TextAreaException e) {
+					setError(e.textArea, true);
+				}
+			});
+		inputTargetDescr1.textProperty().addListener((observable, oldValue, newValue) ->{ 
+		    setError(inputTargetDescr1, false);
+		    try {
+				app.checkSyntax(inputTargetDescr1);
+			} catch (TextAreaException e) {
+				setError(e.textArea, true);
+			}
+		});
+		inputTargetDescr2.textProperty().addListener((observable, oldValue, newValue) ->{ 
+		    setError(inputTargetDescr2, false);
+		    try {
+				app.checkSyntax(inputTargetDescr2);
+			} catch (TextAreaException e) {
+				setError(e.textArea, true);
+			}
+		});
+		
+		setTableHeadersUnmovable();
+		
 	}
 
 	 public void setup() {
 	        targetsTable.setItems(app.getTargetsData());
 	    }
 
+	 
+	  
+	  private void setTableHeadersUnmovable() {
+		  targetsTable.getColumns().addListener(new ListChangeListener() {
+	          public boolean suspended;
+	          @Override
+	          public void onChanged(Change change) {
+	              change.next();
+	              if (change.wasReplaced() && !suspended) {
+	                  this.suspended = true;
+	                  targetsTable.getColumns().setAll(targetKwdColumn, targetDescr1Column, targetDescr2Column, removeRowColumn);
+	                  this.suspended = false;
+	              }
+	          }
+	      });
+	  }
+	 
+	 
 	 @FXML
 	 private void addRow(){
 		 app.getTargetsData().add(new Target());
@@ -201,17 +245,6 @@ public class TargetsWindowController extends TargetEditorController implements I
 		
 	}
 	
-	
-	@FXML
-	private void loadVariablesFromFile(){
-		 app.keyVariableEditorContainerController.loadVariablesFromFile();
-	}
-	
-	@FXML
-	private void saveVariablesToFile(){
-		 app.keyVariableEditorContainerController.saveVariablesToFile();
-	}
-
     @FXML
     private void addData(){
     	String[] targetKwds = this.inputTargetKwd.getText().split("\\r?\\n");
@@ -234,5 +267,17 @@ public class TargetsWindowController extends TargetEditorController implements I
 	public void saveData() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void setError(TextArea tf, boolean setOrUnset){
+		 ObservableList<String> styleClass = tf.getStyleClass();
+		 if (setOrUnset) {
+			 if (! styleClass.contains("red")) {
+	                styleClass.add("red");
+	            }
+			 }
+		 else {
+	            styleClass.removeAll(Collections.singleton("red"));          
+	        }
 	}
 }

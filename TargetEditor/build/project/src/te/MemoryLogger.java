@@ -11,13 +11,7 @@ public class MemoryLogger {
 	private static long lastUsed = 0;
 	
 	public static void print() {
-		System.gc();
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//System.gc();
 		MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
 		MemoryUsage hmusage = mbean.getHeapMemoryUsage();
 		if (startUsed==0)

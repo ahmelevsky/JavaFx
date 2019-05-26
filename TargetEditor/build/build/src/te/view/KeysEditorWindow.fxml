@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
@@ -7,22 +8,68 @@
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="482.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="te.view.KeysEditorController">
+<VBox spacing="20.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="te.view.KeysEditorController">
    <children>
-      <HBox prefHeight="100.0" prefWidth="200.0" />
-      <TextArea fx:id="keysField" editable="true" layoutX="549.0" layoutY="52.0" prefHeight="180.0" prefWidth="431.0" wrapText="true" />
-      <Label layoutX="549.0" layoutY="23.0" prefHeight="21.0" prefWidth="269.0" text="Основной блок" />
-      <Button fx:id="refreshBtn" layoutX="835.0" layoutY="396.0" mnemonicParsing="false" onAction="#update" prefHeight="60.0" prefWidth="145.0" text="ОБНОВИТЬ" />
-      <Label fx:id="countLabel" layoutX="22.0" layoutY="463.0" prefHeight="21.0" prefWidth="767.0" />
-      <CheckBox fx:id="isTarget" layoutX="26.0" layoutY="232.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="277.0" text="Добавить Таргет" />
-      <TextArea fx:id="preview" editable="false" layoutX="26.0" layoutY="263.0" opacity="0.72" prefHeight="193.0" prefWidth="746.0" wrapText="true" />
-      <ComboBox fx:id="variablesCombo" layoutX="22.0" layoutY="52.0" prefHeight="31.0" prefWidth="277.0" />
-      <Button fx:id="addBtn" layoutX="453.0" layoutY="52.0" maxWidth="40.0" mnemonicParsing="false" onAction="#addVariable" prefHeight="25.0" prefWidth="40.0" text=" " />
-      <Label layoutX="26.0" layoutY="23.0" prefHeight="21.0" prefWidth="269.0" text="Переменные ключей" />
-      <Label layoutX="328.0" layoutY="23.0" prefHeight="21.0" prefWidth="116.0" text="Число ключей" />
-      <Spinner fx:id="keyCountBox" editable="true" layoutX="328.0" layoutY="52.0" prefHeight="31.0" prefWidth="96.0" />
-      <CheckBox fx:id="isFolderVariable" layoutX="26.0" layoutY="198.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="277.0" text="Добавить Переменную Папки" />
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <BorderPane minHeight="100.0" prefHeight="200.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0">
+               <top>
+                  <VBox BorderPane.alignment="CENTER">
+                     <children>
+                        <Label prefHeight="21.0" prefWidth="269.0" text="%ui.tabs.keys.vars" />
+                        <ComboBox fx:id="variablesCombo" prefHeight="30.0" prefWidth="250.0" />
+                     </children>
+                  </VBox>
+               </top>
+               <bottom>
+                  <VBox spacing="10.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <CheckBox fx:id="isTarget" mnemonicParsing="false" prefHeight="21.0" prefWidth="277.0" text="%ui.tabs.keys.addtarget">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </CheckBox>
+                        <CheckBox fx:id="isFolderVariable" mnemonicParsing="false" prefHeight="21.0" prefWidth="277.0" text="%ui.tabs.keys.addvar" />
+                     </children>
+                  </VBox>
+               </bottom>
+            </BorderPane>
+            <VBox AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="300.0" AnchorPane.topAnchor="10.0">
+               <children>
+                  <Label prefHeight="21.0" prefWidth="116.0" text="%ui.tabs.keys.count" />
+                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Spinner fx:id="keyCountBox" editable="true" prefHeight="30.0" prefWidth="80.0" />
+                        <Button fx:id="addBtn" maxWidth="40.0" mnemonicParsing="false" onAction="#addVariable" prefHeight="25.0" prefWidth="40.0" text=" " />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox AnchorPane.leftAnchor="470.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+               <children>
+                  <Label prefHeight="21.0" prefWidth="269.0" text="%ui.tabs.keys.main" />
+                  <TextArea fx:id="keysField" editable="true" minHeight="100.0" minWidth="200.0" prefHeight="180.0" wrapText="true" />
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+         <children>
+            <TextArea fx:id="preview" editable="false" minHeight="100.0" minWidth="200.0" opacity="0.72" wrapText="true" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="250.0" AnchorPane.topAnchor="5.0" />
+            <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#update" prefHeight="60.0" prefWidth="145.0" text="%ui.tabs.keys.refresh" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="20.0" />
+         </children>
+      </AnchorPane>
+      <HBox spacing="20.0" />
+      <Label fx:id="countLabel" prefHeight="20.0" prefWidth="800.0">
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </VBox.margin></Label>
    </children>
-</AnchorPane>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

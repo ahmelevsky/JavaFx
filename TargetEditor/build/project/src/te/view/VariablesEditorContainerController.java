@@ -17,21 +17,19 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import te.Main;
+import te.Settings;
 import te.model.Variable;
 
 public class VariablesEditorContainerController  extends TargetEditorController implements Initializable {
 
 	@FXML
 	private Button addVarBtn;
-	@FXML
-	private Button loadBtn;
-	@FXML
-	private Button saveBtn;
 	@FXML
 	private VBox variableLayouts;
 	
@@ -43,8 +41,6 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		this.addVarBtn.setShape(new Circle(25));
-		loadBtn.setTooltip(new Tooltip("Загрузить из файла набор переменных \n(и ключей и описаний)"));
-		saveBtn.setTooltip(new Tooltip("Сохранить в файл набор переменных \n(и ключей и описаний)"));
 	}
 	
 	public void saveVariables(){
@@ -64,9 +60,9 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 			
 			 FXMLLoader loader = new FXMLLoader();
 	         loader.setLocation(Main.class.getResource("view/VariableLayout.fxml"));
-		     HBox sourceLayout = (HBox) loader.load();
+		     AnchorPane sourceLayout = (AnchorPane) loader.load();
 	         variableLayouts.getChildren().add(sourceLayout);
-	         app.getPrimaryStage().sizeToScene();
+	         //app.getPrimaryStage().sizeToScene();
 	         VariableLayoutController controller = loader.getController();
 	         controller.app = this.app;
 	         controller.setVariable(variable);
@@ -75,8 +71,8 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	         
 			} catch (IOException e) {
 				  Alert alert = new Alert(AlertType.ERROR);
-		            alert.setTitle("Ошибка");
-		            alert.setHeaderText("Не могу добавить элементы на форму");
+		            alert.setTitle(Settings.bundle.getString("alert.error.title"));
+		            alert.setHeaderText(Settings.bundle.getString("alert.error.addtoform.content"));
 		            alert.setContentText(e.getMessage());
 		            alert.showAndWait();
 			}
@@ -93,8 +89,8 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 		 }
 		 catch (Exception e) {
 			    Alert alert = new Alert(AlertType.ERROR);
-	            alert.setTitle("Ошибка");
-	            alert.setHeaderText("Не могу удалить элементы");
+	            alert.setTitle(Settings.bundle.getString("alert.error.title"));
+	            alert.setHeaderText(Settings.bundle.getString("alert.error.removeelements.content"));
 	            alert.setContentText(e.getMessage());
 	            alert.showAndWait();
 		 }
@@ -115,40 +111,6 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 			addVariableLayout(v);
 		}
 		
-	}
-
-
-
-	@FXML
-	public void loadVariablesFromFile(){
-		 FileChooser fileChooser = new FileChooser(); 
-
-		 fileChooser.setTitle("Выберите файл с источниками");
-		 File lastFile = app.getKeysFilePath();
-		 if (lastFile!=null)
-			 fileChooser.setInitialDirectory(lastFile.getParentFile());
-		 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (.xml)", "*.xml"));
-         File file = fileChooser.showOpenDialog(app.getPrimaryStage());
-        if(file!=null)
-       	   app.loadKeysDataFromFile(file);
-	}
-	
-	@FXML
-	public void saveVariablesToFile(){
-		 FileChooser fileChooser = new FileChooser(); 
-
-		 fileChooser.setTitle("Сохраните файл с источниками");
-		 File lastFile = app.getKeysFilePath();
-		 if (lastFile!=null)
-			 fileChooser.setInitialDirectory(lastFile.getParentFile());
-         File file = fileChooser.showSaveDialog(app.getPrimaryStage());
-
-        if(file!=null){
-        	if(!file.getName().contains(".")) {
-        		file = new File(file.getAbsolutePath() + ".xml");
-        		}
-       	  app.saveKeysDataToFile(file);
-        }
 	}
 
 	@Override

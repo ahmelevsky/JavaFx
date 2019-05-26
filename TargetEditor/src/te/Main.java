@@ -92,12 +92,11 @@ public class Main extends Application {
             throw new RuntimeException("Problems with creating the log files");
         }
 		
-		/*
-		 * Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
-		 * LOGGER.severe("Global Exception: "+ throwable.getMessage()); for
-		 * (StackTraceElement t:throwable.getStackTrace()) LOGGER.severe(t.toString());
-		 * });
-		 */
+		  Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
+		  LOGGER.severe("Global Exception: "+ throwable.getMessage()); for
+		  (StackTraceElement t:throwable.getStackTrace()) LOGGER.severe(t.toString());
+		  });
+		 
 		
 		loadSettings();
 		Settings.bundle = ResourceBundle.getBundle("te.Language", Settings.locale);
@@ -124,7 +123,7 @@ public class Main extends Application {
 		titleEditorController = (TitleEditorController) addTab(Settings.bundle.getString("ui.tabs.titles.header"), "view/TitleEditorWindow.fxml", TitleEditorController.class);
 		mainFrameController.setup();
 		keysEditorController.setup();
-		mainStage.setTitle("Target Editor v2.0");
+		mainStage.setTitle("TargetEditor v2.0");
 		mainStage.getIcons().add(new Image("file:resources/icon.png"));
 		loadLastData();
 		for (TargetEditorController controller : this.controllers)

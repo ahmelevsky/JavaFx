@@ -4,11 +4,13 @@ import java.io.File;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 @XmlAccessorType(XmlAccessType.PROPERTY)
+@XmlRootElement(name = "FolderVariable")
 public class FolderVariable {
 	private final File folder;
 	private final StringProperty keyVariable;
@@ -19,6 +21,7 @@ public class FolderVariable {
     	this(null);
     }
     
+       
     public FolderVariable(File folder){
     	this.folder = folder;
     	if (folder == null)
@@ -70,5 +73,6 @@ public class FolderVariable {
     public File getFolder(){
     	return this.folder;
     }
+
     
 }
