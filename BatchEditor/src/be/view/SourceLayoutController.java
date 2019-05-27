@@ -37,7 +37,7 @@ public class SourceLayoutController {
 	
 	@FXML
 	private CheckBox isJpgOnly;
-	private Tooltip checkboxtooltip =  new Tooltip("Только растр (.jpg)");
+	private Tooltip checkboxtooltip =  new Tooltip("Raster only (.jpg)");
 	
 	@FXML
 	public Spinner<Integer> filesCount;
@@ -111,7 +111,7 @@ public class SourceLayoutController {
     private void selectPath(){
 		  DirectoryChooser directoryChooser = new DirectoryChooser(); 
 
-          directoryChooser.setTitle("Выберите откуда брать файлы");
+          directoryChooser.setTitle("Choose a folder with your files");
           File selected = new File(this.sourcePath.getText());
           if (selected.exists())
         	  directoryChooser.setInitialDirectory(selected);
@@ -135,7 +135,7 @@ public class SourceLayoutController {
 			    	 count = Utils.countFilesInDirectoryIfNoSubDirectories(location, ".jpg");
 			     else
 			    	 count = Utils.countFilesInDirectory(location, ".jpg");
-        		 this.filesInfo.setText("Картинок: " + count);
+        		 this.filesInfo.setText("Images count: " + count);
         	 }
         	 else
         		 this.filesInfo.setText("");

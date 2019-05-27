@@ -28,9 +28,9 @@
 		
 		<mkdir dir="project" />
 		<copy todir="project">
-			<fileset dir="C:\JavaFX\workspace\BatchEditor">
-				<include name="src/**" />
-			</fileset>
+					<fileset dir="..\.">
+						<include name="src/**" />
+					</fileset>
 		</copy>
 		
 		<mkdir dir="projectRefs" />

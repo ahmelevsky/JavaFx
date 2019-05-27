@@ -91,7 +91,7 @@ public class RootLayoutController {
 	
 	@FXML
 	public void addSourceLayout(){
-		 BatchSource bs = new BatchSource("", "<Нажмите и выберите папку>", 0, false);
+		 BatchSource bs = new BatchSource("", "<Click and select a folder>", 0, false);
 		 app.sources.add(bs);
 		 addSourceLayout(bs);
 	}
@@ -109,8 +109,8 @@ public class RootLayoutController {
 	         app.sourceControllers.add(controller);
 			} catch (IOException e) {
 				  Alert alert = new Alert(AlertType.ERROR);
-		            alert.setTitle("Ошибка");
-		            alert.setHeaderText("Не могу добавить элементы на форму");
+		            alert.setTitle("Error");
+		            alert.setHeaderText("Can't add the elements to the form");
 		            alert.setContentText(e.getMessage());
 		            alert.showAndWait();
 			}
@@ -126,8 +126,8 @@ public class RootLayoutController {
 		 }
 		 catch (Exception e) {
 			    Alert alert = new Alert(AlertType.ERROR);
-	            alert.setTitle("Ошибка");
-	            alert.setHeaderText("Не могу удалить элементы");
+	            alert.setTitle("Error");
+	            alert.setHeaderText("Can't remove the elements");
 	            alert.setContentText(e.getMessage());
 	            alert.showAndWait();
 		 }
@@ -145,7 +145,7 @@ public class RootLayoutController {
     private void selectPath(){
 		  DirectoryChooser directoryChooser = new DirectoryChooser(); 
 
-          directoryChooser.setTitle("Выберите корневую папку для батчей");
+          directoryChooser.setTitle("Select a root folder for the batches");
           File selected = new File(this.batchesPath.getText());
           if (selected.exists())
         	  directoryChooser.setInitialDirectory(selected);
@@ -161,7 +161,7 @@ public class RootLayoutController {
 	private void loadSourcesFile(){
 		 FileChooser fileChooser = new FileChooser(); 
 
-		 fileChooser.setTitle("Выберите файл с источниками");
+		 fileChooser.setTitle("Select a sources file");
 		 fileChooser.setInitialDirectory(app.sourcesFile.getParentFile());
 		 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (.xml)", "*.xml"));
          File file = fileChooser.showOpenDialog(app.getPrimaryStage());
@@ -177,7 +177,7 @@ public class RootLayoutController {
 	private void saveSourcesFile(){
 		 FileChooser fileChooser = new FileChooser(); 
 
-		 fileChooser.setTitle("Сохраните файл с источниками");
+		 fileChooser.setTitle("Save sources file");
 		 fileChooser.setInitialDirectory(app.sourcesFile.getParentFile());
          File file = fileChooser.showSaveDialog(app.getPrimaryStage());
 
@@ -193,11 +193,11 @@ public class RootLayoutController {
     private void showCurrentState(){
 		StringBuilder sb = new StringBuilder();
 		for (BatchSource bs:app.sources)
-			sb.append("\nВыбрано картинок: " + bs.getFilesCount());
-		sb.append("\nВыбрано батчей: " + app.gs.getBatchescount());
+			sb.append("\nSelected images count: " + bs.getFilesCount());
+		sb.append("\nSelected batches count: " + app.gs.getBatchescount());
 		 Alert alert = new Alert(AlertType.INFORMATION);
-         alert.setTitle("Данные");
-         alert.setHeaderText("Данные внутри программы: ");
+         alert.setTitle("Data");
+         alert.setHeaderText("Data in the application: ");
          alert.setContentText(sb.toString());
          alert.showAndWait();
 	}
@@ -211,9 +211,9 @@ public class RootLayoutController {
 	  File outputFolder = new File(app.gs.getPath());
 	  if (!outputFolder.exists()){
 		  Alert alert = new Alert(AlertType.ERROR);
-          alert.setTitle("Ошибка");
-          alert.setHeaderText("Не могу создать батчи");
-          alert.setContentText("Указанная папка не существует: " + app.gs.getPath());
+          alert.setTitle("Error");
+          alert.setHeaderText("Can't create the batches");
+          alert.setContentText("Given folder doesn't exist: " + app.gs.getPath());
           alert.showAndWait();
           this.createBtn.setDisable(false);
           return;
@@ -251,15 +251,15 @@ public class RootLayoutController {
       
     			  if (!globalsb.toString().isEmpty()){
     				  Alert alert = new Alert(AlertType.WARNING);
-    		          alert.setTitle("Предупреждение");
-    		          alert.setHeaderText("Перемещение завершено с предупреждениями");
+    		          alert.setTitle("Warning");
+    		          alert.setHeaderText("Moving files completed with warnings");
     		          alert.setContentText(globalsb.toString());
     		          alert.showAndWait();
     			  }
     			  else {
     				  Alert alert = new Alert(AlertType.INFORMATION);
-    		          alert.setTitle("УСПЕШНО");
-    		          alert.setHeaderText("Перемещение завершено успешно");
+    		          alert.setTitle("SUCCESS");
+    		          alert.setHeaderText("Moving files completed successfully");
     		          alert.showAndWait();
     			  }
     			 

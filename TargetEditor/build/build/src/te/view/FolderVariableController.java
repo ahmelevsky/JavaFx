@@ -124,17 +124,21 @@ public class FolderVariableController  extends TargetEditorController implements
 		        	  }
 		        	//  selectPresetBox.getSelectionModel().clearSelection();
 		          }
-		      		else {
-		      			Platform.runLater(() -> {
-		      				selectPresetBox.getSelectionModel().selectedItemProperty().removeListener(selectionListener);
-		      				selectPresetBox.getSelectionModel().select(ol);
-		      				selectPresetBox.getSelectionModel().selectedItemProperty().addListener(selectionListener);
-		                });
-		      		}
+		      		else 
+		      			selectTheme(ol);
+		      		
 		}
 	}
 	};
     
+	
+	private void selectTheme(FolderTheme ft) {
+		Platform.runLater(() -> {
+				selectPresetBox.getSelectionModel().selectedItemProperty().removeListener(selectionListener);
+				selectPresetBox.getSelectionModel().select(ft);
+				selectPresetBox.getSelectionModel().selectedItemProperty().addListener(selectionListener);
+        });
+	}
 	 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -235,8 +239,22 @@ public class FolderVariableController  extends TargetEditorController implements
 			    return new File(current, name).isDirectory();
 			  }
 			});
+		 
 		 for (File dir:directories){
 			 app.getFolderVariableData().add(new FolderVariable(dir));
+		 }
+		 
+		 FolderTheme ft = selectPresetBox.getSelectionModel().getSelectedItem();
+		 if (ft!=null) {
+			 app.folderVariableData.forEach(v -> {
+     			
+     			 Optional<FolderVariable> opt = ft.getFolderVariables().stream().filter(fw -> fw.getFolderPath().equals(v.getFolderPath())).findFirst();
+     			if (opt!=null && opt.isPresent()){
+     				 FolderVariable presetVariable = opt.get();
+     				 v.setDescriptionVariable(presetVariable.getDescriptionVariable());
+         			 v.setKeyVariable(presetVariable.getKeyVariable());
+     			}
+		 });
 		 }
 	 }
 	
@@ -489,6 +507,7 @@ public class FolderVariableController  extends TargetEditorController implements
 				   ft.getFolderVariables().add(newfv);
 			   });
 			   themesList.add(ft);
+			   selectTheme(ft);
 			  }
 			  LOGGER.fine("FolderVariable Theme Preset was saved with name: " + res.get());
 		  }

@@ -63,7 +63,7 @@ public class Main extends Application {
 		 if (settingsfile.exists()) 
 			 loadLastSettings();
 		 else
-			 gs = new GlobalSettings("<Нажмите и выберите папку для батчей>", 1);
+			 gs = new GlobalSettings("<Click and select an output folder for the batches>", 1);
 		 this.primaryStage = primaryStage;
 	     this.primaryStage.setTitle("BatchEditor");
 	     this.primaryStage.getIcons().add(new Image("file:resources/icon.png"));
@@ -133,9 +133,9 @@ public class Main extends Application {
 	            this.wasChanged = false;
 	        } catch (Exception e) { // catches ANY exception
 	            Alert alert = new Alert(AlertType.ERROR);
-	            alert.setTitle("Ошибка");
-	            alert.setHeaderText("Ошибка загрузки источников");
-	            alert.setContentText("Не могу загрузить данные из файла:\n" + file.getPath());
+	            alert.setTitle("Error");
+	            alert.setHeaderText("Source load error");
+	            alert.setContentText("Can't load data from file:\n" + file.getPath());
 	            alert.showAndWait();
 	        }
 	 }
@@ -156,9 +156,9 @@ public class Main extends Application {
 	            setPersonFilePath(file);
 	        } catch (Exception e) { // catches ANY exception
 	            Alert alert = new Alert(AlertType.ERROR);
-	            alert.setTitle("Ошибка");
-	            alert.setHeaderText("Ошибка сохранения источников");
-	            alert.setContentText("Не могу сохранить данные в файл:\n" + file.getPath());
+	            alert.setTitle("Error");
+	            alert.setHeaderText("Source save error");
+	            alert.setContentText("Can't save data to file:\n" + file.getPath());
 
 	            alert.showAndWait();
 	        }
@@ -175,9 +175,9 @@ public class Main extends Application {
 	            this.gs = (GlobalSettings) um.unmarshal(this.settingsfile);
 	        } catch (Exception e) { // catches ANY exception
 	            Alert alert = new Alert(AlertType.ERROR);
-	            alert.setTitle("Ошибка");
-	            alert.setHeaderText("Ошибка загрузки параметров");
-	            alert.setContentText("Не могу получить параметры из файла:\n" + this.settingsfile.getPath());
+	            alert.setTitle("Error");
+	            alert.setHeaderText("Error loading parameters");
+	            alert.setContentText("Can't get parameters from file:\n" + this.settingsfile.getPath());
 
 	            alert.showAndWait();
 	        }
@@ -194,9 +194,9 @@ public class Main extends Application {
 	            m.marshal(this.gs, this.settingsfile);
 	        } catch (Exception e) { // catches ANY exception
 	            Alert alert = new Alert(AlertType.ERROR);
-	            alert.setTitle("Ошибка");
-	            alert.setHeaderText("Ошибка сохранения параметров");
-	            alert.setContentText("Не могу сохранить параметры в файл:\n" + settingsfile.getPath());
+	            alert.setTitle("Error");
+	            alert.setHeaderText("Error saving parameters");
+	            alert.setContentText("Ca't save parameters to file:\n" + settingsfile.getPath());
 
 	            alert.showAndWait();
 	        }
@@ -220,8 +220,8 @@ public class Main extends Application {
 	     saveLastSettings();
 	     if (this.wasChanged) {
 	     Alert alert = new Alert(AlertType.CONFIRMATION);
-	     alert.setTitle("Подтверждение действия");
-	     alert.setHeaderText("Сохранить изменения?");
+	     alert.setTitle("Confirmation");
+	     alert.setHeaderText("Save the changes?");
 
 	     Optional<ButtonType> result = alert.showAndWait();
 	     if (result.get() == ButtonType.OK){
@@ -231,8 +231,8 @@ public class Main extends Application {
 		 }
 		 catch (Exception e) {
 			 Alert alert = new Alert(AlertType.ERROR);
-	            alert.setTitle("Ошибка");
-	            alert.setHeaderText("Ошибка сохранения данных в xml");
+	            alert.setTitle("Error");
+	            alert.setHeaderText("Error saving the data to xml");
 	            alert.setContentText(e.getMessage());
 	            alert.showAndWait();
 	            throw e;

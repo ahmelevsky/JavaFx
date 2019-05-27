@@ -18,7 +18,7 @@ public class AboutWindowController implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		aboutText.setText("TargetEditor version 2.0\n\nalpha-build (for testing) 2.0.1\n\n2019");
+		aboutText.setText("TargetEditor version 2.0\n\nalpha-build (for testing) 2.0.2\n\n2019");
 		
 	}
 	

@@ -126,8 +126,6 @@ public class Main extends Application {
 		mainStage.setTitle("TargetEditor v2.0");
 		mainStage.getIcons().add(new Image("file:resources/icon.png"));
 		loadLastData();
-		for (TargetEditorController controller : this.controllers)
-			controller.loadData();
 		mainStage.show();
 	}
 	
@@ -359,9 +357,6 @@ public class Main extends Application {
 		 titleEditorController.updateLists();
 	 }
 	 
-	 /** Clears all but not Targets (selected folder), and not saved data -
-	  *     to allow use clear function during writing metadata. 
-	  */
 	 public void clearAllData(){
 		 keyVariableEditorContainerController.clear();
 		 descriptionVariableEditorContainerController.clear();
@@ -411,7 +406,7 @@ public class Main extends Application {
 	         if(file!=null) {
 	    	
 	        try {
-	        	 JAXBContext context = JAXBContext
+	        	   JAXBContext context = JAXBContext
 		                    .newInstance(ImportWrapper.class);
 		            Unmarshaller um = context.createUnmarshaller();
 
@@ -419,10 +414,7 @@ public class Main extends Application {
                     clearAllData();
                     this.keyVariableEditorContainerController.variables.addAll(wrapper.getKeyVariables());
     	            this.descriptionVariableEditorContainerController.variables.addAll(wrapper.getDescriptionVariables());
-    	            this.descriptionVariableEditorContainerController.loadData();
-    	            this.keyVariableEditorContainerController.loadData();
     	            this.targetsData.addAll(wrapper.getTarget());
-    	            this.targetsController.loadData();
 		            if (wrapper.getKeysPage()!=null)
 		            	this.keysEditorController.wrapper = wrapper.getKeysPage();
 		            if (wrapper.getDescriptionPage()!=null)
@@ -517,6 +509,8 @@ public class Main extends Application {
 		            	this.titleEditorController.wrapper = wrapper.getTitlePage();
 		            if (wrapper.getFolderWrapper() !=null)
 		            	this.folderVariableController.wrapper = wrapper.getFolderWrapper();
+		            for (TargetEditorController controller : this.controllers)
+		    			controller.loadData();
 		            LOGGER.fine("Last data was loaded from " + this.dataFile.getAbsolutePath());
 		        } catch (Exception e) { 
 		        	Alert alert = new Alert(AlertType.ERROR);

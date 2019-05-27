@@ -101,7 +101,6 @@ public class VariablesEditorContainerController  extends TargetEditorController 
 	public void clear() {
 		variableLayouts.getChildren().clear();
 		app.keyVariableControllers.clear();
-		app.getPrimaryStage().sizeToScene();
 		variables =  FXCollections.observableArrayList();
 	}
 

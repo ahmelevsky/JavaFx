@@ -61,13 +61,13 @@ public class Utils {
 			
 			l.debug("filesToMoveCount left " + filesToMoveCount);
 			if (errcount>10) {
-				l.error("ОШИБКА: Слишком много ошибок, операция над папкой прервана.");
-				sb.append("ОШИБКА: Слишком много ошибок, операция над папкой прервана.\n");
+				l.error("ERROR: Too many errors, the operation on the folder was interrupted.");
+				sb.append("ERROR: Too many errors, the operation on the folder was interrupted.\n");
 				return movedcount;
 			}
 			if (countFilesInDirectories(subfolders, ".jpg")==0){
-				l.debug("ПРЕДУПРЕЖДЕНИЕ: В папке " + inputFolder.getAbsolutePath() + " больше нет файлов.\n");
-				sb.append("ПРЕДУПРЕЖДЕНИЕ: В папке " + inputFolder.getAbsolutePath() + " больше нет файлов.");
+				l.debug("WARNING: No more files in the folder:  " + inputFolder.getAbsolutePath() + "\n");
+				sb.append("WARNING: No more files in the folder:  " + inputFolder.getAbsolutePath() );
 				return movedcount;		
 			}
 			if (step==subfolders.size())
@@ -85,8 +85,8 @@ public class Utils {
 				if (!isJpgOnly) {
 					File eps = new File(jpg.getParentFile() + File.separator + jpg.getName().replaceFirst("[.][^.]+$", ".eps")); 
 					if (!eps.exists()) {
-						l.error("ПРЕДУПРЕЖДЕНИЕ: Для файла " + jpg.getAbsolutePath() + " не нашлось одноименного eps.");
-						sb.append("ПРЕДУПРЕЖДЕНИЕ: Для файла " + jpg.getAbsolutePath() + " не нашлось одноименного eps.\n");
+						l.error("WARNING: No .eps file for jpeg: " + jpg.getAbsolutePath());
+						sb.append("WARNING: No .eps file for jpeg: " + jpg.getAbsolutePath() + "\n");
 						errcount++;
 						continue;
 					}
@@ -97,8 +97,8 @@ public class Utils {
 						l.log("FILE successully moved. From: " + eps.getAbsolutePath() + " To " + outputFolder.getAbsolutePath() + File.separator + eps.getName());
 						movedcount++;
 					} catch (IOException e) {
-						l.error("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + eps.getAbsolutePath() + " Error message: " + e.getMessage());
-						sb.append("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + eps.getAbsolutePath() + "\n");
+						l.error("WARNING: Can't move the file " + eps.getAbsolutePath() + " Error message: " + e.getMessage());
+						sb.append("WARNING: Can't move the file " + eps.getAbsolutePath() + "\n");
 						continue;
 					}
 				}
@@ -108,8 +108,8 @@ public class Utils {
 					l.log("FILE successully moved. From: " + jpg.getAbsolutePath() + " To " + outputFolder.getAbsolutePath() + File.separator + jpg.getName());
 					movedcount++;
 				} catch (IOException e) {
-					l.error("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + jpg.getAbsolutePath() + " Error message: " + e.getMessage());
-					sb.append("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + jpg.getAbsolutePath() + "\n");
+					l.error("WARNING: Can't move the file " + jpg.getAbsolutePath() + " Error message: " + e.getMessage());
+					sb.append("WARNING: Can't move the file " + jpg.getAbsolutePath() + "\n");
 					continue;
 				}
 				filesToMoveCount--;
@@ -133,18 +133,18 @@ public class Utils {
 			
 			l.debug("filesToMoveCount left " + filesToMoveCount);
 			if (errcount>10) {
-				l.error("ОШИБКА: Слишком много ошибок, операция над папкой прервана.");
-				sb.append("ОШИБКА: Слишком много ошибок, операция над папкой прервана.\n");
+				l.error("ERROR: Too many errors, the operation on the folder was interrupted.");
+				sb.append("ERROR: Too many errors, the operation on the folder was interrupted.\n");
 				return movedcount;
 			}
 			int countFilesInLastFolders = countFilesInDirectoryIfNoSubDirectories(inputFolder, ".jpg");
 			if (countFilesInLastFolders==0){
-				l.debug("ПРЕДУПРЕЖДЕНИЕ: В конечных подпапках директории " + inputFolder.getAbsolutePath() + " больше нет подходящих файлов");
-				sb.append("ПРЕДУПРЕЖДЕНИЕ: В конечных подпапках директории " + inputFolder.getAbsolutePath() + " больше нет подходящих файлов.\n");
+				l.debug("WARNING: No more applicable files in the subfolders of directory " + inputFolder.getAbsolutePath());
+				sb.append("WARNING: No more applicable files in the subfolders of directory " + inputFolder.getAbsolutePath() + "\n");
 				return movedcount;		
 			}
 			else 
-				l.debug("Количество файлов jpeg в конечных папках: " + countFilesInLastFolders);
+				l.debug("JPEG count in the subfolders: " + countFilesInLastFolders);
 			
 			File selectedDirectory = inputFolder; 
 			File dir = selectedDirectory;
@@ -170,8 +170,8 @@ public class Utils {
 				if (!isJpgOnly) {
 					File eps = new File(jpg.getParentFile() + File.separator + jpg.getName().replaceFirst("[.][^.]+$", ".eps")); 
 					if (!eps.exists()) {
-						l.error("ПРЕДУПРЕЖДЕНИЕ: Для файла " + jpg.getAbsolutePath() + " не нашлось одноименного eps.");
-						sb.append("ПРЕДУПРЕЖДЕНИЕ: Для файла " + jpg.getAbsolutePath() + " не нашлось одноименного eps.\n");
+						l.error("WARNING: No .eps file for jpeg: " + jpg.getAbsolutePath());
+						sb.append("WARNING: No .eps file for jpeg: " + jpg.getAbsolutePath() + "\n");
 						errcount++;
 						continue;
 					}
@@ -182,8 +182,8 @@ public class Utils {
 						l.log("FILE successully moved. From: " + eps.getAbsolutePath() + " To " + outputFolder.getAbsolutePath() + File.separator + eps.getName());
 						movedcount++;
 					} catch (IOException e) {
-						l.error("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + eps.getAbsolutePath() + " Error message: " + e.getMessage());
-						sb.append("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + eps.getAbsolutePath() + "\n");
+						l.error("WARNING: Can't move the file " + jpg.getAbsolutePath() + " Error message: " + e.getMessage());
+						sb.append("WARNING: Can't move the file " + jpg.getAbsolutePath() + "\n");
 						continue;
 					}
 				}
@@ -193,8 +193,8 @@ public class Utils {
 					l.log("FILE successully moved. From: " + jpg.getAbsolutePath() + " To " + outputFolder.getAbsolutePath() + File.separator + jpg.getName());
 					movedcount++;
 				} catch (IOException e) {
-					l.error("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + jpg.getAbsolutePath() + " Error message: " + e.getMessage());
-					sb.append("ПРЕДУПРЕЖДЕНИЕ: Не получилось переместить файл " + jpg.getAbsolutePath() + "\n");
+					l.error("WARNING: Can't move the file " + jpg.getAbsolutePath() + " Error message: " + e.getMessage());
+					sb.append("WARNING: Can't move the file " + jpg.getAbsolutePath() + "\n");
 					continue;
 				}
 				filesToMoveCount--;
@@ -313,7 +313,7 @@ public class Utils {
 			if (!folder.mkdir()){
 				 Alert alert = new Alert(AlertType.ERROR);
 		            alert.setTitle("Ошибка");
-		            alert.setHeaderText("не могу создать папку для батча: " + folder.getAbsolutePath());
+		            alert.setHeaderText("Error creating batch output folder: " + folder.getAbsolutePath());
 		            l.error("Error creating batch output folder" + folder.getAbsolutePath());
 		            alert.showAndWait();
 		            return false;

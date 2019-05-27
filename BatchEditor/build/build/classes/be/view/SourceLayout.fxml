@@ -15,7 +15,7 @@
    <children>
       <Circle fx:id="statusCircle" fill="WHITE" radius="15.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
       <TextField fx:id="captionText" minWidth="150.0" prefWidth="150.0" />
-      <Label text="Растр:" />
+      <Label text="Raster:" />
       <CheckBox fx:id="isJpgOnly" mnemonicParsing="false" />
       <Hyperlink fx:id="sourcePath" onAction="#selectPath" text="&lt;SELECT FOLDER&gt;" HBox.hgrow="SOMETIMES" />
       <Region HBox.hgrow="ALWAYS" />
