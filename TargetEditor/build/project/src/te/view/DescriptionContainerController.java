@@ -90,6 +90,9 @@ public class DescriptionContainerController  extends TargetEditorController impl
 	private boolean isInitialized;
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
+	
+	public String currentDescriptionExample = "";
+	
 	private final ChangeListener<String> boxListener  = new ChangeListener<String>(){
 		@Override
 		public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
@@ -322,6 +325,7 @@ public class DescriptionContainerController  extends TargetEditorController impl
 	
 	@FXML
 	private void refresh(){
+		setError(resultText, false, null);
 		try {
 			removeListeners();
 			getMaxLengthDescription();
@@ -435,7 +439,7 @@ public class DescriptionContainerController  extends TargetEditorController impl
 			countLabel.setFill(Color.BLACK);
 		}
 		countLabel.setText(Settings.bundle.getString("ui.tabs.descriptions.maxchars") + resultString.length());
-		
+		this.currentDescriptionExample =resultString;
 		return resultString;
 	}
 	
@@ -469,7 +473,9 @@ public class DescriptionContainerController  extends TargetEditorController impl
 			if(isRandomStored.get(i))
 				position = -1;
 			final String dataValue = data.get(i);
-			if (dataValue.equals(this.folderDescr)){
+			if (dataValue==null)
+				continue;
+			else if (dataValue.equals(this.folderDescr)){
 				String t = app.mainFrameController.currentFolder.getDescriptionVariable();
 			    if (t!=null && !t.isEmpty())
 			    	result.add( new Tuple<Integer, String>(position, t));

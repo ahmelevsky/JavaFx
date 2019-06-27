@@ -25,7 +25,7 @@ public class ExiftoolRunner {
 		getOperationSystem();
 	}
 
-	public static void writeMetadataToFile(File toFile, List<String> keys,
+	public static boolean writeMetadataToFile(File toFile, List<String> keys,
 			String title, String description) throws IOException {
 
 		List<String> sb = new ArrayList<String>();
@@ -33,7 +33,7 @@ public class ExiftoolRunner {
 		if (isWindows) sb.add(exifpath);
 		else if (isMac)  sb.add("/usr/local/bin/exiftool");
 		else throw new IOException("Unsupported OS");
-		
+		LOGGER.fine("Set OS");
 		sb.add("-overwrite_original");
 		
 		for (String k : keys) {
@@ -59,16 +59,22 @@ public class ExiftoolRunner {
 		LOGGER.info("");
 		LOGGER.info(Settings.bundle.getString("log.message.write") + toFile.getAbsolutePath());
 		
+		LOGGER.info("Decription: " + description);
+		LOGGER.info("Keywords: " + StringUtils.join(keys, ", "));
+		LOGGER.info("Title: " + title);
+		
 		try {
-			LOGGER.info("Exiftool exit code: " +runCommand(sb)); 
+			int code = runCommand(sb);
+			LOGGER.info("Exiftool exit code: " + code); 
+			if (code==0 || code==141) return true;
+			else return false;
 		} catch (InterruptedException | IOException e) {
 			LOGGER.severe("Exiftool process interrupted on file "
 					+ toFile.getAbsolutePath());
 			LOGGER.severe(e.getMessage());
+			return false;
 		}
-		LOGGER.info("Decription: " + description);
-		LOGGER.info("Keywords: " + StringUtils.join(keys, ", "));
-		LOGGER.info("Title: " + title);
+		
 	}
 
 	static void getOperationSystem() {

@@ -145,7 +145,29 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		cutToSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 200, 50));
 		cutToSpinner.focusedProperty().addListener((arg, oldVal, newVal) ->correctSpinnerValue());
 		cutToSpinner.valueProperty().addListener((arg, oldVal, newVal) -> correctSpinnerValue());
-		
+		cutToSpinner.valueProperty().addListener((arg, oldVal, newVal) -> {
+			try {
+				removeListeners();
+				updateCounter();
+			} catch (TextAreaException e) {
+				setError(e.textArea, true, e.getMessage());
+			}
+			finally {
+				addListeners();
+			}
+		});
+		doCutBox.selectedProperty().addListener((arg, oldVal, newVal) -> {
+			try {
+				removeListeners();
+				updateCounter();
+			} catch (TextAreaException e) {
+				setError(e.textArea, true, e.getMessage());
+			}
+			finally {
+				addListeners();
+			}
+		});
+		cutToSpinner.getValueFactory().setValue(50);
 	}
 	
 	private void correctSpinnerValue(){
@@ -249,8 +271,6 @@ public class TitleEditorController extends TargetEditorController implements Ini
 			options1.add(this.targetDescr1);
 			options1.add(this.targetDescr2);
 		}
-		options1.addAll(app.descriptionVariableEditorContainerController.variables.stream().map(Variable::getName)
-	              .collect(Collectors.toList()));
 		
 		if (options1.contains(selectedValue))
 			titleBox.getSelectionModel().select(selectedValue);
@@ -270,20 +290,18 @@ public class TitleEditorController extends TargetEditorController implements Ini
 		String title = "";
 		String data = titleBox.getSelectionModel().getSelectedItem();
 		if (isTakeFromDescriptionBox.isSelected()) 
-			title = app.descriptionEditorController.getMaxLengthDescription();
+			title = app.descriptionEditorController.currentDescriptionExample;
 		else if (data==null || data.equals(Settings.bundle.getString("ui.selector.text"))){
-			    	title  = parseVariablesInText(titleText, true);
+			    	title  = titleText.getText();
 		}
 		else if (data.equals(this.folderDescr)){
 			List<String> res = app.getFolderVariableData().stream().map(FolderVariable::getDescriptionVariable).collect(Collectors.toList());
 			title = Collections.max(res, Comparator.comparing(s -> s.length()));
-			titleText.setText(title);
 		}
 		else if (data.equals(this.targetDescr1)) {
 			Target target = app.getTargetWithMaxLength();
 			if (target!=null){
 				title = target.getTargetDescr1();
-			titleText.setText(title);
 			}
 			
 		}
@@ -291,16 +309,11 @@ public class TitleEditorController extends TargetEditorController implements Ini
 			Target target = app.getTargetWithMaxLength();
 			if (target!=null){
 				title = target.getTargetDescr2();
-			titleText.setText(title);
 			}
 		}
-	   /* else {
-	    	String variableValue = Variable.getMaxValueByName(app.descriptionVariableEditorContainerController.variables, data);
-		    if (variableValue==null) 
-		    	titleText.setText("");
-		    else
-		    	titleText.setText(variableValue);
-		}*/
+		if (this.doCutBox.isSelected())
+			title = cutTitle(title);
+		titleText.setText(title);
 		app.checkSyntax(titleText);
 		countLabel.setText("(" + getWordsCount(title) + "/" + title.length() + ")");
 	}
@@ -322,20 +335,41 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	
 	public String getTitleForMetadata(){
 		String uncut = getTitleForMetadataUncut();
-		if (this.doCut) {
-			String[] split = uncut.split(" ");
-			StringBuilder sb = new StringBuilder();
-			StringBuilder sbtemp = new StringBuilder();
-			for (String s:split) {
-				sbtemp.append(s + " ");
-				if (sbtemp.length()<=this.cutTo)
-					sb.append(s + " ");
-				else break;
-			}
-			return sb.toString();
-		}
+		if (this.doCut) 
+			return cutTitleMetadata(uncut);
 		else return uncut;
 	}
+	
+	
+	private String cutTitleMetadata(String title) {
+		String[] split = title.split(" ");
+		StringBuilder sb = new StringBuilder();
+		StringBuilder sbtemp = new StringBuilder();
+		for (String s:split) {
+			sbtemp.append(s + " ");
+			if (sbtemp.length()<=this.cutTo)
+				sb.append(s + " ");
+			else break;
+		}
+		return sb.toString();
+	}
+	
+	private String cutTitle(String title) {
+		String[] split = title.split(" ");
+		StringBuilder sb = new StringBuilder();
+		StringBuilder sbtemp = new StringBuilder();
+		for (String s:split) {
+			sbtemp.append(s + " ");
+			if (sbtemp.length()<=this.cutToSpinner.getValueFactory().getValue())
+				sb.append(s + " ");
+			else break;
+		}
+		if (title.charAt(title.length()-1) == ' ')
+			return sb.toString();
+		else
+			return sb.toString().trim();
+	}
+	
 	
 	private String getTitleForMetadataUncut(){
 		if (isTakeFromDescription)

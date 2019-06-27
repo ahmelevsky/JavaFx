@@ -42,11 +42,11 @@
 	<target name='do-compile'>
 		<delete dir="build" />
 		<mkdir dir="build/src" />
-		<mkdir dir="build/libs" />
+		<mkdir dir="build/lib" />
 		<mkdir dir="build/classes" />
 	
 		<!-- Copy project-libs references -->
-		<copy todir="build/libs">
+		<copy todir="build/lib">
 			<fileset dir="externalLibs">
 				<include name="commons-lang3-3.5.jar"/>
 				<include name="exiftool.exe"/>
@@ -64,7 +64,7 @@
 	
 		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="build/src" destdir="build/classes" encoding="Cp1251">
 			<classpath>
-				<fileset dir="build/libs">
+				<fileset dir="build/lib">
 					<include name="*"/>
 				</fileset>
 			</classpath>
@@ -84,10 +84,10 @@
 		<delete file="deploy" />
 		
 		<mkdir dir="dist" />
-		<mkdir dir="dist/libs" />
+		<mkdir dir="dist/lib" />
 		<mkdir dir="dist/resources" />
 		
-		<copy todir="dist/libs">
+		<copy todir="dist/lib">
 			<fileset dir="externalLibs">
 				<include name="*" />
 			</fileset>
@@ -98,7 +98,7 @@
 		
 		<fx:resources id="appRes">
 			<fx:fileset dir="dist" includes="TargetEditor.jar"/>
-			<fx:fileset dir="dist" includes="libs/*"/>
+			<fx:fileset dir="dist" includes="lib/*"/>
 			<fx:fileset dir="dist" includes="resources/**"/>
 		</fx:resources> 
 		
@@ -165,8 +165,8 @@
 		            <!-- You can have multiple instance of classpath if you 3rd party or
 		                 dependent jars in different locations -->
 		        </bundleapp>
-				<copy todir="TargetEditor.app/Contents/Java/libs" >  
-                          <fileset dir="deploy/libs" includes="*.jar"/>  
+				<copy todir="TargetEditor.app/Contents/Java/lib" >  
+                          <fileset dir="deploy/lib" includes="*.jar"/>  
                     </copy> 
 				<copy todir="TargetEditor.app/Contents/Resources/resources" >  
                           <fileset dir="deploy/resources" includes="**"/>  

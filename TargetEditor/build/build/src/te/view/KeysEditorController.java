@@ -70,7 +70,7 @@ public class KeysEditorController extends TargetEditorController implements Init
 	@FXML
 	private CheckBox isFolderVariable;
 	
-	private ObservableList<String> items = FXCollections.observableArrayList("Все");
+	private ObservableList<String> items = FXCollections.observableArrayList(Settings.bundle.getString("ui.tabs.keys.all"));
 	private String savedKeywordsTemplate;
 	private boolean isT;
 	private boolean isF;

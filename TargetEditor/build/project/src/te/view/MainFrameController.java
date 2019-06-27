@@ -297,10 +297,14 @@ public class MainFrameController implements Initializable{
 		    	    	try{
 		   	        	    LOGGER.info("Current file: " + image.getName());
 		   	        		currentTarget = app.getRandomTarget();
+		   	        		LOGGER.fine("Set current target");
 		   	        		List<String> keywords = app.keysEditorController.generateKeywordsForMetadata();
+		   	        		LOGGER.fine("Set keywords");
 		   	        		String description  =  app.descriptionEditorController.generateDescriptionForMetadata();
+		   	        		LOGGER.fine("Set description");
 		   	        		String title = app.titleEditorController.getTitleForMetadata();
-		   	        		ExiftoolRunner.writeMetadataToFile (image, keywords, title, description);
+		   	        		LOGGER.fine("Set title");
+		   	        		boolean isSuccess = ExiftoolRunner.writeMetadataToFile (image, keywords, title, description);
 		   	        		if (isWriteBothExtensions) {
 		   	        			File eps = new File(image.getAbsolutePath().replaceFirst("[.][^.]+$", "") + ".eps");
 		   	        			if (eps.exists())
@@ -308,7 +312,8 @@ public class MainFrameController implements Initializable{
 		   	        			else
 		   	        				LOGGER.warning(Settings.bundle.getString("log.warn.epsnotfound") + image.getAbsolutePath());
 		   	        		}
-		   	         		success.incrementAndGet();
+		   	         		if (isSuccess) success.incrementAndGet();
+		   	         		else failures.incrementAndGet();
 		   	         		
 		   	        	}
 		   	        	catch (IOException ex) {

@@ -4408,3 +4408,744 @@ org.eclipse.debug.core.DebugException: Invalid stack frame
 	at org.eclipse.jface.text.TextViewerHoverManager$4.run(TextViewerHoverManager.java:169)
 !SUBENTRY 1 org.eclipse.jdt.debug 4 100 2019-05-27 13:16:35.834
 !MESSAGE Invalid stack frame
+!SESSION 2019-05-28 15:01:37.333 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-05-28 15:01:59.034
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2019-05-28 17:33:22.344 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product -data C:\Java\JavaFx -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-05-28 17:33:41.764
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2019-05-28 20:36:28.868 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-05-28 20:36:48.056
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2019-05-29 11:44:16.172 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-05-29 11:44:42.570
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2019-05-30 14:37:01.467 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-05-30 14:37:19.387
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2019-06-03 20:34:05.851 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-06-03 20:34:22.131
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2019-06-04 19:48:01.571 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-06-04 19:48:17.109
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2019-06-07 13:16:16.025 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-06-07 13:16:31.258
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2019-06-12 19:45:27.277 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product -data C:\Java\JavaFx -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-06-12 19:45:42.080
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2019-06-17 10:23:27.821 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-06-17 10:23:42.231
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2019-06-17 23:59:47.887 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-06-18 00:00:00.220
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2019-06-18 00:00:24.608 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-06-18 00:00:37.617
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2019-06-19 21:01:47.595 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-06-19 21:02:11.374
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.jdt.core 4 4 2019-06-19 22:00:24.408
+!MESSAGE Exception occurred during compilation unit conversion:
+----------------------------------- SOURCE BEGIN -------------------------------------
+package te.view;
+
+import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.SingleSelectionModel;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TextArea;
+import te.Settings;
+import te.model.FolderVariable;
+import te.model.Target;
+import te.model.TitleEditorWrapper;
+import te.model.Variable;
+import te.util.DataException;
+import te.util.SyntaxParser;
+import te.util.TextAreaException;
+import te.util.TextException;
+
+public class TitleEditorController extends TargetEditorController implements Initializable {
+	
+	@FXML
+	private TextArea titleText;
+	@FXML
+	private ComboBox<String> titleBox;
+	@FXML
+	private Label countLabel;
+	@FXML
+	private  CheckBox isTakeFromDescriptionBox;
+	@FXML
+	private Spinner<Integer> cutToSpinner;
+	@FXML
+	private  CheckBox doCutBox;
+	
+	private String titleBoxSetting;
+	public String titleTextSetting;
+	
+	private boolean isTakeFromDescription;
+	private boolean doCut;
+	private int cutTo;
+	
+	ObservableList<String> options1 =  FXCollections.observableArrayList();
+
+	public TitleEditorWrapper wrapper;
+	private final String targetDescr1 = "TargetDescr1";
+	private final String targetDescr2 = "TargetDescr2";		
+	private final String folderDescr = "FolderDescr";
+	private boolean isInitialized;
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	
+	
+	private final ChangeListener<String> boxListener = new ChangeListener<String>(){
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
+				if (newValue==null || (oldValue!=null && newValue.equals(oldValue)))	return;
+				removeListeners();
+				if (newValue.equals(targetDescr1) || newValue.equals(targetDescr2) || newValue.equals(folderDescr)) {
+					titleText.setEditable(false);
+				}
+				else {
+					titleText.setEditable(true);
+					Optional<Variable> opt = app.descriptionVariableEditorContainerController.variables.stream().filter(v->v.getName().equals(newValue)).findFirst();
+					if (oldValue!=null && !oldValue.equals(newValue) && opt!=null && opt.isPresent()){
+						addVariableToText(opt.get(), titleText);
+					}
+					if (oldValue!=null && !oldValue.equals(Settings.bundle.getString("ui.selector.text")) && newValue.equals(Settings.bundle.getString("ui.selector.text")))
+						titleText.setText("");
+				}
+				setError(titleText, false, null);
+				try {	
+					updateCounter();
+					 }
+					 catch (TextAreaException e) {
+						setError(e.textArea, true, e.getMessage());
+					 }
+				finally{
+					addListeners();
+				}
+			}
+			};
+	
+	   private final ChangeListener<String> textListener = new ChangeListener<String>(){
+					@Override
+					public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
+						removeListeners();
+						setError(titleText, false, null);
+						titleBox.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
+						 try {	
+							 updateCounter();
+							 }
+							 catch (TextAreaException e) {
+								setError(e.textArea, true, e.getMessage());
+							 }
+						 finally{
+							 addListeners();
+						 }
+					}
+					};
+					
+	 private final ChangeListener<Boolean> checkBoxListener = new ChangeListener<Boolean>(){
+							@Override
+							public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue){	
+								removeListeners();
+								if (newValue == true) {
+									titleText.setDisable(true);
+									titleBox.setDisable(true);
+								}
+								else {
+									titleText.setDisable(false);
+									titleBox.setDisable(false);
+								}
+								setError(titleText, false, null);
+								 try {	
+									 updateCounter();
+									 }
+									 catch (TextAreaException e) {
+										setError(e.textArea, true, e.getMessage());
+									 }
+								 finally {
+									 addListeners();
+								 }
+							};
+					};
+					
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		titleBox.setItems(options1);
+		titleBox.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
+		addListeners();
+		cutToSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 200, 50));
+		cutToSpinner.focusedProperty().addListener((arg, oldVal, newVal) ->correctSpinnerValue());
+		cutToSpinner.valueProperty().addListener((arg, oldVal, newVal) -> correctSpinnerValue());
+		cutToSpinner.valueProperty().addListener((arg, oldVal, newVal) -> correctSpinnerValue());
+		cutToSpinner.getValueFactory().setValue(50);
+	}
+	
+	private void correctSpinnerValue(){
+		String text = cutToSpinner.getEditor().getText();
+		int val = 50; 
+	    try {
+	    	val = Integer.parseInt(text);    	
+	     }
+	    catch (NumberFormatException e) {
+	    	cutToSpinner.getEditor().setText("50");
+	    	cutToSpinner.getValueFactory().setValue(val);
+	    	cutToSpinner.increment(0);
+	    }
+	    cutToSpinner.getValueFactory().setValue(val);
+	    cutToSpinner.increment(0);
+		/*
+		 * try { updateCounter(); } catch (TextAreaException e) { setError(e.textArea,
+		 * true, e.getMessage()); }
+		 */
+	}
+		
+	
+    private void addListeners(){
+    	titleBox.valueProperty().removeListener(boxListener);
+		isTakeFromDescriptionBox.selectedProperty().removeListener(checkBoxListener);
+		titleText.textProperty().removeListener(textListener);
+    	titleBox.valueProperty().addListener(boxListener);
+		isTakeFromDescriptionBox.selectedProperty().addListener(checkBoxListener);
+		titleText.textProperty().addListener(textListener);
+	}
+	
+	
+	private void removeListeners(){
+		titleBox.valueProperty().removeListener(boxListener);
+		isTakeFromDescriptionBox.selectedProperty().removeListener(checkBoxListener);
+		titleText.textProperty().removeListener(textListener);
+	}
+	
+	
+	
+	private void addVariableToText(Variable d, TextArea ta){
+		if (d==null)
+			return;
+		String previous = ta.getText().trim();
+		if (!this.isInitialized)
+			previous = "";
+		StringBuilder sb = new StringBuilder(previous);
+		if (!previous.isEmpty())
+			sb.append(", ");
+		sb.append("<");
+		sb.append(d.getName());
+		sb.append(">[1]");
+		ta.setText(sb.toString());
+	}
+	
+	
+	
+	
+	private String parseVariablesInText(TextArea tf, boolean isMax) throws TextAreaException{
+		String result = null;
+		try{
+			result = SyntaxParser.pasteVariables(app.descriptionVariableEditorContainerController.variables, tf.getText(), isMax, " ");	
+		}
+		catch (TextException e) {
+			throw new TextAreaException (tf, e.getMessage());
+		}
+		return result;
+	}
+
+	private void setError(TextArea tf, boolean setOrUnset, String errorText){
+		 ObservableList<String> styleClass = tf.getStyleClass();
+		 ObservableList<String> styleClassresultText = countLabel.getStyleClass();
+		 if (setOrUnset) {
+			 if (! styleClass.contains("red")) {
+	                styleClass.add("red");
+	            }
+			 if (errorText!=null){
+				 if (! styleClassresultText.contains("redText")) {
+					 styleClassresultText.add("redText");
+		            }
+				 countLabel.setText(errorText);
+			 }
+	        } 
+		 else {
+	            styleClass.removeAll(Collections.singleton("red"));          
+	            styleClassresultText.removeAll(Collections.singleton("redText"));
+	            countLabel.setText("");
+	        }
+	}
+	
+	
+	public void updateLists(){
+		removeListeners();
+		SingleSelectionModel<String> selected = titleBox.selectionModelProperty().getValue();
+		String selectedValue = null;
+		if (selected!=null && !selected.isEmpty())
+			selectedValue = selected.getSelectedItem();
+		
+		options1.clear();
+		options1.add(Settings.bundle.getString("ui.selector.text"));
+		titleBox.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
+		if (!app.getFolderVariableData().isEmpty())
+			options1.add(this.folderDescr);
+		if (!app.getTargetsData().isEmpty()){
+			options1.add(this.targetDescr1);
+			options1.add(this.targetDescr2);
+		}
+		
+		if (options1.contains(selectedValue))
+			titleBox.getSelectionModel().select(selectedValue);
+		
+		try {
+			updateCounter();
+		} catch (TextAreaException e) {
+			setError(e.textArea, true, e.getMessage());
+		}
+		
+		addListeners();
+	}
+	
+	
+	
+	public void updateCounter() throws TextAreaException {
+		String title = "";
+		String data = titleBox.getSelectionModel().getSelectedItem();
+		if (isTakeFromDescriptionBox.isSelected()) 
+			title = app.descriptionEditorController.getMaxLengthDescription();
+		else if (data==null || data.equals(Settings.bundle.getString("ui.selector.text"))){
+			    	title  = titleText.getText();
+		}
+		else if (data.equals(this.folderDescr)){
+			List<String> res = app.getFolderVariableData().stream().map(FolderVariable::getDescriptionVariable).collect(Collectors.toList());
+			title = Collections.max(res, Comparator.comparing(s -> s.length()));
+		}
+		else if (data.equals(this.targetDescr1)) {
+			Target target = app.getTargetWithMaxLength();
+			if (target!=null){
+				title = target.getTargetDescr1();
+			}
+			
+		}
+		else if (data.equals(this.targetDescr2)){
+			Target target = app.getTargetWithMaxLength();
+			if (target!=null){
+				title = target.getTargetDescr2();
+			}
+		}
+		app.checkSyntax(titleText);
+		if (this.doCutBox.isSelected())
+			title = cutTitle(title);
+		titleText.setText(title);
+		countLabel.setText("(" + getWordsCount(title) + "/" + title.length() + ")");
+	}
+	
+	private void updateResult()
+	
+	public void saveTitleSource() throws DataException{
+		this.isTakeFromDescription = isTakeFromDescriptionBox.isSelected();
+		this.doCut = doCutBox.isSelected();
+		this.cutTo = cutToSpinner.getValueFactory().getValue();
+		  try {
+			  SyntaxParser.checkVariables(app.descriptionVariableEditorContainerController.variables, titleText.getText());
+			  titleTextSetting = titleText.getText();
+		    }
+		    catch (TextException e) {
+		    	setError(titleText, true, e.getMessage());
+				throw new DataException(this.tab);
+		    }
+		titleBoxSetting = titleBox.getSelectionModel().getSelectedItem()==null ? "" : titleBox.getSelectionModel().getSelectedItem();
+	}
+	
+	public String getTitleForMetadata(){
+		String uncut = getTitleForMetadataUncut();
+		if (this.doCut) 
+			return cutTitleMetadata(uncut);
+		else return uncut;
+	}
+	
+	
+	private String cutTitleMetadata(String title) {
+		String[] split = title.split(" ");
+		StringBuilder sb = new StringBuilder();
+		StringBuilder sbtemp = new StringBuilder();
+		for (String s:split) {
+			sbtemp.append(s + " ");
+			if (sbtemp.length()<=this.cutTo)
+				sb.append(s + " ");
+			else break;
+		}
+		return sb.toString();
+	}
+	
+	private String cutTitle(String title) {
+		String[] split = title.split(" ");
+		StringBuilder sb = new StringBuilder();
+		StringBuilder sbtemp = new StringBuilder();
+		for (String s:split) {
+			sbtemp.append(s + " ");
+			if (sbtemp.length()<=this.cutToSpinner.getValueFactory().getValue())
+				sb.append(s + " ");
+			else break;
+		}
+		if (title.charAt(title.length()-1) == ' ')
+			return sb.toString();
+		else
+			return sb.toString().trim();
+	}
+	
+	
+	private String getTitleForMetadataUncut(){
+		if (isTakeFromDescription)
+			return app.descriptionEditorController.currentDescription;
+		else if  (titleBoxSetting.equals(this.folderDescr))
+			return app.mainFrameController.currentFolder.getDescriptionVariable();
+		else if (titleBoxSetting.equals(this.targetDescr1)) 
+			return app.mainFrameController.currentTarget.getTargetDescr1();
+		else if (titleBoxSetting.equals(this.targetDescr2))
+			return app.mainFrameController.currentTarget.getTargetDescr2();
+		
+		else {
+			String variableValue = null;
+			try {
+				variableValue = SyntaxParser.pasteVariablesUnique(app.descriptionVariableEditorContainerController.savedVariables, this.titleTextSetting, false, " ");
+			} catch (TextException e) {
+				LOGGER.warning("ERROR: Ошибка вставки переменных в строку: " + this.titleTextSetting);
+				app.isProblem = true;
+			}
+			if (variableValue==null)
+				return "";
+			else
+				return variableValue;
+		}
+	}
+	
+	private int getWordsCount(String text){
+		return text.split("\\s+").length;
+	}
+
+	public void clearAll(){
+		titleBox.getSelectionModel().select(Settings.bundle.getString("ui.selector.text"));
+		titleText.clear();
+		isTakeFromDescriptionBox.setSelected(false);
+		doCutBox.setSelected(false);
+		cutToSpinner.getValueFactory().setValue(50);
+	}
+
+	@Override
+	public void loadData() {
+		updateLists();
+		if (this.wrapper != null){
+			titleText.setText(this.wrapper.inputValue);
+			titleBox.getSelectionModel().select(this.wrapper.comboValue);
+			isTakeFromDescriptionBox.setSelected(this.wrapper.isTakeFromDescription);
+			doCutBox.setSelected(this.wrapper.doCut);
+			cutToSpinner.getValueFactory().setValue(this.wrapper.cutTo);
+		}
+		//Fill with targetDescr1 if empty
+		if (!isTakeFromDescriptionBox.isSelected() && titleText.getText().isEmpty() && !app.getTargetsData().isEmpty()){
+			titleBox.getSelectionModel().select(this.targetDescr1);
+		}
+		
+		
+		isInitialized = true;
+	}
+
+	@Override
+	public void saveData() {
+		this.wrapper = new TitleEditorWrapper(this.isTakeFromDescriptionBox.isSelected(), this.titleBox.getSelectionModel().getSelectedItem(), this.titleText.getText(), this.doCutBox.isSelected(), this.cutToSpinner.getValueFactory().getValue());
+	}
+	
+	@FXML
+	private void onClickDoCutOption() {
+		cutToSpinner.setDisable(!doCutBox.isSelected());
+	}
+}
+
+----------------------------------- SOURCE END -------------------------------------
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.ASTNode.setSourceRange(ASTNode.java:2949)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:636)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3036)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1393)
+	at org.eclipse.jdt.core.dom.AST.convertCompilationUnit(AST.java:367)
+	at org.eclipse.jdt.internal.core.CompilationUnit.buildStructure(CompilationUnit.java:202)
+	at org.eclipse.jdt.internal.core.Openable.generateInfos(Openable.java:268)
+	at org.eclipse.jdt.internal.core.JavaElement.openWhenClosed(JavaElement.java:596)
+	at org.eclipse.jdt.internal.core.CompilationUnit.makeConsistent(CompilationUnit.java:1145)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.makeConsistent(ReconcileWorkingCopyOperation.java:173)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.executeOperation(ReconcileWorkingCopyOperation.java:94)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:736)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.runOperation(JavaModelOperation.java:802)
+	at org.eclipse.jdt.internal.core.CompilationUnit.reconcile(CompilationUnit.java:1322)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:131)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.access$0(JavaReconcilingStrategy.java:113)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy$1.run(JavaReconcilingStrategy.java:93)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:90)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:157)
+	at org.eclipse.jdt.internal.ui.text.CompositeReconcilingStrategy.reconcile(CompositeReconcilingStrategy.java:92)
+	at org.eclipse.jdt.internal.ui.text.JavaCompositeReconcilingStrategy.reconcile(JavaCompositeReconcilingStrategy.java:107)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:76)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:210)
+
+!ENTRY org.eclipse.jdt.ui 4 2 2019-06-19 22:00:24.413
+!MESSAGE Problems occurred when invoking code from plug-in: "org.eclipse.jdt.ui".
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.ASTNode.setSourceRange(ASTNode.java:2949)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:636)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3036)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1393)
+	at org.eclipse.jdt.core.dom.AST.convertCompilationUnit(AST.java:367)
+	at org.eclipse.jdt.internal.core.CompilationUnit.buildStructure(CompilationUnit.java:202)
+	at org.eclipse.jdt.internal.core.Openable.generateInfos(Openable.java:268)
+	at org.eclipse.jdt.internal.core.JavaElement.openWhenClosed(JavaElement.java:596)
+	at org.eclipse.jdt.internal.core.CompilationUnit.makeConsistent(CompilationUnit.java:1145)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.makeConsistent(ReconcileWorkingCopyOperation.java:173)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.executeOperation(ReconcileWorkingCopyOperation.java:94)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:736)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.runOperation(JavaModelOperation.java:802)
+	at org.eclipse.jdt.internal.core.CompilationUnit.reconcile(CompilationUnit.java:1322)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:131)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.access$0(JavaReconcilingStrategy.java:113)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy$1.run(JavaReconcilingStrategy.java:93)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:90)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:157)
+	at org.eclipse.jdt.internal.ui.text.CompositeReconcilingStrategy.reconcile(CompositeReconcilingStrategy.java:92)
+	at org.eclipse.jdt.internal.ui.text.JavaCompositeReconcilingStrategy.reconcile(JavaCompositeReconcilingStrategy.java:107)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:76)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:210)
+
+!ENTRY org.eclipse.jdt.ui 4 0 2019-06-19 22:00:24.413
+!MESSAGE Error in JDT Core during reconcile
+!STACK 0
+java.lang.IllegalArgumentException
+	at org.eclipse.jdt.core.dom.ASTNode.setSourceRange(ASTNode.java:2949)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:636)
+	at org.eclipse.jdt.core.dom.ASTConverter.buildBodyDeclarations(ASTConverter.java:204)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:3036)
+	at org.eclipse.jdt.core.dom.ASTConverter.convert(ASTConverter.java:1393)
+	at org.eclipse.jdt.core.dom.AST.convertCompilationUnit(AST.java:367)
+	at org.eclipse.jdt.internal.core.CompilationUnit.buildStructure(CompilationUnit.java:202)
+	at org.eclipse.jdt.internal.core.Openable.generateInfos(Openable.java:268)
+	at org.eclipse.jdt.internal.core.JavaElement.openWhenClosed(JavaElement.java:596)
+	at org.eclipse.jdt.internal.core.CompilationUnit.makeConsistent(CompilationUnit.java:1145)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.makeConsistent(ReconcileWorkingCopyOperation.java:173)
+	at org.eclipse.jdt.internal.core.ReconcileWorkingCopyOperation.executeOperation(ReconcileWorkingCopyOperation.java:94)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:736)
+	at org.eclipse.jdt.internal.core.JavaModelOperation.runOperation(JavaModelOperation.java:802)
+	at org.eclipse.jdt.internal.core.CompilationUnit.reconcile(CompilationUnit.java:1322)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:131)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.access$0(JavaReconcilingStrategy.java:113)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy$1.run(JavaReconcilingStrategy.java:93)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:45)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:90)
+	at org.eclipse.jdt.internal.ui.text.java.JavaReconcilingStrategy.reconcile(JavaReconcilingStrategy.java:157)
+	at org.eclipse.jdt.internal.ui.text.CompositeReconcilingStrategy.reconcile(CompositeReconcilingStrategy.java:92)
+	at org.eclipse.jdt.internal.ui.text.JavaCompositeReconcilingStrategy.reconcile(JavaCompositeReconcilingStrategy.java:107)
+	at org.eclipse.jface.text.reconciler.MonoReconciler.process(MonoReconciler.java:76)
+	at org.eclipse.jface.text.reconciler.AbstractReconciler$BackgroundThread.run(AbstractReconciler.java:210)
+!SESSION 2019-06-20 19:44:29.342 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-06-20 19:44:46.519
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2019-06-26 12:49:06.032 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-06-26 12:49:21.790
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+!SESSION 2019-06-27 17:23:59.657 -----------------------------------------------
+eclipse.buildId=4.10.0.I20181206-0815
+java.version=1.8.0_192
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2019-06-27 17:24:19.563
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Artiom'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.

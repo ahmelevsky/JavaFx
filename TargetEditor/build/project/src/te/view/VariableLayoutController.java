@@ -7,12 +7,15 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.lang3.StringUtils;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -37,6 +40,8 @@ public class VariableLayoutController implements Initializable {
 	private TextArea variableValuesTxt;
 	@FXML
 	private ComboBox<String> variableDelimiterBox;
+	@FXML
+	private Label valuesCount;
 	
 	private ObservableList<String> delimiters =  FXCollections.observableArrayList(","
 			                                                                       ,";"
@@ -53,6 +58,18 @@ public class VariableLayoutController implements Initializable {
 			if (!variableNameTxt.getText().isEmpty() && !isInitialLoad)
 				updateVariable();
 		} );
+		variableValuesTxt.focusedProperty().addListener(new ChangeListener<Boolean>()
+		{
+		    @Override
+		    public void changed(ObservableValue<? extends Boolean> arg0, Boolean oldPropertyValue, Boolean newPropertyValue)
+		    {
+		        if (!newPropertyValue)
+		        {
+		           removeDuplicatesFromTextField();
+		        }
+		    }
+		});
+		
 		variableValuesTxt.textProperty().addListener((observable, oldValue, newValue) ->{ 
 			if (!variableValuesTxt.getText().isEmpty() && !isInitialLoad)
 			    updateVariable();
@@ -63,6 +80,7 @@ public class VariableLayoutController implements Initializable {
 					setError(e.textArea, true);
 				}
 			});
+		
 		variableDelimiterBox.valueProperty().addListener((observable, oldValue, newValue) -> {
 			if (!isInitialLoad)
 				updateVariable();
@@ -94,6 +112,7 @@ public class VariableLayoutController implements Initializable {
 			}
 		this.variableNameTxt.setText(variable.getName());
 		this.variableValuesTxt.setText(StringUtils.join(variable.getValues(), variable.getDelimiter()));
+		valuesCount.setText(String.valueOf(variable.getValues().size()));
 		this.isInitialLoad = false;
 	}
 	
@@ -111,8 +130,14 @@ public class VariableLayoutController implements Initializable {
 				delimiter = "\\r?\\n";
 		variable.delimiterProperty().set(delimiter);
 		variable.setValues(variableValuesTxt.getText());
+		valuesCount.setText(String.valueOf(variable.getValues().size()));
 	}
 	
+	
+	private void removeDuplicatesFromTextField() {
+		if (variable!=null && !variable.getValues().isEmpty())
+			variableValuesTxt.setText(String.join(variable.getDelimiter(), variable.getValues()));
+	}
 	
 	@FXML
     private void remove(){

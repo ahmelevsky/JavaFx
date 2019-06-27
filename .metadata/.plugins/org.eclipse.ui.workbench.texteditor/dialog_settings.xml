@@ -6,12 +6,19 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="TargetEd" key="selection"/>
-		<item value="false" key="casesensitive"/>
+		<item value="addData" key="selection"/>
+		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="addData"/>
+			<item value="app.targetsData.add"/>
+			<item value="Все"/>
+			<item value="libs"/>
+			<item value="Exiftool process interrupted "/>
+			<item value="Ex"/>
+			<item value="Exiftool process interrupted"/>
 			<item value="TargetEd"/>
 			<item value="Target"/>
 			<item value="ui.properties"/>
@@ -20,13 +27,6 @@
 			<item value="compare"/>
 			<item value="Circle"/>
 			<item value="controllersList"/>
-			<item value="inputTargetKwd"/>
-			<item value="keyCountBox"/>
-			<item value="taskThread"/>
-			<item value="Platform"/>
-			<item value="&quot;&lt;текст&gt;&quot;"/>
-			<item value="&quot;&lt;text&gt;&quot;"/>
-			<item value="appRes"/>
 		</list>
 		<list key="replacehistory">
 			<item value="Settings.bundle.getString(&quot;ui.selector.text&quot;)"/>

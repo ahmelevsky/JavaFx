@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -58,7 +59,8 @@ import te.view.VariableLayoutController;
 import te.view.VariablesEditorContainerController;
 
 public class Main extends Application {
-	public Set<TargetEditorController> controllers = new HashSet<TargetEditorController>();
+	public Set<TargetEditorController> serviceControllers = new HashSet<TargetEditorController>();
+	public Set<TargetEditorController> metaControllers = new HashSet<TargetEditorController>();
 	public TargetsWindowController targetsController;
 	public KeysEditorController keysEditorController;
 	//public DescriptionEditorController descriptionEditorController;
@@ -84,7 +86,6 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) throws IOException {
-		
 		try {
             TargetLogger.setup();
         } catch (IOException e) {
@@ -99,7 +100,13 @@ public class Main extends Application {
 		 
 		
 		loadSettings();
+		try {
 		Settings.bundle = ResourceBundle.getBundle("te.Language", Settings.locale);
+		}
+		catch (Exception ex)
+		{
+			Settings.bundle = ResourceBundle.getBundle("te.Language", Locale.ENGLISH);
+		}
 		ExiftoolRunner.app = this;
 		SyntaxParser.app = this;
 		mainStage = primaryStage;
@@ -109,21 +116,20 @@ public class Main extends Application {
 		mainFrameController = organizeStage("view/MainFrameWindow.fxml");
 		mainFrameController.app = this;
 		//mainStage.setResizable(false);
-		targetsController = (TargetsWindowController) addTab(Settings.bundle.getString("ui.tabs.targets.header"), "view/TargetsWindow.fxml", TargetsWindowController.class);
+		targetsController = (TargetsWindowController) addTab(Settings.bundle.getString("ui.tabs.targets.header"), "view/TargetsWindow.fxml", TargetsWindowController.class, false);
 		targetsController.setup();
-		folderVariableController = (FolderVariableController) addTab(Settings.bundle.getString("ui.tabs.foldervars.header"), "view/FolderVariablesWindow.fxml", FolderVariableController.class);
+		folderVariableController = (FolderVariableController) addTab(Settings.bundle.getString("ui.tabs.foldervars.header"), "view/FolderVariablesWindow.fxml", FolderVariableController.class, false);
 		folderVariableController.setup();
-		keyVariableEditorContainerController = (VariablesEditorContainerController) addTab(Settings.bundle.getString("ui.tabs.keyvars.header"), "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
+		keyVariableEditorContainerController = (VariablesEditorContainerController) addTab(Settings.bundle.getString("ui.tabs.keyvars.header"), "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class, false);
 		keyVariableEditorContainerController.controllersList = keyVariableControllers;
-		keysEditorController = (KeysEditorController) addTab(Settings.bundle.getString("ui.tabs.keys.header"), "view/KeysEditorWindow.fxml", KeysEditorController.class);
-		descriptionVariableEditorContainerController = (VariablesEditorContainerController) addTab(Settings.bundle.getString("ui.tabs.descvars.header"), "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class);
+		keysEditorController = (KeysEditorController) addTab(Settings.bundle.getString("ui.tabs.keys.header"), "view/KeysEditorWindow.fxml", KeysEditorController.class, true);
+		descriptionVariableEditorContainerController = (VariablesEditorContainerController) addTab(Settings.bundle.getString("ui.tabs.descvars.header"), "view/VariablesEditorContainer.fxml", VariablesEditorContainerController.class, false);
 		descriptionVariableEditorContainerController.controllersList = descriptionVariableControllers;
-		//descriptionEditorController = (DescriptionEditorController) addTab(Settings.bundle.getString("ui.tabs.descriptions.header"), "view/DescriptionEditorWindow.fxml", DescriptionEditorController.class);
-		descriptionEditorController = (DescriptionContainerController) addTab(Settings.bundle.getString("ui.tabs.descriptions.header"), "view/DescriptionContainerWindow.fxml", DescriptionContainerController.class);
-		titleEditorController = (TitleEditorController) addTab(Settings.bundle.getString("ui.tabs.titles.header"), "view/TitleEditorWindow.fxml", TitleEditorController.class);
+		descriptionEditorController = (DescriptionContainerController) addTab(Settings.bundle.getString("ui.tabs.descriptions.header"), "view/DescriptionContainerWindow.fxml", DescriptionContainerController.class, true);
+		titleEditorController = (TitleEditorController) addTab(Settings.bundle.getString("ui.tabs.titles.header"), "view/TitleEditorWindow.fxml", TitleEditorController.class, true);
 		mainFrameController.setup();
 		keysEditorController.setup();
-		mainStage.setTitle("TargetEditor v2.0");
+		mainStage.setTitle("TargetEditor v2.2");
 		mainStage.getIcons().add(new Image("file:resources/icon.png"));
 		loadLastData();
 		mainStage.show();
@@ -153,7 +159,7 @@ public class Main extends Application {
 	        return loader.getController();
 	    }
 	 
-	private TargetEditorController addTab(String tabTitle, String fxml, @SuppressWarnings("rawtypes") Class c) throws IOException{
+	private TargetEditorController addTab(String tabTitle, String fxml, @SuppressWarnings("rawtypes") Class c, boolean isMetaTab) throws IOException{
 		 FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxml));
 	        loader.setLocation(Main.class.getResource(fxml));
 	        loader.setResources(Settings.bundle);
@@ -171,7 +177,10 @@ public class Main extends Application {
 	        TargetEditorController controller = loader.getController();
 	        controller.tab = tab;
 	        controller.app = this;
-	        this.controllers.add(controller);
+	        if (isMetaTab)
+	        	this.metaControllers.add(controller);
+	        else
+	        	this.serviceControllers.add(controller);
 	        return controller;
 	}
 	 
@@ -423,7 +432,9 @@ public class Main extends Application {
 		            	this.titleEditorController.wrapper = wrapper.getTitlePage();
 		            if (wrapper.getFolderWrapper() !=null)
 		            	this.folderVariableController.wrapper = wrapper.getFolderWrapper();
-		            for (TargetEditorController controller : this.controllers)
+		            for (TargetEditorController controller : this.serviceControllers)
+		    			controller.loadData();
+		            for (TargetEditorController controller : this.metaControllers)
 		    			controller.loadData();
 	            setKeysFilePath(file);
 	            LOGGER.fine("Data was imported to " + file.getAbsolutePath());
@@ -455,7 +466,9 @@ public class Main extends Application {
 	        		}
 	    	
 	        try {
-	        	 for (TargetEditorController controller:this.controllers)
+	        	 for (TargetEditorController controller:this.serviceControllers)
+	    	         controller.saveData();
+	        	 for (TargetEditorController controller:this.metaControllers)
 	    	         controller.saveData();
 			  JAXBContext context = JAXBContext
 	                    .newInstance(ImportWrapper.class);
@@ -509,7 +522,9 @@ public class Main extends Application {
 		            	this.titleEditorController.wrapper = wrapper.getTitlePage();
 		            if (wrapper.getFolderWrapper() !=null)
 		            	this.folderVariableController.wrapper = wrapper.getFolderWrapper();
-		            for (TargetEditorController controller : this.controllers)
+		            for (TargetEditorController controller : this.serviceControllers)
+		    			controller.loadData();
+		            for (TargetEditorController controller : this.metaControllers)
 		    			controller.loadData();
 		            LOGGER.fine("Last data was loaded from " + this.dataFile.getAbsolutePath());
 		        } catch (Exception e) { 
@@ -524,7 +539,9 @@ public class Main extends Application {
 	    
 		 public void saveLastData(){
 			 try {
-			      for (TargetEditorController controller:this.controllers)
+			      for (TargetEditorController controller:this.serviceControllers)
+		    	         controller.saveData();
+			      for (TargetEditorController controller:this.metaControllers)
 		    	         controller.saveData();
 				  JAXBContext context = JAXBContext
 		                    .newInstance(DataWrapper.class);
