@@ -223,12 +223,16 @@ public class MainFrameController implements Initializable{
 			return;
 		}
 		 int allImagesCounter = 0;
-		 File[] directoriesToWalk = rootFolder.listFiles(new FilenameFilter() {
+		 List<File> directoriesToWalk = new ArrayList<File>();
+		 directoriesToWalk.add(rootFolder);
+		 directoriesToWalk.addAll(Arrays.asList(rootFolder.listFiles(new FilenameFilter() {
 	           @Override
 	          public boolean accept(File current, String name) {
 	          return new File(current, name).isDirectory();
 	          }
-	       });
+	       })));
+		 
+		 
 		 for (File d:directoriesToWalk){
 			 allImagesCounter = allImagesCounter + d.listFiles(new FileFilter() {
               public boolean accept(File f) {
@@ -272,14 +276,15 @@ public class MainFrameController implements Initializable{
 			    	int failures = 0;
 			    	int done = 0;
 			    	*/
-			    	
-		             File[] directories = rootFolder.listFiles(new FilenameFilter() {
+			    	List<File> directories = new ArrayList<File>();
+			    	directories.add(rootFolder);
+			    	directories.addAll(Arrays.asList(rootFolder.listFiles(new FilenameFilter() {
 			           @Override
 			          public boolean accept(File current, String name) {
 			          return new File(current, name).isDirectory();
 		 	          }
-			       });
-		             
+			       })));
+			    	
 		             
 		           for (File dir:directories){
 			            currentFolder = app.getSavedFolderVariableData().stream().filter(t->t.getFolder().equals(dir)).findFirst().get();

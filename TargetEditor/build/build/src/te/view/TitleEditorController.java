@@ -355,6 +355,7 @@ public class TitleEditorController extends TargetEditorController implements Ini
 	}
 	
 	private String cutTitle(String title) {
+		if (title.trim().isEmpty()) return "";
 		String[] split = title.split(" ");
 		StringBuilder sb = new StringBuilder();
 		StringBuilder sbtemp = new StringBuilder();

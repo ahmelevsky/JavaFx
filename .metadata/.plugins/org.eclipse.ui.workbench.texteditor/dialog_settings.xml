@@ -6,12 +6,13 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="addData" key="selection"/>
+		<item value="pasteVariables" key="selection"/>
 		<item value="true" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="pasteVariables"/>
 			<item value="addData"/>
 			<item value="app.targetsData.add"/>
 			<item value="Все"/>
@@ -26,7 +27,6 @@
 			<item value="alert"/>
 			<item value="compare"/>
 			<item value="Circle"/>
-			<item value="controllersList"/>
 		</list>
 		<list key="replacehistory">
 			<item value="Settings.bundle.getString(&quot;ui.selector.text&quot;)"/>

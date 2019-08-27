@@ -251,6 +251,7 @@ public class FolderVariableController  extends TargetEditorController implements
 			  }
 			});
 		 
+		 app.getFolderVariableData().add(new FolderVariable(baseDir));
 		 for (File dir:directories){
 			 app.getFolderVariableData().add(new FolderVariable(dir));
 		 }

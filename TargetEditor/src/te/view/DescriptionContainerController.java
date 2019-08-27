@@ -51,6 +51,7 @@ import te.model.FolderVariable;
 import te.model.Target;
 import te.model.Variable;
 import te.util.DataException;
+import te.util.MultiParser;
 import te.util.SyntaxParser;
 import te.util.TextAreaException;
 import te.util.TextException;
@@ -228,10 +229,10 @@ public class DescriptionContainerController  extends TargetEditorController impl
 		}
 		
 	
-	private String parseVariablesInText(TextArea tf, boolean isMax) throws TextAreaException{
+	private String parseVariablesInText(MultiParser parser, TextArea tf, boolean isMax) throws TextAreaException{
 		String result = null;
 		try{
-			result = SyntaxParser.pasteVariables(app.descriptionVariableEditorContainerController.variables, tf.getText(), isMax, " ");	
+			result = parser.pasteVariables(tf.getText(), isMax, " ");	
 		}
 		catch (TextException e) {
 			throw new TextAreaException (tf, e.getMessage());
@@ -340,6 +341,7 @@ public class DescriptionContainerController  extends TargetEditorController impl
 	public String getRandomDescription() throws TextAreaException{
 		
 		Target target = app.getRandomTarget();
+		MultiParser parser = new MultiParser(app.descriptionVariableEditorContainerController.variables);
 		String randomFolderscription = app.getRandomFolderDescr();
 		List<Tuple<Integer, String>> result = new ArrayList<Tuple<Integer, String>>();
 		for (int i=0; i<selectors.size();i++){
@@ -375,7 +377,7 @@ public class DescriptionContainerController  extends TargetEditorController impl
 				}
 			}
 			else {
-				 String t = parseVariablesInText(textFields.get(i), false);
+				 String t = parseVariablesInText(parser, textFields.get(i), false);
 				    if (!t.isEmpty()) 
 				    	result.add( new Tuple<Integer, String>(position, t));
 			}
@@ -389,6 +391,7 @@ public class DescriptionContainerController  extends TargetEditorController impl
 	
 	public String getMaxLengthDescription() throws TextAreaException{
 		Target target = app.getTargetWithMaxLength();
+		MultiParser parser = new MultiParser(app.descriptionVariableEditorContainerController.variables);
 		List<Tuple<Integer, String>> result = new ArrayList<Tuple<Integer, String>>();
 		for (int i=0; i<selectors.size();i++){
 			String d =  selectors.get(i).getSelectionModel().getSelectedItem();
@@ -423,7 +426,7 @@ public class DescriptionContainerController  extends TargetEditorController impl
 				}
 			}
 			else {
-				 String t = parseVariablesInText(textFields.get(i), true);
+				 String t = parseVariablesInText(parser, textFields.get(i), true);
 			    if (!t.isEmpty()) 
 			    	result.add( new Tuple<Integer, String>(position, t));
 			}
@@ -468,6 +471,7 @@ public class DescriptionContainerController  extends TargetEditorController impl
 			
 	public String generateDescriptionForMetadata(){
 		List<Tuple<Integer, String>> result = new ArrayList<Tuple<Integer, String>>();
+		MultiParser parser = new MultiParser(app.descriptionVariableEditorContainerController.savedVariables);
 		for (int i=0; i<data.size();i++){
 			int position = i;
 			if(isRandomStored.get(i))
@@ -494,7 +498,7 @@ public class DescriptionContainerController  extends TargetEditorController impl
 			else {
 			    String t = "";
 				try {
-					t = SyntaxParser.pasteVariables(app.descriptionVariableEditorContainerController.savedVariables, textFieldsStored.get(i), false, " ");
+					t = parser.pasteVariables(textFieldsStored.get(i), false, " ");
 				} catch (TextException e) {
 					LOGGER.warning(Settings.bundle.getString("alert.error.pastevars") + textFieldsStored.get(i));
 					app.isProblem = true;

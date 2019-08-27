@@ -182,7 +182,7 @@ public List<String> generateKeywordsForMetadata(){
 	    List<String> keys = new ArrayList<String>();
 		
 	    try {
-	    	if (isT)
+	    	if (isT && !app.getTargetsData().isEmpty())
 	 			addToList(app.mainFrameController.currentTarget.getTargetKwd(), keys);
 	    	if (isF)
 	 			addToList(app.mainFrameController.currentFolder.getKeyVariable(), keys);
@@ -215,7 +215,7 @@ public List<String> generateKeywordsForMetadata(){
 	private List<String> getKeysFromUI() throws TextAreaException{
         List<String> keys = new ArrayList<String>();
 		
-        if (isTarget.isSelected())
+        if (isTarget.isSelected() && !app.getTargetsData().isEmpty())
 			addToList(app.getRandomTargetKwd(), keys);
         if (isFolderVariable.isSelected()) 
 			addToList(app.getRandomFolderKwd(), keys);

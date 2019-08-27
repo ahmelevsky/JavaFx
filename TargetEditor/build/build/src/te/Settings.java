@@ -8,7 +8,7 @@ public class Settings {
 	
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	private static String writeOption = "jpg";
-	public static Locale locale = Locale.ENGLISH;
+	public static Locale locale = Locale.getDefault();
 	public static ResourceBundle bundle;
 	public static boolean autosaveEnabled;
 
