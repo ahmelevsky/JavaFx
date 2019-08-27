@@ -1,6 +1,7 @@
 package be.view;
 
 import java.io.File;
+import java.io.IOException;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
@@ -18,6 +19,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.DirectoryChooser;
 import be.Main;
 import be.model.BatchSource;
+import be.util.Logger;
 import be.util.Utils;
 
 public class SourceLayoutController {
@@ -49,7 +51,7 @@ public class SourceLayoutController {
 	private ObjectProperty<Integer> spinnerValueSource;
 	private ObjectProperty<Integer> spinnerValueUI;
 	private Main app;
-	
+	private static Logger l = Logger.getLogger();
 	private static File lastDirectory;
 	
 	@FXML
@@ -120,7 +122,16 @@ public class SourceLayoutController {
           File file = directoryChooser.showDialog(app.getPrimaryStage());
 
          if(file!=null) {
-        	 lastDirectory = file.getParentFile();
+        	 l.log(file.getAbsolutePath());
+        	 try {
+        		 if (file.getParentFile().exists())
+        		 lastDirectory = file.getParentFile();
+			} catch (Exception e) {
+				l.error("LastDirectory " + e.getMessage());
+			}
+        	 l.log(file.getPath());
+        	 l.log(file.getName());
+        	 //
         	 this.sourcePath.setText(file.getAbsolutePath());
         	 countImages();
          }

@@ -340,6 +340,7 @@ public class DescriptionContainerController  extends TargetEditorController impl
 	public String getRandomDescription() throws TextAreaException{
 		
 		Target target = app.getRandomTarget();
+		String randomFolderscription = app.getRandomFolderDescr();
 		List<Tuple<Integer, String>> result = new ArrayList<Tuple<Integer, String>>();
 		for (int i=0; i<selectors.size();i++){
 			String d =  selectors.get(i).getSelectionModel().getSelectedItem();
@@ -350,11 +351,10 @@ public class DescriptionContainerController  extends TargetEditorController impl
 				   continue;
 				}
 			else if (d.equals(this.folderDescr)){
-				String t = app.getRandomFolderDescr();
-				if (t!=null){
-					textFields.get(i).setText(t);
-					if (!t.isEmpty())
-						result.add( new Tuple<Integer, String>(position, t));
+				if (randomFolderscription!=null){
+					textFields.get(i).setText(randomFolderscription);
+					if (!randomFolderscription.isEmpty())
+						result.add( new Tuple<Integer, String>(position, randomFolderscription));
 				}
 			}
 			else if (d.equals(this.targetDescr1)) {
