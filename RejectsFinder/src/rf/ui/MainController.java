@@ -215,7 +215,7 @@ public class MainController implements Initializable {
 			if (rejectesString.isEmpty()) break;
 			List<ShutterImage> listFromShutter = JsonParser.parseImagesData(rejectesString);
 			if (listFromShutter.isEmpty()) break;
-			//if (from!=null && listFromShutter.stream().allMatch(d -> d.uploadedDate.isAfter(to))) break;
+			if (from!=null && listFromShutter.stream().allMatch(d -> d.uploadedDate.isBefore(from))) break;
 			for (ShutterImage im:listFromShutter) {
 				if((from==null || !from.isAfter(im.uploadedDate)) && (to==null || !to.isBefore(im.uploadedDate)))
 					list.add(im);

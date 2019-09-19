@@ -39,6 +39,7 @@
 		
 		<mkdir dir="projectRefs" />
 	</target>
+		
 	<target name='do-compile'>
 		<delete dir="build" />
 		<mkdir dir="build/src" />

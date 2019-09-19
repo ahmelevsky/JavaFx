@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="RejectsFinder.jnlp">
+  <information>
+    <title>RejectsFinder</title>
+    <vendor>AH</vendor>
+    <description>RejectsFinder</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="RejectsFinder.jar" size="23099" download="eager" />
+    <jar href="lib\json.jar" size="65003" download="eager" />
+    <jar href="lib\jsoup-1.10.2-javadoc.jar" size="643353" download="eager" />
+    <jar href="lib\jsoup-1.10.2-sources.jar" size="168517" download="eager" />
+    <jar href="lib\jsoup-1.10.2.jar" size="350645" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="0" height="0" main-class="rf.Main"  name="RejectsFinder" />
+  <update check="background"/>
+</jnlp>
