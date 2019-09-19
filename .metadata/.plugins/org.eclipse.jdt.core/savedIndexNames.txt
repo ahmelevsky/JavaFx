@@ -1,7 +1,6 @@
 INDEX VERSION 1.131+C:\Java\JavaFx\.metadata\.plugins\org.eclipse.jdt.core
 364793574.index
 58742763.index
-1601483075.index
 828417197.index
 1877530060.index
 1812925749.index
@@ -19,7 +18,6 @@ INDEX VERSION 1.131+C:\Java\JavaFx\.metadata\.plugins\org.eclipse.jdt.core
 1436731243.index
 2370653335.index
 3276307630.index
-2138765084.index
 357786558.index
 40785539.index
 1776541923.index
@@ -27,9 +25,8 @@ INDEX VERSION 1.131+C:\Java\JavaFx\.metadata\.plugins\org.eclipse.jdt.core
 1570217054.index
 3384901160.index
 1621844734.index
-1065886693.index
-3078568342.index
 2969329633.index
+1065886693.index
 2478260869.index
 2864832462.index
 3698729362.index

@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,10 +16,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
+import org.json.JSONException;
+
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -31,24 +30,30 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableCell;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.DirectoryChooser;
-import javafx.util.Callback;
 import rf.JsonParser;
+import rf.Main;
 import rf.ShutterImage;
 import rf.ShutterProvider;
-import rf.Main;
+import rf.utils.TableUtils;
 
 public class MainController implements Initializable {
 
@@ -127,7 +132,6 @@ public class MainController implements Initializable {
 		columnRejectDate.setCellValueFactory(new PropertyValueFactory<>("verdict_time"));
 		setupTableViewColumn();
 		tableView.setItems(list);
-		tableView.setEditable(true);
 		//list.add(new ShutterImage(123, "VNF_FMSK_newee", new ArrayList<String>(),"dsf", "VNF_FMSK_newee", "dsf43"));
 		copyOption.setToggleGroup(group);
 		copyOption.setSelected(true);
@@ -145,6 +149,32 @@ public class MainController implements Initializable {
 		         toDateValue = toDate.getValue();
 		     }
 		 });
+		
+		tableView.getSelectionModel().setCellSelectionEnabled(true);
+	    tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+	   // TableUtils.installCopyPasteHandler(tableView);
+	    tableView.setOnKeyPressed(new TableKeyEventHandler());
+	    tableView.getSelectionModel().getSelectedItems().forEach(it->it.setSelected(true));
+	    
+	    
+	    String sourcePath = loadString("sourcepath");
+	    		if(sourcePath!=null ){
+	    			File sF = new File(sourcePath);
+	    			if (sF.exists()) {
+	    			 	 this.source = sF;
+	    	           	 this.sourceFolder.setText(sourcePath);
+	    			}
+	    		}
+	    		
+	     String destPath = loadString("destinationpath");
+		    		if(destPath!=null ){
+		    			File dF = new File(destPath);
+		    			if (dF.exists()) {
+		    			 	 this.destination = dF;
+		    	           	 this.destFolder.setText(destPath);
+		    			}
+		    		}
+	          
 	}
 	
 	
@@ -155,17 +185,37 @@ public class MainController implements Initializable {
             BooleanProperty property = cellValue.getSelected();
             // Add listener to handler change
             property.addListener((observable, oldValue, newValue) -> cellValue.setSelected(newValue));
+            property.addListener((observable, oldValue, newValue) -> tableView.getSelectionModel().getSelectedItems().forEach(it->it.setSelected(newValue)));
             return property;
         });
     }
 	
 	@FXML
 	private void getRejected() {
+
+		if (this.sessionIdText.getText().trim().isEmpty()) {
+			try {
+				app.showWeb();
+				String sessionId = app.webController.getSessionId();
+				if (sessionId!=null) {
+				Platform.runLater(new Runnable() {
+		            public void run() {
+		            	sessionIdText.setText(sessionId);
+		            }
+				 });
+				saveSessionId();
+				}
+			} catch (IOException e) {
+				setStatus("Error creating vew view");
+			}
+			return;
+		}
 		
 		if (fromDateValue!=null && toDateValue!=null && fromDateValue.isAfter(toDateValue)) {
 			showAlert("Дата начала периода выставлена позже даты конца");
 			return;
 		}
+		
 		
 		setStatus("");
 		saveSessionId();
@@ -198,7 +248,7 @@ public class MainController implements Initializable {
 				
 				
 				enableControl();
-				setStatus("Количество реджектов за выбранный период: " + list.size());
+				
 			}
 		});
 		t1.start();
@@ -210,9 +260,11 @@ public class MainController implements Initializable {
 		int per_page = 100;
 		int page = 1;
 		long before = new Date().getTime();
+		try {
 		while (before + timeoutSeconds*1000 >  new Date().getTime()) {
 			String rejectesString = provider.getRejects(per_page,page);
 			if (rejectesString.isEmpty()) break;
+		
 			List<ShutterImage> listFromShutter = JsonParser.parseImagesData(rejectesString);
 			if (listFromShutter.isEmpty()) break;
 			if (from!=null && listFromShutter.stream().allMatch(d -> d.uploadedDate.isBefore(from))) break;
@@ -222,6 +274,12 @@ public class MainController implements Initializable {
 			}
 			page++;
 		}
+		setStatus("Количество реджектов за выбранный период: " + list.size());
+		}
+		catch (JSONException e) {
+			setStatus("Autorization error");
+			showAlert("Неправильный sessionId. Очистите поле sessionId и повторите авторизацию");
+			}
 	}
 	
 	
@@ -328,6 +386,21 @@ private void enableControl() {
         }
 	}
 	
+	private void saveString(String key, String data) {
+		  Preferences prefs = Preferences.userNodeForPackage(Main.class);
+		  if (data!=null) {
+			  prefs.put(key,data);
+	      } else {
+	          prefs.remove(key);
+	      }
+		}
+		
+		private String loadString(String key) {
+			Preferences prefs = Preferences.userNodeForPackage(Main.class);
+	        String saved = prefs.get(key, null);
+	        return saved;
+		}
+	
 	
 	@FXML
     private void selectDestPath(){
@@ -339,6 +412,7 @@ private void enableControl() {
          if(file!=null){
         	 this.destination = file;
         	 this.destFolder.setText(file.getAbsolutePath());
+        	 saveString("destinationpath", file.getAbsolutePath());
          }
 	}
 	
@@ -356,6 +430,7 @@ private void enableControl() {
          if(file!=null){
         	 this.source = file;
         	 this.sourceFolder.setText(file.getAbsolutePath());
+        	 saveString("sourcepath", file.getAbsolutePath());
          }
 	}
 	
@@ -400,4 +475,82 @@ private void enableControl() {
 			return null;
 		}
 	}
+	
+	
+	
+	
+	public static class TableKeyEventHandler implements EventHandler<KeyEvent> {
+
+        KeyCodeCombination copyKeyCodeCompination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_ANY);
+        KeyCodeCombination copyKeyCodeCompinationMac = new KeyCodeCombination(KeyCode.C, KeyCombination.META_ANY);
+        public void handle(final KeyEvent keyEvent) {
+
+            if (copyKeyCodeCompination.match(keyEvent) || copyKeyCodeCompinationMac.match(keyEvent)) {
+
+                if( keyEvent.getSource() instanceof TableView) {
+
+                    // copy to clipboard
+                    copySelectionToClipboard( (TableView<?>) keyEvent.getSource());
+
+                    // event is handled, consume it
+                    keyEvent.consume();
+
+                }
+
+            }
+
+        }
+
+   
+ public static void copySelectionToClipboard(TableView<?> table) {
+
+        StringBuilder clipboardString = new StringBuilder();
+
+        ObservableList<TablePosition> positionList = table.getSelectionModel().getSelectedCells();
+
+        int prevRow = -1;
+
+        for (TablePosition position : positionList) {
+
+            int row = position.getRow();
+            int col = position.getColumn();
+
+            Object cell = (Object) table.getColumns().get(col).getCellData(row);
+
+            // null-check: provide empty string for nulls
+            if (cell == null) {
+                cell = "";
+            }
+
+            // determine whether we advance in a row (tab) or a column
+            // (newline).
+            if (prevRow == row) {
+
+                clipboardString.append('\t');
+
+            } else if (prevRow != -1) {
+
+                clipboardString.append('\n');
+
+            }
+
+            // create string from cell
+            String text = cell.toString();
+
+            // add new item to clipboard
+            clipboardString.append(text);
+
+            // remember previous
+            prevRow = row;
+        }
+
+        // create clipboard content
+        final ClipboardContent clipboardContent = new ClipboardContent();
+        clipboardContent.putString(clipboardString.toString());
+
+        // set clipboard content
+        Clipboard.getSystemClipboard().setContent(clipboardContent);
+    }
+ }
+ 
 }

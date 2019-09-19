@@ -6,12 +6,13 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="Preferences" key="selection"/>
+		<item value="" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="rt"/>
 			<item value="Preferences"/>
 			<item value="&lt;!DOCTYPE html&gt;"/>
 			<item value="Submit content"/>
@@ -26,7 +27,6 @@
 			<item value="Exiftool process interrupted "/>
 			<item value="Ex"/>
 			<item value="Exiftool process interrupted"/>
-			<item value="TargetEd"/>
 		</list>
 		<list key="replacehistory">
 			<item value="Java\JavaFx\"/>
