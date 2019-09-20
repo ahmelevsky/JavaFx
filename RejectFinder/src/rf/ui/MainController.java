@@ -9,8 +9,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -34,10 +41,13 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -112,6 +122,12 @@ public class MainController implements Initializable {
 	private Button moveBtn;
 	
 	@FXML
+	private Button loadBtn;
+	
+	@FXML
+	private TextArea jsonTxt;
+	
+	@FXML
 	private Label statusLabel;
     ToggleGroup group = new ToggleGroup();
 	
@@ -137,6 +153,8 @@ public class MainController implements Initializable {
 		copyOption.setSelected(true);
 		moveOption.setToggleGroup(group);
 		
+		//ScrollBar scrollBarv = (ScrollBar)jsonTxt.lookup(".scroll-bar:vertical");
+		//scrollBarv.setDisable(true);
 		
 		fromDate.setOnAction(new EventHandler() {
 		     public void handle(Event t) {
@@ -174,6 +192,24 @@ public class MainController implements Initializable {
 		    	           	 this.destFolder.setText(destPath);
 		    			}
 		    		}
+		    		
+		    		
+		 tableView.setRowFactory( tv -> {
+		    		    TableRow<ShutterImage> row = new TableRow<>();
+		    		    row.setOnMouseClicked(event -> {
+		    		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+		    		        	ShutterImage rowData = row.getItem();
+		    		           if (rowData!=null) {
+		    		        	   try {
+									app.showImageInfo(rowData);
+								} catch (IOException e) {
+									showAlert("Can't load ImageInfo");
+								}
+		    		           }
+		    		        }
+		    		    });
+		    		    return row ;
+		    		});
 	          
 	}
 	
@@ -220,7 +256,6 @@ public class MainController implements Initializable {
 		setStatus("");
 		saveSessionId();
 		list.clear();
-		List<ShutterImage> rejectsImages = new ArrayList<ShutterImage>();
 		Thread t1 = new Thread(new Runnable() {
 
 			@Override
@@ -237,16 +272,8 @@ public class MainController implements Initializable {
 					return;
 				}
 				getRejectsForDates(provider, fromDateValue, toDateValue, 60);
-				
-				
-				/*
-				 * String rejectesString = provider.getRejects(100,1);
-				 * writeToFile("D:\\Shutter.html", rejectesString); List<ShutterImage>
-				 * listFromShutter = JsonParser.parseImagesData(rejectesString);
-				 * list.addAll(listFromShutter);
-				 */
-				
-				
+				checkNewRejects();
+				saveLastRejectDate();
 				enableControl();
 				
 			}
@@ -254,7 +281,46 @@ public class MainController implements Initializable {
 		t1.start();
 
 	}
+	@FXML
+	private void loadJson() {
+		if (fromDateValue!=null && toDateValue!=null && fromDateValue.isAfter(toDateValue)) {
+			showAlert("Дата начала периода выставлена позже даты конца");
+			return;
+		}
+		
+		setStatus("");
+		list.clear();
+		
+		Thread t1 = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				disableControl();
+				loadManualRejectsForDates(fromDateValue, toDateValue);
+				saveLastRejectDate();
+				checkNewRejects();
+				enableControl();
+			}
+		});
+		t1.start();
+	}
 	
+	
+	private void saveLastRejectDate() {
+		if (!list.isEmpty()) {
+			saveString("lastrejectdate", list.stream().map(u -> u.verdictTime).max(LocalDateTime::compareTo).get().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+		}
+	}
+	
+    private void checkNewRejects() {
+		String last  = loadString("lastrejectdate");
+		if (last==null)
+			list.forEach(im -> im.setSelected(true));
+		else {
+			LocalDateTime lastVerdictTime = LocalDateTime.parse(last,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+			list.stream().filter(im -> im.verdictTime.isAfter(lastVerdictTime)).forEach(im-> im.setSelected(true));
+		}
+	}
 	
 	private void getRejectsForDates(ShutterProvider provider, LocalDate from, LocalDate to, int timeoutSeconds) {
 		int per_page = 100;
@@ -279,6 +345,26 @@ public class MainController implements Initializable {
 		catch (JSONException e) {
 			setStatus("Autorization error");
 			showAlert("Неправильный sessionId. Очистите поле sessionId и повторите авторизацию");
+			}
+	}
+	
+	
+	private void loadManualRejectsForDates(LocalDate from, LocalDate to) {
+		String json = jsonTxt.getText().trim();
+		if (json.isEmpty())
+			return;
+		try {
+		
+			List<ShutterImage> listFromShutter = JsonParser.parseImagesData(json);
+			for (ShutterImage im:listFromShutter) {
+				if((from==null || !from.isAfter(im.uploadedDate)) && (to==null || !to.isBefore(im.uploadedDate)))
+					list.add(im);
+			}
+		setStatus("Количество реджектов за выбранный период: " + list.size());
+		}
+		catch (JSONException e) {
+			setStatus("Неправильный формат");
+			showAlert("Неправильный формат данных. Вставьте корректные данные в текстовое поле для загрузки");
 			}
 	}
 	

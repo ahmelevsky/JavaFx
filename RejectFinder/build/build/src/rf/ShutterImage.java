@@ -28,6 +28,11 @@ public class ShutterImage {
 	private StringProperty original_filename = new SimpleStringProperty();
 	private String original_filename_backup;
 	private StringProperty verdict_time = new SimpleStringProperty();
+	private StringProperty previewPath = new SimpleStringProperty();
+	private StringProperty description = new SimpleStringProperty();
+	private StringProperty submitter_note = new SimpleStringProperty();
+	private BooleanProperty has_property_release = new SimpleBooleanProperty(false);
+	private BooleanProperty is_illustration = new SimpleBooleanProperty(false);
 	public LocalDate uploadedDate;
 	public LocalDateTime verdictTime;
 	
@@ -44,7 +49,7 @@ public class ShutterImage {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		uploadedDate = LocalDate.parse(uploaded_date, formatter);
 		Instant instant = Instant.parse(verdict_time);
-		verdictTime = LocalDateTime.ofInstant(instant, ZoneId.of(ZoneOffset.UTC.getId()));	
+		this.verdictTime = LocalDateTime.ofInstant(instant, ZoneId.of(ZoneOffset.UTC.getId()));	
 	}
 
 	public BooleanProperty getSelected() {
@@ -112,5 +117,45 @@ public class ShutterImage {
 	
 	public void restoreName() {
 		this.original_filename.set(this.original_filename_backup);
+	}
+
+	public String getPreviewPath() {
+		return previewPath.get();
+	}
+
+	public void setPreviewPath(String previewPath) {
+		this.previewPath.set(previewPath);
+	}
+
+	public String getDescription() {
+		return description.get();
+	}
+
+	public void setDescription(String description) {
+		this.description.set(description);
+	}
+
+	public String getSubmitter_note() {
+		return submitter_note.get();
+	}
+
+	public void setSubmitter_note(String submitter_note) {
+		this.submitter_note.set(submitter_note);
+	}
+
+	public boolean getHas_property_release() {
+		return has_property_release.get();
+	}
+
+	public void setHas_property_release(boolean has_property_release) {
+		this.has_property_release.set(has_property_release);
+	}
+
+	public boolean getIs_illustration() {
+		return is_illustration.get();
+	}
+
+	public void setIs_illustration(boolean is_illustration) {
+		this.is_illustration.set(is_illustration);
 	}
 }

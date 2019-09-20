@@ -12,6 +12,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import rf.ui.ImageInfoController;
 import rf.ui.MainController;
 import rf.ui.WebController;
 
@@ -20,6 +21,7 @@ public class Main extends Application {
 	
 	  public MainController mainController;
       public WebController webController;
+      public ImageInfoController imageInfoController;
       private Stage mainStage;
       private Scene mainScene;
 	
@@ -33,9 +35,11 @@ public class Main extends Application {
 	        this.mainStage.setScene(this.mainScene);
 	        this.mainStage.sizeToScene();
 	        mainController = loader.getController();
-	        mainStage.setTitle("RejectFinder v1.0");
+	        mainStage.setTitle("RejectFinder v1.2");
 	        mainController.app = this;
 			mainStage.getIcons().add(new Image("file:resources/icon.png"));
+			mainStage.setMinHeight(500);
+			mainStage.setMinWidth(800);
 			mainStage.show();
 	}
 	
@@ -50,6 +54,24 @@ public class Main extends Application {
 	        dialog.setScene(scene);
 	        dialog.sizeToScene();
 	        webController = loader.getController();
+	        dialog.initOwner(this.mainStage);
+	        dialog.initModality(Modality.APPLICATION_MODAL); 
+	        dialog.showAndWait(); 
+	}
+	
+	public void showImageInfo(ShutterImage image) throws IOException {
+		 FXMLLoader loader = new FXMLLoader(Main.class.getResource("ui/ImageInfoForm.fxml"));
+	        loader.setLocation(Main.class.getResource("ui/ImageInfoForm.fxml"));
+	        VBox page = (VBox) loader.load();
+	        Scene scene = new Scene(page);
+	        Stage dialog = new Stage();
+	        dialog.setResizable(false);
+	        dialog.getIcons().add(new Image("file:resources/icon.png"));
+	        dialog.setTitle("Image Information");
+	        dialog.setScene(scene);
+	        dialog.sizeToScene();
+	        imageInfoController = loader.getController();
+	        imageInfoController.loadData(image);
 	        dialog.initOwner(this.mainStage);
 	        dialog.initModality(Modality.APPLICATION_MODAL); 
 	        dialog.showAndWait(); 

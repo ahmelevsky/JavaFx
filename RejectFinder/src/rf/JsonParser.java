@@ -34,8 +34,17 @@ public class JsonParser {
 				reasons.add(reasonsarr.getJSONObject(j).getString("reason"));
 			}
 			String filename = imageobj.getString("original_filename");
-			result.add(new ShutterImage(imageobj.getInt("media_id"), imageobj.getString("media_type"), reasons,
-					imageobj.getString("uploaded_date"), imageobj.getString("original_filename"), imageobj.getString("verdict_time")));
+			ShutterImage image = new ShutterImage(imageobj.getInt("media_id"), imageobj.getString("media_type"), reasons,
+					imageobj.getString("uploaded_date"), imageobj.getString("original_filename"), imageobj.getString("verdict_time"));
+			image.setDescription(imageobj.getString("description"));
+			image.setPreviewPath(imageobj.getString("thumbnail_url_480"));
+			image.setSubmitter_note(imageobj.getString("submitter_note"));
+			image.setIs_illustration(imageobj.getBoolean("is_illustration"));
+			if (imageobj.isNull("has_property_release"))
+				image.setHas_property_release(false);
+			else
+				image.setHas_property_release(true);
+			result.add(image);
 		}
 		return result;
 	}
