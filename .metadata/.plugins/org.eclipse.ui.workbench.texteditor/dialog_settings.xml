@@ -6,27 +6,27 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="RejectFinder" key="selection"/>
+		<item value="" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="lastIndex"/>
+			<item value="resources"/>
+			<item value="resou"/>
+			<item value="bundleapp"/>
+			<item value="dist"/>
+			<item value="includes=&quot;**&quot;"/>
+			<item value="deploy/lib"/>
+			<item value="copy"/>
+			<item value="lib"/>
+			<item value="setup-staging-area"/>
+			<item value="libs"/>
+			<item value="Extern"/>
+			<item value="compil"/>
 			<item value="RejectsFinder"/>
 			<item value="rt"/>
-			<item value="Preferences"/>
-			<item value="&lt;!DOCTYPE html&gt;"/>
-			<item value="Submit content"/>
-			<item value="CleanStripes"/>
-			<item value=".upload_jwt"/>
-			<item value="JavaFX\workspace\"/>
-			<item value="pasteVariables"/>
-			<item value="addData"/>
-			<item value="app.targetsData.add"/>
-			<item value="Все"/>
-			<item value="libs"/>
-			<item value="Exiftool process interrupted "/>
-			<item value="Ex"/>
 		</list>
 		<list key="replacehistory">
 			<item value="RejectFinder"/>

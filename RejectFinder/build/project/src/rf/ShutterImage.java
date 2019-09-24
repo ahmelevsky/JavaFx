@@ -20,7 +20,7 @@ public class ShutterImage {
 
 	private IntegerProperty media_id = new SimpleIntegerProperty();
 	private BooleanProperty selected = new SimpleBooleanProperty(false);
-	//private boolean isSelected;
+	// private boolean isSelected;
 	private StringProperty media_type = new SimpleStringProperty();
 	private List<String> reasonsList;
 	private StringProperty reasonsString = new SimpleStringProperty();
@@ -35,7 +35,8 @@ public class ShutterImage {
 	private BooleanProperty is_illustration = new SimpleBooleanProperty(false);
 	public LocalDate uploadedDate;
 	public LocalDateTime verdictTime;
-	
+	public String extenstion;
+
 	public ShutterImage(int media_id, String media_type, List<String> reasons, String uploaded_date,
 			String original_filename, String verdict_time) {
 		this.media_id.set(media_id);
@@ -44,12 +45,19 @@ public class ShutterImage {
 		this.reasonsString.set(String.join(", ", this.reasonsList));
 		this.uploaded_date.set(uploaded_date);
 		this.original_filename.set(original_filename);
+		try {
+			this.extenstion = original_filename.substring(original_filename.lastIndexOf(".") + 1);
+		} catch (IndexOutOfBoundsException e) {
+			this.extenstion = "";
+		}
 		this.original_filename_backup = original_filename;
 		this.verdict_time.set(verdict_time);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		uploadedDate = LocalDate.parse(uploaded_date, formatter);
+		DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 		Instant instant = Instant.parse(verdict_time);
-		this.verdictTime = LocalDateTime.ofInstant(instant, ZoneId.of(ZoneOffset.UTC.getId()));	
+		this.verdictTime = LocalDateTime.ofInstant(instant, ZoneId.of(ZoneOffset.UTC.getId()));
+		this.verdict_time.set(this.verdictTime.format(formatterTime));
 	}
 
 	public BooleanProperty getSelected() {
@@ -59,8 +67,7 @@ public class ShutterImage {
 	public void setSelected(boolean selected) {
 		this.selected.set(selected);
 	}
-	
-	
+
 	public int getMedia_id() {
 		return media_id.get();
 	}
@@ -110,11 +117,11 @@ public class ShutterImage {
 	}
 
 	public void correctName() {
-		int pos= this.original_filename_backup.indexOf('_');
-		if (pos>-1)
-			this.original_filename.set(this.original_filename_backup.substring(pos+1));
+		int pos = this.original_filename_backup.indexOf('_');
+		if (pos > -1)
+			this.original_filename.set(this.original_filename_backup.substring(pos + 1));
 	}
-	
+
 	public void restoreName() {
 		this.original_filename.set(this.original_filename_backup);
 	}

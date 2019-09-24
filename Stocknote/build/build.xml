@@ -11,7 +11,12 @@
 		<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
 			uri="javafx:com.sun.javafx.tools.ant"
 			classpathref="fxant"/>
+		
+		<taskdef name="bundleapp"
+						             classname="com.oracle.appbundler.AppBundlerTask"   
+						             classpath="deploy/appbundler-1.0.jar" />
 	</target>
+		
 	<target name="setup-staging-area">
 		<delete dir="externalLibs" />
 		<delete dir="project" />
@@ -26,9 +31,13 @@
 				<include name="src/**" />
 			</fileset>
 		</copy>
-	
+		  <copy todir="deploy\resources">  
+						         <fileset dir="..\resources" includes="**"/>  
+				         </copy> 
 		<mkdir dir="projectRefs" />
 	</target>
+		
+		
 	<target name='do-compile'>
 		<delete dir="build" />
 		<mkdir dir="build/src" />
@@ -67,19 +76,24 @@
 	
 	
 	</target>
+		
+		
+		
 	<target name="do-deploy" depends="setup-staging-area, do-compile, init-fx-tasks">
 		<delete file="dist"/>
 		<delete file="deploy" />
 	
 		<mkdir dir="dist" />
 		<mkdir dir="dist/libs" />
-	
+		<mkdir dir="dist/resources" />
 		<copy todir="dist/libs">
 			<fileset dir="externalLibs">
 				<include name="*" />
 			</fileset>
 		</copy>
-	
+		 <copy todir="dist/resources">  
+								         <fileset dir="deploy/resources" includes="**"/>  
+						        </copy> 
 	
 		<fx:resources id="appRes">
 			<fx:fileset dir="dist" includes="Stocknote.jar"/>
@@ -102,9 +116,9 @@
 			<fx:resources refid="appRes"/>
 	
 			<manifest>
-				<attribute name="Implementation-Vendor" value=""/>
-				<attribute name="Implementation-Title" value=""/>
-				<attribute name="Implementation-Version" value=""/>
+				<attribute name="Implementation-Vendor" value="AH"/>
+				<attribute name="Implementation-Title" value="Stocknote"/>
+				<attribute name="Implementation-Version" value="1.0"/>
 				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>
@@ -122,18 +136,17 @@
 		            identifier="stocknote.Main"
 		            mainclassname="stocknote.Main">
 		            <!-- The following is important and should point to your build -->
-		            <classpath file="deploy/Stocknote.jar" />
+		            <classpath file="dist/Stocknote.jar" />
 					<!-- <classpath dir="deploy/libs" includes="*.jar" /> -->
 					
 					<option value="-Duser.dir=$APP_ROOT/Contents/Resources"/>
-		            <!-- You can have multiple instance of classpath if you 3rd party or
-		                 dependent jars in different locations -->
-		        </bundleapp>
-				<copy todir="Stocknote.app/Contents/Java/lib" >  
+		        	</bundleapp>
+  		       <!-- <copy todir="Stocknote.app/Contents/Java/lib" >  
                           <fileset dir="deploy/lib" includes="*.jar"/>  
-                    </copy> 
+                    </copy> -->
 				<copy todir="Stocknote.app/Contents/Resources/resources" >  
                           <fileset dir="deploy/resources" includes="**"/>  
                     </copy> 
-		    </target>
+		        	
+		        </target>
 </project>

@@ -1,25 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<HBox prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="stocknote.RemoveWordsController">
+
+<VBox xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="stocknote.RemoveWordsController">
    <children>
-      <TextArea fx:id="sourceTxt" wrapText="true">
-         <HBox.margin>
+      <HBox prefWidth="800.0" VBox.vgrow="ALWAYS">
+         <children>
+            <TextArea fx:id="sourceTxt" wrapText="true">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </TextArea>
+            <TextArea fx:id="removeTxt" wrapText="true">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </TextArea>
+            <TextArea fx:id="destTxt" wrapText="true">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </TextArea>
+         </children>
+      </HBox>
+      <Separator prefWidth="200.0" />
+      <Label text="Удаление определенных слов из исходного текста или массива слов. В первое окно скопируйте исходный текст или набор слов. Во второе окно - те слова, которые хотите исключить. В третьем окне будет результат." wrapText="true">
+         <VBox.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </HBox.margin>
-      </TextArea>
-      <TextArea fx:id="removeTxt" wrapText="true">
-         <HBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </HBox.margin>
-      </TextArea>
-      <TextArea fx:id="destTxt" wrapText="true">
-         <HBox.margin>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </HBox.margin>
-      </TextArea>
+         </VBox.margin>
+      </Label>
    </children>
-</HBox>
+</VBox>

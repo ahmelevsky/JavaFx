@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
@@ -36,11 +37,11 @@ public class Main extends Application {
 	        this.mainStage.sizeToScene();
 	        mainController = loader.getController();
 	        mainStage.setTitle("Stocknote");
-	        
+	        mainStage.getIcons().add(new Image("file:resources/icon.png"));
 	        addTab("Удалить дубликаты", "RemoveDuplicatesForm.fxml");
 	        addTab("Вырезать слова", "RemoveWordsForm.fxml");
 	        addTab("Соединить слова", "JoinWordsForm.fxml");
-	        
+	        addTab("Заглавные буквы", "CapitalizeForm.fxml");
 			mainStage.show();
 	}
 	

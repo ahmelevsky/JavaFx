@@ -22,11 +22,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 import org.json.JSONException;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -49,6 +52,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -129,10 +133,19 @@ public class MainController implements Initializable {
 	
 	@FXML
 	private Label statusLabel;
-    ToggleGroup group = new ToggleGroup();
 	
+	@FXML
+	private CheckBox jpgOption;
+	
+	@FXML
+	private CheckBox epsOption;
+	
+	
+	
+    ToggleGroup groupCopyMoveOption = new ToggleGroup();
+    
 	ObservableList<ShutterImage> list = FXCollections.observableArrayList();
-	
+	List<ShutterImage> fullList = new ArrayList<ShutterImage>();
 	private File source;
 	private File destination;
 	LocalDate fromDateValue;
@@ -149,10 +162,23 @@ public class MainController implements Initializable {
 		setupTableViewColumn();
 		tableView.setItems(list);
 		//list.add(new ShutterImage(123, "VNF_FMSK_newee", new ArrayList<String>(),"dsf", "VNF_FMSK_newee", "dsf43"));
-		copyOption.setToggleGroup(group);
+		copyOption.setToggleGroup(groupCopyMoveOption);
 		copyOption.setSelected(true);
-		moveOption.setToggleGroup(group);
+		moveOption.setToggleGroup(groupCopyMoveOption);
+
 		
+		epsOption.selectedProperty().addListener(new ChangeListener<Boolean>() {
+		    @Override
+		    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		        fillTable();
+		    }
+		});
+		jpgOption.selectedProperty().addListener(new ChangeListener<Boolean>() {
+		    @Override
+		    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		        fillTable();
+		    }
+		});
 		//ScrollBar scrollBarv = (ScrollBar)jsonTxt.lookup(".scroll-bar:vertical");
 		//scrollBarv.setDisable(true);
 		
@@ -255,7 +281,7 @@ public class MainController implements Initializable {
 		
 		setStatus("");
 		saveSessionId();
-		list.clear();
+		fullList.clear();
 		Thread t1 = new Thread(new Runnable() {
 
 			@Override
@@ -289,7 +315,7 @@ public class MainController implements Initializable {
 		}
 		
 		setStatus("");
-		list.clear();
+		fullList.clear();
 		
 		Thread t1 = new Thread(new Runnable() {
 
@@ -315,13 +341,24 @@ public class MainController implements Initializable {
     private void checkNewRejects() {
 		String last  = loadString("lastrejectdate");
 		if (last==null)
-			list.forEach(im -> im.setSelected(true));
+			fullList.forEach(im -> im.setSelected(true));
 		else {
 			LocalDateTime lastVerdictTime = LocalDateTime.parse(last,DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-			list.stream().filter(im -> im.verdictTime.isAfter(lastVerdictTime)).forEach(im-> im.setSelected(true));
+			fullList.stream().filter(im -> im.verdictTime.isAfter(lastVerdictTime)).forEach(im-> im.setSelected(true));
 		}
 	}
 	
+    private void fillTable() {
+    	list.clear();
+    	if (jpgOption.isSelected() && epsOption.isSelected())
+    		list.addAll(fullList);
+    	else if (jpgOption.isSelected())
+    		list.addAll(fullList.stream().filter(f -> f.extenstion.startsWith("jp")).collect(Collectors.toList()));
+    	else if (epsOption.isSelected())
+    		list.addAll(fullList.stream().filter(f -> f.extenstion.contentEquals("eps")).collect(Collectors.toList()));
+    	setStatus("Количество реджектов за выбранный период: " + list.size());
+    }
+    
 	private void getRejectsForDates(ShutterProvider provider, LocalDate from, LocalDate to, int timeoutSeconds) {
 		int per_page = 100;
 		int page = 1;
@@ -336,11 +373,11 @@ public class MainController implements Initializable {
 			if (from!=null && listFromShutter.stream().allMatch(d -> d.uploadedDate.isBefore(from))) break;
 			for (ShutterImage im:listFromShutter) {
 				if((from==null || !from.isAfter(im.uploadedDate)) && (to==null || !to.isBefore(im.uploadedDate)))
-					list.add(im);
+					fullList.add(im);
 			}
 			page++;
 		}
-		setStatus("Количество реджектов за выбранный период: " + list.size());
+		fillTable();
 		}
 		catch (JSONException e) {
 			setStatus("Autorization error");
@@ -358,9 +395,9 @@ public class MainController implements Initializable {
 			List<ShutterImage> listFromShutter = JsonParser.parseImagesData(json);
 			for (ShutterImage im:listFromShutter) {
 				if((from==null || !from.isAfter(im.uploadedDate)) && (to==null || !to.isBefore(im.uploadedDate)))
-					list.add(im);
+					fullList.add(im);
 			}
-		setStatus("Количество реджектов за выбранный период: " + list.size());
+		fillTable();
 		}
 		catch (JSONException e) {
 			setStatus("Неправильный формат");
@@ -521,7 +558,7 @@ private void enableControl() {
 	}
 	
 	@FXML
-    private void moveFiles() {
+    private void moveFiles_backup() {
 		setStatus("");
 		int moved = 0;
 		if (source==null || !source.exists() || !source.isDirectory() ||
@@ -551,6 +588,58 @@ private void enableControl() {
 		}
 		showMessage("Перенесено " + moved + " файлов");
 	}
+	
+	
+	@FXML
+    private void moveFiles() {
+		setStatus("");
+		int moved = 0;
+		if (source==null || !source.exists() || !source.isDirectory() ||
+				destination==null || !destination.exists() || !destination.isDirectory())
+			showAlert("Убедитесь что исходная и конечная папки выбраны и существуют");
+		
+		else if (source.getAbsolutePath().equals(destination.getAbsolutePath()))
+			showAlert("Исходная и конечная папки не должны совпадать");
+		else {
+			try {
+			for (ShutterImage image:list) {
+				if (image.getSelected().get()) {
+					Path file = findFile(image.getOriginal_filename());
+					if (file==null) continue;
+					Path jpg = null;
+					if (image.extenstion.equals("eps"))
+							jpg = findJpeg(file.toFile().getAbsolutePath());
+					if (this.moveOption.isSelected()) {
+							Files.move(file, Paths.get(destination.getAbsolutePath() + File.separator + file.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+						if (jpg!=null)
+							Files.move(jpg, Paths.get(destination.getAbsolutePath() + File.separator + jpg.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+					}
+					
+			    	else {
+			    		   Files.copy(file, Paths.get(destination.getAbsolutePath() + File.separator + file.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+			    		if (jpg!=null)   
+			    			Files.copy(jpg, Paths.get(destination.getAbsolutePath() + File.separator + jpg.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+			    	}
+						
+					moved++;
+				}
+			}
+			} catch (IOException e) {
+				setStatus("Ошибка копирования");
+				showAlert("Ошибка копирования. Перенесено " + moved + " файлов");
+		 }
+		}
+		showMessage("Перенесено " + moved + " файлов");
+	}
+	
+	private Path findJpeg(String epsFullPath) {
+		File jpgFile = new File(epsFullPath.substring(0, epsFullPath.lastIndexOf(".")) + ".jpg");
+		if (jpgFile.exists()) {
+			return Paths.get(jpgFile.getAbsolutePath());
+		}
+		else return null;
+	}
+	
 	
 	private Path findFile(String name) {
 		try {

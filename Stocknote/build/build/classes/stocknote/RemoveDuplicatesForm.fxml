@@ -2,13 +2,14 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="stocknote.RemoveDuplicatesController">
    <children>
-      <HBox VBox.vgrow="ALWAYS">
+      <HBox VBox.vgrow="SOMETIMES">
          <children>
             <TextArea fx:id="sourceTxt" wrapText="true" HBox.hgrow="ALWAYS">
                <HBox.margin>
@@ -23,6 +24,12 @@
          </children>
       </HBox>
       <Label fx:id="count">
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </VBox.margin>
+      </Label>
+      <Separator prefWidth="200.0" />
+      <Label text="Удаление дубликатов ключевых слов. В первое окно скопируйте ваши ключевые слова. Во втором окне будет результат без дубликатов." wrapText="true">
          <VBox.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </VBox.margin>

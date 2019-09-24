@@ -26,9 +26,12 @@
 				<delete dir="resources" />
 				<mkdir dir="externalLibs" />
 				
-				<copy todir="externalLibs">
-					<fileset dir="..\lib" includes="**" />  
-						 </copy> 
+			<copy todir="externalLibs">
+						<fileset dir="C:\Java\JavaFx\RejectFinder\lib">
+							<include name="json.jar"/>
+							<include name="jsoup-1.10.2.jar"/>
+						</fileset>
+					</copy>
 			    <copy todir="deploy\resources">  
 				         <fileset dir="..\resources" includes="**"/>  
 		         </copy> 
@@ -46,19 +49,16 @@
 	<target name='do-compile'>
 		<delete dir="build" />
 		<mkdir dir="build/src" />
-		<mkdir dir="build/libs" />
+		<mkdir dir="build/lib" />
 		<mkdir dir="build/classes" />
 	
 		<!-- Copy project-libs references -->
-		<copy todir="build/libs">
+		<copy todir="build/lib">
 			<fileset dir="externalLibs">
 				<include name="json.jar"/>
-				<include name="jsoup-1.10.2-javadoc.jar"/>
-				<include name="jsoup-1.10.2-sources.jar"/>
-				<include name="jsoup-1.10.2.jar"/>
+			    <include name="jsoup-1.10.2.jar"/>
 			</fileset>
 		</copy>
-	
 		<!-- Copy project references -->
 	
 		<!-- Copy project sources itself -->
@@ -70,8 +70,9 @@
 	
 		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="build/src" destdir="build/classes" encoding="Cp1251">
 			<classpath>
-				<fileset dir="build/libs">
-					<include name="*"/>
+				<fileset dir="build/lib">
+					<include name="json.jar"/>
+					<include name="jsoup-1.10.2.jar"/>	
 				</fileset>
 			</classpath>
 		</javac>
@@ -96,7 +97,8 @@
 		
 		<copy todir="dist/lib">
 			<fileset dir="externalLibs">
-				<include name="*" />
+				<include name="json.jar"/>
+				<include name="jsoup-1.10.2.jar"/>	
 			</fileset>
 		</copy>
 		 <copy todir="dist/resources">  
@@ -158,19 +160,22 @@
 			        <bundleapp outputdirectory="."
 			            name="RejectFinder"
 			            displayname="RejectFinder"
-						icon="dist/icon.icns"
+						icon="deploy/icon.icns"
 			            identifier="rf.Main"
 			            mainclassname="rf.Main">
 			            <!-- The following is important and should point to your build -->
 			            <classpath file="deploy/RejectFinder.jar" />
-						<!-- <classpath dir="deploy/libs" includes="*.jar" /> -->
+						<!-- <classpath dir="deploy/lib" includes="*.jar" /> -->
 						
 						<option value="-Duser.dir=$APP_ROOT/Contents/Resources"/>
 			            <!-- You can have multiple instance of classpath if you 3rd party or
 			                 dependent jars in different locations -->
 			        </bundleapp>
 					<copy todir="RejectFinder.app/Contents/Java/lib" >  
-	                          <fileset dir="deploy/lib" includes="*.jar"/>  
+	                          	<fileset dir="deploy/lib">
+	                          					<include name="json.jar"/>
+	                          				    <include name="jsoup-1.10.2.jar"/>
+	                          				</fileset>
 	                    </copy> 
 					<copy todir="RejectFinder.app/Contents/Resources/resources" >  
 	                          <fileset dir="deploy/resources" includes="**"/>  

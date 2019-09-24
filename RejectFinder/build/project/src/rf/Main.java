@@ -1,5 +1,6 @@
 package rf;
 	
+import java.io.File;
 import java.io.IOException;
 
 import javafx.application.Application;
@@ -35,7 +36,7 @@ public class Main extends Application {
 	        this.mainStage.setScene(this.mainScene);
 	        this.mainStage.sizeToScene();
 	        mainController = loader.getController();
-	        mainStage.setTitle("RejectFinder v1.2");
+	        mainStage.setTitle("RejectFinder v1.3");
 	        mainController.app = this;
 			mainStage.getIcons().add(new Image("file:resources/icon.png"));
 			mainStage.setMinHeight(500);
@@ -68,6 +69,8 @@ public class Main extends Application {
 	        dialog.setResizable(false);
 	        dialog.getIcons().add(new Image("file:resources/icon.png"));
 	        dialog.setTitle("Image Information");
+	        File f = new File("resources/application.css");
+	        scene.getStylesheets().add("file:///" + f.getAbsolutePath().replace("\\", "/"));
 	        dialog.setScene(scene);
 	        dialog.sizeToScene();
 	        imageInfoController = loader.getController();

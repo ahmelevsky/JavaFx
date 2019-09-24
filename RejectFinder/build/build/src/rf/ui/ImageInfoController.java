@@ -46,10 +46,10 @@ public class ImageInfoController implements Initializable {
 			filenameTxt.setText("ERROR Loading Image data");
 			return;
 		}
-		filenameTxt.setText("FileName: " + image.getOriginal_filename());
+		filenameTxt.setText(image.getOriginal_filename());
 		descriptionTxt.setText(image.getDescription());
 		previewImg.setImage(new Image(image.getPreviewPath(), true));
-		submitterNoteTxt.setText("Submitter Note: " + image.getSubmitter_note());
+		submitterNoteTxt.setText(image.getSubmitter_note());
 		isIllustrationBox.setSelected(image.getIs_illustration());
 		hasPropertyReleaseBox.setSelected(image.getHas_property_release());
 		isIllustrationBox.setDisable(true);

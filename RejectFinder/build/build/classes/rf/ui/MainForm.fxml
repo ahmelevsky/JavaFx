@@ -17,50 +17,68 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rf.ui.MainController" >
+<VBox minWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="rf.ui.MainController">
    <children>
-      <HBox>
+      <VBox>
          <children>
-            <Label text="Session Id:">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="9.0" />
-               </HBox.margin>
-            </Label>
-            <TextField fx:id="sessionIdText" prefWidth="200.0">
-               <HBox.margin>
+            <HBox>
+               <children>
+                  <Label text="Session Id:">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="9.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="sessionIdText" prefWidth="200.0">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <Button fx:id="getDataBtn" mnemonicParsing="false" onAction="#getRejected" text="GET!">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Pane HBox.hgrow="ALWAYS" />
+                  <Label text="C: ">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="9.0" />
+                     </HBox.margin>
+                  </Label>
+                  <DatePicker fx:id="fromDate">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </DatePicker>
+                  <Label text="До: ">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="9.0" />
+                     </HBox.margin>
+                  </Label>
+                  <DatePicker fx:id="toDate">
+                     <HBox.margin>
+                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                     </HBox.margin>
+                  </DatePicker>
+               </children>
+            </HBox>
+            <HBox spacing="10.0">
+               <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin></TextField>
-            <Button fx:id="getDataBtn" mnemonicParsing="false" onAction="#getRejected" text="GET!">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin></Button>
-            <Pane HBox.hgrow="ALWAYS" />
-            <Label text="C: ">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="9.0" />
-               </HBox.margin></Label>
-            <DatePicker fx:id="fromDate">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin></DatePicker>
-            <Label text="До: ">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="9.0" />
-               </HBox.margin></Label>
-            <DatePicker fx:id="toDate">
-               <HBox.margin>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </DatePicker>
+               </VBox.margin>
+               <children>
+                  <CheckBox fx:id="epsOption" mnemonicParsing="false" selected="true" text="EPS" />
+                  <CheckBox fx:id="jpgOption" mnemonicParsing="false" selected="true" text="JPG" />
+               </children>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
       <Accordion>
         <panes>
           <TitledPane animated="false" text="Самостоятельная загрузка данных">
                <content>
                   <HBox spacing="5.0">
                      <children>
-                        <TextArea fx:id="jsonTxt" prefHeight="60.0" HBox.hgrow="ALWAYS" wrapText="true" >
+                        <TextArea fx:id="jsonTxt" prefHeight="60.0" wrapText="true" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets left="5.0" right="5.0" />
                            </HBox.margin>
