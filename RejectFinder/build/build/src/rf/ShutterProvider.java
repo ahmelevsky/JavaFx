@@ -45,7 +45,7 @@ public class ShutterProvider {
 			Connection.Response resp=	get("/api/content_editor/photo", parameters);
 			return resp.body();
 		} catch (IOException e) {
-			return "";
+			return null;
 		}
 	}
 	

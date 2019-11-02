@@ -300,15 +300,20 @@ public class MainFrameController implements Initializable{
 		    	    List<File> im = Arrays.asList(images);
 		    	    im.parallelStream().forEach( image ->  {
 		    	    	try{
-		   	        	    LOGGER.info("Current file: " + image.getName());
-		   	        		currentTarget = app.getRandomTarget();
-		   	        		LOGGER.fine("Set current target");
-		   	        		List<String> keywords = app.keysEditorController.generateKeywordsForMetadata();
-		   	        		LOGGER.fine("Set keywords");
-		   	        		String description  =  app.descriptionEditorController.generateDescriptionForMetadata();
-		   	        		LOGGER.fine("Set description");
-		   	        		String title = app.titleEditorController.getTitleForMetadata();
-		   	        		LOGGER.fine("Set title");
+		    	    		List<String> keywords = null;
+		    	    		String description  = null;
+		    	    		String title = null;
+							synchronized (this) {
+								LOGGER.info("Current file: " + image.getName());
+								currentTarget = app.getRandomTarget();
+								LOGGER.fine("Set current target");
+								keywords = app.keysEditorController.generateKeywordsForMetadata();
+								LOGGER.fine("Set keywords");
+								description = app.descriptionEditorController.generateDescriptionForMetadata();
+								LOGGER.fine("Set description");
+								title = app.titleEditorController.getTitleForMetadata();
+								LOGGER.fine("Set title");
+							}
 		   	        		boolean isSuccess = ExiftoolRunner.writeMetadataToFile (image, keywords, title, description);
 		   	        		if (isWriteBothExtensions) {
 		   	        			File eps = new File(image.getAbsolutePath().replaceFirst("[.][^.]+$", "") + ".eps");

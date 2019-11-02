@@ -36,8 +36,12 @@ public class CapitalizeController implements Initializable {
 
 	public String capitalizeWords(String str) {
 		String lines[] = str.split("\\r?\\n");
-		List<String> result = new ArrayList<String>();
+		StringBuilder result = new StringBuilder();
 		for (String line : lines) {
+			if (line.trim().isEmpty()) { 
+				result.append("\n");
+				continue;
+				}
 			String words[] = line.split("\\s");
 			String capitalizeWord = "";
 			for (String w : words) {
@@ -45,10 +49,10 @@ public class CapitalizeController implements Initializable {
 				String afterfirst = w.substring(1);
 				capitalizeWord += first.toUpperCase() + afterfirst + " ";
 			}
-			result.add(capitalizeWord.trim());
+			result.append(capitalizeWord.trim() + "\n");
 		}
 		
-		return String.join("\n", result);
+		return result.toString().trim();
 	}
 
 }

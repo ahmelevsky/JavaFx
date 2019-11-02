@@ -59,9 +59,9 @@ public class ExiftoolRunner {
 		LOGGER.info("");
 		LOGGER.info(Settings.bundle.getString("log.message.write") + toFile.getAbsolutePath());
 		
-		LOGGER.info("Decription: " + description);
-		LOGGER.info("Keywords: " + StringUtils.join(keys, ", "));
-		LOGGER.info("Title: " + title);
+		LOGGER.info("Decription (" +toFile.getName() + "): " + description);
+		LOGGER.info("Keywords (" +toFile.getName() + "): " + StringUtils.join(keys, ", "));
+		LOGGER.info("Title (" +toFile.getName() + "): " + title);
 		
 		try {
 			int code = runCommand(sb);

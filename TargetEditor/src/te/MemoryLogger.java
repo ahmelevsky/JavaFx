@@ -16,7 +16,7 @@ public class MemoryLogger {
 		MemoryUsage hmusage = mbean.getHeapMemoryUsage();
 		if (startUsed==0)
 			startUsed = hmusage.getUsed();
-		LOGGER.info("Heap Memory Usage: " + hmusage.getUsed() + ", More than initial: " + (hmusage.getUsed() - startUsed) + ", dif: " + (hmusage.getUsed()-lastUsed));
+		LOGGER.fine("Heap Memory Usage: " + hmusage.getUsed() + ", More than initial: " + (hmusage.getUsed() - startUsed) + ", dif: " + (hmusage.getUsed()-lastUsed));
 		lastUsed = hmusage.getUsed();
 	}
 	

@@ -66,7 +66,7 @@ public class Language_en extends ListResourceBundle {
 	            { "alert.warn.missedfolvars", "Some of the folders have no variables in selected theme" },
 	            { "alert.yes", "Yes" },
 	            { "alert.no", "No" },
-	            { "log.message.write", "Metadata writing to file" },
+	            { "log.message.write", "Metadata writing to file " },
 	            { "parser.unexistedvar.begin", "Variable with a name " },
 	            { "parser.unexistedvar.end", " doesn't exist"},
 	            { "parser.badsymbols", "You put special symbols in the text like: <>[] without the correct variable syntax" },

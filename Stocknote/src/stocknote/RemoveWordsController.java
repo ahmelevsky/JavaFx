@@ -1,6 +1,7 @@
 package stocknote;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.StringJoiner;
 
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -33,8 +34,16 @@ public class RemoveWordsController implements Initializable{
 				}
 				//source = source.trim().replaceAll("\\;+", "\\;");
 				//source = source.trim().replaceAll("[\\; \\;]+", "\\; ");
-				source = source.trim().replaceAll(",+", ",");
-				source = source.trim().replaceAll("[, ,]+", ", ");
+				//source = source.trim().replaceAll(",[\\s]+,", ",");
+				
+			    String[] arr  =  source.split(",");
+			    StringJoiner sj = new StringJoiner(",");
+			    for (String s : arr) {
+			    	if (!s.trim().isEmpty())
+			        sj.add(s);
+			    }
+			    source = sj.toString();
+			    source = source.trim().replaceAll(",+", ",");
 				source = source.trim().replaceAll(" +", " ");
 				source = source.trim().replaceAll("\\r?\\n+", "\n");
 				destTxt.setText(source);

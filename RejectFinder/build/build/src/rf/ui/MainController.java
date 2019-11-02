@@ -258,7 +258,7 @@ public class MainController implements Initializable {
 		if (this.sessionIdText.getText().trim().isEmpty()) {
 			try {
 				app.showWeb();
-				String sessionId = app.webController.getSessionId();
+				String sessionId = app.webController.sessionId;
 				if (sessionId!=null) {
 				Platform.runLater(new Runnable() {
 		            public void run() {
@@ -294,7 +294,7 @@ public class MainController implements Initializable {
 				}
 				ShutterProvider provider = new ShutterProvider(sessionId);
 				if (!provider.isConnection()) {
-					setStatus("Ошибка авторизации");
+					setStatus("Ошибка соединения");
 					return;
 				}
 				getRejectsForDates(provider, fromDateValue, toDateValue, 60);
@@ -363,11 +363,19 @@ public class MainController implements Initializable {
 		int per_page = 100;
 		int page = 1;
 		long before = new Date().getTime();
+		String rejectesString = null;
 		try {
 		while (before + timeoutSeconds*1000 >  new Date().getTime()) {
-			String rejectesString = provider.getRejects(per_page,page);
+			rejectesString = provider.getRejects(per_page,page);
+			if (rejectesString == null) {
+				setStatus("Ошибка соединения");
+				showAlert("Ошибка соединения с сервером");
+				return;
+				}
 			if (rejectesString.isEmpty()) break;
-		
+		    
+			//writeToFile("D:\\Response.txt", rejectesString);
+		    
 			List<ShutterImage> listFromShutter = JsonParser.parseImagesData(rejectesString);
 			if (listFromShutter.isEmpty()) break;
 			if (from!=null && listFromShutter.stream().allMatch(d -> d.uploadedDate.isBefore(from))) break;
@@ -380,8 +388,19 @@ public class MainController implements Initializable {
 		fillTable();
 		}
 		catch (JSONException e) {
-			setStatus("Autorization error");
-			showAlert("Неправильный sessionId. Очистите поле sessionId и повторите авторизацию");
+			if (rejectesString.contains("Redirecting to")) {
+				setStatus("Autorization error");
+				showAlert("Неправильный sessionId. Очистите поле sessionId и повторите авторизацию");
+			}
+			else if (rejectesString.startsWith("{")){
+				setStatus("JSON parsing error");
+				showAlert("Данные загружены, но приложение не смогло их правильно интерпретировать. Обратитесь к разработчику.");
+			}
+			else {
+				int endIndex = rejectesString.length()>300 ? 300 : rejectesString.length();
+				setStatus("Unknown error");
+				showAlert("Некорректные данные:\n" + rejectesString.substring(0, endIndex)); 
+			}
 			}
 	}
 	

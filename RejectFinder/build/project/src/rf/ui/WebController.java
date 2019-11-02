@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.CookieHandler;
 import java.net.URI;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,20 +27,23 @@ public class WebController implements Initializable {
 	
 	private WebEngine webEngine;
 	private String shutterURL = "https://contributor-accounts.shutterstock.com/login";
-	private URI uri = URI.create(shutterURL);
-	private CookieHandler cookiesHandler;
+	private URI uri = URI.create("https://contributor-accounts.shutterstock.com");
 	private Map<String, List<String>> headers = new LinkedHashMap<String, List<String>>();
-	
+	public String sessionId = null;
+	java.net.CookieManager manager = null;
 	@FXML
 	private ProgressIndicator progress;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
 		 webEngine = wv.getEngine();
 		 webEngine.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36");
-		this.cookiesHandler = CookieHandler.getDefault();
+		 manager = new java.net.CookieManager();
+		 java.net.CookieHandler.setDefault(manager);
+		headers.put("Set-Cookie", Arrays.asList("name=value"));
 		 try {
-			cookiesHandler.put(uri, headers);
+			 manager.put(uri, headers);
 		} catch (IOException e) {
 			System.out.println("Cookies init error");
 		}
@@ -58,28 +62,25 @@ public class WebController implements Initializable {
 		 webEngine.load(shutterURL);
 	}
 
-	public String getSessionId() {
+	public void getSessionId() {
 		 try {
-				Map<String, List<String>> headers2 = cookiesHandler.get(uri, headers);
+				Map<String, List<String>> headers2 = manager.get(uri, headers);
 				List<String> cookiesList = headers2.get("Cookie");
 				if (cookiesList!=null && !cookiesList.isEmpty()) {
-					String[] arr = cookiesList.get(cookiesList.size()-1).split("; ");
-					for (String s:arr) {
+					for (String s:cookiesList) {
+						System.out.println(s.split("=")[0] + " : " + s.split("=")[1]);
 						if (s.startsWith("session="))
-							return s.split("=")[1];
+							this.sessionId = s.split("=")[1];
 					}
-					return null;
 				}
-					return null;
 			} catch (IOException e) {
 				System.out.println("Cookies get error");
-				return null;
 			}
 	}
 	
 	public String getCookieString() {
 		 try {
-				Map<String, List<String>> headers2 = cookiesHandler.get(uri, headers);
+				Map<String, List<String>> headers2 = manager.get(uri, headers);
 				List<String> cookiesList = headers2.get("Cookie");
 				if (cookiesList!=null && !cookiesList.isEmpty()) 
 					return cookiesList.get(cookiesList.size()-1);
@@ -89,15 +90,6 @@ public class WebController implements Initializable {
 				System.out.println("Cookies get error");
 				return null;
 			}
-	}
-	
-	
-	
-	public void show() {
-		// webEngine.load("https://submit.shutterstock.com");
-		//webEngine.
-		
-		
 	}
 	
 	

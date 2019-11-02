@@ -4,15 +4,16 @@ import java.io.File;
 import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 import rf.ui.ImageInfoController;
 import rf.ui.MainController;
 import rf.ui.WebController;
@@ -36,7 +37,7 @@ public class Main extends Application {
 	        this.mainStage.setScene(this.mainScene);
 	        this.mainStage.sizeToScene();
 	        mainController = loader.getController();
-	        mainStage.setTitle("RejectFinder v1.3");
+	        mainStage.setTitle("RejectFinder v1.3.3");
 	        mainController.app = this;
 			mainStage.getIcons().add(new Image("file:resources/icon.png"));
 			mainStage.setMinHeight(500);
@@ -57,6 +58,11 @@ public class Main extends Application {
 	        webController = loader.getController();
 	        dialog.initOwner(this.mainStage);
 	        dialog.initModality(Modality.APPLICATION_MODAL); 
+	        dialog.setOnCloseRequest(new EventHandler<WindowEvent>() {
+	            public void handle(WindowEvent we) {
+	            	webController.getSessionId();
+	            }
+	        });        
 	        dialog.showAndWait(); 
 	}
 	

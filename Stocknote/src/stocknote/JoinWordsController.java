@@ -29,7 +29,9 @@ public class JoinWordsController implements Initializable{
 				
 				StringBuilder sb = new StringBuilder();
 				for (String wb:wordsBegin) {
+					if (!wb.trim().isEmpty())
 					for (String we:wordsEnd) {
+						if (!we.trim().isEmpty())
 						sb.append(wb.trim() + " "  + we.trim() + "\n");
 					}
 
