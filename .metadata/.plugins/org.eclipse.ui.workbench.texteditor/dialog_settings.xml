@@ -6,27 +6,27 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="1024337068" key="selection"/>
+		<item value="class" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="class"/>
+			<item value="jar"/>
+			<item value="Rejec"/>
+			<item value="Re"/>
+			<item value="Reject"/>
+			<item value="dist"/>
+			<item value="dist\libs"/>
+			<item value="dist/libs"/>
+			<item value="deploy/lib"/>
+			<item value="deploy"/>
+			<item value="libs"/>
+			<item value="Loaded Keys"/>
 			<item value="1024337068"/>
 			<item value="clipboard"/>
 			<item value="mousePressedEventHandler"/>
-			<item value="log.message.write"/>
-			<item value="Metadata writing to file"/>
-			<item value="Metadata writing to fileH"/>
-			<item value="Metadata"/>
-			<item value="lastIndex"/>
-			<item value="resources"/>
-			<item value="resou"/>
-			<item value="bundleapp"/>
-			<item value="dist"/>
-			<item value="includes=&quot;**&quot;"/>
-			<item value="deploy/lib"/>
-			<item value="copy"/>
 		</list>
 		<list key="replacehistory">
 			<item value="RejectFinder"/>

@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="javafx.scene.input.ClipboardContent"/>
-<fullyQualifiedTypeName name="rf.utils.TableUtils"/>
-<fullyQualifiedTypeName name="java.net.URI"/>
-<fullyQualifiedTypeName name="java.net.CookieHandler"/>
-<fullyQualifiedTypeName name="java.util.LinkedHashMap"/>
-<fullyQualifiedTypeName name="org.json.JSONException"/>
-<fullyQualifiedTypeName name="javafx.scene.control.ScrollBar"/>
-<fullyQualifiedTypeName name="javafx.scene.control.Label"/>
-<fullyQualifiedTypeName name="javafx.scene.control.CheckBox"/>
-<fullyQualifiedTypeName name="javafx.stage.Stage"/>
-<fullyQualifiedTypeName name="rf.ui.ImageInfoController"/>
-<fullyQualifiedTypeName name="javafx.scene.control.TableRow"/>
-<fullyQualifiedTypeName name="javafx.scene.image.Image"/>
-<fullyQualifiedTypeName name="java.time.LocalDateTime"/>
-<fullyQualifiedTypeName name="java.util.Comparator"/>
-<fullyQualifiedTypeName name="java.util.Collections"/>
 <fullyQualifiedTypeName name="java.time.format.DateTimeFormatter"/>
 <fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="rf.ShutterImage"/>
@@ -24,7 +8,6 @@
 <fullyQualifiedTypeName name="javafx.scene.control.Toggle"/>
 <fullyQualifiedTypeName name="org.apache.commons.text.WordUtils"/>
 <fullyQualifiedTypeName name="java.lang.String"/>
-<fullyQualifiedTypeName name="java.util.stream.Collectors"/>
 <fullyQualifiedTypeName name="java.util.stream.IntStream"/>
 <fullyQualifiedTypeName name="java.util.concurrent.CompletableFuture"/>
 <fullyQualifiedTypeName name="java.lang.StringBuilder"/>
@@ -43,7 +26,6 @@
 <fullyQualifiedTypeName name="javafx.scene.input.MouseEvent"/>
 <fullyQualifiedTypeName name="javafx.scene.paint.Color"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.BorderPane"/>
-<fullyQualifiedTypeName name="klt.data.ImageData"/>
 <fullyQualifiedTypeName name="javafx.scene.control.TextArea"/>
 <fullyQualifiedTypeName name="javafx.scene.control.TextField"/>
 <fullyQualifiedTypeName name="javafx.scene.control.Button"/>
@@ -51,8 +33,6 @@
 <fullyQualifiedTypeName name="klt.ui.MainWindowController"/>
 <fullyQualifiedTypeName name="javafx.scene.input.KeyCode"/>
 <fullyQualifiedTypeName name="klt.ui.SelectionHandler"/>
-<fullyQualifiedTypeName name="klt.ui.SelectableBorderPane"/>
-<fullyQualifiedTypeName name="klt.Main"/>
 <fullyQualifiedTypeName name="klt.data.JsonParser"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
@@ -60,4 +40,24 @@
 <fullyQualifiedTypeName name="org.jsoup.select.Elements"/>
 <fullyQualifiedTypeName name="klt.web.ShutterProvider"/>
 <fullyQualifiedTypeName name="org.jsoup.nodes.Element"/>
+<fullyQualifiedTypeName name="javafx.scene.control.ProgressIndicator"/>
+<fullyQualifiedTypeName name="javafx.concurrent.Task"/>
+<fullyQualifiedTypeName name="javafx.scene.control.ProgressBar"/>
+<fullyQualifiedTypeName name="com.sun.org.apache.xalan.internal.xsltc.dom.LoadDocument"/>
+<fullyQualifiedTypeName name="klt.ui.SelectableBorderPane"/>
+<fullyQualifiedTypeName name="klt.Main"/>
+<fullyQualifiedTypeName name="com.sun.media.jfxmediaimpl.platform.Platform"/>
+<fullyQualifiedTypeName name="javafx.application.Platform"/>
+<fullyQualifiedTypeName name="javafx.scene.control.Label"/>
+<fullyQualifiedTypeName name="javafx.scene.layout.VBox"/>
+<fullyQualifiedTypeName name="java.util.LinkedHashSet"/>
+<fullyQualifiedTypeName name="java.util.Queue"/>
+<fullyQualifiedTypeName name="org.apache.commons.collections4.queue.CircularFifoQueue"/>
+<fullyQualifiedTypeName name="java.util.Set"/>
+<fullyQualifiedTypeName name="java.util.Collection"/>
+<fullyQualifiedTypeName name="klt.data.KeywordsCache"/>
+<fullyQualifiedTypeName name="javafx.scene.control.RadioButton"/>
+<fullyQualifiedTypeName name="javafx.scene.control.ToggleGroup"/>
+<fullyQualifiedTypeName name="java.util.stream.Collectors"/>
+<fullyQualifiedTypeName name="klt.data.ImageData"/>
 </qualifiedTypeNameHistroy>
