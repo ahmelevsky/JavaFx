@@ -34,6 +34,8 @@ public class Main extends Application {
 	        this.mainStage.setScene(this.mainScene);
 	        this.mainStage.sizeToScene();
 	        mainController = loader.getController();
+	        mainController.app = this;
+	        mainController.setup();
 	        mainStage.setTitle("Keywords Lookup Test");
 	       // mainController.app = this;
 			//mainStage.getIcons().add(new Image("file:resources/icon.png"));

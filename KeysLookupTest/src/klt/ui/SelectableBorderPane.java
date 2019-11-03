@@ -47,22 +47,11 @@ public class SelectableBorderPane extends BorderPane implements SelectableNode {
 	public void notifySelection(boolean select) {
 		if(select) {
 			this.setStyle("-fx-background-color: #FF22FF;");
-			if (this.imageData!=null && this.imageData.keywords.isEmpty()) {
-				List<String> kwds;
-				try {
-					kwds = ShutterProvider.getKeywords(this.imageData.link);
-				} catch (IOException e) {
-					app.showAlert("Can't get Keywords data. Can't find original image data in response.");
-					return;
-				}
-				if (kwds==null) {
-					app.showAlert("Can't get Keywords data. NULL");
-					return;
-				}
-				this.imageData.keywords.addAll(kwds);
-			}
+			this.imageData.selected = true;
 		}
-		else
+		else {
 			this.setStyle(null);
+			this.imageData.selected = false;
+		}
 	}
 }

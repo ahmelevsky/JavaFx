@@ -1,7 +1,9 @@
 package klt.data;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ImageData {
 
@@ -12,7 +14,8 @@ public class ImageData {
 	public String image_type;
 	public String src;
 	public String link;
-	public List<String> keywords = new ArrayList<String>();
+	public Set<String> keywords = new LinkedHashSet<String>();
+	public boolean selected;
 	
 	@Override
 	public String toString() {

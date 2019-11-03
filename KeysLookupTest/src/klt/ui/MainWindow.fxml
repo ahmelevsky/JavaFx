@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
@@ -37,10 +38,10 @@
                         <TextField fx:id="queryInput" />
                         <HBox spacing="10.0">
                            <children>
-                              <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="80.0" text="Select All" />
-                              <Button mnemonicParsing="false" text="Unselect All" />
+                              <Button fx:id="selectAllBtn" mnemonicParsing="false" onAction="#selectAll" prefHeight="26.0" prefWidth="100.0" text="Select All" />
+                              <Button fx:id="unSelectAllBtn" mnemonicParsing="false" onAction="#unselectAll" prefWidth="100.0" text="Unselect All" />
                               <Pane HBox.hgrow="ALWAYS" />
-                              <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#search" prefHeight="26.0" prefWidth="80.0" text="Seach" />
+                              <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#search" prefHeight="26.0" prefWidth="100.0" text="Seach" />
                            </children>
                         </HBox>
                      </children>
@@ -50,6 +51,11 @@
                         <FlowPane fx:id="imagesContainer" hgap="10.0" prefWrapLength="0.0" vgap="10.0" />
                      </content>
               </ScrollPane>
+                  <VBox fx:id="progressBarBox">
+                     <children>
+                        <ProgressBar fx:id="loadBar" progress="0.0" />
+                     </children>
+                  </VBox>
                </children>
             </VBox>
             <ScrollPane hbarPolicy="NEVER" SplitPane.resizableWithParent="false">
@@ -68,7 +74,7 @@
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
-        <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status" HBox.hgrow="ALWAYS">
+        <Label fx:id="leftStatusLabel" maxHeight="1.7976931348623157E308" maxWidth="-1.0" HBox.hgrow="ALWAYS">
           <font>
             <Font size="11.0" fx:id="x3" />
           </font>
@@ -77,7 +83,7 @@
           </textFill>
         </Label>
         <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
-        <Label font="$x3" maxWidth="-1.0" text="Right status" textFill="$x4" HBox.hgrow="NEVER" />
+        <Label fx:id="rightStatusLabel" font="$x3" maxWidth="-1.0" textFill="$x4" HBox.hgrow="NEVER" />
       </children>
       <padding>
         <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />

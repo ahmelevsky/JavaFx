@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -80,8 +82,8 @@ public class ShutterProvider {
 	*/
 	
 	
-	public static List<String> getKeywords(String link) throws IOException {
-	    	List<String> result = new ArrayList<String>();
+	public static Set<String> getKeywords(String link) throws IOException {
+	    	Set<String> result = new LinkedHashSet<String>();
 	    	
 	    	Document doc = Jsoup.connect(baseURL + link )
 			  .headers(headers)
