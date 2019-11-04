@@ -22,7 +22,7 @@ public class Main extends Application {
 	
 	  public MainWindowController mainController;
       private Stage mainStage;
-      private Scene mainScene;
+      public Scene mainScene;
 	
 	@Override
 	public void start(Stage primaryStage) throws IOException {
@@ -38,8 +38,8 @@ public class Main extends Application {
 	        mainController.setup();
 	        mainStage.setTitle("Keywords Lookup Test v0.1 alpha");
 			mainStage.getIcons().add(new Image("file:resources/icon.png"));
-			mainStage.setMinHeight(500);
-			mainStage.setMinWidth(800);
+			mainStage.setMinHeight(600);
+			mainStage.setMinWidth(1200);
 			mainStage.show();
 			SelectionHandler.app = this;
 			SelectableBorderPane.app = this;

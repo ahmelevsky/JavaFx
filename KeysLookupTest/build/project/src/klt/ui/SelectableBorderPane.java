@@ -46,7 +46,7 @@ public class SelectableBorderPane extends BorderPane implements SelectableNode {
 	@Override
 	public void notifySelection(boolean select) {
 		if(select) {
-			this.setStyle("-fx-background-color: #FF22FF;");
+			this.setStyle("-fx-background-color: #BF9EAE;");
 			this.imageData.selected = true;
 		}
 		else {

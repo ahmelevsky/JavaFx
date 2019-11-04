@@ -1,4 +1,12 @@
-package klt.ui;
+    new RubberBandSelection( pane);
+
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    package klt.ui;
 
 import java.io.IOException;
 import java.net.URL;
@@ -17,7 +25,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -130,6 +137,8 @@ public class MainWindowController implements Initializable {
 
 	ToggleGroup radioTypeGroup = new ToggleGroup();
 	
+	private boolean isShiftPressed; 
+    private boolean isDownTag;
     private int shiftTagPosition;
 	
 
@@ -148,8 +157,6 @@ public class MainWindowController implements Initializable {
 	Task<Void> backgroundLoadTask;
 
 	Task<Void> processingTask;
-	
-	Task<List<ImageData>> searchTask;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -187,13 +194,6 @@ public class MainWindowController implements Initializable {
 			public Void call() throws InterruptedException {
 				System.out.println("Run Processing Task");
 				rightStatusUpdate("Waiting for keywords data to be downloaded...");
-				
-				Platform.runLater(new Runnable() {
-					public void run() {
-						keysPane.getChildren().clear();
-						keysButtons.clear();
-					}});
-				
 				while (!selectedItems.stream().filter(SelectableBorderPane.class::isInstance)
 						.map(result -> (SelectableBorderPane) result)
 						.allMatch(n -> !n.imageData.getAllKeywords().isEmpty())) {
@@ -250,6 +250,8 @@ public class MainWindowController implements Initializable {
 
 				List<TagButton> tempList = new ArrayList<TagButton>();
 				tempList.addAll(keysButtons);
+				keysPane.getChildren().clear();
+				keysButtons.clear();
 				
 				Map<String, Long> salesresult = salekwds.stream()
 						.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
@@ -297,29 +299,70 @@ public class MainWindowController implements Initializable {
 						if (old!=null)
 							button.setActive(old.isActive);
 					    
+						/*
+						button.setOnAction(click -> {
+						 if(!button.isActive)
+							 button.setActive(true);
+						 else
+							 button.setActive(false);
+						 recoundSalesCount();
+						 if (isShiftPressed) {
+							 if (shiftTagPosition==0) {
+								 shiftTagPosition = button.position;
+								 isDownTag = !button.isActive;
+							 }
+							 else {
+								 keysPane.getChildren().forEach(node -> {
+									 if (node instanceof TagButton) {
+										 TagButton tag = (TagButton) node;
+										 if ((shiftTagPosition<button.position && tag.position>shiftTagPosition && tag.position<=button.position)
+												  || (shiftTagPosition>button.position && tag.position>shiftTagPosition && tag.position>=button.position))
+												 tag.setActive(!isDownTag);
+									 }
+								 });
+							 }
+						 }
+						});
+					    */
+						
+						
+						button.addEventFilter(KeyEvent.KEY_PRESSED,
+				                event -> {
+				                	if (event.getCode() == KeyCode.SHIFT)
+				                		isShiftPressed = true;
+				                });
+						button.addEventFilter(KeyEvent.KEY_RELEASED,
+								  event -> {
+									  if (event.getCode() == KeyCode.SHIFT) {
+										  isShiftPressed = false;
+										  shiftTagPosition = 0;
+									  }
+					                });
+						
+						
 						button.setOnMouseClicked(new EventHandler<MouseEvent>(){
 							@Override
 							public void handle(MouseEvent event){ 
 							    if(event.getButton().equals(MouseButton.PRIMARY)){
-							    	
-							    	 if (event.isShiftDown() && shiftTagPosition>0) {
-										 TagButton previousButton = keysButtons.stream().filter(b->b.position == shiftTagPosition).findFirst().orElse(null);
-										 if (previousButton !=null)
-										 keysButtons.forEach(tag -> {
-											 if ((shiftTagPosition<button.position && tag.position>shiftTagPosition && tag.position<=button.position)
-													  || (shiftTagPosition>button.position && tag.position<shiftTagPosition && tag.position>=button.position)) {
-													 tag.setActive(previousButton.isActive);
-											 }
-									 });
-									 }
-							    	 else {
-							    		 if(!button.isActive)
-							    			 button.setActive(true);
-							    		 else
-							    			 button.setActive(false);
-							    	 }
+							    	if(!button.isActive)
+										 button.setActive(true);
+									 else
+										 button.setActive(false);
 									 recoundSalesCount();
-									 shiftTagPosition = button.position;
+									 
+									 if (isShiftPressed) {
+										 if (shiftTagPosition==0) {
+											 shiftTagPosition = button.position;
+											 isDownTag = !button.isActive;
+										 }
+										 else {
+											 keysButtons.forEach(tag -> {
+													 if ((shiftTagPosition<button.position && tag.position>shiftTagPosition && tag.position<=button.position)
+															  || (shiftTagPosition>button.position && tag.position>shiftTagPosition && tag.position>=button.position))
+															 tag.setActive(!isDownTag);
+											 });
+										 }
+									 }
 									}
 							 }
 						   });
@@ -477,23 +520,14 @@ public class MainWindowController implements Initializable {
 
 	@FXML
 	private void search() {
-		String query = queryInput.getText();
-		if (query != null && !query.trim().isEmpty()) {
-		
-			
-		if (searchTask!= null && searchTask.isRunning())	
-			searchTask.cancel(true);
+
 		if (backgroundLoadTask != null && backgroundLoadTask.isRunning())
 			backgroundLoadTask.cancel(true);
 
 		cleanResults();
-		
-			
-		searchTask = new Task<List<ImageData>>() {
-			@Override
-			public List<ImageData> call() throws InterruptedException {
-				
-		   System.out.println("SEARCH TASK STARTED");
+
+		String query = queryInput.getText();
+		if (query != null && !query.trim().isEmpty()) {
 			String result = null;
 			List<ImageData> data = null;
 			if (radioAll.isSelected())
@@ -508,7 +542,7 @@ public class MainWindowController implements Initializable {
 			if (result == null) {
 				app.showAlert("Request error");
 				leftStatusUpdate("Request error");
-				return data;
+				return;
 			}
 
 			else {
@@ -535,69 +569,43 @@ public class MainWindowController implements Initializable {
 			if (data == null) {
 				app.showAlert("Parsing error");
 				leftStatusUpdate("Parsing error");
-				return data;
+				return;
 			}
 
 			updateAllMatchesCountLabel(JsonParser.getAllMatchesCount(result));
 			addRelatedKeywords(JsonParser.getRelatedKeywords(result));
-             return data;
-			};
-		};
-		
-		searchTask.setOnCancelled(new EventHandler<WorkerStateEvent>() {
-		    @Override
-		    public void handle(WorkerStateEvent t) {
-		    	System.out.println("Search task cancelled");
-			}});
-		
-		searchTask.setOnCancelled(new EventHandler<WorkerStateEvent>() {
-		    @Override
-		    public void handle(WorkerStateEvent t) {
-		    	System.out.println("Search task stopped");
-			}});
-		
-		searchTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-		    @Override
-		    public void handle(WorkerStateEvent t) {
-		    	List<ImageData>   data = searchTask.getValue();
-		    	System.out.println("Search task succeed");
-		    	if (data!=null) {
-		    		
-		    		for (ImageData imdata : data) {
-						addImageThumbnail(imdata);
-					}
 
-					boolean needProcessing = false;
-					for (SelectableBorderPane newimage : images) {
-						SelectableBorderPane same = previousImages.stream()
-								.filter(im -> im.imageData.id.equals(newimage.imageData.id)).findFirst().orElse(null);
-						if (same != null) {
-							needProcessing = true;
-							newimage.imageData.addKeywords(same.imageData.getAllKeywords());
-							selectedItems.add(newimage);
-							newimage.notifySelection(true);
-						}
-					}
-					if (needProcessing)
-						keywordsProcessing();
+			for (ImageData imdata : data) {
+				addImageThumbnail(imdata);
+			}
 
-					Platform.runLater(new Runnable() {
-						public void run() {
-							createBackgroundLoadTask();
-							callTask(backgroundLoadTask);
-						}
-					});
-		    	}
-		    }
-		});
-		callTask(searchTask);
+			boolean needProcessing = false;
+			for (SelectableBorderPane newimage : this.images) {
+				SelectableBorderPane same = this.previousImages.stream()
+						.filter(im -> im.imageData.id.equals(newimage.imageData.id)).findFirst().orElse(null);
+				if (same != null) {
+					needProcessing = true;
+					newimage.imageData.addKeywords(same.imageData.getAllKeywords());
+					selectedItems.add(newimage);
+					newimage.notifySelection(true);
+				}
+			}
+			if (needProcessing)
+				keywordsProcessing();
+
+			Platform.runLater(new Runnable() {
+				public void run() {
+					createBackgroundLoadTask();
+					callTask(backgroundLoadTask);
+				}
+			});
 		}
 	}
 
 	private void updateAllMatchesCountLabel(int count) {
 		Platform.runLater(new Runnable() {
 			public void run() {
-				allMatchesCountLabel.setText("Total images: " + count);
+				allMatchesCountLabel.setText("Total records: " + count);
 			}
 		});
 	}

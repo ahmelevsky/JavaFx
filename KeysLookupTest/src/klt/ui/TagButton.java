@@ -1,13 +1,21 @@
 package klt.ui;
 
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 
 public class TagButton extends Button {
 
 	public boolean isActive;
+	public String key;
+	public long salesCount;
+	public long allCount;
+	public int position;
 	
-	public TagButton(String label){
+	public TagButton(String label, long salesCount, long allCount){
 		super(label);
+		this.key = label;
+		this.salesCount = salesCount;
+		this.allCount = allCount;
 		this.isActive=true;
 		this.setStyle(
                 "-fx-background-radius: 20px; " +
@@ -20,12 +28,7 @@ public class TagButton extends Button {
                    " -fx-text-fill: black;" //+
                //    " -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );"
         );
-		 this.setOnAction(click -> {
-			 if(!this.isActive)
-				 this.setActive(true);
-			 else
-				 this.setActive(false);
-			});
+		this.setTooltip(new Tooltip(salesCount + " / " + allCount));
 	}
 	
 	public void setActive(boolean isActive) {
