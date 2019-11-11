@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="klt.ui.MainWindowController"/>
-<fullyQualifiedTypeName name="javafx.scene.input.KeyCode"/>
-<fullyQualifiedTypeName name="klt.ui.SelectionHandler"/>
-<fullyQualifiedTypeName name="java.util.List"/>
-<fullyQualifiedTypeName name="org.jsoup.nodes.Document"/>
-<fullyQualifiedTypeName name="org.jsoup.select.Elements"/>
-<fullyQualifiedTypeName name="klt.web.ShutterProvider"/>
-<fullyQualifiedTypeName name="org.jsoup.nodes.Element"/>
-<fullyQualifiedTypeName name="javafx.scene.control.ProgressIndicator"/>
-<fullyQualifiedTypeName name="javafx.concurrent.Task"/>
-<fullyQualifiedTypeName name="javafx.scene.control.ProgressBar"/>
-<fullyQualifiedTypeName name="com.sun.org.apache.xalan.internal.xsltc.dom.LoadDocument"/>
 <fullyQualifiedTypeName name="klt.Main"/>
-<fullyQualifiedTypeName name="com.sun.media.jfxmediaimpl.platform.Platform"/>
 <fullyQualifiedTypeName name="javafx.application.Platform"/>
 <fullyQualifiedTypeName name="javafx.scene.control.Label"/>
 <fullyQualifiedTypeName name="javafx.scene.layout.VBox"/>
@@ -25,13 +12,11 @@
 <fullyQualifiedTypeName name="javafx.scene.control.RadioButton"/>
 <fullyQualifiedTypeName name="javafx.scene.control.ToggleGroup"/>
 <fullyQualifiedTypeName name="java.util.stream.Collectors"/>
-<fullyQualifiedTypeName name="klt.data.ImageData"/>
 <fullyQualifiedTypeName name="java.util.Collection"/>
 <fullyQualifiedTypeName name="java.util.Iterator"/>
 <fullyQualifiedTypeName name="java.util.LinkedList"/>
 <fullyQualifiedTypeName name="javafx.scene.control.Slider"/>
 <fullyQualifiedTypeName name="javafx.scene.control.Button"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.util.ListIterator"/>
 <fullyQualifiedTypeName name="java.util.Map"/>
 <fullyQualifiedTypeName name="java.util.function.Function"/>
@@ -40,7 +25,6 @@
 <fullyQualifiedTypeName name="klt.data.JsonParser"/>
 <fullyQualifiedTypeName name="java.lang.Throwable"/>
 <fullyQualifiedTypeName name="java.util.concurrent.CopyOnWriteArrayList"/>
-<fullyQualifiedTypeName name="klt.ui.SelectableBorderPane"/>
 <fullyQualifiedTypeName name="javafx.scene.input.Clipboard"/>
 <fullyQualifiedTypeName name="javafx.scene.input.ClipboardContent"/>
 <fullyQualifiedTypeName name="javafx.scene.control.Tooltip"/>
@@ -60,4 +44,20 @@
 <fullyQualifiedTypeName name="javafx.scene.input.KeyEvent"/>
 <fullyQualifiedTypeName name="klt.ui.TagButton"/>
 <fullyQualifiedTypeName name="javafx.concurrent.WorkerStateEvent"/>
+<fullyQualifiedTypeName name="javafx.collections.ListChangeListener"/>
+<fullyQualifiedTypeName name="klt.ui.SelectableBorderPane"/>
+<fullyQualifiedTypeName name="com.sun.media.jfxmediaimpl.platform.Platform"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="klt.data.ImageData"/>
+<fullyQualifiedTypeName name="netscape.javascript.JSException"/>
+<fullyQualifiedTypeName name="klt.workers.ResponseData"/>
+<fullyQualifiedTypeName name="java.io.IOException"/>
+<fullyQualifiedTypeName name="org.json.JSONException"/>
+<fullyQualifiedTypeName name="klt.workers.RequestData"/>
+<fullyQualifiedTypeName name="klt.workers.ImagesType"/>
+<fullyQualifiedTypeName name="klt.workers.ShutterRequest"/>
+<fullyQualifiedTypeName name="klt.ui.MainWindowController"/>
+<fullyQualifiedTypeName name="klt.workers.WorkerStatus"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.util.Collections"/>
 </qualifiedTypeNameHistroy>

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<project name="KeysFinder" default="do-deploy" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
+	<target name="init-fx-tasks">
+		<path id="fxant">
+			<filelist>
+				<file name="${java.home}\..\lib\ant-javafx.jar"/>
+				<file name="${java.home}\lib\jfxrt.jar"/>
+			</filelist>
+		</path>
+	
+		<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+			uri="javafx:com.sun.javafx.tools.ant"
+			classpathref="fxant"/>
+		
+		<taskdef name="bundleapp"
+						             classname="com.oracle.appbundler.AppBundlerTask"   
+						             classpath="deploy/appbundler-1.0.jar" />
+		
+	</target>
+	<target name="setup-staging-area">
+		<delete dir="externalLibs" />
+					<delete dir="project" />
+					<delete dir="projectRefs" />
+					<delete dir="resources" />
+					<mkdir dir="externalLibs" />
+	
+		<copy todir="externalLibs">
+			<fileset dir="C:\Java\JavaFx\KeysFinder\lib">
+				<filename name="commons-collections4-4.4.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Java\JavaFx\KeysFinder\lib">
+				<filename name="jsoup-1.10.2.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Java\JavaFx\KeysFinder\lib">
+				<filename name="json.jar"/>
+			</fileset>
+		</copy>
+		<copy todir="externalLibs">
+			<fileset dir="C:\Java\JavaFx\KeysFinder\lib">
+				<filename name="commons-lang3-3.9.jar"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="dist\resources">  
+						         <fileset dir="..\resources" includes="**"/>  
+				         </copy> 
+		
+		
+		<mkdir dir="project" />
+		<copy todir="project">
+			<fileset dir="C:\Java\JavaFx\KeysFinder">
+				<include name="src/**" />
+			</fileset>
+		</copy>
+	
+		<mkdir dir="projectRefs" />
+	</target>
+	<target name='do-compile'>
+		<delete dir="build" />
+		<mkdir dir="build/src" />
+		<mkdir dir="build/lib" />
+		<mkdir dir="build/classes" />
+	
+		<!-- Copy project-libs references -->
+		<copy todir="build/lib">
+			<fileset dir="externalLibs">
+				<include name="json.jar"/>
+				<include name="commons-collections4-4.4.jar"/>
+				<include name="commons-lang3-3.9.jar"/>
+				<include name="jsoup-1.10.2.jar"/>
+			</fileset>
+		</copy>
+	
+		<!-- Copy project references -->
+	
+		<!-- Copy project sources itself -->
+		<copy todir="build/src">
+			<fileset dir="project/src">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+	
+		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="build/src" destdir="build/classes" encoding="Cp1251">
+			<classpath>
+				<fileset dir="build/lib">
+					                <include name="json.jar"/>
+									<include name="commons-collections4-4.4.jar"/>
+									<include name="commons-lang3-3.9.jar"/>
+									<include name="jsoup-1.10.2.jar"/>
+								</fileset>
+			</classpath>
+		</javac>
+	
+		<!-- Copy over none Java-Files -->
+		<copy todir="build/classes">
+		<fileset dir="project/src">
+			<exclude name="**/*.java"/>
+		</fileset>
+		</copy>
+	
+	
+	</target>
+	<target name="do-deploy" depends="setup-staging-area, do-compile, init-fx-tasks">
+		<delete file="dist"/>
+		<delete file="deploy" />
+	
+		<mkdir dir="dist" />
+		<mkdir dir="dist/lib" />
+	
+		<copy todir="dist/lib">
+			<fileset dir="externalLibs">
+				<include name="json.jar"/>
+								<include name="commons-collections4-4.4.jar"/>
+								<include name="commons-lang3-3.9.jar"/>
+								<include name="jsoup-1.10.2.jar"/>
+			</fileset>
+		</copy>
+	
+	
+		<fx:resources id="appRes">
+			<fx:fileset dir="dist" includes="KeysFinder.jar"/>
+			<fx:fileset dir="dist" includes="lib/*"/>
+		</fx:resources>
+	
+		<fx:application id="fxApplication"
+			name="KeysFinder"
+			mainClass="klt.Main"
+			toolkit="fx"
+		    version="2.0"
+		/>
+	
+		<mkdir dir="build/classes/META-INF" />
+	
+	
+	
+		<fx:jar destfile="dist/KeysFinder.jar">
+			<fx:application refid="fxApplication"/>
+			<fileset dir="build/classes">
+			</fileset>
+			<fx:resources refid="appRes"/>
+	
+			<manifest>
+				<attribute name="Implementation-Vendor" value="AH"/>
+				<attribute name="Implementation-Title" value="KeysFinder"/>
+				<attribute name="Implementation-Version" value="1.0"/>
+				<attribute name="JavaFX-Feature-Proxy" value="None"/>
+			</manifest>
+		</fx:jar>
+	
+	</target>
+		
+		<target name="createApp" depends="do-deploy">
+					        <bundleapp outputdirectory="."
+					            name="KeysFinder"
+					            displayname="KeysFinder"
+								icon="deploy/icon.icns"
+					            identifier="klt.Main"
+					            mainclassname="klt.Main">
+					            <!-- The following is important and should point to your build -->
+					            <classpath file="dist/KeysFinder.jar" />
+								<!-- <classpath dir="deploy/lib" includes="*.jar" /> -->
+								
+								<option value="-Duser.dir=$APP_ROOT/Contents/Resources"/>
+					            <!-- You can have multiple instance of classpath if you 3rd party or
+					                 dependent jars in different locations -->
+					        </bundleapp>
+							<copy todir="KeysFinder.app/Contents/Java/lib" >  
+			                          	<fileset dir="dist/lib">
+			                          					<include name="json.jar"/>
+			                          				    <include name="jsoup-1.10.2.jar"/>
+			                          	            	<include name="commons-collections4-4.4.jar"/>
+			                          					<include name="commons-lang3-3.9.jar"/>
+			                          				</fileset>
+			                    </copy> 
+							<copy todir="KeysFinder.app/Contents/Resources/resources" >  
+			                          <fileset dir="dist/resources" includes="**"/>  
+			                    </copy> 
+					    </target>
+		
+</project>

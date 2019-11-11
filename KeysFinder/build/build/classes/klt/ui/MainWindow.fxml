@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<VBox minWidth="1000.0" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="klt.ui.MainWindowController">
+  <children>
+    <SplitPane dividerPositions="0.5" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <items>
+            <VBox minHeight="500.0" minWidth="500.0" prefHeight="200.0" prefWidth="200.0" spacing="5.0">
+               <children>
+                  <VBox>
+                     <children>
+                        <HBox>
+                           <children>
+                              <TextField fx:id="queryInput" HBox.hgrow="SOMETIMES" />
+                              <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#search" prefHeight="26.0" prefWidth="80.0" text="Search" HBox.hgrow="NEVER" />
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <FlowPane fx:id="relatedKeywordsContainer" hgap="10.0" vgap="5.0" VBox.vgrow="SOMETIMES">
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </FlowPane>
+                        <VBox>
+                           <children>
+                              <HBox spacing="20.0">
+                                 <children>
+                                    <RadioButton fx:id="radioAll" mnemonicParsing="false" selected="true" text="All Images" />
+                                    <RadioButton fx:id="radioPhotos" mnemonicParsing="false" text="Photos" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox spacing="20.0">
+                                 <children>
+                                    <RadioButton fx:id="radioVectors" mnemonicParsing="false" text="Vectors">
+                                       <HBox.margin>
+                                          <Insets right="15.0" />
+                                       </HBox.margin>
+                                    </RadioButton>
+                                    <RadioButton fx:id="radioIllustration" mnemonicParsing="false" text="Illustrations" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <HBox spacing="10.0">
+                           <children>
+                              <Button fx:id="selectAllBtn" mnemonicParsing="false" onAction="#selectAll" prefHeight="26.0" prefWidth="100.0" text="Select All" />
+                              <Button fx:id="unSelectAllBtn" mnemonicParsing="false" onAction="#unselectAll" prefWidth="100.0" text="Unselect All" />
+                              <Pane HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin></Pane>
+                           </children>
+                           <VBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <HBox>
+                     <VBox.margin>
+                        <Insets left="5.0" right="5.0" top="5.0" />
+                     </VBox.margin>
+                     <children>
+                        <Label fx:id="allMatchesCountLabel" />
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Label fx:id="selectedImagesCountLabel" />
+                     </children>
+                  </HBox>
+              <ScrollPane fx:id="sp" hbarPolicy="NEVER" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+                     <content>
+                        <FlowPane fx:id="imagesContainer" hgap="10.0" prefWrapLength="0.0" vgap="10.0" />
+                     </content>
+              </ScrollPane>
+                  <VBox fx:id="progressBarBox">
+                     <children>
+                        <ProgressBar fx:id="loadBar" progress="0.0" />
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+            <VBox fx:id="rightBox" minWidth="500.0" spacing="10.0">
+               <children>
+                  <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" minWidth="500.0" VBox.vgrow="SOMETIMES">
+                     <content>
+                        <FlowPane fx:id="keysPane" hgap="10.0" vgap="10.0" />
+                     </content>
+                  </ScrollPane>
+                  <HBox fillHeight="false" spacing="10.0">
+                     <children>
+                        <Button fx:id="selectAllKeysBtn" mnemonicParsing="false" onAction="#selectAllKeywords" text="Select All" />
+                        <Button fx:id="unselectAllKeysBtn" mnemonicParsing="false" onAction="#unselectAllKeywords" text="Unselect All" />
+                        <Button fx:id="reverseKeysSelectionBtn" mnemonicParsing="false" onAction="#reversKeywords" text="Reverse" />
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Label fx:id="salesCountLabel">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Button fx:id="copyKeysBtn" mnemonicParsing="false" onAction="#copyKeywords" text="Copy" />
+                     </children>
+                     <VBox.margin>
+                        <Insets right="5.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <TextArea fx:id="otherKeysArea" editable="false" minHeight="200.0" wrapText="true" VBox.vgrow="ALWAYS" />
+                  <Label fx:id="otherCountLabel" />
+               </children>
+            </VBox>
+      </items>
+    </SplitPane>
+    <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
+      <children>
+        <Label fx:id="leftStatusLabel" maxHeight="1.7976931348623157E308" maxWidth="-1.0" HBox.hgrow="ALWAYS">
+          <font>
+            <Font size="11.0" fx:id="x3" />
+          </font>
+          <textFill>
+            <Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
+          </textFill>
+        </Label>
+        <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+        <Label fx:id="rightStatusLabel" font="$x3" maxWidth="-1.0" textFill="$x4" HBox.hgrow="NEVER" />
+      </children>
+      <padding>
+        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+      </padding>
+    </HBox>
+  </children>
+</VBox>
