@@ -33,8 +33,8 @@ public class ShutterRequest {
 				int page = 1;
 				while (responseData.images.size() < requestData.requestCount) {
 					templist.clear();
-					if (requestData.requestCount<100)
-						result = ShutterProvider.findImages(requestData.query, requestData.type, page, requestData.requestCount);
+					if ((requestData.requestCount - responseData.images.size()) <100)
+						result = ShutterProvider.findImages(requestData.query, requestData.type, page, requestData.requestCount - responseData.images.size());
 					else
 						result = ShutterProvider.findImages(requestData.query, requestData.type, page);
 					templist = JsonParser.parseImagesData(result);
