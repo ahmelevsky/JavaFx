@@ -17,6 +17,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import klt.workers.ImagesType;
+
 public class ShutterProvider {
 
 	static String baseURL = "https://www.shutterstock.com";
@@ -85,12 +87,12 @@ public class ShutterProvider {
 	}
 	
 	
-	public static String findImages(String query) throws IOException {
+	public static String findImages(String query, ImagesType type, int page) throws IOException {
 		Map<String,String> parameters = new HashMap<String,String>(){{
 			   put("q", query);
 			   put("language", "en");
 			   put("page[size]", "100");
-			   put("page[number]", "1");
+			   put("page[number]", String.valueOf(page));
 			   put("recordActivity", "true");
 			 //  put("fields%5Bimages%5D", "title");
 			 //  put("fields%5Bimages%5D", "link");
@@ -102,6 +104,52 @@ public class ShutterProvider {
 			  // put("fields[images]", "has_model_release");
 			  // put("fields[images]", "has_property_release");
 			}};
+			
+			switch (type) {
+			case PHOTOS:
+				parameters.put("filter[image_type]", "photo");
+				break;
+			case VECTORS:
+				parameters.put("filter[image_type]", "vector");
+				break;
+			case ILLUSTRATIONS:
+				parameters.put("filter[image_type]", "illustration");
+				break;
+			}
+			//System.out.println(get("/studioapi/images/search", parameters));
+			return get("/studioapi/images/search", parameters);
+	}
+	
+	
+	public static String findImages(String query, ImagesType type, int page, int recordsCount) throws IOException {
+		Map<String,String> parameters = new HashMap<String,String>(){{
+			   put("q", query);
+			   put("language", "en");
+			   put("page[size]", String.valueOf(recordsCount));
+			   put("page[number]", String.valueOf(page));
+			   put("recordActivity", "true");
+			 //  put("fields%5Bimages%5D", "title");
+			 //  put("fields%5Bimages%5D", "link");
+			  // put("fields%5Bimages%5D", "displays");
+			 //  put("fields%5Bimages%5D", "alt");
+			  // put("fields[images]", "aspect");
+			 //  put("fields[images]", "image_type");
+			  // put("fields[images]", "is_editorial");
+			  // put("fields[images]", "has_model_release");
+			  // put("fields[images]", "has_property_release");
+			}};
+			
+			switch (type) {
+			case PHOTOS:
+				parameters.put("filter[image_type]", "photo");
+				break;
+			case VECTORS:
+				parameters.put("filter[image_type]", "vector");
+				break;
+			case ILLUSTRATIONS:
+				parameters.put("filter[image_type]", "illustration");
+				break;
+			}
 			//System.out.println(get("/studioapi/images/search", parameters));
 			return get("/studioapi/images/search", parameters);
 	}

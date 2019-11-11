@@ -28,32 +28,29 @@ public class ShutterRequest {
 			System.out.println("SEARCH TASK STARTED");
 			responseData = new ResponseData();
 			String result = null;
+			List<ImageData> templist = new ArrayList<ImageData>();
 			try {
-			switch(requestData.type) {
-			case ALL:
-				result = ShutterProvider.findImagesAll(requestData.query);
-				responseData.images = JsonParser.parseImagesData(result);
-				break;
-			case PHOTOS:
-				result = ShutterProvider.findImagesPhotos(requestData.query);
-				responseData.images = JsonParser.parseImagesData(result);
-				break;
-			case VECTORS:
-				result = ShutterProvider.findImagesVector(requestData.query);
-				responseData.images = JsonParser.parseImagesData(result);
-				break;
-			case ILLUSTRATIONS:
 				int page = 1;
-				responseData.images = new ArrayList<ImageData>();
-				while (responseData.images.size() < 100 && page < 6) {
-					result = ShutterProvider.findImagesIllustration(requestData.query, page);
-					List<ImageData> notFilteredImagesList = JsonParser.parseImagesData(result);
-					responseData.images.addAll(notFilteredImagesList.stream().filter(im -> im.image_type.equals("illustration"))
+				while (responseData.images.size() < requestData.requestCount) {
+					templist.clear();
+					if (requestData.requestCount<100)
+						result = ShutterProvider.findImages(requestData.query, requestData.type, page, requestData.requestCount);
+					else
+						result = ShutterProvider.findImages(requestData.query, requestData.type, page);
+					templist = JsonParser.parseImagesData(result);
+					if (templist.isEmpty())
+						break;
+					if (requestData.type.equals(ImagesType.ILLUSTRATIONS))  {
+						responseData.images.addAll(templist.stream().filter(im -> im.image_type.equals("illustration"))
 							.collect(Collectors.toList()));
+						if (templist.stream().filter(im -> im.image_type.equals("illustration")).count()==0)
+								break;
+					}
+					else 
+						responseData.images.addAll(templist);
 					page++;
 				}
-				break;
-			}
+			
 			responseData.matchesCount = JsonParser.getAllMatchesCount(result);
 			responseData.relatedKeywords = JsonParser.getRelatedKeywords(result);
 			return responseData;
@@ -71,8 +68,6 @@ public class ShutterRequest {
 		}
 	};
 	
-	
-	
 	public static void execute(RequestData requestData, MainWindowController ui) {
 		
 		if (request!=null )
@@ -81,23 +76,34 @@ public class ShutterRequest {
 		request = new ShutterRequest(requestData);
 		request.ui = ui;
 		
+		request.searchTask.setOnRunning(new EventHandler<WorkerStateEvent>() {
+		    @Override
+		    public void handle(WorkerStateEvent t) {
+		    	request.ui.setSearchIndicator(true);
+			}});
+		
+		
 		request.searchTask.setOnCancelled(new EventHandler<WorkerStateEvent>() {
 		    @Override
 		    public void handle(WorkerStateEvent t) {
 		    	request.status = WorkerStatus.CANCELLED;
 		    	System.out.println("Search task cancelled");
+		    	request.ui.setSearchIndicator(false);
 			}});
 		
 		request.searchTask.setOnFailed(new EventHandler<WorkerStateEvent>() {
 		    @Override
 		    public void handle(WorkerStateEvent t) {
+		    	request.ui.setSearchIndicator(false);
 		    	request.status = WorkerStatus.FAILED;
-		    	System.out.println("Search task faled");
+		    	System.out.println("Search task faled " + request.error);
+		    	ui.app.showAlert("Error: search request failed: " + request.error);
 			}});
 		
 		request.searchTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 		    @Override
 		    public void handle(WorkerStateEvent t) {
+		    	request.ui.setSearchIndicator(false);
 		    	request.status = WorkerStatus.DONE;
 		    	System.out.println("Search task succeed");
 		    	request.responseData = request.searchTask.getValue();

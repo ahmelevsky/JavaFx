@@ -25,8 +25,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -132,6 +135,13 @@ public class MainWindowController implements Initializable {
 
 	@FXML
 	private Label otherCountLabel;
+	
+	@FXML
+	private Spinner<Integer> requestCountSpinner;
+	
+	
+	@FXML
+	private ProgressIndicator searchIndicator;
 
 	ToggleGroup radioTypeGroup = new ToggleGroup();
 	
@@ -184,6 +194,11 @@ public class MainWindowController implements Initializable {
 		selectedItems.addListener((ListChangeListener<SelectableBorderPane>) c -> {
 			selectedImagesCountLabel.setText("Selected images: " + selectedItems.size());
 		});
+		 SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = //
+	                new SpinnerValueFactory.IntegerSpinnerValueFactory(50, 1000, 100);
+		 valueFactory.amountToStepByProperty().set(50);
+	     requestCountSpinner.setValueFactory(valueFactory);
+	     searchIndicator.setVisible(false);
 	}
 
 	private void createProcessingTask() {
@@ -515,6 +530,7 @@ public class MainWindowController implements Initializable {
 	private void search() {
 		RequestData requestData = new RequestData();
 		requestData.query = queryInput.getText();
+	    requestData.requestCount = requestCountSpinner.getValue();
 		if (requestData.query.trim().isEmpty())
 			return;
 		if (radioAll.isSelected())
@@ -656,6 +672,10 @@ public class MainWindowController implements Initializable {
 	}
 
 	
+	public void setSearchIndicator(boolean isProgress) {
+		this.searchIndicator.setVisible(isProgress);
+	}
+	
 	 static class ResizableRectangle extends Rectangle {
 	        ResizableRectangle(double w, double h) {
 	            super(w, h);
@@ -670,4 +690,5 @@ public class MainWindowController implements Initializable {
 	        }
 	    }
 	
+	 
 }
