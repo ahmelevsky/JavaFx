@@ -15,6 +15,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -139,6 +141,8 @@ public class MainWindowController implements Initializable {
 	@FXML
 	private Spinner<Integer> requestCountSpinner;
 	
+	@FXML
+	private TextField searchTxt;
 	
 	@FXML
 	private ProgressIndicator searchIndicator;
@@ -163,6 +167,23 @@ public class MainWindowController implements Initializable {
 	Task<Void> backgroundLoadTask;
 
 	Task<Void> processingTask;
+	
+	private final ChangeListener<String> searchListener  = new ChangeListener<String>(){
+		@Override
+		public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
+			 highlightKeys();
+		}
+	};
+	
+	private void highlightKeys() {
+		if (searchTxt.getText().trim().isEmpty())
+			keysButtons.stream().forEach(b -> b.setFound(false));
+		else {
+			keysButtons.stream().filter(b -> b.key.startsWith(searchTxt.getText())).forEach(b -> b.setFound(true));
+			keysButtons.stream().filter(b -> !b.key.startsWith(searchTxt.getText())).forEach(b -> b.setFound(false));
+		}
+	}
+	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -199,6 +220,7 @@ public class MainWindowController implements Initializable {
 		 valueFactory.amountToStepByProperty().set(50);
 	     requestCountSpinner.setValueFactory(valueFactory);
 	     searchIndicator.setVisible(false);
+	     searchTxt.textProperty().addListener(searchListener);
 	}
 
 	private void createProcessingTask() {
@@ -351,6 +373,7 @@ public class MainWindowController implements Initializable {
 				Collections.sort(resultOtherKeys);
 				otherKeysArea.setText(String.join(", ", resultOtherKeys));
 				otherCountLabel.setText("Other keys: " + resultOtherKeys.size());
+				highlightKeys();
 			}
 		});
 	}

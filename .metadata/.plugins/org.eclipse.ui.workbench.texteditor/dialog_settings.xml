@@ -12,6 +12,7 @@
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="if(isActive) {"/>
 			<item value="KeysLookup"/>
 			<item value="KeysLookupTest"/>
 			<item value="Total "/>
@@ -26,7 +27,6 @@
 			<item value="dist"/>
 			<item value="dist\libs"/>
 			<item value="dist/libs"/>
-			<item value="deploy/lib"/>
 		</list>
 		<list key="replacehistory">
 			<item value="KeysFinder"/>

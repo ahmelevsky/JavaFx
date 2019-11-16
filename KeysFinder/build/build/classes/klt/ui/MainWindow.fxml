@@ -116,6 +116,7 @@
             </VBox>
             <VBox fx:id="rightBox" minWidth="500.0" spacing="10.0">
                <children>
+                  <TextField fx:id="searchTxt" />
                   <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" minWidth="500.0" VBox.vgrow="SOMETIMES">
                      <content>
                         <FlowPane fx:id="keysPane" hgap="10.0" vgap="10.0" />

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="javafx.scene.layout.VBox"/>
 <fullyQualifiedTypeName name="java.util.LinkedHashSet"/>
 <fullyQualifiedTypeName name="java.util.Queue"/>
 <fullyQualifiedTypeName name="org.apache.commons.collections4.queue.CircularFifoQueue"/>
@@ -15,7 +14,6 @@
 <fullyQualifiedTypeName name="javafx.scene.control.Slider"/>
 <fullyQualifiedTypeName name="javafx.scene.control.Button"/>
 <fullyQualifiedTypeName name="java.util.ListIterator"/>
-<fullyQualifiedTypeName name="java.util.Map"/>
 <fullyQualifiedTypeName name="java.util.function.Function"/>
 <fullyQualifiedTypeName name="java.util.Map.Entry"/>
 <fullyQualifiedTypeName name="java.util.LinkedHashMap"/>
@@ -44,7 +42,6 @@
 <fullyQualifiedTypeName name="javafx.collections.ListChangeListener"/>
 <fullyQualifiedTypeName name="klt.ui.SelectableBorderPane"/>
 <fullyQualifiedTypeName name="com.sun.media.jfxmediaimpl.platform.Platform"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="klt.data.ImageData"/>
 <fullyQualifiedTypeName name="netscape.javascript.JSException"/>
 <fullyQualifiedTypeName name="klt.workers.ResponseData"/>
@@ -58,6 +55,9 @@
 <fullyQualifiedTypeName name="klt.workers.ImagesType"/>
 <fullyQualifiedTypeName name="java.io.IOException"/>
 <fullyQualifiedTypeName name="org.json.JSONException"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="javafx.scene.control.ProgressIndicator"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.util.Map"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
 </qualifiedTypeNameHistroy>

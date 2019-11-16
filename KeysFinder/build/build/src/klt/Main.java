@@ -36,7 +36,7 @@ public class Main extends Application {
 	        mainController = loader.getController();
 	        mainController.app = this;
 	        mainController.setup();
-	        mainStage.setTitle("KeysFinder v0.3 beta");
+	        mainStage.setTitle("KeysFinder v0.4 beta");
 			mainStage.getIcons().add(new Image("file:resources/icon.png"));
 			mainStage.setMinHeight(600);
 			mainStage.setMinWidth(1200);
