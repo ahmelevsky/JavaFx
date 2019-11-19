@@ -33,7 +33,7 @@ public class ShutterRequest {
 				int page = 1;
 				while (responseData.images.size() < requestData.requestCount) {
 					templist.clear();
-					if ((requestData.requestCount - responseData.images.size()) <100)
+					if (((requestData.requestCount - responseData.images.size()) <100) && !requestData.type.equals(ImagesType.ILLUSTRATIONS))
 						result = ShutterProvider.findImages(requestData.query, requestData.type, page, requestData.requestCount - responseData.images.size());
 					else
 						result = ShutterProvider.findImages(requestData.query, requestData.type, page);
@@ -50,7 +50,7 @@ public class ShutterRequest {
 						responseData.images.addAll(templist);
 					page++;
 				}
-			
+				
 			responseData.matchesCount = JsonParser.getAllMatchesCount(result);
 			responseData.relatedKeywords = JsonParser.getRelatedKeywords(result);
 			return responseData;
