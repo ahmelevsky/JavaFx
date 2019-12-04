@@ -71,6 +71,34 @@ public class MultiParser {
 	}
 
 
+	public String pasteVariablesMin(String string, String delimiter) throws TextException{
+		final Matcher matcher = TAG_REGEX.matcher(string);
+	    while (matcher.find()) {
+	    	if (!matcher.group(1).isEmpty()) {
+	    		if (!local.containsKey(matcher.group(1)))
+	    			throw new TextException(Settings.bundle.getString("parser.unexistedvar.begin") + matcher.group(1) + Settings.bundle.getString("parser.unexistedvar.end"));
+	    		
+	    		int multiplier = 1;
+	    		if (matcher.group(3)!= null)
+	    			if (matcher.group(3).isEmpty()) {
+	    				Optional<Variable> opt = global.stream().filter(p -> p.getName().equals(matcher.group(1))).findFirst();
+	    				if (opt!=null && opt.isPresent()) {
+	    					Variable var = opt.get();
+	    					string = StringUtils.replaceOnce(string, matcher.group(0), StringUtils.join(var.getValues(), delimiter));
+	    				}
+	    			}
+	    			else {
+	    				multiplier = Integer.parseInt(matcher.group(3));
+	    					string = StringUtils.replaceOnce(string, matcher.group(0), StringUtils.join(getNMinValues(matcher.group(1), multiplier), delimiter));
+	    			}
+	    		else
+	    				string = StringUtils.replaceOnce(string, matcher.group(0), getMinValue(matcher.group(1)));
+	    	}
+	    }
+	    if(StringUtils.containsAny(string, '[', ']', '<', '>'))
+	    		throw new TextException(Settings.bundle.getString("parser.badsymbols"));
+	    return string;
+	}
 
 	private String getRandomValue(String name) {
 		Set<String> values = local.get(name);
@@ -88,6 +116,16 @@ public class MultiParser {
 			refill(name);
 		if (values.isEmpty()) return "";
 		String result = Collections.max(values, Comparator.comparing(s -> s.length()));
+		values.remove(result);
+		return result;
+	}
+
+	private String getMinValue(String name) {
+		Set<String> values = local.get(name);
+		if (values.isEmpty())
+			refill(name);
+		if (values.isEmpty()) return "";
+		String result = Collections.min(values, Comparator.comparing(s -> s.length()));
 		values.remove(result);
 		return result;
 	}
@@ -126,7 +164,20 @@ public class MultiParser {
 		return result;
 	}
 
-
+	private List<String> getNMinValues(String name, int multiplier) {
+		List<String> result = new ArrayList<String>();
+		Set<String> values = local.get(name);
+		for (int i=0; i<multiplier; i++) {
+			if (values.isEmpty())
+				refill(name);
+			if (values.isEmpty()) 
+				break;
+			String res = Collections.min(values, Comparator.comparing(s -> s.length()));
+			values.remove(res);
+			result.add(res);
+		}
+		return result;
+	}
 
 	private void refill(String variableName) {
 		Optional<Variable> opt = global.stream().filter(p -> p.getName().equals(variableName)).findFirst();

@@ -11,18 +11,22 @@ import javafx.collections.ListChangeListener.Change;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.converter.DefaultStringConverter;
+import te.Settings;
 import te.model.Target;
 import te.util.TextAreaException;
 
@@ -43,6 +47,8 @@ public class TargetsWindowController extends TargetEditorController implements I
 	 @FXML
 	 private Button addBtn;
 	 @FXML
+	 private Button removeAllBtn;
+	 @FXML
 	 private TextArea inputTargetKwd;
 	 @FXML
 	 private TextArea inputTargetDescr1;
@@ -60,6 +66,7 @@ public class TargetsWindowController extends TargetEditorController implements I
 	public void initialize(URL location, ResourceBundle resources) {
 		setTableEditable();
 		this.addBtn.setShape(new Circle(25));
+		this.removeAllBtn.setShape(new Circle(25));
 		Callback<TableColumn<Target,String>, TableCell<Target,String>> cellFactory =
 	             new Callback<TableColumn<Target,String>, TableCell<Target,String>>() {
 	                 public TableCell<Target,String> call(TableColumn<Target,String> p) {
@@ -174,6 +181,19 @@ public class TargetsWindowController extends TargetEditorController implements I
 	 private void addRow(){
 		 app.getTargetsData().add(new Target());
 	 }
+	 
+	 @FXML
+	 private void removeAll(){
+		 Alert alert = new Alert(AlertType.CONFIRMATION);
+         alert.setTitle("Confirmation");
+         alert.setContentText(Settings.bundle.getString("ui.tabs.targets.removeconfirmation"));
+         alert.showAndWait();
+         if (alert.getResult().equals(ButtonType.OK)) {
+        	 targetsTable.getItems().clear();
+        	 app.getTargetsData().clear();
+         }
+	 }
+	 
 	 
 	 private void setTableEditable() {
 		  targetsTable.setEditable(true);

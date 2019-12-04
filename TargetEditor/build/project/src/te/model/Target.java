@@ -63,4 +63,8 @@ public class Target {
     	this.targetDescr2.set(target);
     }
     
+    public int getDescriptionsLength() {
+    	return this.getTargetDescr1().length() + this.getTargetDescr2().length();
+    }
+    
 }

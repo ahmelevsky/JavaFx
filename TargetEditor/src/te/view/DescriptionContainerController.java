@@ -63,6 +63,8 @@ public class DescriptionContainerController  extends TargetEditorController impl
 	@FXML
 	private Text countLabel;
 	@FXML
+	private Text countMinLabel;
+	@FXML
 	private TextArea resultText;
 	@FXML
 	private Button refreshBtn;
@@ -121,6 +123,7 @@ public class DescriptionContainerController  extends TargetEditorController impl
 			setError(textFields.get(index), false, null);
 			 try {	
 					getMaxLengthDescription();
+					getMinLengthDescription();
 					getRandomDescription();
 				 }
 				 catch (TextAreaException e) {
@@ -145,6 +148,7 @@ public class DescriptionContainerController  extends TargetEditorController impl
 			
 				 try {	
 					getMaxLengthDescription();
+					getMinLengthDescription();
 					getRandomDescription();
 				 }
 				 catch (TextAreaException e) {
@@ -162,6 +166,7 @@ public class DescriptionContainerController  extends TargetEditorController impl
 				removeListeners();
 				try {
 					getMaxLengthDescription();
+					getMinLengthDescription();
 					getRandomDescription();
 				} catch (TextAreaException e) {
 					setError(e.textArea, true, e.getMessage());
@@ -240,7 +245,16 @@ public class DescriptionContainerController  extends TargetEditorController impl
 		return result;
 	}
 	
-	
+	private String parseVariablesInTextMin(MultiParser parser, TextArea tf) throws TextAreaException{
+		String result = null;
+		try{
+			result = parser.pasteVariablesMin(tf.getText(), " ");	
+		}
+		catch (TextException e) {
+			throw new TextAreaException (tf, e.getMessage());
+		}
+		return result;
+	}
 	
 	private void setError(TextArea tf, boolean setOrUnset, String errorText){
 		 ObservableList<String> styleClass = tf.getStyleClass();
@@ -330,6 +344,7 @@ public class DescriptionContainerController  extends TargetEditorController impl
 		try {
 			removeListeners();
 			getMaxLengthDescription();
+			getMinLengthDescription();
 			getRandomDescription();
 			addListeners();
 		} catch (TextAreaException e) {
@@ -389,6 +404,9 @@ public class DescriptionContainerController  extends TargetEditorController impl
 		return resultString;
 	}
 	
+	
+	
+	
 	public String getMaxLengthDescription() throws TextAreaException{
 		Target target = app.getTargetWithMaxLength();
 		MultiParser parser = new MultiParser(app.descriptionVariableEditorContainerController.variables);
@@ -442,6 +460,65 @@ public class DescriptionContainerController  extends TargetEditorController impl
 			countLabel.setFill(Color.BLACK);
 		}
 		countLabel.setText(Settings.bundle.getString("ui.tabs.descriptions.maxchars") + resultString.length());
+		this.currentDescriptionExample =resultString;
+		return resultString;
+	}
+	
+	
+	
+	public String getMinLengthDescription() throws TextAreaException{
+		Target target = app.getTargetWithMinLength();
+		MultiParser parser = new MultiParser(app.descriptionVariableEditorContainerController.variables);
+		List<Tuple<Integer, String>> result = new ArrayList<Tuple<Integer, String>>();
+		for (int i=0; i<selectors.size();i++){
+			String d =  selectors.get(i).getSelectionModel().getSelectedItem();
+			int position = i;
+			if(randomBoxes.get(i).isSelected())
+				position = -1;
+			if (d == null || d.isEmpty()){
+			   continue;
+			}
+			else if (d.equals(this.folderDescr)){
+				List<String> res = app.getFolderVariableData().stream().map(FolderVariable::getDescriptionVariable).collect(Collectors.toList());
+				String t = Collections.min(res, Comparator.comparing(s -> s.length()));
+				textFields.get(i).setText(t);
+			    if (!t.isEmpty())
+			    	result.add( new Tuple<Integer, String>(position, t));
+			}
+			else if (d.equals(this.targetDescr1)) {
+				if (target!=null){
+					String t = target.getTargetDescr1();
+					textFields.get(i).setText(t);
+				    if (!t.isEmpty())
+				    	result.add( new Tuple<Integer, String>(position, t));
+				}
+				
+			}
+			else if (d.equals(this.targetDescr2)){
+				if (target!=null){
+					String t = target.getTargetDescr2();
+					textFields.get(i).setText(t);
+				    if (!t.isEmpty())
+				    	result.add( new Tuple<Integer, String>(position, t));
+				}
+			}
+			else {
+				 String t = parseVariablesInTextMin(parser, textFields.get(i));
+			    if (!t.isEmpty()) 
+			    	result.add( new Tuple<Integer, String>(position, t));
+			}
+			app.checkSyntax(textFields.get(i));
+		}
+		
+		String resultString = joinWithPositions(result);
+		
+		if (resultString.length() > this.LIMIT){
+			countMinLabel.setFill(Color.RED);
+		}
+		else{
+			countMinLabel.setFill(Color.BLACK);
+		}
+		countMinLabel.setText(Settings.bundle.getString("ui.tabs.descriptions.minchars") + resultString.length());
 		this.currentDescriptionExample =resultString;
 		return resultString;
 	}

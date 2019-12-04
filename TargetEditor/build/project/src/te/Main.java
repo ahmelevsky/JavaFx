@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -129,7 +130,7 @@ public class Main extends Application {
 		titleEditorController = (TitleEditorController) addTab(Settings.bundle.getString("ui.tabs.titles.header"), "view/TitleEditorWindow.fxml", TitleEditorController.class, true);
 		mainFrameController.setup();
 		keysEditorController.setup();
-		mainStage.setTitle("TargetEditor v2.3.1");
+		mainStage.setTitle("TargetEditor v2.4");
 		mainStage.getIcons().add(new Image("file:resources/icon.png"));
 		loadLastData();
 		mainStage.show();
@@ -260,7 +261,10 @@ public class Main extends Application {
 		return resultTarget;
 	}
 	
-	
+	public Target getTargetWithMinLength(){
+		if (getTargetsData()==null || getTargetsData().isEmpty()) return null;
+		return getTargetsData().stream().min(Comparator.comparing(Target::getDescriptionsLength)).orElse(null);
+	}
 	
 	
 	public ObservableList<FolderVariable> getFolderVariableData() {

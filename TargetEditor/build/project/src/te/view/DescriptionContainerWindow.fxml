@@ -26,7 +26,12 @@
          <children>
             <AnchorPane>
                <children>
-                  <Text fx:id="countLabel" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="279.0000021010637" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="5.0" />
+                  <VBox layoutX="5.0" layoutY="5.0" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="5.0">
+                     <children>
+                        <Text fx:id="countLabel" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="279.0000021010637" />
+                        <Text fx:id="countMinLabel" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="279.0000021010637" />
+                     </children>
+                  </VBox>
                   <Button fx:id="addLayoutBtn" mnemonicParsing="false" onAction="#addDecriptionLayout" stylesheets="@../application.css" text="+" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
                </children>
             </AnchorPane>

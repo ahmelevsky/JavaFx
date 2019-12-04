@@ -356,6 +356,7 @@ public class MainController implements Initializable {
     		list.addAll(fullList.stream().filter(f -> f.extenstion.startsWith("jp")).collect(Collectors.toList()));
     	else if (epsOption.isSelected())
     		list.addAll(fullList.stream().filter(f -> f.extenstion.contentEquals("eps")).collect(Collectors.toList()));
+    	correctFilename();
     	setStatus("Количество реджектов за выбранный период: " + list.size());
     }
     

@@ -303,16 +303,15 @@ public class MainFrameController implements Initializable{
 		    	    		List<String> keywords = null;
 		    	    		String description  = null;
 		    	    		String title = null;
-							synchronized (this) {
+							synchronized (currentTarget = app.getRandomTarget()) {
 								LOGGER.info("Current file: " + image.getName());
-								currentTarget = app.getRandomTarget();
-								LOGGER.fine("Set current target");
+								LOGGER.fine(image.getName() + ": Set current target: " + currentTarget.getTargetDescr1());
 								keywords = app.keysEditorController.generateKeywordsForMetadata();
-								LOGGER.fine("Set keywords");
+								LOGGER.fine(image.getName() + ": Set keywords");
 								description = app.descriptionEditorController.generateDescriptionForMetadata();
-								LOGGER.fine("Set description");
+								LOGGER.fine(image.getName() + ": Set description");
 								title = app.titleEditorController.getTitleForMetadata();
-								LOGGER.fine("Set title");
+								LOGGER.fine(image.getName() + ": Set title");
 							}
 		   	        		boolean isSuccess = ExiftoolRunner.writeMetadataToFile (image, keywords, title, description);
 		   	        		if (isWriteBothExtensions) {
