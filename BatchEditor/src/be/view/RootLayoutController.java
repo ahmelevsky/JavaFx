@@ -146,10 +146,13 @@ public class RootLayoutController {
 		  DirectoryChooser directoryChooser = new DirectoryChooser(); 
 
           directoryChooser.setTitle("Select a root folder for the batches");
+          try {
           File selected = new File(this.batchesPath.getText());
           if (selected.exists())
         	  directoryChooser.setInitialDirectory(selected);
-
+          }
+          catch(Exception e) {};
+          
           File file = directoryChooser.showDialog(app.getPrimaryStage());
 
          if(file!=null){
@@ -162,14 +165,21 @@ public class RootLayoutController {
 		 FileChooser fileChooser = new FileChooser(); 
 
 		 fileChooser.setTitle("Select a sources file");
+		 try {
 		 fileChooser.setInitialDirectory(app.sourcesFile.getParentFile());
+		 }
+		 catch(Exception e) {};
 		 fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (.xml)", "*.xml"));
          File file = fileChooser.showOpenDialog(app.getPrimaryStage());
 
-        if(file!=null){
+        if(file!=null  && file.getParentFile()!=null && file.getParentFile().exists()){
+        	showMessage("Start loading data from xml");
        	 app.loadLastSources(file);
        	 this.clear();
        	 app.addSouceLayouts();
+        }
+        else {
+        	showMessage("Error. File path: " + file.getAbsolutePath());
         }
 	}
 	
@@ -178,7 +188,9 @@ public class RootLayoutController {
 		 FileChooser fileChooser = new FileChooser(); 
 
 		 fileChooser.setTitle("Save sources file");
+		 try {
 		 fileChooser.setInitialDirectory(app.sourcesFile.getParentFile());
+		 }catch(Exception e) {};
          File file = fileChooser.showSaveDialog(app.getPrimaryStage());
 
         if(file!=null){
@@ -199,6 +211,13 @@ public class RootLayoutController {
          alert.setTitle("Data");
          alert.setHeaderText("Data in the application: ");
          alert.setContentText(sb.toString());
+         alert.showAndWait();
+	}
+	
+	private void showMessage(String mesage) {
+		 Alert alert = new Alert(AlertType.INFORMATION);
+         alert.setTitle("Debug message");
+         alert.setContentText(mesage);
          alert.showAndWait();
 	}
 	

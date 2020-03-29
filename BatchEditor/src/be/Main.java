@@ -72,7 +72,7 @@ public class Main extends Application {
 	     this.primaryStage.setMinWidth(500);
 	     initRootLayout();
 	     File file = getPersonFilePath();
-	        if (file != null) {
+	        if (file != null  && file.getParentFile()!=null && file.getParentFile().exists()) {
 	        	loadLastSources(file);
 	        }
 	        else if (this.sourcesFile.exists()) {
@@ -135,7 +135,11 @@ public class Main extends Application {
 	            Alert alert = new Alert(AlertType.ERROR);
 	            alert.setTitle("Error");
 	            alert.setHeaderText("Source load error");
-	            alert.setContentText("Can't load data from file:\n" + file.getPath());
+	            //alert.setContentText("Can't load data from file:\n" + file.getPath());
+	            StringBuilder sb = new StringBuilder(e.getMessage());
+	            for (StackTraceElement s:e.getStackTrace())
+	            	sb.append(s.toString() + "\n");
+             	alert.setContentText(sb.toString());
 	            alert.showAndWait();
 	        }
 	 }
@@ -158,8 +162,11 @@ public class Main extends Application {
 	            Alert alert = new Alert(AlertType.ERROR);
 	            alert.setTitle("Error");
 	            alert.setHeaderText("Source save error");
-	            alert.setContentText("Can't save data to file:\n" + file.getPath());
-
+	          // alert.setContentText("Can't save data to file:\n" + file.getPath());
+	            StringBuilder sb = new StringBuilder(e.getMessage());
+	            for (StackTraceElement s:e.getStackTrace())
+	            	sb.append(s.toString() + "\n");
+             	alert.setContentText(sb.toString());
 	            alert.showAndWait();
 	        }
 	 }
@@ -196,7 +203,7 @@ public class Main extends Application {
 	            Alert alert = new Alert(AlertType.ERROR);
 	            alert.setTitle("Error");
 	            alert.setHeaderText("Error saving parameters");
-	            alert.setContentText("Ca't save parameters to file:\n" + settingsfile.getPath());
+	            alert.setContentText("Can't save parameters to file:\n" + settingsfile.getPath());
 
 	            alert.showAndWait();
 	        }
@@ -249,7 +256,7 @@ public class Main extends Application {
 	    public File getPersonFilePath() {
 	        Preferences prefs = Preferences.userNodeForPackage(Main.class);
 	        String filePath = prefs.get("filePath", null);
-	        if (filePath != null) {
+	        if (filePath != null && new File(filePath).exists()) {
 	        	this.sourcesFile =  new File(filePath);
 	            return this.sourcesFile;
 	        } else {
@@ -259,7 +266,7 @@ public class Main extends Application {
 
 	    public void setPersonFilePath(File file) {
 	        Preferences prefs = Preferences.userNodeForPackage(Main.class);
-	        if (file != null) {
+	        if (file != null && file.getParentFile()!=null && file.getParentFile().exists()) {
 	            prefs.put("filePath", file.getPath());
 	            this.sourcesFile = file;
 	            primaryStage.setTitle("BatchEditor - " + file.getName());

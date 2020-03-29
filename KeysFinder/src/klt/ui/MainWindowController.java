@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -277,7 +278,7 @@ public class MainWindowController implements Initializable {
 
 	public <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
 		List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
-		list.sort(Entry.comparingByValue());
+		list.sort(Entry.comparingByValue(Comparator.reverseOrder()));
 		Map<K, V> result = new LinkedHashMap<>();
 		for (Entry<K, V> entry : list) {
 			result.put(entry.getKey(), entry.getValue());
@@ -294,12 +295,13 @@ public class MainWindowController implements Initializable {
 				tempList.addAll(keysButtons);
 				
 				Map<String, Long> salesresult = salekwds.stream()
-						.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+						.collect(Collectors.groupingBy(Function.identity(),  LinkedHashMap::new, Collectors.counting()));
+				
 
 				Map<String, Long> salesresultSorted = sortByValue(salesresult);
 
 				Map<String, Long> otherresult = otherkwds.stream()
-						.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+						.collect(Collectors.groupingBy(Function.identity(),  LinkedHashMap::new, Collectors.counting()));
 
 				Map<String, Long> otherresultSorted = sortByValue(otherresult);
 
@@ -307,11 +309,11 @@ public class MainWindowController implements Initializable {
 				List<String> resultOtherKeys = new ArrayList<String>();
 
 				for (Map.Entry<String, Long> entry : salesresultSorted.entrySet()) {
-					resultSalesKeys.add(0, entry.getKey());
+					resultSalesKeys.add(entry.getKey());
 				}
 
 				for (Map.Entry<String, Long> entry : otherresultSorted.entrySet()) {
-					resultOtherKeys.add(0, entry.getKey());
+					resultOtherKeys.add(entry.getKey());
 				}
 				
 				boolean isSeparator = false;

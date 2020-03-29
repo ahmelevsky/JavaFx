@@ -6,12 +6,16 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="ui.tabs.descriptions.maxchars" key="selection"/>
+		<item value="prefs" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="prefs"/>
+			<item value="Source load error"/>
+			<item value="save source"/>
+			<item value="userNodeForPackage"/>
 			<item value="ui.tabs.descriptions.maxchars"/>
 			<item value="&lt;PTableColumn"/>
 			<item value="PTableColumn"/>
@@ -23,10 +27,6 @@
 			<item value="otherKeysArea"/>
 			<item value="#"/>
 			<item value="class"/>
-			<item value="jar"/>
-			<item value="Rejec"/>
-			<item value="Re"/>
-			<item value="Reject"/>
 		</list>
 		<list key="replacehistory">
 			<item value="&lt;TableColumn"/>
