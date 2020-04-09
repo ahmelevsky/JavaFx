@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
@@ -131,6 +133,9 @@ public class MainWindowController implements Initializable {
 
 	@FXML
 	private RadioButton radioIllustration;
+	
+	@FXML
+	private RadioButton radioVectorIllustration;
 
 	@FXML
 	private Label salesCountLabel;
@@ -149,12 +154,18 @@ public class MainWindowController implements Initializable {
 
 	ToggleGroup radioTypeGroup = new ToggleGroup();
 	
+	@FXML
+	private CheckBox isSearchByUser;
+	
+	@FXML
+	private TextField userIDTxt;
+	
+	
     private int shiftTagPosition;
 	
 
 	private List<SelectableBorderPane> images = new ArrayList<SelectableBorderPane>();
 	private List<SelectableBorderPane> previousImages = new ArrayList<SelectableBorderPane>();
-	private List<SelectableBorderPane> badImages = new ArrayList<SelectableBorderPane>();
 
 	private ObservableList<SelectableBorderPane> selectedItems = FXCollections.observableArrayList();
 
@@ -164,7 +175,7 @@ public class MainWindowController implements Initializable {
 	
 	public List<TagButton> keysButtons = new ArrayList<TagButton>();
 
-	Task<Void> backgroundLoadTask;
+	//Task<Void> backgroundLoadTask;
 
 	Task<Void> processingTask;
 	
@@ -197,7 +208,8 @@ public class MainWindowController implements Initializable {
 				search();
 			}
 		});
-
+		
+		userIDTxt.disableProperty().bind(isSearchByUser.selectedProperty().not());
 	}
 
 	public void setup() {
@@ -207,10 +219,12 @@ public class MainWindowController implements Initializable {
 		radioPhotos.setToggleGroup(radioTypeGroup);
 		radioVectors.setToggleGroup(radioTypeGroup);
 		radioIllustration.setToggleGroup(radioTypeGroup);
+		radioVectorIllustration.setToggleGroup(radioTypeGroup);
 		radioAll.setOnAction(value -> search());
 		radioPhotos.setOnAction(value -> search());
 		radioVectors.setOnAction(value -> search());
 		radioIllustration.setOnAction(value -> search());
+		radioVectorIllustration.setOnAction(value -> search());
 		// testTags();
 		selectedItems.addListener((ListChangeListener<SelectableBorderPane>) c -> {
 			selectedImagesCountLabel.setText("Selected images: " + selectedItems.size());
@@ -228,14 +242,14 @@ public class MainWindowController implements Initializable {
 			@Override
 			public Void call() throws InterruptedException {
 				System.out.println("Run Processing Task");
-				rightStatusUpdate("Waiting for keywords data to be downloaded...");
-				
 				Platform.runLater(new Runnable() {
 					public void run() {
 						keysPane.getChildren().clear();
 						keysButtons.clear();
 					}});
 				
+				//rightStatusUpdate("Waiting for keywords data to be downloaded...");
+				/*
 				while (!selectedItems.stream().filter(SelectableBorderPane.class::isInstance)
 						.map(result -> (SelectableBorderPane) result)
 						.allMatch(n -> !n.imageData.getAllKeywords().isEmpty())) {
@@ -245,7 +259,8 @@ public class MainWindowController implements Initializable {
 					Thread.sleep(200);
 				}
 				rightStatusUpdate("Keywords data downloaded. Processing...");
-
+                */
+				
 				/////// PROCESSING
 				List<String> salekwds = new ArrayList<String>();
 				List<String> otherkwds = new ArrayList<String>();
@@ -277,7 +292,7 @@ public class MainWindowController implements Initializable {
 
 	public <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
 		List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
-		list.sort(Entry.comparingByValue());
+		list.sort(Entry.comparingByValue(Comparator.reverseOrder()));
 		Map<K, V> result = new LinkedHashMap<>();
 		for (Entry<K, V> entry : list) {
 			result.put(entry.getKey(), entry.getValue());
@@ -294,12 +309,13 @@ public class MainWindowController implements Initializable {
 				tempList.addAll(keysButtons);
 				
 				Map<String, Long> salesresult = salekwds.stream()
-						.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+						.collect(Collectors.groupingBy(Function.identity(),  LinkedHashMap::new, Collectors.counting()));
+				
 
 				Map<String, Long> salesresultSorted = sortByValue(salesresult);
 
 				Map<String, Long> otherresult = otherkwds.stream()
-						.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+						.collect(Collectors.groupingBy(Function.identity(),  LinkedHashMap::new, Collectors.counting()));
 
 				Map<String, Long> otherresultSorted = sortByValue(otherresult);
 
@@ -307,11 +323,11 @@ public class MainWindowController implements Initializable {
 				List<String> resultOtherKeys = new ArrayList<String>();
 
 				for (Map.Entry<String, Long> entry : salesresultSorted.entrySet()) {
-					resultSalesKeys.add(0, entry.getKey());
+					resultSalesKeys.add(entry.getKey());
 				}
 
 				for (Map.Entry<String, Long> entry : otherresultSorted.entrySet()) {
-					resultOtherKeys.add(0, entry.getKey());
+					resultOtherKeys.add(entry.getKey());
 				}
 				
 				boolean isSeparator = false;
@@ -422,6 +438,8 @@ public class MainWindowController implements Initializable {
          clipboard.setContent(content);
 	}
 	
+	
+	/*
 	public Task<Void> createBackgroundLoadTask() {
 		backgroundLoadTask = new Task<Void>() {
 			@Override
@@ -476,6 +494,7 @@ public class MainWindowController implements Initializable {
 		}));
 		return backgroundLoadTask;
 	}
+	*/
 
 	public void callTask(Task t) {
 		if (t.isRunning())
@@ -493,9 +512,10 @@ public class MainWindowController implements Initializable {
 					SelectableBorderPane pane = SelectableBorderPane.create(imdata);
 					imagesContainer.getChildren().add(pane);
 					images.add(pane);
+					//System.out.println(imdata.id);
 				}
-				createBackgroundLoadTask();
-				callTask(backgroundLoadTask);
+				//createBackgroundLoadTask();
+				//callTask(backgroundLoadTask);
 			}
 		});
 	}
@@ -523,6 +543,7 @@ public class MainWindowController implements Initializable {
 		});
 	}
 	
+	/*
 	private void updateKeywords(ImageData image) {
 		if (image == null) {
 			System.out.println("updateKeywords methods error: Image object is null");
@@ -548,12 +569,15 @@ public class MainWindowController implements Initializable {
 			}
 		}
 	}
-
+*/
+	
 	@FXML
 	private void search() {
 		RequestData requestData = new RequestData();
 		requestData.query = queryInput.getText();
 	    requestData.requestCount = requestCountSpinner.getValue();
+	    if (this.isSearchByUser.isSelected())
+	    	requestData.user = this.userIDTxt.getText();
 		if (requestData.query.trim().isEmpty())
 			return;
 		if (radioAll.isSelected())
@@ -564,10 +588,12 @@ public class MainWindowController implements Initializable {
 			requestData.type = ImagesType.VECTORS;
 		else if (radioIllustration.isSelected())
 			requestData.type = ImagesType.ILLUSTRATIONS;
-			
+		else if (radioVectorIllustration.isSelected())
+			requestData.type = ImagesType.VECTORSILLUSTRATIONS;
+		/*	
 		if (backgroundLoadTask != null && backgroundLoadTask.isRunning())
 			backgroundLoadTask.cancel(true);
-
+        */
 		cleanResults();
 		ShutterRequest.execute(requestData, this);
 	}
@@ -609,12 +635,12 @@ public class MainWindowController implements Initializable {
 				otherKeysArea.clear();
 				salesCountLabel.setText("");
 				otherCountLabel.setText("");
-				badImages.clear();
 				imagesContainer.getChildren().clear();
 				previousImages.clear();
 				previousImages.addAll((Collection<? extends SelectableBorderPane>) selectedItems);
 				images.clear();
 				selectedItems.clear();
+				leftStatusUpdate("");
 	}
 
 	public boolean select(SelectableBorderPane n, boolean selected) {
@@ -623,8 +649,8 @@ public class MainWindowController implements Initializable {
 				if (!selectedItems.contains(n))
 					selectedItems.add(n);
 				ImageData imData = ((SelectableBorderPane) n).imageData;
-				if (imData != null)
-					updateKeywords(imData);
+				//if (imData != null)
+					//updateKeywords(imData);
 			} else {
 				selectedItems.remove(n);
 			}

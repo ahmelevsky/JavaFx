@@ -5,18 +5,24 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.collections4.map.MultiKeyMap;
 import org.jsoup.Connection;
+import org.jsoup.Connection.KeyVal;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import klt.data.ImageData;
+import klt.data.JsonParser;
+import klt.ui.SelectableBorderPane;
 import klt.workers.ImagesType;
 
 public class ShutterProvider {
@@ -24,7 +30,7 @@ public class ShutterProvider {
 	static String baseURL = "https://www.shutterstock.com";
 	static Map<String,String> cookies;
 	static Map<String,String> headers;
-
+	
     
 	static {
 		headers = new HashMap<String,String>(){{
@@ -39,140 +45,103 @@ public class ShutterProvider {
 		super();
 	}
 
-	public static String findImagesAll(String query) throws IOException {
-		Map<String,String> parameters = new HashMap<String,String>(){{
-			   put("q", query);
-			   put("language", "en");
-			   put("page[size]", "100");
-			   put("page[number]", "1");
-			   put("recordActivity", "true");
-			}};
-			return get("/studioapi/images/search", parameters);
-	}
 	
-	public static String findImagesPhotos(String query) throws IOException {
-		Map<String,String> parameters = new HashMap<String,String>(){{
-			   put("q", query);
-			   put("language", "en");
-			   put("page[size]", "100");
-			   put("page[number]", "2");
-			   put("recordActivity", "true");
-			   put("filter[image_type]", "photo");
-			}};
-			return get("/studioapi/images/search", parameters);
-	}
-	
-	public static String findImagesVector(String query) throws IOException {
-		Map<String,String> parameters = new HashMap<String,String>(){{
-			   put("q", query);
-			   put("language", "en");
-			   put("page[size]", "100");
-			   put("page[number]", "1");
-			   put("recordActivity", "true");
-			   put("filter[image_type]", "vector");
-			}};
-			return get("/studioapi/images/search", parameters);
-	}
-	
-	public static String findImagesIllustration(String query, int page) throws IOException {
-		Map<String,String> parameters = new HashMap<String,String>(){{
-			   put("q", query);
-			   put("language", "en");
-			   put("page[size]", "100");
-			   put("page[number]", String.valueOf(page));
-			   put("recordActivity", "true");
-			   put("filter[image_type]", "illustration");
-			}};
-			return get("/studioapi/images/search", parameters);
-	}
-	
-	
-	public static String findImages(String query, ImagesType type, int page) throws IOException {
-		Map<String,String> parameters = new HashMap<String,String>(){{
-			   put("q", query);
-			   put("language", "en");
-			   put("page[size]", "100");
-			   put("page[number]", String.valueOf(page));
-			   put("recordActivity", "true");
-			 //  put("fields%5Bimages%5D", "title");
-			 //  put("fields%5Bimages%5D", "link");
-			  // put("fields%5Bimages%5D", "displays");
-			 //  put("fields%5Bimages%5D", "alt");
-			  // put("fields[images]", "aspect");
-			 //  put("fields[images]", "image_type");
-			  // put("fields[images]", "is_editorial");
-			  // put("fields[images]", "has_model_release");
-			  // put("fields[images]", "has_property_release");
-			}};
+	public static String findImages(String query, String user, ImagesType type, int page) throws IOException {
+		List<KeyVal> parameters = new ArrayList<KeyVal>();
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[display_name]", "name"));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("q", query));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("language", "en"));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("page[size]", "100"));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("page[number]", String.valueOf(page)));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "keywords"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "link"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "src"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "image_type"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "displays"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "alt"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "has_model_release"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "has_property_release"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "aspect"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "is_editorial"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("allow_inject", "true"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("activity_type", "footage_search"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("include", "contributor-limited-meta"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("recordActivity", "true"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("sort", "popular"));
 			
-			switch (type) {
-			case PHOTOS:
-				parameters.put("filter[image_type]", "photo");
-				break;
-			case VECTORS:
-				parameters.put("filter[image_type]", "vector");
-				break;
-			case ILLUSTRATIONS:
-				parameters.put("filter[image_type]", "illustration");
-				break;
-			}
+			 if (user!=null) {
+				 parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[submitter]", user));
+				   String userId = getUser(user);
+				   if (userId != null ) 
+					   parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[submitter]", userId));
+			   }
+			
+			 switch (type) {
+				case PHOTOS:
+					parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[image_type]", "photo"));
+					break;
+				case VECTORS:
+					parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[image_type]", "vector"));
+					break;
+				case ILLUSTRATIONS:
+					parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[image_type]", "illustration"));
+					break;
+				case VECTORSILLUSTRATIONS:
+					parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[image_type]", "illustration"));
+					break;
+				}
 			//System.out.println(get("/studioapi/images/search", parameters));
 			return get("/studioapi/images/search", parameters);
 	}
 	
 	
-	public static String findImages(String query, ImagesType type, int page, int recordsCount) throws IOException {
-		Map<String,String> parameters = new HashMap<String,String>(){{
-			   put("q", query);
-			   put("language", "en");
-			   put("page[size]", String.valueOf(recordsCount));
-			   put("page[number]", String.valueOf(page));
-			   put("recordActivity", "true");
-			 //  put("fields%5Bimages%5D", "title");
-			 //  put("fields%5Bimages%5D", "link");
-			  // put("fields%5Bimages%5D", "displays");
-			 //  put("fields%5Bimages%5D", "alt");
-			  // put("fields[images]", "aspect");
-			 //  put("fields[images]", "image_type");
-			  // put("fields[images]", "is_editorial");
-			  // put("fields[images]", "has_model_release");
-			  // put("fields[images]", "has_property_release");
-			}};
+	public static String findImages(String query, String user, ImagesType type, int page, int recordsCount) throws IOException {
+		List<KeyVal> parameters = new ArrayList<KeyVal>();
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[display_name]", "name"));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("q", query));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("language", "en"));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("page[size]", String.valueOf(recordsCount)));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("page[number]", String.valueOf(page)));
+		 parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "keywords"));
+		    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "link"));
+		    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "src"));
+		    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "image_type"));
+		    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "displays"));
+		    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "alt"));
+		    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "has_model_release"));
+		    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "has_property_release"));
+		    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "aspect"));
+		    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "is_editorial"));
+		    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("allow_inject", "true"));
+		    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("activity_type", "footage_search"));
+		    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("include", "contributor-limited-meta"));
+		    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("recordActivity", "true"));
+		    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("sort", "popular"));
+			
+			 if (user!=null) {
+				   String userId = getUser(user);
+				   if (userId != null ) 
+					   parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[submitter]", userId));
+			   }
 			
 			switch (type) {
 			case PHOTOS:
-				parameters.put("filter[image_type]", "photo");
+				parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[image_type]", "photo"));
 				break;
 			case VECTORS:
-				parameters.put("filter[image_type]", "vector");
+				parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[image_type]", "vector"));
 				break;
 			case ILLUSTRATIONS:
-				parameters.put("filter[image_type]", "illustration");
+				parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[image_type]", "illustration"));
+				break;
+			case VECTORSILLUSTRATIONS:
+				parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[image_type]", "illustration"));
 				break;
 			}
-			//System.out.println(get("/studioapi/images/search", parameters));
 			return get("/studioapi/images/search", parameters);
 	}
 	
-	/*
-	public static String getKeywords(String id) {
-		Map<String,String> parameters = new HashMap<String,String>(){{
-			   put("productId", id);
-			   put("query", "data");
-			   put("safe", "true");
-			   put("searchSource", "base_product_page");
-			}};
-		try {
-		//	System.out.println(get("/api/related", parameters));
-			return get("/api/related", parameters);
-		} catch (IOException e) {
-			return null;
-		}
-	}
-	
-	*/
-	
-	
+	@Deprecated
 	public static Set<String> getKeywords(String link) throws IOException {
 	    	Set<String> result = new LinkedHashSet<String>();
 	    	
@@ -204,6 +173,8 @@ public class ShutterProvider {
 	}
 	
 	
+	
+	
 
 	  private static void writeToFile(String fileName, String data) {
 		 File file = new File(fileName);
@@ -220,11 +191,10 @@ public class ShutterProvider {
 		}
 	  }
 	
-	private static String get(String url, Map<String,String> parameters) throws IOException{
+	private static String get(String url, Collection<KeyVal> parameters) throws IOException{
 
 			if (parameters==null)
-				parameters = new HashMap<String,String>();
-		
+				parameters = new ArrayList<KeyVal>();
 			return
 				  Jsoup.connect(baseURL + url )
 				  .headers(headers)
@@ -239,5 +209,14 @@ public class ShutterProvider {
 			
 	}
 	
-	
+	public static String getUser(String name) throws IOException {
+		if (name==null) return null;
+		if (name.chars().allMatch(Character::isDigit)) return name;
+		else {
+			List<KeyVal> parameters = new ArrayList<KeyVal>();
+			parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[display_name]", name));
+		    String response = get("/studioapi/contributors", parameters);
+		    return JsonParser.parseContributorId(response);
+		}
+	}
 }

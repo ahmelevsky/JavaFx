@@ -4,5 +4,6 @@ public enum ImagesType {
 	  ALL, 
 	  PHOTOS, 
 	  VECTORS, 
-	  ILLUSTRATIONS
+	  ILLUSTRATIONS,
+	  VECTORSILLUSTRATIONS
 }

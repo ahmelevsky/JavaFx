@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+		<item value="C:\Java\JavaFx\RejectFinder"/>
 		<item value="C:\Java\JavaFx\KeysFinder"/>
 		<item value="C:\Java\JavaFx\IdLast"/>
 		<item value="C:\Java\JavaFx\Stocknote"/>

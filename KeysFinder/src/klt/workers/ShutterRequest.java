@@ -21,6 +21,9 @@ public class ShutterRequest {
 	private ResponseData responseData;
 	private MainWindowController ui; 
 	private String error;
+	private int badCount;
+	
+	
 	Task<ResponseData> searchTask = new Task<ResponseData>() {
 		@Override
 		public ResponseData call()  {
@@ -28,18 +31,38 @@ public class ShutterRequest {
 			System.out.println("SEARCH TASK STARTED");
 			responseData = new ResponseData();
 			String result = null;
+			String user = null;
+			if (requestData.user!=null) {
+				try {
+					user = ShutterProvider.getUser(requestData.user);
+					System.out.println(user);
+				} catch (IOException e) {
+					error = "No such UserId or UserName";
+					showError();
+					return responseData;
+				}
+			    if (user == null || user.isEmpty()) {
+			    	error = "No such UserId or UserName";
+					showError();
+					return responseData;
+			    }
+			}
 			List<ImageData> templist = new ArrayList<ImageData>();
 			try {
 				int page = 1;
 				while (responseData.images.size() < requestData.requestCount) {
 					templist.clear();
 					if (((requestData.requestCount - responseData.images.size()) <100) && !requestData.type.equals(ImagesType.ILLUSTRATIONS))
-						result = ShutterProvider.findImages(requestData.query, requestData.type, page, requestData.requestCount - responseData.images.size());
+						result = ShutterProvider.findImages(requestData.query, user, requestData.type, page, requestData.requestCount - responseData.images.size());
 					else
-						result = ShutterProvider.findImages(requestData.query, requestData.type, page);
+						result = ShutterProvider.findImages(requestData.query, user, requestData.type, page, 100);
 					templist = JsonParser.parseImagesData(result);
 					if (templist.isEmpty())
 						break;
+					if (requestData.requestCount<=100)
+						templist = cutList(templist, requestData.requestCount);
+					else if ((requestData.requestCount - responseData.images.size()) <=100)
+						templist = cutList(templist, requestData.requestCount - responseData.images.size());
 					if (requestData.type.equals(ImagesType.ILLUSTRATIONS))  {
 						responseData.images.addAll(templist.stream().filter(im -> im.image_type.equals("illustration"))
 							.collect(Collectors.toList()));
@@ -49,10 +72,20 @@ public class ShutterRequest {
 					else 
 						responseData.images.addAll(templist);
 					page++;
+					
+				    badCount =+ (int)responseData.images.stream().filter(im -> im.getSaleKeywords().isEmpty()).count();
+					responseData.images.removeIf(im -> im.getSaleKeywords().isEmpty());
 				}
 				
-			responseData.matchesCount = JsonParser.getAllMatchesCount(result);
+			if (requestData.type.equals(ImagesType.ILLUSTRATIONS))  {
+				String resVectors = ShutterProvider.findImages(requestData.query, user, ImagesType.VECTORS, 1);
+				responseData.matchesCount = JsonParser.getAllMatchesCount(result) -  JsonParser.getAllMatchesCount(resVectors);
+			}
+			else
+				responseData.matchesCount = JsonParser.getAllMatchesCount(result);
+			
 			responseData.relatedKeywords = JsonParser.getRelatedKeywords(result);
+			
 			return responseData;
 			}
 			catch (IOException e1) {
@@ -141,11 +174,19 @@ public class ShutterRequest {
 		this.ui.addRelatedKeywords(this.responseData.relatedKeywords);
 		this.ui.addImageThumbnails(this.responseData.images);
 		this.ui.selectPreviouslySelected();
+		this.ui.leftStatusUpdate("Done. Images loaded: " + this.responseData.images.size() + ", zero sale excluded: " + this.badCount);
 	}
 	
 	private void showError() {
 		this.ui.app.showAlert(this.error);
 		this.ui.leftStatusUpdate(this.error);
+	}
+	
+	private List<ImageData> cutList(List<ImageData> list, int cutTo) {
+		if (cutTo<list.size())
+			return list.subList(0, cutTo);
+		else 
+			return list;
 	}
 	
 }

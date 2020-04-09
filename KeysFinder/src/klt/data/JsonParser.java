@@ -1,8 +1,10 @@
 package klt.data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -76,6 +78,14 @@ public class JsonParser {
 			if (!attr.isNull("description"))
 				imageData.description = attr.getString("description");
 			
+			if (!attr.isNull("keywords")) {
+				JSONArray kwds = attr.getJSONArray("keywords");
+				Set<String> keys = new HashSet<String>();
+				for (int k=0; k<kwds.length();k++)
+					keys.add(kwds.getString(k));
+				imageData.setKeywords(keys);
+			}
+			
 			result.add(imageData);
 		}
 		return result;
@@ -103,5 +113,27 @@ public class JsonParser {
 			return null;
 		else 
 			return result;
+	}
+	
+	
+	
+	public static String parseContributorId(String jsonString){
+		try {
+		JSONObject obj = new JSONObject(jsonString);
+		JSONArray arr = obj.getJSONArray("data");
+		if (arr==null)
+			return null;
+		if (arr.isEmpty() && arr.isNull(0))
+			return null;
+		;
+		//JSONObject dataObj = obj.getJSONObject("data");
+    	if (!arr.getJSONObject(0).isNull("id"))
+			return arr.getJSONObject(0).getString("id");
+    	else
+    		return null;
+		}
+		catch (JSONException e) {
+			return null;
+		}
 	}
 }
