@@ -166,6 +166,7 @@ public class MainWindowController implements Initializable {
 
 	private List<SelectableBorderPane> images = new ArrayList<SelectableBorderPane>();
 	private List<SelectableBorderPane> previousImages = new ArrayList<SelectableBorderPane>();
+	private List<SelectableBorderPane> badImages = new ArrayList<SelectableBorderPane>();
 
 	private ObservableList<SelectableBorderPane> selectedItems = FXCollections.observableArrayList();
 
@@ -175,7 +176,7 @@ public class MainWindowController implements Initializable {
 	
 	public List<TagButton> keysButtons = new ArrayList<TagButton>();
 
-	//Task<Void> backgroundLoadTask;
+	Task<Void> backgroundLoadTask;
 
 	Task<Void> processingTask;
 	
@@ -248,8 +249,8 @@ public class MainWindowController implements Initializable {
 						keysButtons.clear();
 					}});
 				
-				//rightStatusUpdate("Waiting for keywords data to be downloaded...");
-				/*
+				rightStatusUpdate("Waiting for keywords data to be downloaded...");
+				
 				while (!selectedItems.stream().filter(SelectableBorderPane.class::isInstance)
 						.map(result -> (SelectableBorderPane) result)
 						.allMatch(n -> !n.imageData.getAllKeywords().isEmpty())) {
@@ -259,7 +260,7 @@ public class MainWindowController implements Initializable {
 					Thread.sleep(200);
 				}
 				rightStatusUpdate("Keywords data downloaded. Processing...");
-                */
+                
 				
 				/////// PROCESSING
 				List<String> salekwds = new ArrayList<String>();
@@ -439,7 +440,7 @@ public class MainWindowController implements Initializable {
 	}
 	
 	
-	/*
+	
 	public Task<Void> createBackgroundLoadTask() {
 		backgroundLoadTask = new Task<Void>() {
 			@Override
@@ -494,7 +495,7 @@ public class MainWindowController implements Initializable {
 		}));
 		return backgroundLoadTask;
 	}
-	*/
+	
 
 	public void callTask(Task t) {
 		if (t.isRunning())
@@ -514,8 +515,8 @@ public class MainWindowController implements Initializable {
 					images.add(pane);
 					//System.out.println(imdata.id);
 				}
-				//createBackgroundLoadTask();
-				//callTask(backgroundLoadTask);
+				createBackgroundLoadTask();
+				callTask(backgroundLoadTask);
 			}
 		});
 	}
@@ -543,7 +544,7 @@ public class MainWindowController implements Initializable {
 		});
 	}
 	
-	/*
+	
 	private void updateKeywords(ImageData image) {
 		if (image == null) {
 			System.out.println("updateKeywords methods error: Image object is null");
@@ -569,7 +570,7 @@ public class MainWindowController implements Initializable {
 			}
 		}
 	}
-*/
+
 	
 	@FXML
 	private void search() {
@@ -590,10 +591,8 @@ public class MainWindowController implements Initializable {
 			requestData.type = ImagesType.ILLUSTRATIONS;
 		else if (radioVectorIllustration.isSelected())
 			requestData.type = ImagesType.VECTORSILLUSTRATIONS;
-		/*	
 		if (backgroundLoadTask != null && backgroundLoadTask.isRunning())
 			backgroundLoadTask.cancel(true);
-        */
 		cleanResults();
 		ShutterRequest.execute(requestData, this);
 	}
@@ -649,8 +648,8 @@ public class MainWindowController implements Initializable {
 				if (!selectedItems.contains(n))
 					selectedItems.add(n);
 				ImageData imData = ((SelectableBorderPane) n).imageData;
-				//if (imData != null)
-					//updateKeywords(imData);
+				if (imData != null)
+					updateKeywords(imData);
 			} else {
 				selectedItems.remove(n);
 			}

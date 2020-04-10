@@ -141,7 +141,6 @@ public class ShutterProvider {
 			return get("/studioapi/images/search", parameters);
 	}
 	
-	@Deprecated
 	public static Set<String> getKeywords(String link) throws IOException {
 	    	Set<String> result = new LinkedHashSet<String>();
 	    	
@@ -155,7 +154,7 @@ public class ShutterProvider {
 			  .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36")
 			  .get();
 	    	
-	    	Elements elems = doc.select("[data-automation='ExpandableKeywordsList_container_div'] > div >div >a");
+	    	Elements elems = doc.select("[data-automation='KeywordsCarousel_root_div'] > div >div >a");
 	    	for (Element el:elems) {
 	    		if (el.hasText())
 	    			result.add(el.ownText());

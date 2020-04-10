@@ -77,7 +77,7 @@ public class JsonParser {
 			
 			if (!attr.isNull("description"))
 				imageData.description = attr.getString("description");
-			
+			/*
 			if (!attr.isNull("keywords")) {
 				JSONArray kwds = attr.getJSONArray("keywords");
 				Set<String> keys = new HashSet<String>();
@@ -85,7 +85,7 @@ public class JsonParser {
 					keys.add(kwds.getString(k));
 				imageData.setKeywords(keys);
 			}
-			
+			*/
 			result.add(imageData);
 		}
 		return result;

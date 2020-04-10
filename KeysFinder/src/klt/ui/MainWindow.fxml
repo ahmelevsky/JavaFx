@@ -134,7 +134,10 @@
                   <TextField fx:id="searchTxt" VBox.vgrow="ALWAYS" />
                   <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" minWidth="500.0" VBox.vgrow="SOMETIMES">
                      <content>
-                        <FlowPane fx:id="keysPane" hgap="10.0" vgap="10.0" />
+                        <FlowPane fx:id="keysPane" hgap="10.0" vgap="10.0">
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding></FlowPane>
                      </content>
                   </ScrollPane>
                   <HBox fillHeight="false" spacing="10.0">

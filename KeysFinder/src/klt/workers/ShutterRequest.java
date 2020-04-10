@@ -21,7 +21,7 @@ public class ShutterRequest {
 	private ResponseData responseData;
 	private MainWindowController ui; 
 	private String error;
-	private int badCount;
+	//private int badCount;
 	
 	
 	Task<ResponseData> searchTask = new Task<ResponseData>() {
@@ -73,8 +73,8 @@ public class ShutterRequest {
 						responseData.images.addAll(templist);
 					page++;
 					
-				    badCount =+ (int)responseData.images.stream().filter(im -> im.getSaleKeywords().isEmpty()).count();
-					responseData.images.removeIf(im -> im.getSaleKeywords().isEmpty());
+				    //badCount =+ (int)responseData.images.stream().filter(im -> im.getSaleKeywords().isEmpty()).count();
+					//responseData.images.removeIf(im -> im.getSaleKeywords().isEmpty());
 				}
 				
 			if (requestData.type.equals(ImagesType.ILLUSTRATIONS))  {
@@ -174,7 +174,7 @@ public class ShutterRequest {
 		this.ui.addRelatedKeywords(this.responseData.relatedKeywords);
 		this.ui.addImageThumbnails(this.responseData.images);
 		this.ui.selectPreviouslySelected();
-		this.ui.leftStatusUpdate("Done. Images loaded: " + this.responseData.images.size() + ", zero sale excluded: " + this.badCount);
+		//this.ui.leftStatusUpdate("Done. Images loaded: " + this.responseData.images.size() + ", zero sale excluded: " + this.badCount);
 	}
 	
 	private void showError() {
