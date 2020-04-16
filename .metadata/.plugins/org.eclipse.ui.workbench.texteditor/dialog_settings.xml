@@ -6,12 +6,17 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="createBackgroundLoadTask" key="selection"/>
+		<item value="keysPane" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="keysPane"/>
+			<item value="ToEditPane"/>
+			<item value="shiftTagPosition"/>
+			<item value="&#x09;&#x09;isSeparator = true;"/>
+			<item value="backgroundLoadTask"/>
 			<item value="createBackgroundLoadTask"/>
 			<item value="1457516981"/>
 			<item value="prefs"/>
@@ -22,13 +27,9 @@
 			<item value="&lt;PTableColumn"/>
 			<item value="PTableColumn"/>
 			<item value="if(isActive) {"/>
-			<item value="KeysLookup"/>
-			<item value="KeysLookupTest"/>
-			<item value="Total "/>
-			<item value="Thread"/>
-			<item value="otherKeysArea"/>
 		</list>
 		<list key="replacehistory">
+			<item value="shiftPostitionPointer"/>
 			<item value="&lt;TableColumn"/>
 			<item value="KeysFinder"/>
 			<item value="RejectFinder"/>

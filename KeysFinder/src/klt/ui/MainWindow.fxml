@@ -10,6 +10,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.FlowPane?>
@@ -129,38 +131,87 @@
                   </VBox>
                </children>
             </VBox>
-            <VBox fx:id="rightBox" minWidth="500.0" spacing="10.0">
-               <children>
-                  <TextField fx:id="searchTxt" VBox.vgrow="ALWAYS" />
-                  <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" minWidth="500.0" VBox.vgrow="SOMETIMES">
+            <TabPane fx:id="tabPane" minHeight="500.0" minWidth="600.0" tabMinHeight="20.0" tabMinWidth="40.0">
+               <tabs>
+                  <Tab fx:id="tabSearch" closable="false" text="Search">
                      <content>
-                        <FlowPane fx:id="keysPane" hgap="10.0" vgap="10.0">
-                           <padding>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </padding></FlowPane>
+                        <VBox fx:id="rightBox" minWidth="500.0" spacing="10.0">
+                           <children>
+                              <TextField fx:id="searchTxt" VBox.vgrow="ALWAYS" />
+                              <ScrollPane fx:id="keysEditScrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
+                                 <content>
+                                    <FlowPane fx:id="keysPane" hgap="10.0" prefWrapLength="0.0" vgap="10.0" />
+                                 </content>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </ScrollPane>
+                              <HBox fillHeight="false" spacing="10.0">
+                                 <children>
+                                    <Button fx:id="selectAllKeysBtn" mnemonicParsing="false" onAction="#selectAllKeywords" text="Select All" />
+                                    <Button fx:id="unselectAllKeysBtn" mnemonicParsing="false" onAction="#unselectAllKeywords" text="Unselect All" />
+                                    <Button fx:id="reverseKeysSelectionBtn" mnemonicParsing="false" onAction="#reversKeywords" text="Reverse" />
+                                    <Button fx:id="addKeysToEditPaneBtn" mnemonicParsing="false" onAction="#addKeywordsToEditPane" text="Add to Edit Pane" />
+                                    <Pane HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="salesCountLabel">
+                                       <HBox.margin>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                    <Button fx:id="copyKeysBtn" mnemonicParsing="false" onAction="#copyKeywords" text="Copy" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets right="5.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <TextArea fx:id="otherKeysArea" editable="false" minHeight="200.0" wrapText="true" VBox.vgrow="ALWAYS" />
+                              <Label fx:id="otherCountLabel" />
+                           </children>
+                        </VBox>
                      </content>
-                  </ScrollPane>
-                  <HBox fillHeight="false" spacing="10.0">
-                     <children>
-                        <Button fx:id="selectAllKeysBtn" mnemonicParsing="false" onAction="#selectAllKeywords" text="Select All" />
-                        <Button fx:id="unselectAllKeysBtn" mnemonicParsing="false" onAction="#unselectAllKeywords" text="Unselect All" />
-                        <Button fx:id="reverseKeysSelectionBtn" mnemonicParsing="false" onAction="#reversKeywords" text="Reverse" />
-                        <Pane HBox.hgrow="ALWAYS" />
-                        <Label fx:id="salesCountLabel">
-                           <HBox.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </HBox.margin>
-                        </Label>
-                        <Button fx:id="copyKeysBtn" mnemonicParsing="false" onAction="#copyKeywords" text="Copy" />
-                     </children>
-                     <VBox.margin>
-                        <Insets right="5.0" />
-                     </VBox.margin>
-                  </HBox>
-                  <TextArea fx:id="otherKeysArea" editable="false" minHeight="200.0" wrapText="true" VBox.vgrow="ALWAYS" />
-                  <Label fx:id="otherCountLabel" />
-               </children>
-            </VBox>
+                  </Tab>
+                  <Tab fx:id="tabEdit" closable="false" text="Edit">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                           <children>
+                              <TextField fx:id="editPaneSearchTxt" />
+                              <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" minWidth="500.0" VBox.vgrow="SOMETIMES">
+                                 <content>
+                                    <FlowPane fx:id="keysEditPane" hgap="10.0" prefWrapLength="0.0" vgap="10.0" />
+                                 </content>
+                              </ScrollPane>
+                              <HBox spacing="10.0">
+                                 <children>
+                                    <TextField fx:id="editPaneAddText" HBox.hgrow="SOMETIMES" />
+                                    <Button fx:id="editPaneAddBtn" mnemonicParsing="false" onAction="#addMoreKeywordsEditPane" text="Add" />
+                                 </children>
+                              </HBox>
+                              <HBox spacing="10.0">
+                                 <children>
+                                    <Button fx:id="editPaneSelectAllBtn" mnemonicParsing="false" onAction="#selectAllKeywordsEditPane" text="Select All" />
+                                    <Button fx:id="editPaneUnselectAllBtn" mnemonicParsing="false" onAction="#unselectAllKeywordsEditPane" text="Unselect All" />
+                                    <Button fx:id="editPaneReverseBtn" mnemonicParsing="false" onAction="#reversKeywordsEditPane" text="Reverse" />
+                                    <Pane HBox.hgrow="ALWAYS" />
+                                    <Label fx:id="editPaneSalesCountLabel" />
+                                    <Button fx:id="editPaneCopyBtn" mnemonicParsing="false" onAction="#copyKeywordsEditPane" text="Copy" />
+                                 </children>
+                              </HBox>
+                              <HBox spacing="10.0">
+                                 <children>
+                                    <Button fx:id="editPaneCleanBtn" mnemonicParsing="false" onAction="#cleanEditPane" text="Clean" />
+                                    <Button fx:id="editPaneDeleteUnselectedBtn" mnemonicParsing="false" onAction="#removeUnselectedEditPane" text="Delete unselected" />
+                                 </children>
+                              </HBox>
+                              <Pane VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
       </items>
     </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">

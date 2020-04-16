@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.function.Function;
@@ -25,7 +26,10 @@ import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -34,6 +38,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -48,6 +54,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import klt.Main;
 import klt.data.ImageData;
+import klt.data.KeyWord;
 import klt.data.KeywordsCache;
 import klt.web.ShutterProvider;
 import klt.workers.ImagesType;
@@ -160,9 +167,56 @@ public class MainWindowController implements Initializable {
 	@FXML
 	private TextField userIDTxt;
 	
+	@FXML
+	private TabPane tabPane;
+	
+	@FXML
+	private Tab tabSearch;
+	
+	@FXML
+	private Tab tabEdit;
+	
+	@FXML
+	private FlowPane keysEditPane;
+	
+	@FXML
+	private Button addKeysToEditPaneBtn;
+	
+	@FXML
+	private Button editPaneSelectAllBtn;
+	
+	@FXML
+	private Button editPaneUnselectAllBtn;
+	
+	@FXML
+	private Button editPaneReverseBtn;
+	
+	@FXML
+	private Button editPaneCopyBtn;
+	
+	@FXML
+	private Button editPaneDeleteUnselectedBtn;
+	
+	@FXML
+	private Button editPaneCleanBtn;
+	
+	@FXML
+	private Button editPaneAddBtn;
+	
+	@FXML
+	private TextField editPaneAddText;
+	
+	@FXML
+	private Label editPaneSalesCountLabel;
+	
+	@FXML
+	private TextField editPaneSearchTxt;
+	
+	@FXML
+	private ScrollPane keysEditScrollPane;
 	
     private int shiftTagPosition;
-	
+    private int shiftTagPositionEditPane;
 
 	private List<SelectableBorderPane> images = new ArrayList<SelectableBorderPane>();
 	private List<SelectableBorderPane> previousImages = new ArrayList<SelectableBorderPane>();
@@ -175,6 +229,10 @@ public class MainWindowController implements Initializable {
 	}
 	
 	public List<TagButton> keysButtons = new ArrayList<TagButton>();
+	
+	public List<TagButton> keysButtonsEditPane = new ArrayList<TagButton>();
+	
+	public List<KeyWord> keywordsEdit = new ArrayList<KeyWord>();
 
 	Task<Void> backgroundLoadTask;
 
@@ -187,6 +245,23 @@ public class MainWindowController implements Initializable {
 		}
 	};
 	
+	private final ChangeListener<String> searchListenerEditTab  = new ChangeListener<String>(){
+		@Override
+		public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
+			highlightKeysEditPane();
+		}
+	};
+	
+	private void highlightKeysEditPane() {
+		if (editPaneSearchTxt.getText().trim().isEmpty())
+			keysButtonsEditPane.stream().forEach(b -> b.setFound(false));
+		else {
+			keysButtonsEditPane.stream().filter(b -> b.key.startsWith(editPaneSearchTxt.getText())).forEach(b -> b.setFound(true));
+			keysButtonsEditPane.stream().filter(b -> !b.key.startsWith(editPaneSearchTxt.getText())).forEach(b -> b.setFound(false));
+		}
+	}
+	
+	
 	private void highlightKeys() {
 		if (searchTxt.getText().trim().isEmpty())
 			keysButtons.stream().forEach(b -> b.setFound(false));
@@ -195,6 +270,7 @@ public class MainWindowController implements Initializable {
 			keysButtons.stream().filter(b -> !b.key.startsWith(searchTxt.getText())).forEach(b -> b.setFound(false));
 		}
 	}
+	
 	
 	
 	@Override
@@ -209,8 +285,14 @@ public class MainWindowController implements Initializable {
 				search();
 			}
 		});
-		
+		editPaneAddText.setOnKeyReleased(event -> {
+			if (event.getCode() == KeyCode.ENTER) {
+				addMoreKeywordsEditPane();
+			}
+		});
 		userIDTxt.disableProperty().bind(isSearchByUser.selectedProperty().not());
+		
+		
 	}
 
 	public void setup() {
@@ -236,6 +318,8 @@ public class MainWindowController implements Initializable {
 	     requestCountSpinner.setValueFactory(valueFactory);
 	     searchIndicator.setVisible(false);
 	     searchTxt.textProperty().addListener(searchListener);
+	     editPaneSearchTxt.textProperty().addListener(searchListenerEditTab);
+	     
 	}
 
 	private void createProcessingTask() {
@@ -263,13 +347,22 @@ public class MainWindowController implements Initializable {
                 
 				
 				/////// PROCESSING
-				List<String> salekwds = new ArrayList<String>();
+				List<KeyWord> saleskwds = new ArrayList<KeyWord>();
 				List<String> otherkwds = new ArrayList<String>();
 				for (SelectableBorderPane p : selectedItems) {
-					salekwds.addAll(p.imageData.getSaleKeywords());
+					for (String word:p.imageData.getSaleKeywords()) {
+						KeyWord kword = saleskwds.stream().filter(kw -> kw.word.equals(word)).findFirst().orElse(null);
+						if (kword!=null)
+							kword.images.add(p.imageData.id);
+						else {
+							KeyWord kworddd = new KeyWord(word, p.imageData.id);
+							kworddd.unsales.addAll(selectedItems.stream().filter(si -> si.imageData.getOtherKeywords().contains(kworddd.word)).map(SelectableBorderPane::getImageId).collect(Collectors.toSet()));
+							saleskwds.add(kworddd);
+						}
+					}
 					otherkwds.addAll(p.imageData.getOtherKeywords());
-				}
-				collectKeywords(salekwds, otherkwds);
+				}				
+				collectKeywords(saleskwds, otherkwds);
 				/////////////////
 				return null;
 			}
@@ -302,59 +395,40 @@ public class MainWindowController implements Initializable {
 		return result;
 	}
 
-	private void collectKeywords(List<String> salekwds, List<String> otherkwds) {
+	private void collectKeywords(List<KeyWord> salekwds, List<String> otherkwds) {
 		Platform.runLater(new Runnable() {
 			public void run() {
 
-				List<TagButton> tempList = new ArrayList<TagButton>();
-				tempList.addAll(keysButtons);
+				//List<TagButton> tempList = new ArrayList<TagButton>();
+				//tempList.addAll(keysButtons);
 				
-				Map<String, Long> salesresult = salekwds.stream()
-						.collect(Collectors.groupingBy(Function.identity(),  LinkedHashMap::new, Collectors.counting()));
+				KeyWord.sortByWeight(salekwds);
+				Collections.sort(otherkwds);
 				
-
-				Map<String, Long> salesresultSorted = sortByValue(salesresult);
-
-				Map<String, Long> otherresult = otherkwds.stream()
-						.collect(Collectors.groupingBy(Function.identity(),  LinkedHashMap::new, Collectors.counting()));
-
-				Map<String, Long> otherresultSorted = sortByValue(otherresult);
-
-				List<String> resultSalesKeys = new ArrayList<String>();
-				List<String> resultOtherKeys = new ArrayList<String>();
-
-				for (Map.Entry<String, Long> entry : salesresultSorted.entrySet()) {
-					resultSalesKeys.add(entry.getKey());
-				}
-
-				for (Map.Entry<String, Long> entry : otherresultSorted.entrySet()) {
-					resultOtherKeys.add(entry.getKey());
-				}
 				
 				boolean isSeparator = false;
 				boolean isOnlyOne = true;
 				int position = 1;
-				for (String key:resultSalesKeys) {
-					 long allCount = 0;
-					 if (otherresultSorted.get(key)!=null)
-						 allCount = salesresultSorted.get(key) + otherresultSorted.get(key);
-					 else 
-						 allCount = salesresultSorted.get(key);
-					if (salesresultSorted.get(key)>1) isOnlyOne=false;
-					if(salesresultSorted.get(key)==1 && !isSeparator && !isOnlyOne) {
+				
+				for (KeyWord kw : salekwds){
+					//long allCount  = kw.images.size() + otherkwds.stream().filter(w -> w.equals(kw.word)).count();
+					long allCount  = kw.images.size() +  kw.unsales.size();
+					if (kw.images.size()>1) isOnlyOne=false;
+					if(kw.images.size()==1 && !isSeparator && !isOnlyOne) {
 						isSeparator = true;
 						  Rectangle rect = new ResizableRectangle(keysPane.getWidth(),5);
 					        rect.setFill(Color.TRANSPARENT);
 					        rect.widthProperty().bind(keysPane.widthProperty());
-						keysPane.getChildren().add(rect);
+					        keysPane.getChildren().add(rect);
 					}
-					final TagButton  button = new TagButton(key, salesresultSorted.get(key),allCount);
+					
+					final TagButton  button = new TagButton(kw, allCount);
 					keysButtons.add(button);
 					keysPane.getChildren().add(button);
 					button.position = position;
-					 TagButton old= tempList.stream().filter(t->t.key.equals(key)).findFirst().orElse(null);
-						if (old!=null)
-							button.setActive(old.isActive);
+					//TagButton old= tempList.stream().filter(t->t.key.equals(kw.word)).findFirst().orElse(null);
+						//if (old!=null)
+							//button.setActive(old.isActive);
 					    
 						button.setOnMouseClicked(new EventHandler<MouseEvent>(){
 							@Override
@@ -377,7 +451,7 @@ public class MainWindowController implements Initializable {
 							    		 else
 							    			 button.setActive(false);
 							    	 }
-									 recoundSalesCount();
+									 recountSalesCount();
 									 shiftTagPosition = button.position;
 									}
 							 }
@@ -385,18 +459,110 @@ public class MainWindowController implements Initializable {
 					    
 					position++;
 				}
-				recoundSalesCount();
-				resultOtherKeys.removeAll(resultSalesKeys);
-				Collections.sort(resultOtherKeys);
-				otherKeysArea.setText(String.join(", ", resultOtherKeys));
-				otherCountLabel.setText("Other keys: " + resultOtherKeys.size());
+				
+				
+				recountSalesCount();
+				salekwds.forEach(kw -> otherkwds.remove(kw.word));
+				otherKeysArea.setText(String.join(", ", otherkwds.stream().distinct().collect(Collectors.toList())));
+				otherCountLabel.setText("Other keys: " + otherkwds.size());
 				highlightKeys();
+				System.out.println(keysEditScrollPane.getWidth());
+				System.out.println(keysPane.getWidth());
 			}
 		});
 	}
 	
 	
-	public void recoundSalesCount() {
+	@FXML
+	private void addKeywordsToEditPane() {
+		for (TagButton button:keysButtons)
+			if (button.isActive) {
+				KeyWord kword = this.keywordsEdit.stream().filter(kw -> kw.word.equals(button.keyword.word)).findFirst().orElse(null);
+				if (kword==null)
+					this.keywordsEdit.add(button.keyword);
+				else 
+					kword.images.addAll(button.keyword.images);
+			}
+		collectKeysEditPane();
+		this.tabPane.getSelectionModel().select(tabEdit);
+	}
+	
+	
+	private void collectKeysEditPane() {
+			Platform.runLater(new Runnable() {
+				public void run() {
+					
+					List<TagButton> tempList = new ArrayList<TagButton>();
+					tempList.addAll(keysButtonsEditPane);
+					
+					keysEditPane.getChildren().clear();
+					keysButtonsEditPane.clear();
+					
+					KeyWord.sortByWeight(keywordsEdit);
+					
+					boolean isSeparator = false;
+					boolean isOnlyOne = true;
+					int position = 1;
+					
+					for (KeyWord kw : keywordsEdit){
+						long allCount  = kw.images.size() +  kw.unsales.size();
+						if (kw.images.size()>1) isOnlyOne=false;
+						if(kw.images.size()==1 && !isSeparator && !isOnlyOne) {
+							isSeparator = true;
+							  Rectangle rect = new ResizableRectangle(keysEditPane.getWidth(),5);
+						        rect.setFill(Color.TRANSPARENT);
+						        rect.widthProperty().bind(keysEditPane.widthProperty());
+						        keysEditPane.getChildren().add(rect);
+						}
+						
+						final TagButton  button = new TagButton(kw, allCount);
+						keysButtonsEditPane.add(button);
+						keysEditPane.getChildren().add(button);
+						button.position = position;
+						TagButton old= tempList.stream().filter(t->t.key.equals(kw.word)).findFirst().orElse(null);
+							if (old!=null)
+								button.setActive(old.isActive);
+						    
+							button.setOnMouseClicked(new EventHandler<MouseEvent>(){
+								@Override
+								public void handle(MouseEvent event){ 
+								    if(event.getButton().equals(MouseButton.PRIMARY)){
+								    	
+								    	 if (event.isShiftDown() && shiftTagPositionEditPane>0) {
+											 TagButton previousButton = keysButtonsEditPane.stream().filter(b->b.position == shiftTagPositionEditPane).findFirst().orElse(null);
+											 if (previousButton !=null)
+												 keysButtonsEditPane.forEach(tag -> {
+												 if ((shiftTagPositionEditPane<button.position && tag.position>shiftTagPositionEditPane && tag.position<=button.position)
+														  || (shiftTagPositionEditPane>button.position && tag.position<shiftTagPositionEditPane && tag.position>=button.position)) {
+														 tag.setActive(previousButton.isActive);
+												 }
+										 });
+										 }
+								    	 else {
+								    		 if(!button.isActive)
+								    			 button.setActive(true);
+								    		 else
+								    			 button.setActive(false);
+								    	 }
+										 recountSalesCountEditPane();
+										 shiftTagPositionEditPane = button.position;
+										}
+								 }
+							   });
+						    
+						position++;
+					}
+					
+					recountSalesCountEditPane();
+					highlightKeysEditPane();
+					
+				}
+			});
+	}
+	
+	
+	
+	public void recountSalesCount() {
 		Platform.runLater(new Runnable() {
 			public void run() {
 				salesCountLabel.setText("Keys: " + keysButtons.stream().filter(k->k.isActive).count());
@@ -407,14 +573,14 @@ public class MainWindowController implements Initializable {
 	private void selectAllKeywords() {
 		for (TagButton button:keysButtons)
 			button.setActive(true);
-		recoundSalesCount();
+		recountSalesCount();
 	}
 
 	@FXML
 	private void unselectAllKeywords() {
 		for (TagButton button:keysButtons)
 			button.setActive(false);
-		recoundSalesCount();
+		recountSalesCount();
 	}
 	
 	@FXML
@@ -424,7 +590,7 @@ public class MainWindowController implements Initializable {
 				button.setActive(false);
 			else
 				button.setActive(true);
-		recoundSalesCount();
+		recountSalesCount();
 	}
 	
 	@FXML
@@ -438,6 +604,107 @@ public class MainWindowController implements Initializable {
 	     content.putString(String.join(", ", keys));
          clipboard.setContent(content);
 	}
+	
+	
+	public void recountSalesCountEditPane() {
+		Platform.runLater(new Runnable() {
+			public void run() {
+				editPaneSalesCountLabel.setText("Keys: " + keysButtonsEditPane.stream().filter(k->k.isActive).count());
+			}});
+	}
+	
+	@FXML
+	private void selectAllKeywordsEditPane() {
+		for (TagButton button:keysButtonsEditPane)
+			button.setActive(true);
+		recountSalesCountEditPane();
+	}
+
+	@FXML
+	private void unselectAllKeywordsEditPane() {
+		for (TagButton button:keysButtonsEditPane)
+			button.setActive(false);
+		recountSalesCountEditPane();
+	}
+	
+	@FXML
+	private void reversKeywordsEditPane() {
+		for (TagButton button:keysButtonsEditPane)
+			if (button.isActive)
+				button.setActive(false);
+			else
+				button.setActive(true);
+		recountSalesCountEditPane();
+	}
+	
+	@FXML
+	private void cleanEditPane() {
+		Platform.runLater(new Runnable() {
+			public void run() {
+				
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setHeaderText("Action confirmation");
+				alert.setContentText("Are you sure want to clear this list?");
+				alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
+				
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == ButtonType.YES){
+					keysEditPane.getChildren().clear();
+					keysButtonsEditPane.clear();
+					keywordsEdit.clear();
+					recountSalesCountEditPane();
+				} else {
+				}
+			}});
+	}
+	
+	
+	@FXML
+	private void removeUnselectedEditPane() {
+		Platform.runLater(new Runnable() {
+			public void run() {
+		for (TagButton button:keysButtonsEditPane) {
+			if (!button.isActive) {
+				keysEditPane.getChildren().remove(button);
+				keywordsEdit.remove(button.keyword);
+			}
+		}	
+		keysButtonsEditPane.removeIf(b -> !b.isActive);
+		recountSalesCountEditPane();
+			}});
+	}
+	
+	@FXML
+	private void addMoreKeywordsEditPane() {
+		Platform.runLater(new Runnable() {
+			public void run() {
+		        String text = editPaneAddText.getText();
+		        String[] keys = text.split("\\s*(;|,|\\s)\\s*");
+		        for (String k:keys) {
+		        	if (!k.trim().isEmpty() && !keywordsEdit.stream().anyMatch(kw -> kw.word.equals(k)))
+		        		keywordsEdit.add(new KeyWord(k.trim()));
+		        }
+		        editPaneAddText.clear();
+		        collectKeysEditPane();
+				recountSalesCountEditPane();
+			}});
+	}
+	
+	
+	@FXML
+	private void copyKeywordsEditPane() {
+		List<String> keys = new ArrayList<String>();
+		for (TagButton button:keysButtonsEditPane)
+			if (button.isActive)
+				keys.add(button.key);
+		 final Clipboard clipboard = Clipboard.getSystemClipboard();
+	     final ClipboardContent content = new ClipboardContent();
+	     content.putString(String.join(", ", keys));
+         clipboard.setContent(content);
+	}
+	
+	
+	
 	
 	
 	
@@ -595,6 +862,7 @@ public class MainWindowController implements Initializable {
 			backgroundLoadTask.cancel(true);
 		cleanResults();
 		ShutterRequest.execute(requestData, this);
+		this.tabPane.getSelectionModel().select(tabSearch);
 	}
 
 	public void updateAllMatchesCountLabel(int count) {
@@ -685,6 +953,7 @@ public class MainWindowController implements Initializable {
 		}
 		keywordsProcessing();
 	}
+	
 
 	public void keywordsProcessing() {
 		Platform.runLater(new Runnable() {
@@ -738,5 +1007,9 @@ public class MainWindowController implements Initializable {
 	        }
 	    }
 	
+	 
+	 public void gotoSearchTab() {
+		 this.tabPane.getSelectionModel().select(tabSearch);
+	 }
 	 
 }

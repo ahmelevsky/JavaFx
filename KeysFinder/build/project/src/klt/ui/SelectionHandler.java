@@ -36,6 +36,7 @@ public class SelectionHandler {
 			else 
 				app.mainController.select(selectableTarget, true);
 		}
+		app.mainController.gotoSearchTab();
 	}
 	
 		

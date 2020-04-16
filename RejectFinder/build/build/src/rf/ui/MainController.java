@@ -297,7 +297,7 @@ public class MainController implements Initializable {
 					setStatus("Ошибка соединения");
 					return;
 				}
-				getRejectsForDates(provider, fromDateValue, toDateValue, 60);
+				getRejectsForDates(provider, fromDateValue, toDateValue);
 				checkNewRejects();
 				saveLastRejectDate();
 				enableControl();
@@ -356,16 +356,16 @@ public class MainController implements Initializable {
     		list.addAll(fullList.stream().filter(f -> f.extenstion.startsWith("jp")).collect(Collectors.toList()));
     	else if (epsOption.isSelected())
     		list.addAll(fullList.stream().filter(f -> f.extenstion.contentEquals("eps")).collect(Collectors.toList()));
+    	correctFilename();
     	setStatus("Количество реджектов за выбранный период: " + list.size());
     }
     
-	private void getRejectsForDates(ShutterProvider provider, LocalDate from, LocalDate to, int timeoutSeconds) {
+	private void getRejectsForDates(ShutterProvider provider, LocalDate from, LocalDate to) {
 		int per_page = 100;
 		int page = 1;
-		long before = new Date().getTime();
 		String rejectesString = null;
 		try {
-		while (before + timeoutSeconds*1000 >  new Date().getTime()) {
+		while (true) {
 			rejectesString = provider.getRejects(per_page,page);
 			if (rejectesString == null) {
 				setStatus("Ошибка соединения");

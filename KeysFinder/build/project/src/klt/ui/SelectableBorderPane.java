@@ -54,4 +54,9 @@ public class SelectableBorderPane extends BorderPane implements SelectableNode {
 			this.imageData.selected = false;
 		}
 	}
+	
+	public String getImageId() {
+		if (this.imageData == null) return null;
+		else return this.imageData.id;
+	}
 }
