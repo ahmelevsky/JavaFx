@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="stocknote.RemoveWordsController">
    <children>
       <HBox prefWidth="800.0" VBox.vgrow="ALWAYS">
@@ -30,7 +29,7 @@
          </children>
       </HBox>
       <Separator prefWidth="200.0" />
-      <Label text="Удаление определенных слов из исходного текста или массива слов. В первое окно скопируйте исходный текст или набор слов. Во второе окно - те слова, которые хотите исключить. В третьем окне будет результат." wrapText="true">
+      <Label text="Удаление определенных слов из исходного текста или массива слов. В первое окно скопируйте исходный текст или набор слов. Во второе окно - те слова, которые хотите исключить. В третьем окне будет результат. Разделитель - запятая, точка с запятой или новая строка." wrapText="true">
          <VBox.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </VBox.margin>

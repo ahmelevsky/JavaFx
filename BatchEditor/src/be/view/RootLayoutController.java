@@ -91,7 +91,7 @@ public class RootLayoutController {
 	
 	@FXML
 	public void addSourceLayout(){
-		 BatchSource bs = new BatchSource("", "<Click and select a folder>", 0, false);
+		 BatchSource bs = new BatchSource("", "<Click and select a folder>", 0, false, false);
 		 app.sources.add(bs);
 		 addSourceLayout(bs);
 	}
@@ -253,9 +253,9 @@ public class RootLayoutController {
     	    	}
     	    	
     	    	if (this.isRandom.isSelected())
-    	    		movedcount = Utils.selectFilesAndMoveRandom(sourceFolder, batchFolder, bs.getFilesCount(), bs.isIsJpgOnly(), sb, movedcount);
+    	    		movedcount = Utils.selectFilesAndMoveRandom(sourceFolder, batchFolder, bs.getFilesCount(), bs.isIsJpgOnly(),  bs.isIsEpsOnly(), sb, movedcount);
     	    	else 
-    	    		movedcount = Utils.selectFilesAndMove(sourceFolder, batchFolder, bs.getFilesCount(), bs.isIsJpgOnly(), sb, movedcount);
+    	    		movedcount = Utils.selectFilesAndMove(sourceFolder, batchFolder, bs.getFilesCount(), bs.isIsJpgOnly(),  bs.isIsEpsOnly(), sb, movedcount);
     				
     			 if (!sb.toString().isEmpty()){
     				globalsb.append("-=" + bs.getCaption() + "=-\n" + sb.toString() + "\n");

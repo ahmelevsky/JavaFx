@@ -303,9 +303,11 @@ public class MainFrameController implements Initializable{
 		    	    		List<String> keywords = null;
 		    	    		String description  = null;
 		    	    		String title = null;
-							synchronized (currentTarget = app.getRandomTarget()) {
+							synchronized (this) {
+								currentTarget = app.getRandomTarget();
 								LOGGER.info("Current file: " + image.getName());
-								LOGGER.fine(image.getName() + ": Set current target: " + currentTarget.getTargetDescr1());
+								if (currentTarget!=null)
+									LOGGER.fine(image.getName() + ": Set current target: " + currentTarget.getTargetDescr1());
 								keywords = app.keysEditorController.generateKeywordsForMetadata();
 								LOGGER.fine(image.getName() + ": Set keywords");
 								description = app.descriptionEditorController.generateDescriptionForMetadata();

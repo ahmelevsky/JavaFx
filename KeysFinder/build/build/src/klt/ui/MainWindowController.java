@@ -42,6 +42,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -313,13 +314,15 @@ public class MainWindowController implements Initializable {
 			selectedImagesCountLabel.setText("Selected images: " + selectedItems.size());
 		});
 		 SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = //
-	                new SpinnerValueFactory.IntegerSpinnerValueFactory(50, 1000, 100);
-		 valueFactory.amountToStepByProperty().set(50);
+	                new SpinnerValueFactory.IntegerSpinnerValueFactory(100, 100000, 100);
+		 valueFactory.amountToStepByProperty().set(100);
 	     requestCountSpinner.setValueFactory(valueFactory);
+	     TextFormatter<Integer> integerFormatter = new TextFormatter<Integer>(valueFactory.getConverter(), valueFactory.getValue());
+	     requestCountSpinner.getEditor().setTextFormatter(integerFormatter);
 	     searchIndicator.setVisible(false);
 	     searchTxt.textProperty().addListener(searchListener);
 	     editPaneSearchTxt.textProperty().addListener(searchListenerEditTab);
-	     
+	    
 	}
 
 	private void createProcessingTask() {
@@ -679,7 +682,7 @@ public class MainWindowController implements Initializable {
 		Platform.runLater(new Runnable() {
 			public void run() {
 		        String text = editPaneAddText.getText();
-		        String[] keys = text.split("\\s*(;|,|\\s)\\s*");
+		        String[] keys = text.split("\\s*(;|,)\\s*");
 		        for (String k:keys) {
 		        	if (!k.trim().isEmpty() && !keywordsEdit.stream().anyMatch(kw -> kw.word.equals(k)))
 		        		keywordsEdit.add(new KeyWord(k.trim()));
@@ -844,6 +847,7 @@ public class MainWindowController implements Initializable {
 		RequestData requestData = new RequestData();
 		requestData.query = queryInput.getText();
 	    requestData.requestCount = requestCountSpinner.getValue();
+	    
 	    if (this.isSearchByUser.isSelected())
 	    	requestData.user = this.userIDTxt.getText();
 		if (requestData.query.trim().isEmpty())

@@ -36,12 +36,16 @@ public class Main extends Application {
 	        this.mainStage.setScene(scene);
 	        this.mainStage.sizeToScene();
 	        mainController = loader.getController();
-	        mainStage.setTitle("Stocknote");
+	        mainStage.setTitle("Stocknote 1.5");
 	        mainStage.getIcons().add(new Image("file:resources/icon.png"));
 	        addTab("Удалить дубликаты", "RemoveDuplicatesForm.fxml");
 	        addTab("Вырезать слова", "RemoveWordsForm.fxml");
 	        addTab("Соединить слова", "JoinWordsForm.fxml");
 	        addTab("Заглавные буквы", "CapitalizeForm.fxml");
+	        addTab("Точки", "EndDotForm.fxml");
+	        addTab("Длина строк", "SortByLengthForm.fxml");
+	        addTab("Строки в запятые", "LinesToCommasForm.fxml");
+	        addTab("Запятые в строки", "CommasToLinesForm.fxml");
 			mainStage.show();
 	}
 	

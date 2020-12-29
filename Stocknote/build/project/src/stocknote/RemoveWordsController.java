@@ -1,9 +1,11 @@
 package stocknote;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.StringJoiner;
 
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -27,25 +29,17 @@ public class RemoveWordsController implements Initializable{
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue){
 				String source = sourceTxt.getText();
 				String rem = removeTxt.getText() + " ";
-				String[]wordsToRemove = rem.split(" |, |\\r?\\n");
+				String[] wordsToRemove = rem.split("\\s*(;|,|\\n)\\s*");
+				List<String> arr  =  new ArrayList<String>(Arrays.asList(source.split("\\s*(;|,|\\n)\\s*")));
+				 
 				for (String w:wordsToRemove)
-				{
-					source = source.replaceAll("\\b" +w + "\\b", "");
-				}
-				//source = source.trim().replaceAll("\\;+", "\\;");
-				//source = source.trim().replaceAll("[\\; \\;]+", "\\; ");
-				//source = source.trim().replaceAll(",[\\s]+,", ",");
-				
-			    String[] arr  =  source.split(",");
+					arr.removeIf(a -> a.equals(w.trim()));
 			    StringJoiner sj = new StringJoiner(",");
 			    for (String s : arr) {
 			    	if (!s.trim().isEmpty())
 			        sj.add(s);
 			    }
 			    source = sj.toString();
-			    source = source.trim().replaceAll(",+", ",");
-				source = source.trim().replaceAll(" +", " ");
-				source = source.trim().replaceAll("\\r?\\n+", "\n");
 				destTxt.setText(source);
 			}
    };

@@ -125,6 +125,19 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
+      <HBox>
+         <children>
+            <Pane HBox.hgrow="ALWAYS" />
+            <CheckBox fx:id="uncheckByReasonBox" mnemonicParsing="false" text="Убрать выделение если причина &quot;повторная загрузка&quot;">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </CheckBox>
+         </children>
+         <VBox.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </VBox.margin>
+      </HBox>
       <Accordion>
         <panes>
             <TitledPane animated="false" text="Перенос файлов">
@@ -136,12 +149,12 @@
                            <children>
                               <VBox HBox.hgrow="NEVER">
                                  <children>
-                                    <RadioButton fx:id="copyOption" mnemonicParsing="false" selected="true" text="Копировать">
+                                    <RadioButton fx:id="copyOption" mnemonicParsing="false" text="Копировать">
                                        <VBox.margin>
                                           <Insets bottom="5.0" top="5.0" />
                                        </VBox.margin>
                                     </RadioButton>
-                                    <RadioButton fx:id="moveOption" mnemonicParsing="false" text="Перенести">
+                                    <RadioButton fx:id="moveOption" mnemonicParsing="false" selected="true" text="Перенести">
                                        <VBox.margin>
                                           <Insets bottom="5.0" top="5.0" />
                                        </VBox.margin>

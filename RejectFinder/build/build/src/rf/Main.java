@@ -37,7 +37,7 @@ public class Main extends Application {
 	        this.mainStage.setScene(this.mainScene);
 	        this.mainStage.sizeToScene();
 	        mainController = loader.getController();
-	        mainStage.setTitle("RejectFinder v1.3.4");
+	        mainStage.setTitle("RejectFinder v1.3.6");
 	        mainController.app = this;
 			mainStage.getIcons().add(new Image("file:resources/icon.png"));
 			mainStage.setMinHeight(500);

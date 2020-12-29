@@ -130,7 +130,7 @@ public class Main extends Application {
 		titleEditorController = (TitleEditorController) addTab(Settings.bundle.getString("ui.tabs.titles.header"), "view/TitleEditorWindow.fxml", TitleEditorController.class, true);
 		mainFrameController.setup();
 		keysEditorController.setup();
-		mainStage.setTitle("TargetEditor v2.4");
+		mainStage.setTitle("TargetEditor v2.4.1");
 		mainStage.getIcons().add(new Image("file:resources/icon.png"));
 		loadLastData();
 		mainStage.show();

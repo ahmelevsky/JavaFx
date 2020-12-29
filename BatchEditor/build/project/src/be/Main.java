@@ -65,7 +65,7 @@ public class Main extends Application {
 		 else
 			 gs = new GlobalSettings("<Click and select an output folder for the batches>", 1);
 		 this.primaryStage = primaryStage;
-	     this.primaryStage.setTitle("BatchEditor");
+	     this.primaryStage.setTitle("BatchEditor v2.1");
 	     this.primaryStage.getIcons().add(new Image("file:resources/icon.png"));
 	     this.primaryStage.setMaxHeight(650);
 	     this.primaryStage.setMinHeight(200);

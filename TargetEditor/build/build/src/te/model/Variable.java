@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -23,7 +24,7 @@ public class Variable {
 	private final StringProperty delimiter;
 	//private final StringProperty valuesString;
 	
-    private final Set<String> values = new HashSet<String>();
+    private final Set<String> values = new LinkedHashSet<String>();
 	
     
     public Variable(){

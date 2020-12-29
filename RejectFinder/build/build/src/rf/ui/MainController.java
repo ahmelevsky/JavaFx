@@ -140,6 +140,8 @@ public class MainController implements Initializable {
 	@FXML
 	private CheckBox epsOption;
 	
+	@FXML
+	private CheckBox uncheckByReasonBox;
 	
 	
     ToggleGroup groupCopyMoveOption = new ToggleGroup();
@@ -151,6 +153,8 @@ public class MainController implements Initializable {
 	LocalDate fromDateValue;
 	LocalDate toDateValue;
 	 
+	String badreason = "approved_on_site";
+	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -163,9 +167,9 @@ public class MainController implements Initializable {
 		tableView.setItems(list);
 		//list.add(new ShutterImage(123, "VNF_FMSK_newee", new ArrayList<String>(),"dsf", "VNF_FMSK_newee", "dsf43"));
 		copyOption.setToggleGroup(groupCopyMoveOption);
-		copyOption.setSelected(true);
+		copyOption.setSelected(false);
 		moveOption.setToggleGroup(groupCopyMoveOption);
-
+		moveOption.setSelected(true);
 		
 		epsOption.selectedProperty().addListener(new ChangeListener<Boolean>() {
 		    @Override
@@ -194,12 +198,28 @@ public class MainController implements Initializable {
 		     }
 		 });
 		
+		uncheckByReasonBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+		    @Override
+		    public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+		        if (newValue) {
+		        	fullList.stream().filter(im -> im.getReasonsString().contains(badreason)).forEach(im-> im.setSelected(false));
+		        }
+		    }
+		});
+		
 		tableView.getSelectionModel().setCellSelectionEnabled(true);
 	    tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 	   // TableUtils.installCopyPasteHandler(tableView);
 	    tableView.setOnKeyPressed(new TableKeyEventHandler());
 	    tableView.getSelectionModel().getSelectedItems().forEach(it->it.setSelected(true));
-	    
+	    tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+	        if (newSelection != null) {
+	            tableView.getSelectionModel().getSelectedItems().forEach(it -> {
+	            	if (it.getReasonsString().contains(badreason))
+	            		uncheckByReasonBox.setSelected(false);
+	            });
+	        }
+	    });
 	    
 	    String sourcePath = loadString("sourcepath");
 	    		if(sourcePath!=null ){
@@ -282,6 +302,7 @@ public class MainController implements Initializable {
 		setStatus("");
 		saveSessionId();
 		fullList.clear();
+		this.uncheckByReasonBox.setSelected(false);
 		Thread t1 = new Thread(new Runnable() {
 
 			@Override

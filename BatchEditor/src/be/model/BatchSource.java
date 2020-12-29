@@ -15,18 +15,20 @@ public class BatchSource {
     private final StringProperty path;
     private final IntegerProperty filesCount;
     private final BooleanProperty isJpgOnly;
+    private final BooleanProperty isEpsOnly;
     @XmlTransient
     public final StringProperty status;    
     
 	public BatchSource() {
-		this(null, null, 0, false);
+		this(null, null, 0, false, false);
 	}
 
-	public BatchSource(String caption, String path, int filesCount, boolean isJpgOnly) {
+	public BatchSource(String caption, String path, int filesCount, boolean isJpgOnly, boolean isEpsOnly) {
 		this.caption = new SimpleStringProperty(caption);
 		this.path = new SimpleStringProperty(path);
 		this.filesCount = new SimpleIntegerProperty(filesCount);
 		this.isJpgOnly = new SimpleBooleanProperty(isJpgOnly);
+		this.isEpsOnly = new SimpleBooleanProperty(isEpsOnly);
 		this.status = new SimpleStringProperty("underfined");
 	}
 
@@ -83,6 +85,20 @@ public class BatchSource {
 	public final void setIsJpgOnly(final boolean isJpgOnly) {
 		this.isJpgOnlyProperty().set(isJpgOnly);
 	}
+	
+	
+	public final BooleanProperty isEpsOnlyProperty() {
+		return this.isEpsOnly;
+	}
+
+	public final boolean isIsEpsOnly() {
+		return this.isEpsOnlyProperty().get();
+	}
+
+	public final void setIsEpsOnly(final boolean isEpsOnly) {
+		this.isEpsOnlyProperty().set(isEpsOnly);
+	}
+	
 	public final StringProperty statusProperty() {
 		return this.status;
 	}

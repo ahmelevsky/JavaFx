@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -42,6 +44,10 @@ public class SourceLayoutController {
 	private Tooltip checkboxtooltip =  new Tooltip("Raster only (.jpg)");
 	
 	@FXML
+	private CheckBox isEpsOnly;
+	private Tooltip checkboxEpsTooltip =  new Tooltip("EPS files only (.eps)");
+	
+	@FXML
 	public Spinner<Integer> filesCount;
 	SpinnerValueFactory<Integer> valueFactory;
 	
@@ -59,6 +65,26 @@ public class SourceLayoutController {
 		this.statusCircle.setFill(Color.WHITE);
 	    this.sourcePath.setTooltip(tooltip);
 	    this.isJpgOnly.setTooltip(checkboxtooltip);
+	    this.isEpsOnly.setTooltip(checkboxEpsTooltip);
+	    
+	    
+	    this.isJpgOnly.selectedProperty().addListener(new ChangeListener<Boolean>() {
+	           public void changed(ObservableValue<? extends Boolean> ov,
+	             Boolean old_val, Boolean new_val) {
+	             if (new_val) 
+	            	 isEpsOnly.setSelected(false);
+	             countImages();
+	          }
+	        });
+	    this.isEpsOnly.selectedProperty().addListener(new ChangeListener<Boolean>() {
+	           public void changed(ObservableValue<? extends Boolean> ov,
+	             Boolean old_val, Boolean new_val) {
+	             if (new_val) 
+	            	 isJpgOnly.setSelected(false);
+	             countImages();
+	          }
+	        });
+	    
 		this.removeBtn.setShape(new Circle(15));
 		
 		filesCount.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -88,6 +114,7 @@ public class SourceLayoutController {
 		    filesCount.setValueFactory(valueFactory);
 		    this.valueFactory.setValue(source.getFilesCount());
 		    this.isJpgOnly.setSelected(source.isIsJpgOnly());
+		    this.isEpsOnly.setSelected(source.isIsEpsOnly());
 		    this.tooltip.setText(source.getPath());
 		    
 		    //Bindings
@@ -97,6 +124,7 @@ public class SourceLayoutController {
 			
 			this.spinnerValueUI.bindBidirectional(spinnerValueSource);
 			this.isJpgOnly.selectedProperty().bindBidirectional(source.isJpgOnlyProperty());
+			this.isEpsOnly.selectedProperty().bindBidirectional(source.isEpsOnlyProperty());
 			this.tooltip.textProperty().bind(source.pathProperty());
 			this.statusCircle.fillProperty().bind(Bindings.when(source.statusProperty().isEqualTo("underfined"))
 						.then(Color.web("#36c6ed")).otherwise(Bindings.when(source.statusProperty().isEqualTo("progress"))
@@ -140,12 +168,13 @@ public class SourceLayoutController {
 	
 	public void countImages(){
 		File location = new File(sourcePath.getText());
+		String pattern = this.isEpsOnly.isSelected() ? ".eps" : ".jpg";
 		 if(location.exists()){
 			 int count = 0;
 			     if (app.rootController.isSetRandom())
-			    	 count = Utils.countFilesInDirectoryIfNoSubDirectories(location, ".jpg");
+			    	 count = Utils.countFilesInDirectoryIfNoSubDirectories(location, pattern);
 			     else
-			    	 count = Utils.countFilesInDirectory(location, ".jpg");
+			    	 count = Utils.countFilesInDirectory(location, pattern);
         		 this.filesInfo.setText("Images count: " + count);
         	 }
         	 else

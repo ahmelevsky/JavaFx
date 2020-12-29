@@ -24,7 +24,6 @@ public class Utils {
 	}};
 	private static final int limit = 1000000;
 	
-	
 	public static void hackTooltipStartTiming(Tooltip tooltip) {
 	    try {
 	        Field fieldBehavior = tooltip.getClass().getDeclaredField("BEHAVIOR");
@@ -43,9 +42,10 @@ public class Utils {
 	}
 	
 	
-	public static int selectFilesAndMove(File inputFolder, File outputFolder, int filesToMoveCount, boolean isJpgOnly, StringBuffer sb, int movedcount){
-			
-		List<File> subfolders = getSubdirsInCorrectOrder(inputFolder);
+	public static int selectFilesAndMove(File inputFolder, File outputFolder, int filesToMoveCount, boolean isJpgOnly, boolean isEpsOnly, StringBuffer sb, int movedcount){
+
+		String pattern = isEpsOnly ? ".eps" : ".jpg";
+		List<File> subfolders = getSubdirsInCorrectOrder(inputFolder, pattern);
 		l.debug("Start enumerating source subfloders for batch source item, subfolders count: " + subfolders.size());
 		l.debug("Input folder: " + inputFolder.getAbsolutePath());
 		l.debug("Output folder: " + outputFolder.getAbsolutePath());
@@ -65,7 +65,7 @@ public class Utils {
 				sb.append("ERROR: Too many errors, the operation on the folder was interrupted.\n");
 				return movedcount;
 			}
-			if (countFilesInDirectories(subfolders, ".jpg")==0){
+			if (countFilesInDirectories(subfolders, pattern)==0){
 				l.debug("WARNING: No more files in the folder:  " + inputFolder.getAbsolutePath() + "\n");
 				sb.append("WARNING: No more files in the folder:  " + inputFolder.getAbsolutePath() );
 				return movedcount;		
@@ -75,14 +75,14 @@ public class Utils {
 			
 			File[] images = subfolders.get(step++).listFiles(new FileFilter() {
 	        public boolean accept(File f) {
-	        	return f.getName().toLowerCase().endsWith(".jpg") && ignoreTemplate.stream().noneMatch(t -> f.getName().toLowerCase().matches(t));
+	        	return f.getName().toLowerCase().endsWith(pattern) && ignoreTemplate.stream().noneMatch(t -> f.getName().toLowerCase().matches(t));
 	        	}
 		});
-			l.debug("JPEG files count: " + images.length + " in subfolder: " + subfolders.get(step-1).getAbsolutePath());
+			l.debug("Files count: " + images.length + " in subfolder: " + subfolders.get(step-1).getAbsolutePath());
  			if (images.length>0){
 				File jpg = images[new Random().nextInt(images.length)];
 				l.debug("Randomly selected file: " + jpg.getAbsolutePath());
-				if (!isJpgOnly) {
+				if (!isEpsOnly && !isJpgOnly) {
 					File eps = new File(jpg.getParentFile() + File.separator + jpg.getName().replaceFirst("[.][^.]+$", ".eps")); 
 					if (!eps.exists()) {
 						l.error("WARNING: No .eps file for jpeg: " + jpg.getAbsolutePath());
@@ -119,11 +119,12 @@ public class Utils {
 	}
 	
 	
-	public static int selectFilesAndMoveRandom(File inputFolder, File outputFolder, int filesToMoveCount, boolean isJpgOnly, StringBuffer sb, int movedcount){
+	public static int selectFilesAndMoveRandom(File inputFolder, File outputFolder, int filesToMoveCount, boolean isJpgOnly, boolean isEpsOnly, StringBuffer sb, int movedcount){
 		l.debug("Start RANDOM enumerating source subfolders for batch source item");
 		l.debug("Input folder: " + inputFolder.getAbsolutePath());
 		l.debug("Output folder: " + outputFolder.getAbsolutePath());
 		l.debug("Files to move: " + filesToMoveCount);
+		String pattern = isEpsOnly ? ".eps" : ".jpg";
 		
 		int errcount = 0;
 		while (filesToMoveCount>0){
@@ -137,14 +138,14 @@ public class Utils {
 				sb.append("ERROR: Too many errors, the operation on the folder was interrupted.\n");
 				return movedcount;
 			}
-			int countFilesInLastFolders = countFilesInDirectoryIfNoSubDirectories(inputFolder, ".jpg");
+			int countFilesInLastFolders = countFilesInDirectoryIfNoSubDirectories(inputFolder, pattern);
 			if (countFilesInLastFolders==0){
 				l.debug("WARNING: No more applicable files in the subfolders of directory " + inputFolder.getAbsolutePath());
 				sb.append("WARNING: No more applicable files in the subfolders of directory " + inputFolder.getAbsolutePath() + "\n");
 				return movedcount;		
 			}
 			else 
-				l.debug("JPEG count in the subfolders: " + countFilesInLastFolders);
+				l.debug("Files count in the subfolders: " + countFilesInLastFolders);
 			
 			File selectedDirectory = inputFolder; 
 			File dir = selectedDirectory;
@@ -160,14 +161,14 @@ public class Utils {
 			
 			File[] images = selectedDirectory.listFiles(new FileFilter() {
 	        public boolean accept(File f) {
-	        	return f.getName().toLowerCase().endsWith(".jpg") && ignoreTemplate.stream().noneMatch(t -> f.getName().toLowerCase().matches(t));
+	        	return f.getName().toLowerCase().endsWith(pattern) && ignoreTemplate.stream().noneMatch(t -> f.getName().toLowerCase().matches(t));
 	        	}
 		});
-			l.debug("JPEG files count: " + images.length + " in subdolder: " + selectedDirectory.getAbsolutePath());
+			l.debug("Files count: " + images.length + " in subdolder: " + selectedDirectory.getAbsolutePath());
  			if (images.length>0){
 				File jpg = images[new Random().nextInt(images.length)];
 				l.debug("Randomly selected file: " + jpg.getAbsolutePath());
-				if (!isJpgOnly) {
+				if (!isEpsOnly && !isJpgOnly) {
 					File eps = new File(jpg.getParentFile() + File.separator + jpg.getName().replaceFirst("[.][^.]+$", ".eps")); 
 					if (!eps.exists()) {
 						l.error("WARNING: No .eps file for jpeg: " + jpg.getAbsolutePath());
@@ -230,7 +231,7 @@ public class Utils {
 	}
 	
 	
-	public static List<File> getSubdirsInCorrectOrder(File file) {
+	public static List<File> getSubdirsInCorrectOrder(File file, String pattern) {
 		List<File> result = new ArrayList<File>();
 		result.add(file);
 	    List<File> subdirs = Arrays.asList(file.listFiles(new FileFilter() {
@@ -243,14 +244,14 @@ public class Utils {
 	    	for (File subf:subdirs){
 	    		List<File> subfolders =  getSubdirs(subf);
 	    		subfolders.add(subf);
-	    		structure.add(filterFoldersSet(subfolders, ".jpg"));
+	    		structure.add(filterFoldersSet(subfolders, pattern));
 	    	}
 	    	while(structure.stream().anyMatch(list -> !list.isEmpty()))
 	    		for (List<File> list:structure)
 	    			if (!list.isEmpty())
 	    				result.add(list.remove(0));
 	    	}
-	    return filterFoldersSet(result, ".jpg");
+	    return filterFoldersSet(result, pattern);
 	}
 	
 	

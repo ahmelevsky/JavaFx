@@ -32,7 +32,7 @@
                         <HBox>
                            <children>
                               <TextField fx:id="queryInput" HBox.hgrow="SOMETIMES" />
-                              <Spinner fx:id="requestCountSpinner" prefHeight="26.0" prefWidth="80.0" />
+                              <Spinner fx:id="requestCountSpinner" editable="true" prefHeight="26.0" prefWidth="100.0" />
                               <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#search" prefHeight="26.0" prefWidth="80.0" text="Search" HBox.hgrow="NEVER" />
                            </children>
                            <VBox.margin>
@@ -185,19 +185,31 @@
                               </ScrollPane>
                               <HBox spacing="10.0">
                                  <children>
-                                    <TextField fx:id="editPaneAddText" HBox.hgrow="SOMETIMES" />
+                                    <TextField fx:id="editPaneAddText" HBox.hgrow="SOMETIMES">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin></TextField>
                                     <Button fx:id="editPaneAddBtn" mnemonicParsing="false" onAction="#addMoreKeywordsEditPane" text="Add" />
                                  </children>
+                                 <VBox.margin>
+                                    <Insets right="5.0" />
+                                 </VBox.margin>
                               </HBox>
                               <HBox spacing="10.0">
                                  <children>
                                     <Button fx:id="editPaneSelectAllBtn" mnemonicParsing="false" onAction="#selectAllKeywordsEditPane" text="Select All" />
                                     <Button fx:id="editPaneUnselectAllBtn" mnemonicParsing="false" onAction="#unselectAllKeywordsEditPane" text="Unselect All" />
                                     <Button fx:id="editPaneReverseBtn" mnemonicParsing="false" onAction="#reversKeywordsEditPane" text="Reverse" />
-                                    <Pane HBox.hgrow="ALWAYS" />
+                                    <Pane HBox.hgrow="ALWAYS">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin></Pane>
                                     <Label fx:id="editPaneSalesCountLabel" />
                                     <Button fx:id="editPaneCopyBtn" mnemonicParsing="false" onAction="#copyKeywordsEditPane" text="Copy" />
                                  </children>
+                                 <VBox.margin>
+                                    <Insets right="5.0" />
+                                 </VBox.margin>
                               </HBox>
                               <HBox spacing="10.0">
                                  <children>

@@ -75,12 +75,13 @@
 		</section>
 	</section>
 	<section name="FatJarPackageWizard">
-		<item value="C:\JavaFX\workspace\SortFilesByEnd\build.xml" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
-		<item value="Main (22) - SortFilesByEnd" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
-		<item value="SortFilesByEnd\SortFilesByEnding.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
+		<item value="C:\Java\JavaFx\Mcat\build\build.xml" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
+		<item value="Main (24) - Mcat" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
+		<item value="Mcat\build\Mcat.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
 		<item value="true" key="FatJarPackageWizardPage.ANTSCRIPT_SAVE"/>
 		<item value="2" key="FatJarPackageWizardPage.LIBRARY_HANDLING"/>
 		<list key="FatJarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="Mcat/build/Mcat.jar"/>
 			<item value="SortFilesByEnd/SortFilesByEnding.jar"/>
 			<item value="FileRemover/FTPUploader.jar"/>
 			<item value="FTPUploader/FTPUploader.jar"/>
@@ -88,6 +89,7 @@
 			<item value="OddAndEven/OddAndEven.jar"/>
 		</list>
 		<list key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION_HISTORY">
+			<item value="C:\Java\JavaFx\Mcat\build\build.xml"/>
 			<item value="C:\JavaFX\workspace\SortFilesByEnd\build.xml"/>
 			<item value="C:\JavaFX\workspace\FileRemover\build.xml"/>
 			<item value="C:\JavaFX\workspace\FTPUploader\build.xml"/>
@@ -234,7 +236,7 @@
 		<item value="false" key="OmitCallToSuper"/>
 	</section>
 	<section name="ClasspathContainerSelectionPage">
-		<item value="0" key="index"/>
+		<item value="1" key="index"/>
 	</section>
 	<section name="BuildPathsPropertyPage">
 		<item value="2" key="pageIndex"/>
