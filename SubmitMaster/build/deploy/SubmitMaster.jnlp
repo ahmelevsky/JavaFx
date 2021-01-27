@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="SubmitMaster.jnlp">
+  <information>
+    <title>SubmitMaster</title>
+    <vendor>AH</vendor>
+    <description>SubmitMaster</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="SubmitMaster.jar" size="46907" download="eager" />
+    <jar href="lib\commons-logging-1.2.jar" size="61829" download="eager" />
+    <jar href="lib\httpclient-4.5.13.jar" size="780321" download="eager" />
+    <jar href="lib\httpcore-4.4.14.jar" size="328436" download="eager" />
+    <jar href="lib\json.jar" size="65003" download="eager" />
+    <jar href="lib\jsoup-1.10.2.jar" size="350645" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="0" height="0" main-class="sm.Main"  name="SubmitMaster" />
+  <update check="background"/>
+</jnlp>

@@ -165,4 +165,5 @@ public class ShutterImage {
 	public void setIs_illustration(boolean is_illustration) {
 		this.is_illustration.set(is_illustration);
 	}
+	
 }

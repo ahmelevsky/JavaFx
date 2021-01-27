@@ -98,6 +98,15 @@ public class MainController implements Initializable {
 	private TableColumn<ShutterImage, String> columnRejectDate;
 	
 	@FXML
+	private TableColumn<ShutterImage, String> columnDescription;
+	
+	@FXML
+	private TableColumn<ShutterImage, String> columnKeywords;
+	
+	@FXML
+	private TableColumn<ShutterImage, Integer> columnKeywordsCount;
+	
+	@FXML
 	private CheckBox selectAllBox;
 	
 	@FXML

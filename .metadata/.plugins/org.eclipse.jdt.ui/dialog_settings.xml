@@ -152,7 +152,7 @@
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 		<item value="681" key="DIALOG_HEIGHT"/>
 		<item value="111" key="DIALOG_X_ORIGIN"/>
-		<item value="-11" key="DIALOG_Y_ORIGIN"/>
+		<item value="-10" key="DIALOG_Y_ORIGIN"/>
 	</section>
 	<section name="GenerateConstructorUsingFieldsSelectionDialog">
 		<item value="false" key="OmitCallToSuper"/>
@@ -170,7 +170,7 @@
 	</section>
 	<section name="NewClassWizardPage">
 		<item value="false" key="create_constructor"/>
-		<item value="false" key="create_unimplemented"/>
+		<item value="true" key="create_unimplemented"/>
 	</section>
 	<section name="OptionalMessageDialog.hide.">
 		<item value="true" key="org.eclipse.jdt.ui.typecomment.deprecated"/>
