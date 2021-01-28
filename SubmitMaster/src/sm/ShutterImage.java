@@ -32,11 +32,11 @@ public class ShutterImage {
 	private StringProperty previewPath = new SimpleStringProperty();
 	private IntegerProperty keywordsCount = new SimpleIntegerProperty();
 	public ObservableList<String> keywords = FXCollections.observableArrayList();
-	//public List<String> keywords = new ArrayList<String>();
 	public ObservableList<String> categories = FXCollections.observableArrayList();
+	public ObservableList<String> categoriesNames = FXCollections.observableArrayList();
 	public List<String> releases = new ArrayList<String>(); 
+	public List<String> releasesNames = new ArrayList<String>(); 
 	private ImageView image;
-	//public LocalDate createdDate;
     public String extension;
 	
 	public ShutterImage(String id,	String uploaded_filename) {

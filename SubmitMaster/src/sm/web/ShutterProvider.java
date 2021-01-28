@@ -79,6 +79,15 @@ public class ShutterProvider {
 	}
 	
 	
+	public String getCategoriesList() {
+		try {
+			return	get("/api/content_editor/categories/photo", null);
+		} catch (IOException e) {
+			return null;
+		}
+	}
+	
+	
 	public String getLoadedFilesList(int per_page, int page) {
 		List<KeyVal> parameters = new ArrayList<KeyVal>();
 		

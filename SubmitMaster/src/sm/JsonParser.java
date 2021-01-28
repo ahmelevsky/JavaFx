@@ -15,7 +15,6 @@ import sm.web.SubmitResponse;
 
 public class JsonParser {
 
-
 	public static List<ShutterImage> parseImagesData(String jsonString) {
 		List<ShutterImage> result = new ArrayList<ShutterImage>();
 		JSONObject obj = new JSONObject(jsonString);
@@ -106,7 +105,7 @@ public class JsonParser {
 					   .put("english_full_location", "")
 					   .put("external_metadata", "")
 					   );
-			   root.put("releases", new JSONArray());
+			   root.put("releases", file.releases);
 			   root.put("submitter_note", "");
 			   data.put(root);
 		   }
@@ -212,6 +211,21 @@ public class JsonParser {
 	}
 	
 	
+	public static List<Category> parseCaterogies(String jsonString) {
+		List<Category> categories  = new ArrayList<Category>();
+		JSONObject obj = new JSONObject(jsonString);
+		JSONArray data = obj.getJSONArray("data");
+		for (int j = 0; j < data.length(); j++) {
+			JSONObject categoryObj = data.getJSONObject(j);
+			String cat_id = categoryObj.getNumber("cat_id").toString();
+			String name = categoryObj.getString("name");
+			String code = categoryObj.getString("code");
+			categories.add(new Category(cat_id, name, code));
+		}
+		return categories;
+	}
+	
+	
 	public static String joinJsonArrays(List<String> arrays) {
 		JSONArray destinationArray = new JSONArray();
 		for (String ar:arrays) {
@@ -224,6 +238,27 @@ public class JsonParser {
 		root.put("data",destinationArray);
 		System.out.println("DESTINATION RELEASES JSON" + root.toString());
 		return root.toString();
+	}
+
+	
+	public static List<FileRule> parseFileRules(String jsonString){
+		 List<FileRule> rules = new ArrayList<FileRule>();
+		 JSONArray data = new JSONArray(jsonString);
+		 for (int i = 0; i < data.length(); i++) {
+			 JSONObject ruleObj = data.getJSONObject(i);
+			 FileRule rule = new FileRule(ruleObj.getString("file"));
+			 rule.isIllustration = ruleObj.getBoolean("isillustration");
+  			 JSONArray categoriesArr = ruleObj.getJSONArray("categories");
+				for (int j = 0; j < categoriesArr.length(); j++) {
+					rule.categories.add(categoriesArr.getString(j));
+				}
+			JSONArray releasesArr = ruleObj.getJSONArray("releases");
+				for (int j = 0; j < releasesArr.length(); j++) {
+					rule.releases.add(releasesArr.getString(j));
+				}
+			rules.add(rule);
+		 }
+		 return rules;
 	}
 	
 }

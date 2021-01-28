@@ -20,8 +20,10 @@
                         <TextArea fx:id="categoriesHelpTxt" editable="false" prefWidth="500.0" wrapText="true" />
                         <VBox spacing="10.0">
                            <children>
+                              <Button fx:id="loadCategoriesBtn" mnemonicParsing="false" onAction="#loadCategories" prefHeight="50.0" prefWidth="174.0" text="Load Categories" />
                               <Button fx:id="loadPropertyReleasesBtn" mnemonicParsing="false" onAction="#loadPropertyReleases" prefHeight="50.0" text="Load Property Releases" />
                               <Button fx:id="checkJsonBtn" mnemonicParsing="false" onAction="#checkRulesJson" prefHeight="50.0" prefWidth="174.0" text="Check Rules" />
+                              <Button fx:id="applyRulesBtn" mnemonicParsing="false" onAction="#applyRules" prefHeight="50.0" prefWidth="174.0" text="Apply Rules" />
                            </children>
                         </VBox>
                         <TextArea fx:id="releasesHelpTxt" editable="false" prefWidth="500.0" />

@@ -126,7 +126,7 @@ public class MainController implements Initializable {
 	@FXML
 	private Label filesCountTxt;
 	
-	ObservableList<ShutterImage> images = FXCollections.observableArrayList();
+	public ObservableList<ShutterImage> images = FXCollections.observableArrayList();
 	 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -158,18 +158,8 @@ public class MainController implements Initializable {
 		});
 		columnKeywordsCount.setCellValueFactory(new PropertyValueFactory<>("keywordsCount"));
 		
-		
-		columnCategories.setCellValueFactory(cl -> new SimpleStringProperty(String.join(", ", cl.getValue().categories)));
-		columnCategories.setCellFactory(tc -> {
-		    TableCell<ShutterImage, String> cell = new TableCell<>();
-		    Text text = new Text();
-		    cell.setGraphic(text);
-		    cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
-		    text.wrappingWidthProperty().bind(columnCategories.widthProperty());
-		    text.textProperty().bind(cell.itemProperty());
-		    return cell ;
-		});
-		
+		columnCategories.setCellValueFactory(cl -> new SimpleStringProperty(String.join(", ", cl.getValue().categoriesNames)));
+		columnPropertyRelease.setCellValueFactory(cl -> new SimpleStringProperty(String.join(", ", cl.getValue().releasesNames)));
 		columnIsIllustration.setCellValueFactory(new PropertyValueFactory<>("is_illustration"));
 		
 		columnPreview.setCellValueFactory(new PropertyValueFactory<ShutterImage, ImageView>("image"));
@@ -329,7 +319,7 @@ public class MainController implements Initializable {
 	private void getFilesList() {
 		
 		logTxt.getChildren().clear();
-		
+		this.images.clear();
 		disableControl();
 		
 		Thread t1 = new Thread(new Runnable() {
@@ -376,6 +366,8 @@ public class MainController implements Initializable {
 			}
 			page++;
 		}
+		this.images.forEach(im->im.setStatus("Uploaded"));
+		correctFilename();
 		}
 		catch (JSONException e) {
 			if (filesList.contains("Redirecting to")) {
@@ -578,6 +570,9 @@ public class MainController implements Initializable {
 			tableView.refresh();
 		}
 		
+		public void refreshTable() {
+			tableView.refresh();
+		}
 		
 		private void updateFilesCount() {
 			this.filesCountTxt.setText("Files count: " + images.size());

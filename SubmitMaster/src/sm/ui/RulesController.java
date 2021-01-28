@@ -20,8 +20,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
+import sm.Category;
+import sm.FileRule;
 import sm.JsonParser;
 import sm.Main;
 import sm.PropertyRelease;
@@ -43,22 +46,35 @@ public class RulesController implements Initializable {
 	private Button loadPropertyReleasesBtn;
 	
 	@FXML
+	private Button loadCategoriesBtn;
+	
+	@FXML
 	private Button checkJsonBtn;
+	
+	@FXML
+	private Button applyRulesBtn;
 	
 	@FXML
 	private TextArea rulesInput;
 	
 	private File rulesJsonFile;
 	private File releasesJsonFile;
+	private File categoriesJsonFile;
+	
+	public List<Category> categories;
+	public List<PropertyRelease> propertyReleases;
+	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		rulesJsonFile  =  new File(System.getProperty("user.home") + File.separator + "SubmitMasterFileRules.json");
 		releasesJsonFile  =  new File(System.getProperty("user.home") + File.separator + "SubmitMasterPropertyReleases.json");
+		categoriesJsonFile  =  new File(System.getProperty("user.home") + File.separator + "SubmitMasterCategories.json");
 	}
 
 	
 	public void setup() {
+		/*
 		categoriesHelpTxt.setText("Abstract:26\r\n" + 
 				"Animals:1\r\n" + 
 				"The Arts:11\r\n" + 
@@ -86,38 +102,74 @@ public class RulesController implements Initializable {
 				"Transportation:0\r\n" + 
 				"Vintage:24 \n"
 				+ "");
-		
+		*/
 		loadRules();
 		
+		
+		if (this.categoriesJsonFile.exists()) {
+			fillCategories();
+	}
+		
+		
 		if (this.releasesJsonFile.exists()) {
-			String releasesString = null;	
-				try {
-					releasesString = new String(Files.readAllBytes(releasesJsonFile.toPath()));
-				} catch (IOException e) {
-					LOGGER.severe(e.getMessage());
-				}
-				if (releasesString!=null && !releasesString.isEmpty()) {
-					try {
-						List<PropertyRelease> releases = JsonParser.parsePropertyReleases(releasesString);
-						fillReleasesArea(releases);
-					}
-					catch(JSONException e) {
-						LOGGER.severe(e.getMessage());
-					}
-					catch(ParseException e) {
-						LOGGER.severe(e.getMessage());
-					}
-				}
+			fillPropertyReleases();
 	}
 	}
 	
+	private void fillCategories() {
+		String categoriesString = null;	
+		try {
+			categoriesString = new String(Files.readAllBytes(categoriesJsonFile.toPath()));
+		} catch (IOException e) {
+			LOGGER.severe(e.getMessage());
+		}
+		if (categoriesString!=null && !categoriesString.isEmpty()) {
+			try {
+				this.categories = JsonParser.parseCaterogies(categoriesString);
+				fillCategoriesArea(this.categories);
+			}
+			catch(JSONException e) {
+				LOGGER.severe(e.getMessage());
+			}
+		}
+	}
+	
+	private void fillPropertyReleases() {
+		String releasesString = null;	
+		try {
+			releasesString = new String(Files.readAllBytes(releasesJsonFile.toPath()));
+		} catch (IOException e) {
+			LOGGER.severe(e.getMessage());
+		}
+		if (releasesString!=null && !releasesString.isEmpty()) {
+			try {
+				this.propertyReleases = JsonParser.parsePropertyReleases(releasesString);
+				fillReleasesArea(this.propertyReleases);
+			}
+			catch(JSONException e) {
+				LOGGER.severe(e.getMessage());
+			}
+			catch(ParseException e) {
+				LOGGER.severe(e.getMessage());
+			}
+		}
+	}
+	
+	
 	private void fillReleasesArea(List<PropertyRelease> releases) {
 			Collections.sort(releases);
+					releasesHelpTxt.clear();
 					for (PropertyRelease release : releases) {
 						releasesHelpTxt.appendText(release.name + ":" + release.id + "\r\n");
 					}
 	}
 	
+	private void fillCategoriesArea(List<Category> categories) {
+				categoriesHelpTxt.clear();
+				for (Category category : categories) {
+					categoriesHelpTxt.appendText(category.name + ":" + category.cat_id + "\r\n");
+				}
+}
 	
 	public void unload() {
 		 saveRules();
@@ -136,11 +188,11 @@ public class RulesController implements Initializable {
 	
 	private void loadRules() {
 		if (!rulesJsonFile.exists()) 
-			rulesInput.setText("{\r\n" + 
-					"\"aaaa\":{\"categories\":[3,26],\"isillustration\":true,release:\"\"},\r\n" + 
-					"\"bbbb\":{\"categories\":[3,26],\"isillustration\":false,release:\"releasefilename\"},\r\n" + 
-					"\"cccc\":{\"categories\":[3,26],\"isillustration\":true,release:\"\"}\r\n" + 
-					"}"
+			rulesInput.setText("[\r\n" + 
+					"{\"file\":\"aaaa\",\"categories\":[\"3\",\"26\"],\"isillustration\":true,\"releases\":[\"19588837\",\"39554837\"]},\r\n" + 
+					"{\"file\":\"bbbb\",\"categories\":[\"3\",\"26\"],\"isillustration\":false,\"releases\":[\"19588843\"]},\r\n" + 
+					"{\"file\":\"cccc\",\"categories\":[\"3\",\"26\"],\"isillustration\":true,\"releases\":[]}\r\n" + 
+					"]"
 					+ "");
 		else
 		try {
@@ -241,5 +293,97 @@ private List<PropertyRelease> getPropertyReleases(ShutterProvider provider) {
 	return releasesList;
 }
 
+
+@FXML
+private void loadCategories(){
+	ShutterProvider provider = app.mainController.getSession();
+	List<Category> categoriesList = getCategories(provider);
+	if (categoriesList!=null && !categoriesList.isEmpty())
+		fillCategoriesArea(categoriesList);
+}
+
+private List<Category> getCategories(ShutterProvider provider) {
+	try {
+		String categoriesString = provider.getCategoriesList();
+		System.out.println(categoriesString);
+		List<Category> categories = JsonParser.parseCaterogies(categoriesString);
+	try {
+		Files.write(categoriesJsonFile.toPath(), categoriesString.getBytes());
+	} catch (IOException e) {
+		LOGGER.severe(e.getMessage());
+	}
+		return categories;
+	}
+	catch (JSONException e) {
+			app.showAlert(e.getMessage());
+			LOGGER.severe(e.getMessage());
+			return null;
+	}
+
+}
+
+
+@FXML
+private void applyRules() {
+	List<FileRule> rules = null;
+	try {
+		rules = JsonParser.parseFileRules(rulesInput.getText());
+	}
+	catch (JSONException e) {
+		LOGGER.severe(e.getMessage());
+		app.showAlert("Error parsing rules: " + e.getMessage());
+		return;
+	}
+		if (this.categoriesJsonFile.exists())
+			fillCategories();
+		else {
+			app.showAlert("Categories are empty. Please Load.");
+			return;
+		}
+		if (this.releasesJsonFile.exists())
+			fillPropertyReleases();
+		else {
+			app.showAlert("PropertyReleases are empty. Please Load.");
+			return;
+		}
+	
+	Collections.sort(rules);
+	
+	for (ShutterImage im:app.mainController.images) {
+		for (FileRule rule:rules) {
+			if (im.getUploaded_filename().toLowerCase().startsWith(rule.prefix.toLowerCase())) {
+				im.categories.clear();
+				im.categories.addAll(rule.categories);
+				im.releases.clear();
+				im.releases.addAll(rule.releases);
+				im.categoriesNames.clear();
+				rule.categories.forEach(p->im.categoriesNames.add(getCategoryNameById(p)));
+				im.releasesNames.clear();
+				rule.releases.forEach(p->im.releasesNames.add(getPropertyReleaseNameById(p)));
+				im.setIs_illustration(rule.isIllustration);
+				im.setStatus("Ready");
+			}
+		}
+	}
+}
+
+
+private String getCategoryNameById(String id) {
+	if (this.categories==null)
+		return "";
+	Category cat = this.categories.stream().filter(c->c.cat_id.equals(id)).findFirst().orElse(null);
+	if (cat==null)
+		return "";
+	else return cat.name;
+}
+
+private String getPropertyReleaseNameById(String id) {
+	if (this.propertyReleases==null)
+		return "";
+	PropertyRelease release = this.propertyReleases.stream().filter(c->c.id.equals(id)).findFirst().orElse(null);
+	if (release==null)
+		return "";
+	else return release.name;
+}
 
 }
