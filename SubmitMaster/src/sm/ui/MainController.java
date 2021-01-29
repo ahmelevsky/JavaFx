@@ -2,10 +2,14 @@ package sm.ui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
 import org.json.JSONException;
@@ -56,6 +60,7 @@ import sm.web.SubmitResponse;
 public class MainController implements Initializable {
 
 	public Main app;
+	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	@FXML
 	private Button getFilesListBtn;
@@ -127,6 +132,7 @@ public class MainController implements Initializable {
 	private Label filesCountTxt;
 	
 	public ObservableList<ShutterImage> images = FXCollections.observableArrayList();
+	private int submitlimit = 2;
 	 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -190,8 +196,7 @@ public class MainController implements Initializable {
 	public void setup() {
 		
 		 SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory = //
-	                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 100);
-		 valueFactory.amountToStepByProperty().set(1);
+	                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 500, 100, 1);
 	     submitCountSpinner.setValueFactory(valueFactory);
 	     TextFormatter<Integer> integerFormatter = new TextFormatter<Integer>(valueFactory.getConverter(), valueFactory.getValue());
 	     submitCountSpinner.getEditor().setTextFormatter(integerFormatter);
@@ -213,9 +218,10 @@ public class MainController implements Initializable {
 	public void log(String message) {
 		Platform.runLater(new Runnable() {
             public void run() {
+            	 String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(Calendar.getInstance().getTime());
             	 Text t1 = new Text();
                  //t1.setStyle("-fx-fill: #4F8A10;-fx-font-weight:bold;");
-                 t1.setText(message + "\n");
+                 t1.setText(timeStamp + "\t" + message + "\n");
                  logTxt.getChildren().add(t1);
             }
 		 });
@@ -224,93 +230,75 @@ public class MainController implements Initializable {
 	public void logError(String message) {
 		Platform.runLater(new Runnable() {
             public void run() {
+            	String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(Calendar.getInstance().getTime());
             	 Text t1 = new Text();
                  t1.setStyle("-fx-fill: red;-fx-font-weight:bold;");
-                 t1.setText(message + "\n");
+                 t1.setText(timeStamp + "\t" + message + "\n");
                  logTxt.getChildren().add(t1);
             }
 		 });
 	}
 	
-	public void log(Collection<String> messages) {
-		Platform.runLater(new Runnable() {
-            public void run() {
-            	 Text t1 = new Text();
-                 //t1.setStyle("-fx-fill: #4F8A10;-fx-font-weight:bold;");
-                 t1.setText(String.join("\n", messages));
-            }
-		 });
-	}
 	
 	@FXML
 	private void submitBtnClick() {
-		
+		submit(false);
+	}
+	
+	@FXML
+	private void submitSelectedBtnClick() {
+		submit(true);
+	}
+	
+	private void submit(boolean onlySelected) {
 		if (this.images.isEmpty()) {
 			log("Нет файлов для сабмита либо не нажали сначала Get Files List");
 			return;
 		}
 		
-		
 		List<ShutterImage> tempList = new ArrayList<ShutterImage>(); 
-		
-		for (ShutterImage im:images) {
-			if (im.getUploaded_filename().contains("holo")
-					 || im.getUploaded_filename().contains("bauhaus")
-					 || im.getUploaded_filename().contains("magic_")
-					 || im.getUploaded_filename().contains("gradien")
-					 || im.getUploaded_filename().contains("fishscale")
-					 || im.getUploaded_filename().contains("electro")
-					 || im.getUploaded_filename().contains("cover")
-					 //|| im.getUploaded_filename().contains("big_data")
-						 )
-			im.setCategories("26", "3");
-			im.setIs_illustration(true);
-			tempList.add(im);	
+		int takecount = this.submitCountSpinner.getValue();
+		for (ShutterImage image:this.images) {
+			if (this.isLimitSubmitCountBox.isSelected() && tempList.size()>=takecount) break;
+			if (image.getStatus().equals("Ready") & (onlySelected==false || (image.getSelected().get())))
+				tempList.add(image);
 		}
 		
-		
-		/*
-		for (int k=images.size()-1; k>images.size()-3;k--) {
-			ShutterImage im1 = images.get(k);
-			im1.setCategories("26", "3");
-			im1.setIs_illustration(true);
-			tempList.add(im1);	
-		}
-		*/
-		
+		int prepareForSubmit = tempList.size();
 		disableControl();
+		AtomicInteger unsuccessfull = new AtomicInteger(0);
 		Thread t1 = new Thread(new Runnable() {
-
 			@Override
 			public void run() {
 				try {
 					ShutterProvider provider = getSession();
-					submitImages(provider, tempList);
+					while (!tempList.isEmpty()) {
+						if (tempList.size()>100) {
+							int code = submitImages(provider, tempList.subList(0, 99));
+							unsuccessfull.addAndGet(code);
+							LOGGER.fine("submitImages return code: " + code);
+							tempList.removeAll(tempList.subList(0, 99));
+						}
+						else {
+							int code = submitImages(provider, tempList);
+							unsuccessfull.addAndGet(code);
+							LOGGER.fine("submitImages return code: " + code);
+							break;
+						}
+					}
 				}
 				finally{
 					enableControl();
+					if (unsuccessfull.get()>0) {
+						app.showAlert("Successfully Submitted: " + String.valueOf(prepareForSubmit-unsuccessfull.get()) + "\n"
+								+ "Unsuccessfull: " + unsuccessfull.get());
+					}
+					else 
+						app.showAlertOK("Successfully Submitted: " + prepareForSubmit);
 				}
 			}
 		});
 		t1.start();
-		
-		
-		/*String contentJson = JsonParser.createContentPayload(tempList);
-		log(contentJson);
-		System.out.println(contentJson);
-		*/
-		/*
-		List<ShutterImage> list = new ArrayList<ShutterImage>();
-		
-		ShutterImage im1 = new ShutterImage ("testId1", "filename1.eps"); 
-		ShutterImage im2 = new ShutterImage ("testId2", "filename2.eps"); 
-		im1.setCategories("26", "3");
-		list.add(im1);
-		list.add(im2);
-		String json = JsonParser.createContentPayload(list);
-		log(json);
-		System.out.println(json);
-		*/
 	}
 	
 	
@@ -387,25 +375,63 @@ public class MainController implements Initializable {
 	}
 	
 	
-	private void submitImages(ShutterProvider provider, List<ShutterImage> files) {
-		
-	//	int per_post = 10;
+	private int submitImages(ShutterProvider provider, List<ShutterImage> files) {
 		
 		try {
 			
-			ContentResponse reponse = provider.contentPost(files);
-			log(reponse.toString());
-			System.out.println(reponse.toString());
+			ContentResponse response = provider.contentPost(files);
+			System.out.println(response.toString());
+			if (response.notSaved.isEmpty())
+				log("Content update. Response: " + response.toString());
+			else
+				logError("Content update. Response has errors: " + response.toString());
 			
-			SubmitResponse sresponse = provider.submitPost(files);
-			log(sresponse.print());
+			List<ShutterImage> savedImages = new ArrayList<ShutterImage>();
+			this.images.stream().filter(im -> response.saved.contains(im.getId())).forEach(im -> { 
+				im.setStatus("Saved...");
+				savedImages.add(im);
+			});
+			
+			this.images.stream().filter(im -> response.notSaved.contains(im.getId())).forEach(im -> im.setStatus("Not saved..."));
+			
+			
+			SubmitResponse sresponse = provider.submitPost(savedImages);
+			if (sresponse.errors.isEmpty())
+				log("Submit. Response: " + sresponse.toString());
+			else {
+				logError("Submit. Response has errors: " + sresponse.toString());
+				logError(String.join(", ", sresponse.errors));
+			}
 			System.out.println(sresponse.print());
+			
+			List<ShutterImage> submittedImages = new ArrayList<ShutterImage>();
+			
+			for (ShutterImage image:submittedImages) {
+				if (sresponse.successImages.stream().filter(o -> o.media_id.equals(image.getId())).findFirst().isPresent()) {
+					image.setStatus("Submitted!");
+					submittedImages.add(image);
+				}
+				else {
+					image.setStatus("ERROR!");
+				}
+			}
+			
+			
+			this.images.removeAll(submittedImages);
+			log("first_submit_check_code: " + sresponse.first_submit_check_code);
+			log("first_submit_check_original_code: " + sresponse.first_submit_check_original_code);
+			log("first_submit_check_message: " + sresponse.first_submit_check_message);
+			
+			
+			return files.size() - submittedImages.size();
 		}
 		catch (JSONException e) {
 				logError("JSON error" + e.getMessage());
+				return -1;
 			}
 		catch (IOException e) {
 			logError(e.getMessage());
+			return -1;
 		}
 	}
 	

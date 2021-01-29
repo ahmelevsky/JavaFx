@@ -178,9 +178,9 @@ public class JsonParser {
 		JSONArray success_arr = data.getJSONArray("success");
 		for (int j = 0; j < success_arr.length(); j++) {
 			JSONObject successobj = success_arr.getJSONObject(j);
-			response.images.get(j).media_id = successobj.getString("media_id");
-			response.images.get(j).upload_id = successobj.getString("upload_id");
-			response.images.get(j).media_type = successobj.getString("media_type");
+			response.successImages.get(j).media_id = successobj.getString("media_id");
+			response.successImages.get(j).upload_id = successobj.getString("upload_id");
+			response.successImages.get(j).media_type = successobj.getString("media_type");
 		}
 		
 		JSONObject first_submit_check_obj = data.getJSONObject("first_submit_check");

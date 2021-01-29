@@ -51,7 +51,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="submitSelectedBtn" mnemonicParsing="false" onAction="#submitBtnClick" text="SUBMIT SELECTED">
+            <Button fx:id="submitSelectedBtn" mnemonicParsing="false" onAction="#submitSelectedBtnClick" text="SUBMIT SELECTED">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>

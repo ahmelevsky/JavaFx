@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
@@ -48,6 +50,7 @@ public class ShutterProvider {
 	String sessionId;
 	Map<String,String> cookies;
     Map<String,String> headers;
+    private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     
 	public ShutterProvider(String sessionId) {
 		this.sessionId = sessionId;
@@ -72,8 +75,11 @@ public class ShutterProvider {
 		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("type", "both"));
 		
 		try {
-			return	get("/api/releases", parameters);
+			String response = get("/api/releases", parameters);
+			LOGGER.fine(response);
+			return	response;
 		} catch (IOException e) {
+			LOGGER.severe(e.getMessage());
 			return null;
 		}
 	}
@@ -109,7 +115,9 @@ public class ShutterProvider {
 	    //parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "is_editorial"));
 		
 		try {
-			return	get("/api/content_editor/photo", parameters);
+			String response =	get("/api/content_editor/photo", parameters);
+			LOGGER.fine(response);
+			return	response;
 		} catch (IOException e) {
 			return null;
 		}
@@ -126,13 +134,19 @@ public class ShutterProvider {
 	}
 	public ContentResponse contentPost(Collection<ShutterImage> files) throws IOException {
 		String json = JsonParser.createContentPayload(files);
+		LOGGER.fine("CONTENT PAYLOAD: " + json);
 		String res = getApachePatchResponse("/api/content_editor", json);
+		LOGGER.fine("CONTENT POST RESPONSE: " + res);
 		return JsonParser.parseContentResponse(res);
+		
 	}
 	
 	public SubmitResponse submitPost(Collection<ShutterImage> files) throws IOException {
 		String json = JsonParser.createSubmitPayload(files);
-		return JsonParser.parseSubmitResponse(getApachePostResponse("/api/content_editor/submit", json));
+		LOGGER.fine("SUBMIT PAYLOAD: " + json);
+		String res = getApachePostResponse("/api/content_editor/submit", json);
+		LOGGER.fine("SUBMIT POST RESPONSE" + res);
+		return JsonParser.parseSubmitResponse(res);
 	}
 	
 	private String get(String url, Collection<KeyVal> parameters) throws IOException{
