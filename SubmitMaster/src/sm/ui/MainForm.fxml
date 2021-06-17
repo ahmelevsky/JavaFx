@@ -42,16 +42,21 @@
                </HBox.margin>
             </Slider>
             <Pane HBox.hgrow="ALWAYS" />
+            <CheckBox fx:id="testModeBox" mnemonicParsing="false" text="TEST MODE">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+            </CheckBox>
          </children>
       </HBox>
       <HBox VBox.vgrow="NEVER">
          <children>
-            <Button fx:id="submitAllBtn" mnemonicParsing="false" onAction="#submitBtnClick" text="SUBMIT ALL">
+            <Button fx:id="submitSelectedBtn" mnemonicParsing="false" onAction="#submitSelectedBtnClick" text="SUB. SELECTED">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="submitSelectedBtn" mnemonicParsing="false" onAction="#submitSelectedBtnClick" text="SUBMIT SELECTED">
+            <Button fx:id="submitAllBtn" mnemonicParsing="false" onAction="#submitBtnClick" text="SUBMIT ALL">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
@@ -61,11 +66,16 @@
                   <Insets bottom="5.0" left="20.0" right="5.0" top="10.0" />
                </HBox.margin>
             </CheckBox>
-            <Spinner fx:id="submitCountSpinner" prefHeight="31.0" prefWidth="102.0">
+            <Spinner fx:id="submitCountSpinner" editable="true" prefHeight="31.0" prefWidth="102.0">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Spinner>
+            <CheckBox fx:id="isRandomOrderBox" mnemonicParsing="false" selected="true" text="Random Order">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="20.0" right="5.0" top="10.0" />
+               </HBox.margin>
+            </CheckBox>
             <CheckBox fx:id="showDescriptionBox" mnemonicParsing="false" onAction="#showDescriptionColumn" text="Show Description">
                <HBox.margin>
                   <Insets bottom="5.0" left="20.0" right="5.0" top="10.0" />
@@ -77,6 +87,11 @@
                </HBox.margin>
             </CheckBox>
             <Pane HBox.hgrow="ALWAYS" />
+            <Button fx:id="applyBtn" mnemonicParsing="false" onAction="#applyRules" text="Aplly Rules">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </Button>
             <Label fx:id="filesCountTxt" text="Files Count: 0">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="20.0" top="10.0" />
@@ -84,18 +99,19 @@
             </Label>
          </children>
       </HBox>
-      <SplitPane dividerPositions="0.5" orientation="VERTICAL" VBox.vgrow="ALWAYS">
+      <SplitPane dividerPositions="0.8" orientation="VERTICAL" VBox.vgrow="ALWAYS">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
-                  <TableView fx:id="tableView" editable="true" prefHeight="400.0" prefWidth="898.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TableView fx:id="tableView" editable="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
                       <TableColumn fx:id="columnSelect" maxWidth="30.0" minWidth="30.0" prefWidth="30.0">
                            <graphic>
-                              <CheckBox mnemonicParsing="false" />
+                              <CheckBox fx:id="selectAllBox" mnemonicParsing="false" onAction="#selectAllClick" />
                            </graphic>
                         </TableColumn>
                         <TableColumn fx:id="columnStatus" maxWidth="200.0" minWidth="40.0" prefWidth="100.0" text="Status" />
+                        <TableColumn fx:id="columnDate" maxWidth="140.0" minWidth="140.0" prefWidth="140.0" resizable="false" text="Upload Date" />
                       <TableColumn fx:id="columnPreview" editable="false" maxWidth="1000.0" minWidth="20.0" prefWidth="100.0" sortable="false" />
                         <TableColumn fx:id="columnName" editable="false" maxWidth="1000.0" minWidth="50.0" prefWidth="200.0">
                            <graphic>
@@ -113,8 +129,8 @@
                         <TableColumn fx:id="columnKeywords" maxWidth="1000.0" minWidth="20.0" prefWidth="210.0" text="Keywords" />
                         <TableColumn fx:id="columnKeywordsCount" maxWidth="120.0" minWidth="21.0" prefWidth="30.0" resizable="false" text="N" />
                         <TableColumn fx:id="columnCategories" maxWidth="600.0" prefWidth="120.0" text="Categories" />
-                        <TableColumn fx:id="columnPropertyRelease" maxWidth="300.0" text="PropertyRelease" />
-                        <TableColumn fx:id="columnIsIllustration" maxWidth="40.0" prefWidth="40.0" resizable="false" text="Illustr." />
+                        <TableColumn fx:id="columnPropertyRelease" maxWidth="600.0" text="PropertyRelease" />
+                        <TableColumn fx:id="columnIsIllustration" maxWidth="-1.0" minWidth="40.0" prefWidth="40.0" resizable="false" text="Illustr." />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -126,7 +142,7 @@
                <children>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <content>
-                        <TextFlow fx:id="logTxt" prefHeight="200.0">
+                        <TextFlow fx:id="logTxt">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>

@@ -127,6 +127,8 @@ public class MainFrameController implements Initializable{
 	private boolean isWriteBothExtensions;
 	private String ext = "jpg";
 	
+	private List<String> warningImages = new ArrayList<String>();
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
@@ -218,6 +220,7 @@ public class MainFrameController implements Initializable{
 	            alert.showAndWait();
 		 }
 		app.isProblem = false;
+		this.warningImages.clear();
 		if (rootFolder==null || !rootFolder.exists() || !rootFolder.isDirectory()){
 			app.showAlert(Settings.bundle.getString("alert.error.nofolder"));
 			return;
@@ -312,6 +315,10 @@ public class MainFrameController implements Initializable{
 								LOGGER.fine(image.getName() + ": Set keywords");
 								description = app.descriptionEditorController.generateDescriptionForMetadata();
 								LOGGER.fine(image.getName() + ": Set description");
+								if (app.descriptionEditorController.allVariablesDuplicateTarget) {
+									LOGGER.warning("File "  + image.getName() + " description variables duplicate target!");
+									warningImages.add(image.getName());
+								}
 								title = app.titleEditorController.getTitleForMetadata();
 								LOGGER.fine(image.getName() + ": Set title");
 							}
@@ -410,7 +417,11 @@ public class MainFrameController implements Initializable{
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setTitle("Done!");
 				alert.setHeaderText("Done!");
-				alert.setContentText(task.getValue());
+				if (this.warningImages.isEmpty())
+					alert.setContentText(task.getValue());
+				else {
+					alert.setContentText(task.getValue() +  "\nWARNINGS: Some of images has duplicated words in descriptions. " + String.join(", ", this.warningImages));
+				}
 				alert.showAndWait();
 			});
 			

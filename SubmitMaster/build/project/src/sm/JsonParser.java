@@ -1,8 +1,12 @@
 package sm;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,7 +15,6 @@ import sm.web.ContentResponse;
 import sm.web.SubmitResponse;
 
 public class JsonParser {
-
 
 	public static List<ShutterImage> parseImagesData(String jsonString) {
 		List<ShutterImage> result = new ArrayList<ShutterImage>();
@@ -103,7 +106,7 @@ public class JsonParser {
 					   .put("english_full_location", "")
 					   .put("external_metadata", "")
 					   );
-			   root.put("releases", new JSONArray());
+			   root.put("releases", file.releases);
 			   root.put("submitter_note", "");
 			   data.put(root);
 		   }
@@ -119,24 +122,31 @@ public class JsonParser {
         List<String> saved = new ArrayList<String>();
         List<String> notSaved = new ArrayList<String>();
         
+       
+        
+        if (obj.has("saved")) {
 		JSONArray savedarr = obj.getJSONArray("saved");
 		
 		for (int j = 0; j < savedarr.length(); j++) {
 			saved.add(savedarr.getString(j));
 		}
-		
+        }
+        if (obj.has("notSaved")) {
 		JSONArray notsavedarr = obj.getJSONArray("notSaved");
 		for (int j = 0; j < notsavedarr.length(); j++) {
 			notSaved.add(notsavedarr.getString(j));
 		}
-		
+        }
 		int success;
 		if (!obj.isNull("success"))
 			success = obj.getInt("success");
 		else
 			success = 0;
-		
-		return new ContentResponse(success, saved, notSaved);
+		ContentResponse response = new ContentResponse(success, saved, notSaved);
+		if (obj.has("error")) 
+	    		response.error = obj.getString("error");
+		 
+		return response;
 		
 	}
 	
@@ -170,25 +180,115 @@ public class JsonParser {
 		JSONObject data = obj.getJSONObject("data");
 		JSONArray item_errors_arr = data.getJSONArray("item_errors");
 		
+		
 		for (int j = 0; j < item_errors_arr.length(); j++) {
-			response.errors.add(item_errors_arr.getString(j));
+			JSONObject errorObj = item_errors_arr.getJSONObject(j);
+			SubmitResponse.ItemError itemError = response.getItemError();
+			itemError.upload_id = errorObj.getString("upload_id");
+			JSONObject validation_errors = errorObj.getJSONObject("validation_errors");
+			JSONObject details = validation_errors.getJSONObject("details");
+			JSONObject keywords = details.getJSONObject("keywords");
+			StringJoiner  errorMsg =  new StringJoiner (", ");
+			if (keywords.getBoolean("hard_validation_failure"))
+				errorMsg.add("Keywords error: " + keywords.getString("message"));
+			JSONObject title = details.getJSONObject("title");
+			if (title.getBoolean("hard_validation_failure"))
+				errorMsg.add("Title error: " + title.getString("message"));
+			itemError.message = errorMsg.toString();
 		}
+		
+		
 		JSONArray success_arr = data.getJSONArray("success");
 		for (int j = 0; j < success_arr.length(); j++) {
 			JSONObject successobj = success_arr.getJSONObject(j);
-			response.images.get(j).media_id = successobj.getString("media_id");
-			response.images.get(j).upload_id = successobj.getString("upload_id");
-			response.images.get(j).media_type = successobj.getString("media_type");
+			SubmitResponse.ShutterImageShort successImage = response.getSuccessImage();
+			successImage.media_id = successobj.getNumber("media_id").toString();
+			successImage.upload_id = successobj.getString("upload_id");
+			successImage.media_type = successobj.getString("media_type");
 		}
 		
-		JSONObject first_submit_check_obj = data.getJSONObject("first_submit_check");
-		response.first_submit_check_code = first_submit_check_obj.getString("code");
-		response.first_submit_check_message = first_submit_check_obj.getString("message");
-		response.first_submit_check_original_code = first_submit_check_obj.getString("original_code");
-		
+		if (!data.isNull("batch_error")) {
+			JSONObject batch_error  = data.getJSONObject("batch_error");
+			response.batch_error_code = batch_error.getString("code");
+			response.batch_error_message= batch_error.getString("message");
+		}
+		if (!data.isNull("first_submit_check")) {
+			JSONObject first_submit_check_obj = data.getJSONObject("first_submit_check");
+			response.first_submit_check_code = first_submit_check_obj.getString("code");
+			response.first_submit_check_message = first_submit_check_obj.getString("message");
+			response.first_submit_check_original_code = first_submit_check_obj.getString("original_code");
+		}
 		return response;
 		
 	}
 	
+	public static List<PropertyRelease> parsePropertyReleases(String jsonString) throws ParseException{
+		List<PropertyRelease> releases  = new ArrayList<PropertyRelease>();
+		JSONObject obj = new JSONObject(jsonString);
+		JSONArray data = obj.getJSONArray("data");
+		for (int j = 0; j < data.length(); j++) {
+			JSONObject releaseObj = data.getJSONObject(j);
+			String id = releaseObj.getString("id");
+			String name = releaseObj.getString("name");
+			String workflow_status = releaseObj.getString("workflow_status");
+			String ext = releaseObj.getString("ext");
+			String visible = releaseObj.getString("visible");
+			String added_date = releaseObj.getString("added_date");
+			String type = releaseObj.getString("type");
+			releases.add(new PropertyRelease(workflow_status, ext, visible, added_date, name, id, type));
+		}
+		return releases;
+	}
+	
+	
+	public static List<Category> parseCaterogies(String jsonString) {
+		List<Category> categories  = new ArrayList<Category>();
+		JSONObject obj = new JSONObject(jsonString);
+		JSONArray data = obj.getJSONArray("data");
+		for (int j = 0; j < data.length(); j++) {
+			JSONObject categoryObj = data.getJSONObject(j);
+			String cat_id = categoryObj.getNumber("cat_id").toString();
+			String name = categoryObj.getString("name");
+			String code = categoryObj.getString("code");
+			categories.add(new Category(cat_id, name, code));
+		}
+		return categories;
+	}
+	
+	
+	public static String joinJsonArrays(List<String> arrays) {
+		JSONArray destinationArray = new JSONArray();
+		for (String ar:arrays) {
+			JSONObject obj = new JSONObject(ar);
+			JSONArray data = obj.getJSONArray("data");
+			for (int i=0;i<data.length();i++)
+				destinationArray.put(data.get(i));
+		}
+		JSONObject root = new JSONObject();
+		root.put("data",destinationArray);
+		System.out.println("DESTINATION RELEASES JSON" + root.toString());
+		return root.toString();
+	}
+
+	
+	public static List<FileRule> parseFileRules(String jsonString){
+		 List<FileRule> rules = new ArrayList<FileRule>();
+		 JSONArray data = new JSONArray(jsonString);
+		 for (int i = 0; i < data.length(); i++) {
+			 JSONObject ruleObj = data.getJSONObject(i);
+			 FileRule rule = new FileRule(ruleObj.getString("file"));
+			 rule.isIllustration = ruleObj.getBoolean("isillustration");
+  			 JSONArray categoriesArr = ruleObj.getJSONArray("categories");
+				for (int j = 0; j < categoriesArr.length(); j++) {
+					rule.categories.add(categoriesArr.getString(j));
+				}
+			JSONArray releasesArr = ruleObj.getJSONArray("releases");
+				for (int j = 0; j < releasesArr.length(); j++) {
+					rule.releases.add(releasesArr.getString(j));
+				}
+			rules.add(rule);
+		 }
+		 return rules;
+	}
 	
 }

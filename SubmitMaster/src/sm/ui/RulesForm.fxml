@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sm.ui.RulesController">
    <children>
       <SplitPane dividerPositions="0.5" orientation="VERTICAL" VBox.vgrow="ALWAYS">
@@ -22,8 +21,10 @@
                            <children>
                               <Button fx:id="loadCategoriesBtn" mnemonicParsing="false" onAction="#loadCategories" prefHeight="50.0" prefWidth="174.0" text="Load Categories" />
                               <Button fx:id="loadPropertyReleasesBtn" mnemonicParsing="false" onAction="#loadPropertyReleases" prefHeight="50.0" text="Load Property Releases" />
+                              <Pane VBox.vgrow="ALWAYS" />
                               <Button fx:id="checkJsonBtn" mnemonicParsing="false" onAction="#checkRulesJson" prefHeight="50.0" prefWidth="174.0" text="Check Rules" />
                               <Button fx:id="applyRulesBtn" mnemonicParsing="false" onAction="#applyRules" prefHeight="50.0" prefWidth="174.0" text="Apply Rules" />
+                              <Pane layoutX="10.0" layoutY="130.0" VBox.vgrow="ALWAYS" />
                            </children>
                         </VBox>
                         <TextArea fx:id="releasesHelpTxt" editable="false" prefWidth="500.0" />

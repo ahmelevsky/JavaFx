@@ -76,7 +76,7 @@ public class ShutterProvider {
 		
 		try {
 			String response = get("/api/releases", parameters);
-			LOGGER.fine(response);
+			LOGGER.fine("PROPERTY RELEASES: " + response);
 			return	response;
 		} catch (IOException e) {
 			LOGGER.severe(e.getMessage());
@@ -87,8 +87,11 @@ public class ShutterProvider {
 	
 	public String getCategoriesList() {
 		try {
-			return	get("/api/content_editor/categories/photo", null);
+			String json = 	get("/api/content_editor/categories/photo", null);
+			LOGGER.fine("CATEGORIES: " + json);
+			return json;
 		} catch (IOException e) {
+			LOGGER.severe(e.getMessage());
 			return null;
 		}
 	}
@@ -119,6 +122,7 @@ public class ShutterProvider {
 			LOGGER.fine(response);
 			return	response;
 		} catch (IOException e) {
+			LOGGER.severe(e.getMessage());
 			return null;
 		}
 	}

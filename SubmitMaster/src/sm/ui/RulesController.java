@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -29,6 +30,7 @@ import sm.JsonParser;
 import sm.Main;
 import sm.PropertyRelease;
 import sm.ShutterImage;
+import sm.utils.Wildcards;
 import sm.web.ShutterProvider;
 
 public class RulesController implements Initializable {
@@ -183,15 +185,14 @@ public class RulesController implements Initializable {
 		} catch (IOException e) {
 			LOGGER.severe(e.getMessage());
 		}
-		//Files.write(rulesJsonFile.toPath(),lines);
 	}
 	
 	private void loadRules() {
 		if (!rulesJsonFile.exists()) 
 			rulesInput.setText("[\r\n" + 
-					"{\"file\":\"aaaa\",\"categories\":[\"3\",\"26\"],\"isillustration\":true,\"releases\":[\"19588837\",\"39554837\"]},\r\n" + 
-					"{\"file\":\"bbbb\",\"categories\":[\"3\",\"26\"],\"isillustration\":false,\"releases\":[\"19588843\"]},\r\n" + 
-					"{\"file\":\"cccc\",\"categories\":[\"3\",\"26\"],\"isillustration\":true,\"releases\":[]}\r\n" + 
+					"{\"file\":\"aa*bb\",\"categories\":[\"3\",\"26\"],\"isillustration\":true,\"releases\":[\"12345678\",\"87654321\"]},\r\n" + 
+					"{\"file\":\"?ccc*\",\"categories\":[\"3\",\"26\"],\"isillustration\":false,\"releases\":[\"12345678\"]},\r\n" + 
+					"{\"file\":\"*\",\"categories\":[\"3\",\"26\"],\"isillustration\":true,\"releases\":[]}\r\n" + 
 					"]"
 					+ "");
 		else
@@ -209,10 +210,8 @@ public class RulesController implements Initializable {
 private void checkRulesJson() {
 	if (isJSONValid(rulesInput.getText())) 
 		app.showAlertOK("Checked");
-			//rulesInput.setStyle("text-area-background: green;");
 	else
 		app.showAlert("Incorrect Json format");
-			//rulesInput.setStyle("text-area-background: red;");
 }
 	
 	
@@ -322,7 +321,54 @@ private List<Category> getCategories(ShutterProvider provider) {
 
 }
 
-
+@FXML
+public void applyRules() {
+	List<FileRule> rules = null;
+	try {
+		rules = JsonParser.parseFileRules(rulesInput.getText());
+	}
+	catch (JSONException e) {
+		LOGGER.severe(e.getMessage());
+		app.showAlert("Error parsing rules: " + e.getMessage());
+		return;
+	}
+		if (this.categoriesJsonFile.exists())
+			fillCategories();
+		else {
+			app.showAlert("Categories are empty. Please Load.");
+			return;
+		}
+		if (this.releasesJsonFile.exists())
+			fillPropertyReleases();
+		else {
+			app.showAlert("PropertyReleases are empty. Please Load.");
+			return;
+		}
+	
+	//Collections.sort(rules);
+	
+	for (FileRule rule:rules) {
+		for (ShutterImage im:app.mainController.images.stream().filter(image->image.getStatus().equals("Uploaded")).collect(Collectors.toList())) {
+			if (Wildcards.match(rule.prefix.toLowerCase(), im.getUploaded_filename().toLowerCase()))  {
+				im.categories.clear();
+				im.categories.addAll(rule.categories);
+				im.releases.clear();
+				im.releases.addAll(rule.releases);
+				im.categoriesNames.clear();
+				rule.categories.forEach(p->im.categoriesNames.add(getCategoryNameById(p)));
+				im.releasesNames.clear();
+				rule.releases.forEach(p->im.releasesNames.add(getPropertyReleaseNameById(p)));
+				im.setIs_illustration(rule.isIllustration);
+				if (app.mainController.validateImageForSubmit(im))
+					im.setStatus("Ready");
+				else 
+					im.setStatus("Not ready");
+			}
+		}
+	}
+	app.mainController.refreshTable();
+}
+/*
 @FXML
 private void applyRules() {
 	List<FileRule> rules = null;
@@ -365,8 +411,9 @@ private void applyRules() {
 			}
 		}
 	}
+	app.mainController.refreshTable();
 }
-
+*/
 
 private String getCategoryNameById(String id) {
 	if (this.categories==null)

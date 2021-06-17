@@ -3,9 +3,11 @@ package te.view;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -91,6 +93,9 @@ public class DescriptionContainerController  extends TargetEditorController impl
 	
 	public DescriptionEditorWrapper wrapper;
 	private boolean isInitialized;
+	
+	public boolean allVariablesDuplicateTarget;
+	
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
 	
@@ -357,6 +362,17 @@ public class DescriptionContainerController  extends TargetEditorController impl
 		
 		Target target = app.getRandomTarget();
 		MultiParser parser = new MultiParser(app.descriptionVariableEditorContainerController.variables);
+		for (int i=0; i<selectors.size();i++){
+			String d =  selectors.get(i).getSelectionModel().getSelectedItem();
+			if (d==null) continue;
+			 if (d.equals(this.targetDescr1))
+				 parser.targetWords.addAll(Arrays.asList(target.getTargetDescr1().split("\\s")));
+			 if (d.equals(this.targetDescr2))
+				 parser.targetWords.addAll(Arrays.asList(target.getTargetDescr2().split("\\s")));
+		}
+		for (int i = 0; i < parser.targetWords.size(); i++)
+			parser.targetWords.set(i, parser.targetWords.get(i).replaceAll("[.,;]+", ""));
+
 		String randomFolderscription = app.getRandomFolderDescr();
 		List<Tuple<Integer, String>> result = new ArrayList<Tuple<Integer, String>>();
 		for (int i=0; i<selectors.size();i++){
@@ -549,6 +565,17 @@ public class DescriptionContainerController  extends TargetEditorController impl
 	public String generateDescriptionForMetadata(){
 		List<Tuple<Integer, String>> result = new ArrayList<Tuple<Integer, String>>();
 		MultiParser parser = new MultiParser(app.descriptionVariableEditorContainerController.savedVariables);
+		for (String d:data){
+			if (d==null) continue;
+			 if (d.equals(this.targetDescr1))
+				 parser.targetWords.addAll(Arrays.asList(app.mainFrameController.currentTarget.getTargetDescr1().split("\\s")));
+			 if (d.equals(this.targetDescr2))
+				 parser.targetWords.addAll(Arrays.asList(app.mainFrameController.currentTarget.getTargetDescr2().split("\\s")));
+		}
+		
+		for (int i = 0; i < parser.targetWords.size(); i++)
+			parser.targetWords.set(i, parser.targetWords.get(i).replaceAll("[.,;]+", ""));
+
 		for (int i=0; i<data.size();i++){
 			int position = i;
 			if(isRandomStored.get(i))
@@ -585,6 +612,7 @@ public class DescriptionContainerController  extends TargetEditorController impl
 			}
 		}
 		this.currentDescription = joinWithPositions(result);
+		this.allVariablesDuplicateTarget = parser.allVariablesDuplicateTarget;
 		return this.currentDescription;
 	}
 	

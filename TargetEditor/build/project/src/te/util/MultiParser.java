@@ -23,7 +23,9 @@ public class MultiParser {
     private final List<Variable> global;
     private Map<String,Set<String>> local = new HashMap<String,Set<String>>();
     private final Pattern TAG_REGEX = Pattern.compile("<(.+?)>(\\[(|[0-9]+?)\\])?");
-	
+	public List<String> targetWords = new ArrayList<String>();
+    public boolean allVariablesDuplicateTarget;
+    
 	public MultiParser(List<Variable> variables) {
 		global = variables;
 	    for (Variable v:global) {
@@ -42,13 +44,20 @@ public class MultiParser {
 	    		if (!local.containsKey(matcher.group(1)))
 	    			throw new TextException(Settings.bundle.getString("parser.unexistedvar.begin") + matcher.group(1) + Settings.bundle.getString("parser.unexistedvar.end"));
 	    		
+	    		if (targetWords.containsAll(local.get(matcher.group(1)))){
+	    			this.allVariablesDuplicateTarget=true;
+	    		}
+	    		else {
+	    			local.get(matcher.group(1)).removeAll(targetWords);
+	    		}
+	    				
 	    		int multiplier = 1;
 	    		if (matcher.group(3)!= null)
 	    			if (matcher.group(3).isEmpty()) {
 	    				Optional<Variable> opt = global.stream().filter(p -> p.getName().equals(matcher.group(1))).findFirst();
 	    				if (opt!=null && opt.isPresent()) {
 	    					Variable var = opt.get();
-	    					string = StringUtils.replaceOnce(string, matcher.group(0), StringUtils.join(var.getValues(), delimiter));
+	    					string = StringUtils.replaceOnce(string, matcher.group(0), StringUtils.join(getAllValues(var), delimiter));
 	    				}
 	    			}
 	    			else {
@@ -84,7 +93,7 @@ public class MultiParser {
 	    				Optional<Variable> opt = global.stream().filter(p -> p.getName().equals(matcher.group(1))).findFirst();
 	    				if (opt!=null && opt.isPresent()) {
 	    					Variable var = opt.get();
-	    					string = StringUtils.replaceOnce(string, matcher.group(0), StringUtils.join(var.getValues(), delimiter));
+	    					string = StringUtils.replaceOnce(string, matcher.group(0), StringUtils.join((var.getValues()), delimiter));
 	    				}
 	    			}
 	    			else {
@@ -99,7 +108,22 @@ public class MultiParser {
 	    		throw new TextException(Settings.bundle.getString("parser.badsymbols"));
 	    return string;
 	}
+	
 
+
+	private List<String> getAllValues(Variable var) {
+		List<String> result = new ArrayList<String>();
+		Set<String> values = new HashSet<String>();
+		values.addAll(var.getValues());
+		values.removeAll(this.targetWords);
+		if (values.isEmpty()) {
+			this.allVariablesDuplicateTarget = true;
+			result.addAll(var.getValues());
+			//result.add(getRandomValueFromCollection(var.getValues()));
+		}
+		return result;
+	}
+	
 	private String getRandomValue(String name) {
 		Set<String> values = local.get(name);
 		if (values.isEmpty())
@@ -184,7 +208,16 @@ public class MultiParser {
 		if (opt==null || !opt.isPresent())
 			return;
 		Variable var = opt.get();
+		local.get(variableName).clear();
 		local.get(variableName).addAll(var.getValues());
+		
+		if (targetWords.containsAll(local.get(variableName))){
+			this.allVariablesDuplicateTarget=true;
+		}
+		else {
+			local.get(variableName).removeAll(targetWords);
+		}
+		
 	}
 	
 	private String getRandomValueFromCollection(Collection<String> c){

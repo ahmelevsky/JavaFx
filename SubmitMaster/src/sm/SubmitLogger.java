@@ -33,8 +33,8 @@ public class SubmitLogger {
         }
 
         logger.setLevel(Level.ALL);
-        fileTxt = new FileHandler(System.getProperty("user.home") + File.separator + "SubmitMaster.log");
-        fileHTML = new FileHandler(System.getProperty("user.home") + File.separator + "SubmitMaster.html");
+        fileTxt = new FileHandler(System.getProperty("user.home") + File.separator + "SubmitMaster.log" , true);
+        fileHTML = new FileHandler(System.getProperty("user.home") + File.separator + "SubmitMaster.html", true);
         fileTxt.setLevel(Level.ALL);
         fileHTML.setLevel(Level.INFO);
         // create a TXT formatter
@@ -46,4 +46,5 @@ public class SubmitLogger {
         fileHTML.setFormatter(formatterHTML);
         logger.addHandler(fileHTML);
     }
+    
 }

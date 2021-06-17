@@ -5,14 +5,18 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 import org.json.JSONException;
+
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -50,12 +54,14 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import sm.Data;
 import sm.JsonParser;
 import sm.Main;
 import sm.ShutterImage;
 import sm.web.ContentResponse;
 import sm.web.ShutterProvider;
 import sm.web.SubmitResponse;
+import sm.web.SubmitResponse.ItemError;
 
 public class MainController implements Initializable {
 
@@ -78,6 +84,9 @@ public class MainController implements Initializable {
 	private CheckBox isLimitSubmitCountBox;
 	
 	@FXML
+	private CheckBox isRandomOrderBox;
+	
+	@FXML
 	private CheckBox correctFilenameBox;
 	
 	@FXML
@@ -93,6 +102,9 @@ public class MainController implements Initializable {
 	private TextFlow logTxt;
 	
 	@FXML
+	private CheckBox selectAllBox;
+	
+	@FXML
 	private TableView<ShutterImage> tableView;
 	
 	@FXML
@@ -100,6 +112,9 @@ public class MainController implements Initializable {
 	
 	@FXML
 	private TableColumn<ShutterImage, String> columnStatus;
+	
+	@FXML
+	private TableColumn<ShutterImage, String> columnDate;
 	
 	@FXML
 	private TableColumn<ShutterImage, ImageView> columnPreview;
@@ -131,44 +146,18 @@ public class MainController implements Initializable {
 	@FXML
 	private Label filesCountTxt;
 	
+	@FXML
+	private Button applyBtn;
+	
+	@FXML
+	private CheckBox testModeBox;
+	
 	public ObservableList<ShutterImage> images = FXCollections.observableArrayList();
-	private int submitlimit = 2;
 	 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		loadSessionId();
-		columnPreview.setPrefWidth(200);
-		columnSelect.setCellValueFactory(new PropertyValueFactory<>("selected"));
-		columnStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-		columnName.setCellValueFactory(new PropertyValueFactory<>("uploaded_filename"));
-		columnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-		columnDescription.setCellFactory(tc -> {
-		    TableCell<ShutterImage, String> cell = new TableCell<>();
-		    Text text = new Text();
-		    cell.setGraphic(text);
-		    cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
-		    text.wrappingWidthProperty().bind(columnDescription.widthProperty());
-		    text.textProperty().bind(cell.itemProperty());
-		    return cell ;
-		});
-		
-		columnKeywords.setCellValueFactory(cl -> new SimpleStringProperty(String.join(", ", cl.getValue().keywords)));
-		columnKeywords.setCellFactory(tc -> {
-		    TableCell<ShutterImage, String> cell = new TableCell<>();
-		    Text text = new Text();
-		    cell.setGraphic(text);
-		    cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
-		    text.wrappingWidthProperty().bind(columnKeywords.widthProperty());
-		    text.textProperty().bind(cell.itemProperty());
-		    return cell ;
-		});
-		columnKeywordsCount.setCellValueFactory(new PropertyValueFactory<>("keywordsCount"));
-		
-		columnCategories.setCellValueFactory(cl -> new SimpleStringProperty(String.join(", ", cl.getValue().categoriesNames)));
-		columnPropertyRelease.setCellValueFactory(cl -> new SimpleStringProperty(String.join(", ", cl.getValue().releasesNames)));
-		columnIsIllustration.setCellValueFactory(new PropertyValueFactory<>("is_illustration"));
-		
-		columnPreview.setCellValueFactory(new PropertyValueFactory<ShutterImage, ImageView>("image"));
+		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		tableView.setItems(images);
 		setupTableViewColumn();
 		tableView.getSelectionModel().setCellSelectionEnabled(true);
@@ -200,10 +189,15 @@ public class MainController implements Initializable {
 	     submitCountSpinner.setValueFactory(valueFactory);
 	     TextFormatter<Integer> integerFormatter = new TextFormatter<Integer>(valueFactory.getConverter(), valueFactory.getValue());
 	     submitCountSpinner.getEditor().setTextFormatter(integerFormatter);
-		
+	     submitCountSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
+	    	  if (!newValue) {
+	    		  submitCountSpinner.increment(0); // won't change value, but will commit editor
+	    	  }
+	    	});
 	}
 	
 	private void setupTableViewColumn() {
+		columnSelect.setCellValueFactory(new PropertyValueFactory<>("selected"));
 		columnSelect.setCellFactory(column -> new CheckBoxTableCell<ShutterImage, Boolean>());
 		columnSelect.setCellValueFactory(cellData -> {
             ShutterImage cellValue = cellData.getValue();
@@ -213,6 +207,42 @@ public class MainController implements Initializable {
             property.addListener((observable, oldValue, newValue) -> tableView.getSelectionModel().getSelectedItems().forEach(it->it.setSelected(newValue)));
             return property;
         });
+		
+		columnPreview.setPrefWidth(200);
+		columnStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+		columnDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+		columnName.setCellValueFactory(new PropertyValueFactory<>("uploaded_filename"));
+		columnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+		columnDescription.setCellFactory(tc -> {
+		    TableCell<ShutterImage, String> cell = new TableCell<>();
+		    Text text = new Text();
+		    cell.setGraphic(text);
+		    cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
+		    text.wrappingWidthProperty().bind(columnDescription.widthProperty());
+		    text.textProperty().bind(cell.itemProperty());
+		    return cell ;
+		});
+		
+		columnKeywords.setCellValueFactory(cl -> new SimpleStringProperty(String.join(", ", cl.getValue().keywords)));
+		columnKeywords.setCellFactory(tc -> {
+		    TableCell<ShutterImage, String> cell = new TableCell<>();
+		    Text text = new Text();
+		    cell.setGraphic(text);
+		    cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
+		    text.wrappingWidthProperty().bind(columnKeywords.widthProperty());
+		    text.textProperty().bind(cell.itemProperty());
+		    return cell ;
+		});
+		columnKeywordsCount.setCellValueFactory(new PropertyValueFactory<>("keywordsCount"));
+		
+		columnCategories.setCellValueFactory(cl -> new SimpleStringProperty(String.join(", ", cl.getValue().categoriesNames)));
+		columnPropertyRelease.setCellValueFactory(cl -> new SimpleStringProperty(String.join(", ", cl.getValue().releasesNames)));
+		columnIsIllustration.setCellValueFactory(new PropertyValueFactory<>("is_illustration"));
+		
+		columnPreview.setCellValueFactory(new PropertyValueFactory<ShutterImage, ImageView>("image"));
+		
+		//TableHeaderRow header = (TableHeaderRow) tableView.lookup("TableHeaderRow");
+		//header.setMouseTransparent(true);
     }
 	
 	public void log(String message) {
@@ -239,6 +269,22 @@ public class MainController implements Initializable {
 		 });
 	}
 	
+	public void logGreen(String message) {
+		Platform.runLater(new Runnable() {
+            public void run() {
+            	String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(Calendar.getInstance().getTime());
+            	 Text t1 = new Text();
+                 t1.setStyle("-fx-fill: green;-fx-font-weight:bold;");
+                 t1.setText(timeStamp + "\t" + message + "\n");
+                 logTxt.getChildren().add(t1);
+            }
+		 });
+	}
+	
+	@FXML
+	private void selectAllClick() {
+		images.forEach(im->im.setSelected(this.selectAllBox.isSelected()));
+	}
 	
 	@FXML
 	private void submitBtnClick() {
@@ -251,6 +297,10 @@ public class MainController implements Initializable {
 	}
 	
 	private void submit(boolean onlySelected) {
+		
+		if (this.testModeBox.isSelected())
+			logGreen("TEST MODE! No real submit or data update will be done!");
+		
 		if (this.images.isEmpty()) {
 			log("Нет файлов для сабмита либо не нажали сначала Get Files List");
 			return;
@@ -258,11 +308,22 @@ public class MainController implements Initializable {
 		
 		List<ShutterImage> tempList = new ArrayList<ShutterImage>(); 
 		int takecount = this.submitCountSpinner.getValue();
-		for (ShutterImage image:this.images) {
+		
+		ListIterator<ShutterImage> li = this.images.listIterator(this.images.size());
+
+		while(li.hasPrevious()) {
 			if (this.isLimitSubmitCountBox.isSelected() && tempList.size()>=takecount) break;
+			ShutterImage image = li.previous();
 			if (image.getStatus().equals("Ready") & (onlySelected==false || (image.getSelected().get())))
 				tempList.add(image);
 		}
+		
+		if (tempList.isEmpty()) {
+			app.showAlert("Nothing to submit. Please apply rules to add categories");
+			return;
+		}
+		if (this.isRandomOrderBox.isSelected())
+			Collections.shuffle(tempList);
 		
 		int prepareForSubmit = tempList.size();
 		disableControl();
@@ -270,17 +331,20 @@ public class MainController implements Initializable {
 		Thread t1 = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				int code = 0;
 				try {
 					ShutterProvider provider = getSession();
 					while (!tempList.isEmpty()) {
 						if (tempList.size()>100) {
-							int code = submitImages(provider, tempList.subList(0, 99));
+							code = submitImages(provider, tempList.subList(0, 99));
+							if (code == -1) 
+								break;
 							unsuccessfull.addAndGet(code);
 							LOGGER.fine("submitImages return code: " + code);
 							tempList.removeAll(tempList.subList(0, 99));
 						}
 						else {
-							int code = submitImages(provider, tempList);
+							code = submitImages(provider, tempList);
 							unsuccessfull.addAndGet(code);
 							LOGGER.fine("submitImages return code: " + code);
 							break;
@@ -289,6 +353,9 @@ public class MainController implements Initializable {
 				}
 				finally{
 					enableControl();
+					if (code == -1 ) {
+						app.showAlert("Submit Failed");
+					}
 					if (unsuccessfull.get()>0) {
 						app.showAlert("Successfully Submitted: " + String.valueOf(prepareForSubmit-unsuccessfull.get()) + "\n"
 								+ "Unsuccessfull: " + unsuccessfull.get());
@@ -331,6 +398,7 @@ public class MainController implements Initializable {
 		int page = 1;
 		String filesList = null;
 		try {
+		logGreen("Loading uploaded files list...");
 		while (true) {
 			filesList = provider.getLoadedFilesList(per_page,page);
 			if (filesList == null) {
@@ -348,7 +416,6 @@ public class MainController implements Initializable {
 			if (imagesTemp.isEmpty()) break;
 			images.addAll(imagesTemp);
 			for (ShutterImage im:imagesTemp) {
-				log(im.getUploaded_filename());
 				ImageView view = im.getImage();
 				view.fitHeightProperty().bind(slider.valueProperty()); 
 			}
@@ -356,6 +423,7 @@ public class MainController implements Initializable {
 		}
 		this.images.forEach(im->im.setStatus("Uploaded"));
 		correctFilename();
+		logGreen("Loaded");
 		}
 		catch (JSONException e) {
 			if (filesList.contains("Redirecting to")) {
@@ -377,14 +445,29 @@ public class MainController implements Initializable {
 	
 	private int submitImages(ShutterProvider provider, List<ShutterImage> files) {
 		
-		try {
+		if (this.testModeBox.isSelected()) {
+			log("Files To Submit: " + String.join(", ", files.stream().map(ShutterImage::getUploaded_filename).collect(Collectors.toList())));
 			
+			String json = JsonParser.createContentPayload(files);
+			LOGGER.fine("CONTENT PAYLOAD: " + json);
+
+			json = JsonParser.createSubmitPayload(files);
+			LOGGER.fine("SUBMIT PAYLOAD: " + json);
+			
+			return files.size();
+		}
+		
+		
+		try {
+			logGreen("Submit operation in progress...");
+			logGreen("Starting content update");
 			ContentResponse response = provider.contentPost(files);
 			System.out.println(response.toString());
-			if (response.notSaved.isEmpty())
+			if (response.notSaved.isEmpty() && response.error.isEmpty())
 				log("Content update. Response: " + response.toString());
 			else
-				logError("Content update. Response has errors: " + response.toString());
+				logError("Content update. Response has errors: " + response.toString()  + ", Error: " + response.error);
+		
 			
 			List<ShutterImage> savedImages = new ArrayList<ShutterImage>();
 			this.images.stream().filter(im -> response.saved.contains(im.getId())).forEach(im -> { 
@@ -394,20 +477,28 @@ public class MainController implements Initializable {
 			
 			this.images.stream().filter(im -> response.notSaved.contains(im.getId())).forEach(im -> im.setStatus("Not saved..."));
 			
-			
+			logGreen("Content update done");
+			logGreen("Starting submit");
 			SubmitResponse sresponse = provider.submitPost(savedImages);
-			if (sresponse.errors.isEmpty())
+			
+			if (sresponse.batch_error_code!=null) {
+				logError("Submit. Response has errors: " + sresponse.batch_error_message);
+				return -1;
+			}
+			
+			
+			if (sresponse.itemErrors.isEmpty())
 				log("Submit. Response: " + sresponse.toString());
 			else {
 				logError("Submit. Response has errors: " + sresponse.toString());
-				logError(String.join(", ", sresponse.errors));
+				logError(String.join("; ", sresponse.itemErrors.stream().map(ItemError::getIdAndMessage).collect(Collectors.toList())));
 			}
-			System.out.println(sresponse.print());
+			System.out.println(sresponse.toString());
 			
 			List<ShutterImage> submittedImages = new ArrayList<ShutterImage>();
 			
-			for (ShutterImage image:submittedImages) {
-				if (sresponse.successImages.stream().filter(o -> o.media_id.equals(image.getId())).findFirst().isPresent()) {
+			for (ShutterImage image:savedImages) {
+				if (sresponse.successImages.stream().filter(o -> o.getUploadId().equals(image.getId())).findFirst().isPresent()) {
 					image.setStatus("Submitted!");
 					submittedImages.add(image);
 				}
@@ -418,10 +509,13 @@ public class MainController implements Initializable {
 			
 			
 			this.images.removeAll(submittedImages);
-			log("first_submit_check_code: " + sresponse.first_submit_check_code);
-			log("first_submit_check_original_code: " + sresponse.first_submit_check_original_code);
-			log("first_submit_check_message: " + sresponse.first_submit_check_message);
-			
+			this.images.forEach(im -> {
+				if (sresponse.itemErrors.stream().map(ItemError::getUploadId).collect(Collectors.toList()).contains(im.getId())) {
+					//im.setStatus(sresponse.itemErrors.stream().filter(er->er.upload_id.equals(im.getId())).findFirst().get().getMessage());
+					im.setStatus("ERROR");
+				}
+			});
+			logGreen("Submit operation completed");
 			
 			return files.size() - submittedImages.size();
 		}
@@ -440,6 +534,7 @@ public class MainController implements Initializable {
             public void run() {
             	getFilesListBtn.setDisable(true);
             	submitAllBtn.setDisable(true);
+            	submitSelectedBtn.setDisable(true);
             }
 		 });
 	}
@@ -449,6 +544,7 @@ public class MainController implements Initializable {
         public void run() {
         	getFilesListBtn.setDisable(false);
         	submitAllBtn.setDisable(false);
+        	submitSelectedBtn.setDisable(false);
         }
 	 });
 	}
@@ -631,6 +727,26 @@ public class MainController implements Initializable {
 				return null;
 			}
 			return provider;
+		}
+		
+		
+		@FXML
+		private void applyRules() {
+			this.app.rulesController.applyRules();
+		}
+		
+		
+		public boolean validateImageForSubmit(ShutterImage image) {
+			if (
+			image.keywords.size()>50 ||
+			image.keywords.isEmpty() ||
+			image.getDescription().isEmpty() ||
+			image.getDescription().length()>200 ||
+			image.categories.isEmpty() ||
+			image.categories.size() >2 
+			)
+				return false;
+			else return true;
 		}
 		
 }

@@ -1,5 +1,11 @@
 package sm;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +30,7 @@ public class ShutterImage {
 	private StringProperty uploaded_filename = new SimpleStringProperty();
 	private String original_filename_backup;
 	private StringProperty created = new SimpleStringProperty();
+	private StringProperty date = new SimpleStringProperty();
 	private StringProperty description = new SimpleStringProperty();
 	private BooleanProperty has_property_release = new SimpleBooleanProperty(false);
 	private BooleanProperty is_illustration = new SimpleBooleanProperty(false);
@@ -32,12 +39,13 @@ public class ShutterImage {
 	private StringProperty previewPath = new SimpleStringProperty();
 	private IntegerProperty keywordsCount = new SimpleIntegerProperty();
 	public ObservableList<String> keywords = FXCollections.observableArrayList();
-	//public List<String> keywords = new ArrayList<String>();
-	public List<String> categories = new ArrayList<String>(); 
+	public ObservableList<String> categories = FXCollections.observableArrayList();
+	public ObservableList<String> categoriesNames = FXCollections.observableArrayList();
 	public List<String> releases = new ArrayList<String>(); 
+	public List<String> releasesNames = new ArrayList<String>(); 
 	private ImageView image;
-	//public LocalDate createdDate;
     public String extension;
+    public LocalDateTime uploadDate;
 	
 	public ShutterImage(String id,	String uploaded_filename) {
 		this.id.set(id);
@@ -94,8 +102,19 @@ public class ShutterImage {
 
 	public void setCreated(String created) {
 		this.created.set(created);
+		DateTimeFormatter formatterTimeOutput = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		DateTimeFormatter formatterTimeInput = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+		this.uploadDate = LocalDateTime.parse(created, formatterTimeInput);
+		this.date.set(this.uploadDate.format(formatterTimeOutput));
+	}
+	
+	public String getDate() {
+		return this.date.get();
 	}
 
+	public void setDate(String date) {
+		this.date.set(date);
+	}
 	public String getId() {
 		return this.id.get();
 	}
@@ -183,11 +202,18 @@ public class ShutterImage {
 		this.uploaded_filename.set(this.original_filename_backup);
 	}
 
-	public StringProperty getStatus() {
-		return status;
+	public String getStatus() {
+		return this.status.get();
 	}
 
-	public void setStatus(StringProperty status) {
-		this.status = status;
+	public void setStatus(String status) {
+		this.status.set(status);
 	}
+
+	@Override
+	public String toString() {
+		return "ShutterImage [id=" + id + ", filename=" + uploaded_filename + "]";
+	}
+	
+	
 }

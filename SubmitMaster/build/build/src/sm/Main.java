@@ -1,5 +1,6 @@
 package sm;
 	
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.logging.Handler;
@@ -14,9 +15,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
@@ -24,6 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
+import sm.ui.HelpController;
 import sm.ui.MainController;
 import sm.ui.RulesController;
 import sm.ui.TabsController;
@@ -35,6 +38,7 @@ public class Main extends Application {
 	  public TabsController tabsController;
 	  public MainController mainController;
 	  public RulesController rulesController;
+	  public HelpController helpController;
       public WebController webController;
       private Stage mainStage;
       private Scene mainScene;
@@ -44,9 +48,19 @@ public class Main extends Application {
   	  
   	  @Override
 	public void start(Stage primaryStage) throws Exception {
+  		  
+  		  
+  		try {
+            SubmitLogger.setup();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Problems with creating the log files");
+        }
+		
+  		  
 		 mainStage = primaryStage;
 		 tabsController = organizeStage("ui/TabsForm.fxml");
-	     mainStage.setTitle("SubmitMaster v0.1 alpha");
+	     mainStage.setTitle("SubmitMaster v1.4");
 	     tabsController.app = this;
 	     
 	     mainController = (MainController) addTab("Submitter", "ui/MainForm.fxml", MainController.class);
@@ -57,10 +71,16 @@ public class Main extends Application {
 	     rulesController.app = this;
 	     rulesController.setup();
 	     
+	     helpController = addHelpTab();
+	     
+	     Data.app = this;
+		 Data.images = this.mainController.images;
+	     
 		 mainStage.getIcons().add(new Image("file:resources/icon.png"));
 		 //mainStage.setMinHeight(500);
 		 //mainStage.setMinWidth(800);
 		 mainStage.show();
+		
 	}
 	
 	
@@ -135,6 +155,28 @@ public class Main extends Application {
 	}
 	
 	
+	private HelpController addHelpTab() throws IOException{
+		 FXMLLoader loader = new FXMLLoader(Main.class.getResource("ui/HelpForm.fxml"));
+	        loader.setLocation(Main.class.getResource("ui/HelpForm.fxml"));
+	        VBox page = (VBox) loader.load();
+	        Tab tab = new Tab ();
+	        /*
+	        Image image = new Image(new File(
+					"resources/help.png").toURI().toString());
+            ImageView imageView = new ImageView();
+            imageView.setFitHeight(16);
+            imageView.setFitWidth(16);
+            imageView.setImage(image);
+	        tab.setGraphic(imageView);
+	        */
+	       // tab.setStyle("-fx-padding: 15 0 15 0;-fx-min-height: 30px;-fx-focus-color: transparent;");
+	        tab.setText("Help");
+	        tab.setContent(page);
+	        tabsController.addTab(tab);
+	        HelpController controller = loader.getController();
+	        return controller;
+	}
+	
 	public void showAlert(String text){
 		 Platform.runLater(new Runnable() {
             public void run() {
@@ -157,5 +199,14 @@ public class Main extends Application {
 		alert.showAndWait();
            }
 		 });
+	}
+	
+	
+	public void disableControl() {
+		this.mainController.disableControl();
+	}
+	
+	public void enableControl() {
+		this.mainController.enableControl();
 	}
 }
