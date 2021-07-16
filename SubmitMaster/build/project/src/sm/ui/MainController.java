@@ -21,6 +21,8 @@ import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -84,6 +86,9 @@ public class MainController implements Initializable {
 	private CheckBox isLimitSubmitCountBox;
 	
 	@FXML
+	private CheckBox isLimitVectorRasterSubmitCountBox;
+	
+	@FXML
 	private CheckBox isRandomOrderBox;
 	
 	@FXML
@@ -97,6 +102,12 @@ public class MainController implements Initializable {
 	
 	@FXML
 	private Spinner<Integer> submitCountSpinner;
+	
+	@FXML
+	private Spinner<Integer> vectorCountSpinner;
+	
+	@FXML
+	private Spinner<Integer> rasterCountSpinner;
 	
 	@FXML
 	private TextFlow logTxt;
@@ -179,6 +190,18 @@ public class MainController implements Initializable {
 	    this.columnDescription.setVisible(false);
 	    this.columnKeywords.setVisible(false);
 	    
+	    this.isLimitSubmitCountBox.selectedProperty().addListener(new ChangeListener<Boolean >() {  
+				@Override
+				public void changed(ObservableValue observable, Boolean  oldValue, Boolean  newValue) {
+					 isLimitVectorRasterSubmitCountBox.setSelected(false);
+				}
+	    });
+	    this.isLimitVectorRasterSubmitCountBox.selectedProperty().addListener(new ChangeListener<Boolean>() {  
+			@Override
+			public void changed(ObservableValue observable, Boolean  oldValue, Boolean  newValue) {
+				isLimitSubmitCountBox.setSelected(false);
+			}
+    });
 	}	
 	
 	
@@ -192,6 +215,28 @@ public class MainController implements Initializable {
 	     submitCountSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
 	    	  if (!newValue) {
 	    		  submitCountSpinner.increment(0); // won't change value, but will commit editor
+	    	  }
+	    	});
+	     
+	     SpinnerValueFactory.IntegerSpinnerValueFactory valueFactoryRaster = //
+	                new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 500, 50, 1);
+	     rasterCountSpinner.setValueFactory(valueFactoryRaster);
+	     TextFormatter<Integer> integerFormatterRaster = new TextFormatter<Integer>(valueFactoryRaster.getConverter(), valueFactoryRaster.getValue());
+	     rasterCountSpinner.getEditor().setTextFormatter(integerFormatterRaster);
+	     rasterCountSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
+	    	  if (!newValue) {
+	    		  rasterCountSpinner.increment(0); // won't change value, but will commit editor
+	    	  }
+	    	});
+	     
+	     SpinnerValueFactory.IntegerSpinnerValueFactory valueFactoryVector = //
+	                new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 500, 50, 1);
+	     vectorCountSpinner.setValueFactory(valueFactoryVector);
+	     TextFormatter<Integer> integerFormatterVector = new TextFormatter<Integer>(valueFactoryVector.getConverter(), valueFactoryVector.getValue());
+	     vectorCountSpinner.getEditor().setTextFormatter(integerFormatterVector);
+	     vectorCountSpinner.focusedProperty().addListener((observable, oldValue, newValue) -> {
+	    	  if (!newValue) {
+	    		  vectorCountSpinner.increment(0); // won't change value, but will commit editor
 	    	  }
 	    	});
 	}
@@ -306,15 +351,34 @@ public class MainController implements Initializable {
 			return;
 		}
 		
+		if (this.isRandomOrderBox.isSelected())
+			Collections.shuffle(this.images);
+		
 		List<ShutterImage> tempList = new ArrayList<ShutterImage>(); 
 		int takecount = this.submitCountSpinner.getValue();
-		
+		int takecountraster = this.rasterCountSpinner.getValue();
+		int takecountvector = this.vectorCountSpinner.getValue();
 		ListIterator<ShutterImage> li = this.images.listIterator(this.images.size());
 
+		int raster = 0;
+		int vector = 0;
 		while(li.hasPrevious()) {
 			if (this.isLimitSubmitCountBox.isSelected() && tempList.size()>=takecount) break;
+			if (this.isLimitVectorRasterSubmitCountBox.isSelected() && tempList.size()>=(takecountraster + takecountvector)) break;
 			ShutterImage image = li.previous();
-			if (image.getStatus().equals("Ready") & (onlySelected==false || (image.getSelected().get())))
+			if (this.isLimitVectorRasterSubmitCountBox.isSelected()) {
+				if (image.getStatus().equals("Ready") && image.isVector() && vector < takecountvector
+						&& (onlySelected==false || (image.getSelected().get()))) {
+					tempList.add(image);
+					vector++;
+				}
+				else if (image.getStatus().equals("Ready") && !image.isVector() && raster < takecountraster
+						&& (onlySelected==false || (image.getSelected().get()))) {
+					tempList.add(image);
+					raster++;
+				}
+			}
+			else if (image.getStatus().equals("Ready") & (onlySelected==false || (image.getSelected().get())))
 				tempList.add(image);
 		}
 		
@@ -322,8 +386,7 @@ public class MainController implements Initializable {
 			app.showAlert("Nothing to submit. Please apply rules to add categories");
 			return;
 		}
-		if (this.isRandomOrderBox.isSelected())
-			Collections.shuffle(tempList);
+		
 		
 		int prepareForSubmit = tempList.size();
 		disableControl();
@@ -353,10 +416,10 @@ public class MainController implements Initializable {
 				}
 				finally{
 					enableControl();
-					if (code == -1 ) {
+					if (code < 0 ) {
 						app.showAlert("Submit Failed");
 					}
-					if (unsuccessfull.get()>0) {
+					else if (unsuccessfull.get()>0) {
 						app.showAlert("Successfully Submitted: " + String.valueOf(prepareForSubmit-unsuccessfull.get()) + "\n"
 								+ "Unsuccessfull: " + unsuccessfull.get());
 					}

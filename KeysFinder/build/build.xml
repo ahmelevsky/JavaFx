@@ -45,6 +45,22 @@
 				<filename name="commons-lang3-3.9.jar"/>
 			</fileset>
 		</copy>
+		<copy todir="externalLibs">
+					<fileset dir="C:\Java\JavaFx\KeysFinder\lib">
+						<filename name="commons-logging-1.2.jar"/>
+					</fileset>
+				</copy>
+			
+		<copy todir="externalLibs">
+					<fileset dir="C:\Java\JavaFx\KeysFinder\lib">
+						<filename name="httpclient-4.5.13.jar"/>
+					</fileset>
+				</copy>
+		<copy todir="externalLibs">
+					<fileset dir="C:\Java\JavaFx\KeysFinder\lib">
+						<filename name="httpcore-4.4.14.jar"/>
+					</fileset>
+				</copy>
 		
 		<copy todir="dist\resources">  
 						         <fileset dir="..\resources" includes="**"/>  
@@ -73,6 +89,9 @@
 				<include name="commons-collections4-4.4.jar"/>
 				<include name="commons-lang3-3.9.jar"/>
 				<include name="jsoup-1.10.2.jar"/>
+				<include name="commons-logging-1.2.jar"/>
+				<include name="httpclient-4.5.13.jar"/>
+				<include name="httpcore-4.4.14.jar"/>
 			</fileset>
 		</copy>
 	
@@ -92,6 +111,9 @@
 									<include name="commons-collections4-4.4.jar"/>
 									<include name="commons-lang3-3.9.jar"/>
 									<include name="jsoup-1.10.2.jar"/>
+									<include name="commons-logging-1.2.jar"/>
+									<include name="httpclient-4.5.13.jar"/>
+									<include name="httpcore-4.4.14.jar"/>
 								</fileset>
 			</classpath>
 		</javac>
@@ -118,6 +140,9 @@
 								<include name="commons-collections4-4.4.jar"/>
 								<include name="commons-lang3-3.9.jar"/>
 								<include name="jsoup-1.10.2.jar"/>
+								<include name="commons-logging-1.2.jar"/>
+								<include name="httpclient-4.5.13.jar"/>
+								<include name="httpcore-4.4.14.jar"/>
 			</fileset>
 		</copy>
 	
@@ -175,6 +200,9 @@
 			                          				    <include name="jsoup-1.10.2.jar"/>
 			                          	            	<include name="commons-collections4-4.4.jar"/>
 			                          					<include name="commons-lang3-3.9.jar"/>
+			                          						<include name="commons-logging-1.2.jar"/>
+			                          						<include name="httpclient-4.5.13.jar"/>
+			                          						<include name="httpcore-4.4.14.jar"/>
 			                          				</fileset>
 			                    </copy> 
 							<copy todir="KeysFinder.app/Contents/Resources/resources" >  
@@ -204,6 +232,9 @@
 					                          				    <include name="jsoup-1.10.2.jar"/>
 					                          	            	<include name="commons-collections4-4.4.jar"/>
 					                          					<include name="commons-lang3-3.9.jar"/>
+					                          					<include name="commons-logging-1.2.jar"/>
+					                          						<include name="httpclient-4.5.13.jar"/>
+					                          						<include name="httpcore-4.4.14.jar"/>
 					                          				</fileset>
 					                    </copy> 
 									<copy todir="KeysFinder.app/Contents/Resources/resources" >  

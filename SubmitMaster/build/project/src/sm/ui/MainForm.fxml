@@ -99,6 +99,31 @@
             </Label>
          </children>
       </HBox>
+      <HBox prefWidth="200.0">
+         <children>
+            <Pane prefWidth="240.0" />
+            <CheckBox fx:id="isLimitVectorRasterSubmitCountBox" mnemonicParsing="false" text="Limit Vector/Raster">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="20.0" right="5.0" top="10.0" />
+               </HBox.margin>
+            </CheckBox>
+            <Spinner fx:id="vectorCountSpinner" editable="true" prefHeight="31.0" prefWidth="102.0">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </Spinner>
+            <Label text="/">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="10.0" right="5.0" top="10.0" />
+               </HBox.margin>
+            </Label>
+            <Spinner fx:id="rasterCountSpinner" editable="true" prefHeight="31.0" prefWidth="102.0">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </Spinner>
+         </children>
+      </HBox>
       <SplitPane dividerPositions="0.8" orientation="VERTICAL" VBox.vgrow="ALWAYS">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0">

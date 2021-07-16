@@ -64,6 +64,11 @@ public class ShutterImage {
         */
 	}
 
+	
+	public boolean isVector() {
+		return uploaded_filename.get().endsWith("eps");
+	}
+	
 	public BooleanProperty getSelected() {
 		return selected;
 	}

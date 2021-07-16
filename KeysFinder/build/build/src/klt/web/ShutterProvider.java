@@ -1,9 +1,12 @@
 package klt.web;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,6 +16,18 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.collections4.map.MultiKeyMap;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.cookie.ClientCookie;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.jsoup.Connection;
 import org.jsoup.Connection.KeyVal;
 import org.jsoup.Jsoup;
@@ -143,7 +158,7 @@ public class ShutterProvider {
 	
 	public static Set<String> getKeywords(String link) throws IOException {
 	    	Set<String> result = new LinkedHashSet<String>();
-	    	
+	    	/*
 	    	Document doc = Jsoup.connect(baseURL + link )
 			  .headers(headers)
 			  .followRedirects(false)
@@ -153,7 +168,17 @@ public class ShutterProvider {
 			  .ignoreContentType(true)
 			  .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36")
 			  .get();
-	    	
+	    	 */
+			
+	    	String html = "";
+			try {
+				html = getApacheGETResponse(link);
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+	    	Document doc= Jsoup.parse(html);
 	    	Elements elems = doc.select("[data-automation='ExpandableKeywordsList_container_div'] > div >div >a");
 	    	for (Element el:elems) {
 	    		if (el.hasText())
@@ -172,6 +197,44 @@ public class ShutterProvider {
 	}
 	
 	
+
+	
+public static String getApacheGETResponse( String url) throws URISyntaxException{
+		
+		
+		    BufferedReader rd = null;
+		    StringBuffer result = new StringBuffer();
+		    String line = "";
+		    HttpResponse response = null;
+		    
+		    HttpClient httpclient =  HttpClientBuilder.create()
+		    		.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36").build();
+		    
+		    URIBuilder builder = new URIBuilder(baseURL + url);
+		    builder.setParameter("order", "newest")
+		    	.setParameter("per_page", "100")
+		    	.setParameter("page", "1")
+		    	.setParameter("status", "edit")
+		    	.setParameter("xhr_id", "finish")
+		    	.setParameter("fields[images]", "keywords");
+		    HttpGet httpGet = new HttpGet(builder.build());
+		   
+		    try{            
+		        //Execute and get the response.
+		        response = httpclient.execute(httpGet);
+		        System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+		        rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+		        while ((line = rd.readLine()) != null) {
+		                        //System.out.println(line);
+		                        result.append(line);
+		        }
+
+		    }catch(Exception e){
+
+		    }
+		    
+		    return result.toString();
+	  }
 	
 	
 
