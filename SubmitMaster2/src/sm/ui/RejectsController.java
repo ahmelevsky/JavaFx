@@ -128,17 +128,6 @@ public class RejectsController implements Initializable {
 	    tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 	    tableView.setOnKeyPressed(new TableKeyEventHandler());
 	    
-	    images.addListener(new ListChangeListener<ShutterImageRejected>() {
-			@Override
-			public void onChanged(Change<? extends ShutterImageRejected> c) {
-				
-				Platform.runLater(new Runnable() {
-		            public void run() {
-		            	updateFilesCount();
-		            }
-				 });
-			}
-	    });
 	    this.columnDescription.setVisible(false);
 	    this.columnKeywords.setVisible(false);
 	    
@@ -191,9 +180,7 @@ public class RejectsController implements Initializable {
 				try {
         			if (sqlmanager==null || sqlmanager.connection.isClosed() || !sqlmanager.connection.isValid(1)) {
         				sqlmanager = new SQLManager(app);
-        				int count = sqlmanager.getImagesCount("SELECT COUNT(*) FROM " + sqlmanager.TABLENAME);
-        				getAllImages(0);
-        				setupPagination(count);
+        				getAllImages();
         			}
         			
         		} catch (SQLException e) {
@@ -220,8 +207,12 @@ public class RejectsController implements Initializable {
 		tableView.refresh();
 	}
 	
-	private void updateFilesCount() {
-		this.filesCountTxt.setText("Files count: " + images.size());
+	private void updateFilesCount(int count) {
+		Platform.runLater(new Runnable() {
+            public void run() {
+            	filesCountTxt.setText("Files count: " + count);
+              }
+		});
 	}
 	
 	@FXML
@@ -267,14 +258,17 @@ public class RejectsController implements Initializable {
 
 			@Override
 			public void run() {
+				disableControls();
 				ShutterProvider provider =  app.mainController.getSession();
 				if (provider==null || !provider.isConnection()) {
+					enableControls();
 					return;
 				}
 				getRejectsForDatesAndWriteDB(provider, sqlmanager, sqlmanager.getLastUpdateDate());
+				getAllImages();
 				//checkNewRejects();
 				//saveLastRejectDate();
-				
+				enableControls();
 			}
 		});
 		t1.start();
@@ -393,9 +387,18 @@ public class RejectsController implements Initializable {
 		System.out.println(sqlmanager.getLastUpdateDate().toString());
 	}
 	
-	public void getAllImages(int page) {
+	/*
+	public void selectAllImages(int page) {
 		this.images.clear();
 		String sql = "SELECT * FROM " + this.sqlmanager.TABLENAME + " ORDER BY media_id DESC LIMIT " + this.rowsOnPage + " OFFSET " + this.rowsOnPage*page;
+		this.images.addAll(this.sqlmanager.getImagesFromDB(sql));
+		bindSlider();
+	}
+	*/
+	
+	public void selectImages(String sql, int page) {
+		sql = sql + " LIMIT " +  + this.rowsOnPage + " OFFSET " + this.rowsOnPage*page;
+		this.images.clear();
 		this.images.addAll(this.sqlmanager.getImagesFromDB(sql));
 		bindSlider();
 	}
@@ -407,7 +410,7 @@ public class RejectsController implements Initializable {
 		}
 	}
 	
-	private void setupPagination(int datasize) {
+	private void setupPagination(String sqldata, int datasize) {
 		//  pagination.setStyle("-fx-border-color:red;");
 		 Platform.runLater(new Runnable() {
 	            public void run() {
@@ -415,7 +418,8 @@ public class RejectsController implements Initializable {
 	        pagination.setPageFactory(new Callback<Integer, Node>() {
 	            @Override
 	            public Node call(Integer pageIndex) {
-	            	 getAllImages(pageIndex);
+	            	 //selectAllImages(pageIndex);
+	            	 selectImages(sqldata, pageIndex);
 	            	 Pane node = new Pane();
 	            	 node.setVisible(false);
 	            	 return node;
@@ -425,6 +429,43 @@ public class RejectsController implements Initializable {
 		 });
 	}
 	
+	
+	private void disableControls() {
+		Platform.runLater(new Runnable() {
+            public void run() {
+            	updateBtn.setDisable(true);
+            	testBtn.setDisable(true);
+            	displayLastBtn.setDisable(true);
+            	pagination.setDisable(true);
+            }
+		 });
+            	
+	}
+	
+	private void enableControls() {
+		Platform.runLater(new Runnable() {
+            public void run() {
+            	updateBtn.setDisable(false);
+            	testBtn.setDisable(false);
+            	displayLastBtn.setDisable(false);
+            	pagination.setDisable(false);
+            }
+		 });
+            	
+	}
+	
+	private void getAllImages() {
+		String sqldata = "SELECT * FROM " + this.sqlmanager.TABLENAME + " ORDER BY media_id DESC"; 
+		String sqlcount = "SELECT COUNT(*) FROM " + sqlmanager.TABLENAME;
+		loadData(sqldata, sqlcount);
+	}
+	
+	
+	private void loadData(String sqldata, String sqlcount) {
+		int count = sqlmanager.getImagesCount(sqlcount);
+		updateFilesCount(count);
+		setupPagination(sqldata, count);
+	}
 	
 }
 

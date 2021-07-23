@@ -88,6 +88,6 @@
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
       </TableView>
-      <Pagination fx:id="pagination" VBox.vgrow="NEVER" />
+      <Pagination fx:id="pagination" maxPageIndicatorCount="30" VBox.vgrow="NEVER" />
    </children>
 </VBox>
