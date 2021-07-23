@@ -79,8 +79,8 @@ public class Main extends Application {
 	     rejectsController.app = this;
 	     rejectsController.setup();
 	     
-
-	     
+	     tabsController.setup();
+	    
 	     Data.app = this;
 		 Data.images = this.mainController.images;
 	     
@@ -159,6 +159,8 @@ public class Main extends Application {
 	        tab.setText(tabTitle);
 	        tabsController.addTab(tab);
 	        Initializable controller = loader.getController();
+	        if (controller.getClass() == RejectsController.class)
+	        	((RejectsController) controller).tab = tab;
 	        return controller;
 	}
 	
@@ -217,4 +219,6 @@ public class Main extends Application {
 	public void enableControl() {
 		this.mainController.enableControl();
 	}
+	
+	
 }

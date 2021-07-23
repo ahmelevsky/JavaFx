@@ -323,9 +323,9 @@ public class JsonParser {
 			
 			String filename = imageobj.getString("original_filename");
 			
-			int media_id = 0;
+			long media_id = 0;
 			if (!imageobj.isNull("media_id"))
-				media_id = imageobj.getInt("media_id");
+				media_id = imageobj.getLong("media_id");
 			
 			
 			String media_type = "";
@@ -383,7 +383,7 @@ public class JsonParser {
 				image.setHas_property_release(true);
 			
 			if (!imageobj.isNull("upload_id"))
-				image.setUpload_id(imageobj.getInt("upload_id"));
+				image.setUpload_id(imageobj.getLong("upload_id"));
 			
 			
 			result.add(image);

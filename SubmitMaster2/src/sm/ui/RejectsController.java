@@ -2,39 +2,48 @@ package sm.ui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import org.json.JSONException;
 
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
+
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.ListChangeListener.Change;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.Pagination;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+import javafx.util.Callback;
 import sm.JsonParser;
-import sm.web.ShutterProvider;
 import sm.Main;
 import sm.ShutterImageRejected;
+import sm.db.SQLManager;
 import sm.ui.MainController.TableKeyEventHandler;
+import sm.web.ShutterProvider;
 
 public class RejectsController implements Initializable {
 
@@ -42,6 +51,10 @@ public class RejectsController implements Initializable {
 	
 	@FXML
 	private Button updateBtn;
+	@FXML
+	private Button displayLastBtn;
+	@FXML
+	private Button testBtn;
 	@FXML
 	private TableView<ShutterImageRejected> tableView;
 	
@@ -93,8 +106,18 @@ public class RejectsController implements Initializable {
 	@FXML
 	private CheckBox showKeywordsBox;
 	
+	@FXML
+	private Pagination pagination; 
+	
+	private SQLManager sqlmanager;
+	
+	int rowsOnPage = 100;
+	
+	
+	public Tab tab;
 	
 	public ObservableList<ShutterImageRejected> images = FXCollections.observableArrayList();
+	private final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -104,7 +127,6 @@ public class RejectsController implements Initializable {
 		tableView.getSelectionModel().setCellSelectionEnabled(true);
 	    tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 	    tableView.setOnKeyPressed(new TableKeyEventHandler());
-	    tableView.getSelectionModel().getSelectedItems().forEach(it->it.setSelected(true));
 	    
 	    images.addListener(new ListChangeListener<ShutterImageRejected>() {
 			@Override
@@ -154,12 +176,35 @@ public class RejectsController implements Initializable {
 		
 		columnPreview.setCellValueFactory(new PropertyValueFactory<ShutterImageRejected, ImageView>("image"));
 		
-		//TableHeaderRow header = (TableHeaderRow) tableView.lookup("TableHeaderRow");
-		//header.setMouseTransparent(true);
     }
 
 	public void setup() {
 		
+	}
+	
+	public void loadData() {
+		
+		Thread t1 = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+        			if (sqlmanager==null || sqlmanager.connection.isClosed() || !sqlmanager.connection.isValid(1)) {
+        				sqlmanager = new SQLManager(app);
+        				int count = sqlmanager.getImagesCount("SELECT COUNT(*) FROM " + sqlmanager.TABLENAME);
+        				getAllImages(0);
+        				setupPagination(count);
+        			}
+        			
+        		} catch (SQLException e) {
+        			LOGGER.severe(e.getMessage());
+        			System.out.println(e.getMessage());
+        		}
+				
+			}
+		});
+		t1.start();
+            	
 	}
 	
 	@FXML
@@ -192,6 +237,29 @@ public class RejectsController implements Initializable {
 		//tableView.refresh();
 	}
 	
+	
+	@FXML
+	private void getLastContent() {
+
+		Thread t1 = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				ShutterProvider provider =  app.mainController.getSession();
+				if (provider==null || !provider.isConnection()) {
+					return;
+				}
+				getRejectsForDates(provider, null, null);
+				//checkNewRejects();
+				//saveLastRejectDate();
+				
+			}
+		});
+		t1.start();
+
+	}
+	
+	
 	@FXML
 	private void updateDatabase() {
 		
@@ -200,10 +268,10 @@ public class RejectsController implements Initializable {
 			@Override
 			public void run() {
 				ShutterProvider provider =  app.mainController.getSession();
-				if (!provider.isConnection()) {
+				if (provider==null || !provider.isConnection()) {
 					return;
 				}
-				getRejectsForDates(provider, null, null);
+				getRejectsForDatesAndWriteDB(provider, sqlmanager, sqlmanager.getLastUpdateDate());
 				//checkNewRejects();
 				//saveLastRejectDate();
 				
@@ -239,7 +307,6 @@ public class RejectsController implements Initializable {
 			}
 			page++;
 		}
-	//	fillTable();
 		}
 		catch (JSONException e) {
 			if (rejectesString.contains("Redirecting to")) {
@@ -258,4 +325,107 @@ public class RejectsController implements Initializable {
 			}
 }
 
+	
+	private void getRejectsForDatesAndWriteDB(ShutterProvider provider, SQLManager sqlmanager, LocalDateTime from) {
+		int per_page = 10;
+		int page = 1;
+		String rejectesString = null;
+		try {
+		while (true) {
+			rejectesString = provider.getRejects(per_page,page);
+			if (rejectesString == null) {
+				app.showAlert("Ошибка соединения с сервером");
+				return;
+				}
+			if (rejectesString.isEmpty()) break;
+		    
+			List<ShutterImageRejected> listFromShutter = JsonParser.parseImagesRejectedData(rejectesString);
+			if (listFromShutter.isEmpty()) break;
+			//if (from!=null && listFromShutter.stream().noneMatch(d -> d.verdictTime.isAfter(from))) break;
+			
+			List<ShutterImageRejected> toRemove = new ArrayList<ShutterImageRejected>();
+			
+			for (ShutterImageRejected im:listFromShutter) {
+				if(sqlmanager.isInDB(im.getMedia_id())) 
+					toRemove.add(im);
+				else	
+					im.setPreviewBytes(provider.downloadImage(im.getPreviewPath()));
+				/*
+				im.setPreviewBytes(provider.downloadByteArray(im.getPreviewPath()));
+				try (FileOutputStream fos = new FileOutputStream(System.getProperty("user.home") + File.separator +  im.getOriginal_filename() + ".jpg")) {
+					   fos.write(im.getPreviewBytes());
+					}
+				 */
+				
+			}
+			listFromShutter.removeAll(toRemove);
+			if (!listFromShutter.isEmpty())
+				sqlmanager.insert(listFromShutter);
+			else 
+				break;
+			page++;
+		}
+		}
+		catch (IOException e) {
+			app.showAlert("Can't get preview image");
+			LOGGER.severe("Can't get preview image, error:  " +  e.getMessage());
+		}
+		catch (JSONException e) {
+			if (rejectesString.contains("Redirecting to")) {
+				//setStatus("Autorization error");
+				app.showAlert("Неправильный sessionId. Очистите поле sessionId и повторите авторизацию");
+			}
+			else if (rejectesString.startsWith("{")){
+				//setStatus("JSON parsing error");
+				app.showAlert("Данные загружены, но приложение не смогло их правильно интерпретировать. Обратитесь к разработчику.");
+			}
+			else {
+				int endIndex = rejectesString.length()>300 ? 300 : rejectesString.length();
+				//setStatus("Unknown error");
+				app.showAlert("Некорректные данные:\n" + rejectesString.substring(0, endIndex)); 
+			}
+			}
 }
+	
+	
+	@FXML
+	private void testBtnClick() {
+		System.out.println(sqlmanager.getLastUpdateDate().toString());
+	}
+	
+	public void getAllImages(int page) {
+		this.images.clear();
+		String sql = "SELECT * FROM " + this.sqlmanager.TABLENAME + " ORDER BY media_id DESC LIMIT " + this.rowsOnPage + " OFFSET " + this.rowsOnPage*page;
+		this.images.addAll(this.sqlmanager.getImagesFromDB(sql));
+		bindSlider();
+	}
+	
+	private void bindSlider() {
+		for (ShutterImageRejected im:images) {
+			ImageView view = im.getImage();
+			view.fitHeightProperty().bind(slider.valueProperty()); 
+		}
+	}
+	
+	private void setupPagination(int datasize) {
+		//  pagination.setStyle("-fx-border-color:red;");
+		 Platform.runLater(new Runnable() {
+	            public void run() {
+		    pagination.setPageCount(datasize/rowsOnPage + 1);
+	        pagination.setPageFactory(new Callback<Integer, Node>() {
+	            @Override
+	            public Node call(Integer pageIndex) {
+	            	 getAllImages(pageIndex);
+	            	 Pane node = new Pane();
+	            	 node.setVisible(false);
+	            	 return node;
+	            }
+	        });
+	            }
+		 });
+	}
+	
+	
+}
+
+

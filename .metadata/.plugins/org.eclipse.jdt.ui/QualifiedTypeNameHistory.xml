@@ -1,24 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.text.NumberFormat"/>
-<fullyQualifiedTypeName name="java.util.function.UnaryOperator"/>
-<fullyQualifiedTypeName name="java.text.ParsePosition"/>
-<fullyQualifiedTypeName name="javafx.util.converter.IntegerStringConverter"/>
-<fullyQualifiedTypeName name="java.lang.Integer"/>
-<fullyQualifiedTypeName name="javafx.scene.image.Image"/>
-<fullyQualifiedTypeName name="javafx.scene.control.Label"/>
-<fullyQualifiedTypeName name="javafx.collections.ListChangeListener"/>
-<fullyQualifiedTypeName name="sm.ui.TabsController"/>
-<fullyQualifiedTypeName name="javafx.scene.control.Button"/>
-<fullyQualifiedTypeName name="sm.ui.RulesController"/>
-<fullyQualifiedTypeName name="javafx.collections.ObservableList"/>
 <fullyQualifiedTypeName name="org.json.JSONObject"/>
 <fullyQualifiedTypeName name="java.util.Map"/>
 <fullyQualifiedTypeName name="java.util.HashMap"/>
 <fullyQualifiedTypeName name="java.util.Date"/>
 <fullyQualifiedTypeName name="java.text.ParseException"/>
 <fullyQualifiedTypeName name="javafx.scene.control.CheckBox"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="sm.JsonParser"/>
 <fullyQualifiedTypeName name="org.json.JSONException"/>
 <fullyQualifiedTypeName name="sm.FileRule"/>
@@ -42,9 +29,7 @@
 <fullyQualifiedTypeName name="sm.web.SubmitResponse.ItemError"/>
 <fullyQualifiedTypeName name="java.util.StringJoiner"/>
 <fullyQualifiedTypeName name="java.util.Collections"/>
-<fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="java.io.FilenameFilter"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="java.util.Scanner"/>
 <fullyQualifiedTypeName name="java.nio.file.Files"/>
 <fullyQualifiedTypeName name="java.nio.file.Path"/>
@@ -57,7 +42,22 @@
 <fullyQualifiedTypeName name="javafx.beans.value.ObservableValue"/>
 <fullyQualifiedTypeName name="sm.Main"/>
 <fullyQualifiedTypeName name="sm.ShutterImage"/>
-<fullyQualifiedTypeName name="sm.ui.RejectsController"/>
-<fullyQualifiedTypeName name="sm.ShutterImageRejected"/>
 <fullyQualifiedTypeName name="sm.web.ShutterProvider"/>
+<fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="java.sql.Statement"/>
+<fullyQualifiedTypeName name="java.sql.ResultSet"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="java.sql.PreparedStatement"/>
+<fullyQualifiedTypeName name="sm.ShutterImageRejected"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="sm.db.SQLManager"/>
+<fullyQualifiedTypeName name="java.io.IOException"/>
+<fullyQualifiedTypeName name="javafx.scene.control.Tab"/>
+<fullyQualifiedTypeName name="sm.ui.RejectsController"/>
+<fullyQualifiedTypeName name="java.io.InputStream"/>
+<fullyQualifiedTypeName name="java.io.ByteArrayOutputStream"/>
+<fullyQualifiedTypeName name="java.io.FileOutputStream"/>
+<fullyQualifiedTypeName name="javafx.beans.property.SimpleLongProperty"/>
+<fullyQualifiedTypeName name="javafx.beans.property.LongProperty"/>
+<fullyQualifiedTypeName name="java.time.LocalDateTime"/>
 </qualifiedTypeNameHistroy>
