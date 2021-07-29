@@ -62,7 +62,7 @@ public class Main extends Application {
   		  
 		 mainStage = primaryStage;
 		 tabsController = organizeStage("ui/TabsForm.fxml");
-	     mainStage.setTitle("SubmitMaster v1.5 test");
+	     mainStage.setTitle("SubmitMaster v2.0");
 	     tabsController.app = this;
 	     
 	     mainController = (MainController) addTab("Submitter", "ui/MainForm.fxml", MainController.class);

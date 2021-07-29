@@ -3,9 +3,7 @@ package sm;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.StringJoiner;
 
 import org.json.JSONArray;
@@ -67,6 +65,7 @@ public class JsonParser {
 				image.setDescription(imageobj.getString("description"));
 			else
 				image.setDescription("");
+		
 			
 			if (!imageobj.isNull("thumbnail_url_480"))
 				image.setPreviewPath(imageobj.getString("thumbnail_url_480"));
@@ -289,6 +288,107 @@ public class JsonParser {
 			rules.add(rule);
 		 }
 		 return rules;
+	}
+	
+	
+	
+
+	public static List<String> getFileNames(String jsonString) {
+		List<String> result = new ArrayList<String>();
+		JSONObject obj = new JSONObject(jsonString);
+        String pageName = obj.getJSONObject("data").getString("pageName");
+
+		JSONArray arr = obj.getJSONArray("data");
+		for (int i = 0; i < arr.length(); i++) {
+			String filename = arr.getJSONObject(i).getString("original_filename");
+			result.add(filename);
+		}
+		return result;
+	}
+	
+	public static List<ShutterImageRejected> parseImagesRejectedData(String jsonString) {
+		List<ShutterImageRejected> result = new ArrayList<ShutterImageRejected>();
+		JSONObject obj = new JSONObject(jsonString);
+
+		JSONArray arr = obj.getJSONArray("data");
+		for (int i = 0; i < arr.length(); i++) {
+			JSONObject imageobj = arr.getJSONObject(i);
+		
+			JSONArray reasonsarr = imageobj.getJSONArray("reasons");
+			List<String> reasons = new ArrayList<String>();
+			
+			for (int j = 0; j < reasonsarr.length(); j++) {
+				reasons.add(reasonsarr.getJSONObject(j).getString("reason"));
+			}
+			
+			String filename = imageobj.getString("original_filename");
+			
+			long media_id = 0;
+			if (!imageobj.isNull("media_id"))
+				media_id = imageobj.getLong("media_id");
+			
+			
+			String media_type = "";
+			if (!imageobj.isNull("media_type"))
+				media_type = imageobj.getString("media_type");
+			
+			String uploaded_date = "";
+			if (!imageobj.isNull("uploaded_date"))
+				uploaded_date = imageobj.getString("uploaded_date");
+			
+			String original_filename = "";
+			if (!imageobj.isNull("original_filename"))
+				original_filename = imageobj.getString("original_filename");
+			
+			String verdict_time = "";
+			if (!imageobj.isNull("verdict_time"))
+				verdict_time = imageobj.getString("verdict_time");
+			
+			
+			ShutterImageRejected image = new ShutterImageRejected(media_id, media_type, reasons,
+					uploaded_date, original_filename, verdict_time);
+			
+			JSONArray keywordsarr = imageobj.getJSONArray("keywords");
+			for (int j = 0; j < keywordsarr.length(); j++) {
+				image.keywords.add(keywordsarr.getString(j));
+			}
+			
+			if (!imageobj.isNull("description"))
+				image.setDescription(imageobj.getString("description"));
+			else
+				image.setDescription("");
+			if (!imageobj.isNull("thumbnail_url_480"))
+				image.setPreviewPath(imageobj.getString("thumbnail_url_480"));
+			else 
+				image.setPreviewPath("");
+			
+			if (!imageobj.isNull("submitter_note"))
+				image.setSubmitter_note(imageobj.getString("submitter_note"));
+			else
+				image.setSubmitter_note("");
+			
+			if (!imageobj.isNull("is_illustration"))
+				image.setIs_illustration(imageobj.getBoolean("is_illustration"));
+			else
+				image.setIs_illustration(false);
+			
+			if (!imageobj.isNull("status"))
+				image.setStatus(imageobj.getString("status"));
+			else
+				image.setStatus("");
+			
+			if (imageobj.isNull("has_property_release"))
+				image.setHas_property_release(false);
+			else
+				image.setHas_property_release(true);
+			
+			if (!imageobj.isNull("upload_id"))
+				image.setUpload_id(imageobj.getLong("upload_id"));
+			
+			
+			result.add(image);
+		}
+		return result;
 	}
 	
 }

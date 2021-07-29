@@ -71,7 +71,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Spinner>
-            <CheckBox fx:id="isRandomOrderBox" mnemonicParsing="false" selected="true" text="Random Order">
+            <CheckBox fx:id="isRandomOrderBox" mnemonicParsing="false" text="Random Order">
                <HBox.margin>
                   <Insets bottom="5.0" left="20.0" right="5.0" top="10.0" />
                </HBox.margin>
@@ -92,7 +92,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Button>
-            <Label fx:id="filesCountTxt" text="Files Count: 0">
+            <Label fx:id="filesCountTxt" minWidth="180.0" text="Files Count: 0">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="20.0" top="10.0" />
                </HBox.margin>

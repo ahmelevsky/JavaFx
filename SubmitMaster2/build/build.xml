@@ -29,30 +29,35 @@
 		<mkdir dir="externalLibs" />
 	
 		<copy todir="externalLibs">
-			<fileset dir="C:\Java\JavaFx\SubmitMaster\lib">
+			<fileset dir="C:\Java\JavaFx\SubmitMaster2\lib">
 				<filename name="jsoup-1.10.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="C:\Java\JavaFx\SubmitMaster\lib">
+			<fileset dir="C:\Java\JavaFx\SubmitMaster2\lib">
 				<filename name="json.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="C:\Java\JavaFx\SubmitMaster\lib">
+			<fileset dir="C:\Java\JavaFx\SubmitMaster2\lib">
 				<filename name="httpcore-4.4.14.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="C:\Java\JavaFx\SubmitMaster\lib">
+			<fileset dir="C:\Java\JavaFx\SubmitMaster2\lib">
 				<filename name="commons-logging-1.2.jar"/>
 			</fileset>
 		</copy>
 		<copy todir="externalLibs">
-			<fileset dir="C:\Java\JavaFx\SubmitMaster\lib">
+			<fileset dir="C:\Java\JavaFx\SubmitMaster2\lib">
 				<filename name="httpclient-4.5.13.jar"/>
 			</fileset>
 		</copy>
+			<copy todir="externalLibs">
+					<fileset dir="C:\Java\JavaFx\SubmitMaster2\lib">
+						<filename name="sqlite-jdbc-3.36.0.1.jar"/>
+					</fileset>
+				</copy>
 	
 			
 		<copy todir="deploy\resources">  
@@ -84,6 +89,7 @@
 				<include name="httpcore-4.4.14.jar"/>
 				<include name="jsoup-1.10.2.jar"/>
 				<include name="commons-logging-1.2.jar"/>
+				<include name="sqlite-jdbc-3.36.0.1.jar"/>
 			</fileset>
 		</copy>
 	

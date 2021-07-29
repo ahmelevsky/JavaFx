@@ -1,7 +1,9 @@
 package sm.web;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -87,7 +89,7 @@ public class ShutterProvider {
 	
 	public String getCategoriesList() {
 		try {
-			String json = 	get("/api/content_editor/categories/photo", null);
+			String json = 	get("/api/content_editor/categories/photo", new ArrayList<KeyVal>());
 			LOGGER.fine("CATEGORIES: " + json);
 			return json;
 		} catch (IOException e) {
@@ -130,7 +132,7 @@ public class ShutterProvider {
 	
 	public boolean isConnection() {
 		try {
-			get("/upload/portfolio", null);
+			get("/upload/portfolio", new HashMap<String,String>());
 		return true;
 		} catch (IOException e) {
 			return false;
@@ -171,7 +173,31 @@ public class ShutterProvider {
 		
 }
 	
+
 	
+	private String get(String url, Map<String,String> parameters) throws IOException{
+		Map<String,String> cookiesGet = new HashMap<String,String>(){{
+			   put("session", sessionId);
+			}};
+
+		Map<String,String> headersGet = new HashMap<String,String>(){{
+			}};
+			if (parameters==null)
+				parameters = new HashMap<String,String>();
+		
+			return
+				  Jsoup.connect(this.baseURL + url )
+				  .headers(headersGet)
+				  .followRedirects(false)
+				  .cookies(cookiesGet)
+				  .method(Connection.Method.GET)
+				  .validateTLSCertificates(false)
+				  .ignoreContentType(true)
+				  .data(parameters)
+				  .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36")
+				  .execute().body();
+		 
+	}
 	
 	private String post(String url, String payload) throws IOException{
 
@@ -312,5 +338,56 @@ public String getApacheGETResponse( String url) throws URISyntaxException{
 	      return null;
 	  }
 	
-	
+
+
+public String getRejects(int per_page, int page) {
+	Map<String,String> parameters = new HashMap<String,String>(){{
+		   put("order", "newest");
+		   put("per_page", String.valueOf(per_page));
+		   put("page", String.valueOf(page));
+		   put("xhr_id", "1");
+		  put("status", "reviewed");
+		}};
+	try {
+		return get("/api/content_editor/photo", parameters);
+	} catch (IOException e) {
+		return null;
+	}
+}
+
+
+public byte[] downloadImage(String url) throws IOException {
+	 return Jsoup.connect(url).headers(this.headers)
+	  .followRedirects(false)
+	  .cookies(this.cookies)
+	  .method(Connection.Method.GET)
+	  .validateTLSCertificates(false)
+	  .ignoreContentType(true)
+	  .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36")
+	  .execute().bodyAsBytes();
+}
+
+
+public byte[] downloadByteArray(String link) throws IOException {
+	URL url = new URL(link);
+	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	InputStream is = null;
+	try {
+	  is = url.openStream ();
+	  byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
+	  int n;
+
+	  while ( (n = is.read(byteChunk)) > 0 ) {
+	    baos.write(byteChunk, 0, n);
+	  }
+	  return baos.toByteArray();
+	}
+	catch (IOException e) {
+	  throw e;
+	}
+	finally {
+	  if (is != null) { is.close(); }
+	}
+}
+
 }

@@ -28,6 +28,7 @@ import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 import sm.ui.HelpController;
 import sm.ui.MainController;
+import sm.ui.RejectsController;
 import sm.ui.RulesController;
 import sm.ui.TabsController;
 import sm.ui.WebController;
@@ -39,7 +40,8 @@ public class Main extends Application {
 	  public MainController mainController;
 	  public RulesController rulesController;
 	  public HelpController helpController;
-      public WebController webController;
+	  public WebController webController;
+      public RejectsController rejectsController;
       private Stage mainStage;
       private Scene mainScene;
       
@@ -60,7 +62,7 @@ public class Main extends Application {
   		  
 		 mainStage = primaryStage;
 		 tabsController = organizeStage("ui/TabsForm.fxml");
-	     mainStage.setTitle("SubmitMaster v1.5 test");
+	     mainStage.setTitle("SubmitMaster v2.0");
 	     tabsController.app = this;
 	     
 	     mainController = (MainController) addTab("Submitter", "ui/MainForm.fxml", MainController.class);
@@ -73,6 +75,12 @@ public class Main extends Application {
 	     
 	     helpController = addHelpTab();
 	     
+	     rejectsController = (RejectsController) addTab("RejectsList", "ui/RejectsForm.fxml", RejectsController.class);
+	     rejectsController.app = this;
+	     rejectsController.setup();
+	     
+	     tabsController.setup();
+	    
 	     Data.app = this;
 		 Data.images = this.mainController.images;
 	     
@@ -151,6 +159,8 @@ public class Main extends Application {
 	        tab.setText(tabTitle);
 	        tabsController.addTab(tab);
 	        Initializable controller = loader.getController();
+	        if (controller.getClass() == RejectsController.class)
+	        	((RejectsController) controller).tab = tab;
 	        return controller;
 	}
 	
@@ -209,4 +219,6 @@ public class Main extends Application {
 	public void enableControl() {
 		this.mainController.enableControl();
 	}
+	
+	
 }

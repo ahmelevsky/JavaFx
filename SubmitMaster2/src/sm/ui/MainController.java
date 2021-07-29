@@ -760,7 +760,8 @@ public class MainController implements Initializable {
 		}
 		
 		private void updateFilesCount() {
-			this.filesCountTxt.setText("Files count: " + images.size());
+			this.filesCountTxt.setText("Files count: " + images.size() + " (V: " + images.filtered(im -> im.isVector()).size()
+					+ " R: " + images.filtered(im -> !im.isVector()).size() + ")");
 		}
 		
 		
