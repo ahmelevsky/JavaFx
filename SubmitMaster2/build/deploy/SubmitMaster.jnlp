@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="SubmitMaster.jar" size="100135" download="eager" />
+    <jar href="SubmitMaster.jar" size="101407" download="eager" />
     <jar href="lib\commons-logging-1.2.jar" size="61829" download="eager" />
     <jar href="lib\httpclient-4.5.13.jar" size="780321" download="eager" />
     <jar href="lib\httpcore-4.4.14.jar" size="328436" download="eager" />

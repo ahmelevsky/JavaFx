@@ -179,7 +179,11 @@ public class ShutterProvider {
 			}
 
 	    	Document doc= Jsoup.parse(html);
-	    	Elements elems = doc.select("[data-automation='ExpandableKeywordsList_container_div'] > div >div >a");
+	    	//writeToFile("D:\\imagedata.html",html);
+	    	
+	    	//Elements elems = doc.select("div.MuiCollapse-root > div.MuiCollapse-wrapper > div.MuiCollapse-wrapperInner > div > a");
+	    	Elements elems = doc.select("div.MuiCollapse-root");
+	    	
 	    	for (Element el:elems) {
 	    		if (el.hasText())
 	    			result.add(el.ownText());
@@ -198,6 +202,27 @@ public class ShutterProvider {
 	
 	
 
+	public static String getKeywordsJson(String id) throws IOException {
+		List<KeyVal> parameters = new ArrayList<KeyVal>();
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("recordActivity", "false"));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("include", "categories,contributor.categories,contained-in-collections.categories,same-model.categories,visually-similar.categories,visually-similar-videos.categories,image-scores,contributor-settings"));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("page[contained-in-collections][size]", "1"));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("language", "en"));
+		return get("/napi/images/"+id, parameters);
+		
+}
+	
+	
+	public static String getKeywordsJsonOldApi(String id) throws IOException {
+		List<KeyVal> parameters = new ArrayList<KeyVal>();
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "keywords"));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("language", "en"));
+		return get("/studioapi/images/"+id, parameters);
+		
+}
+
+
+	
 	
 public static String getApacheGETResponse( String url) throws URISyntaxException{
 		
@@ -211,12 +236,14 @@ public static String getApacheGETResponse( String url) throws URISyntaxException
 		    		.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36").build();
 		    
 		    URIBuilder builder = new URIBuilder(baseURL + url);
+		  /*
 		    builder.setParameter("order", "newest")
 		    	.setParameter("per_page", "100")
 		    	.setParameter("page", "1")
 		    	.setParameter("status", "edit")
 		    	.setParameter("xhr_id", "finish")
 		    	.setParameter("fields[images]", "keywords");
+		    */
 		    HttpGet httpGet = new HttpGet(builder.build());
 		   
 		    try{            

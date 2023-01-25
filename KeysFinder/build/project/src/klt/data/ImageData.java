@@ -3,6 +3,7 @@ package klt.data;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class ImageData {
 	private Set<String> saleKeywords = new LinkedHashSet<String>();
 	private List<String> otherKeywords = new ArrayList<String>();
 	public boolean selected;
+	public static int limit = 10;
 	
 	
 	public Set<String> getAllKeywords(){
@@ -42,8 +44,14 @@ public class ImageData {
 	
 	public void addKeywords(Collection<String> keywords) {
 		this.keywords.addAll(keywords);
-		splitKeywordsToSaleAndOther();
+		//NO OTHER KEYWORDS
+		//splitKeywordsToSaleAndOther();
+		//allKeywordsAreSale();
+		limitKeywords();
 	}
+	
+	
+	
 	
 	@Override
 	public String toString() {
@@ -51,7 +59,23 @@ public class ImageData {
 				+ ", image_type=" + image_type + ", src=" + src + "]";
 	}
 	
+	private void allKeywordsAreSale() {
+	 this.saleKeywords.clear();
+	 this.saleKeywords.addAll(this.keywords);
+	}
 	
+	
+	public void limitKeywords() {
+		 this.saleKeywords.clear();
+		 Iterator<String> namesIterator = this.keywords.iterator();
+		 int i=0;
+		 while(namesIterator.hasNext() && i<limit) {
+			 this.saleKeywords.add(namesIterator.next());
+			 i++;
+			}
+	}
+	
+
 	private void splitKeywordsToSaleAndOther() {
 		this.saleKeywords.clear();
 		this.otherKeywords.clear();

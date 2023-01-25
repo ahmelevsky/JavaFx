@@ -152,15 +152,19 @@ public class JsonParser {
    public static String createSubmitPayload(Collection<ShutterImage> files) {
 	   JSONObject root = new JSONObject();
 	   JSONArray media = new JSONArray();
-	  
+	   JSONArray notSpellCheckArray = new JSONArray();
+	   
 		   for (ShutterImage file:files) {
 			   JSONObject mediaObj = new JSONObject();
 			   mediaObj.put("media_type", "photo");
 			   mediaObj.put("media_id", file.getId());
 			   media.put(mediaObj);
+			//   for (String k:file.keywords)
+				 //  notSpellCheckArray.put(k);
 		   }
 		  root.put("media", media);
-		  root.put("keywords_not_to_spellcheck", new JSONArray());
+		
+		  root.put("keywords_not_to_spellcheck", notSpellCheckArray);
 		  root.put("skip_spellcheck", "true");
 		  
 		  System.out.println("JSON SUBMIT PAYLOAD: " + root.toString());
@@ -184,16 +188,24 @@ public class JsonParser {
 			JSONObject errorObj = item_errors_arr.getJSONObject(j);
 			SubmitResponse.ItemError itemError = response.getItemError();
 			itemError.upload_id = errorObj.getString("upload_id");
-			JSONObject validation_errors = errorObj.getJSONObject("validation_errors");
-			JSONObject details = validation_errors.getJSONObject("details");
-			JSONObject keywords = details.getJSONObject("keywords");
-			StringJoiner  errorMsg =  new StringJoiner (", ");
-			if (keywords.getBoolean("hard_validation_failure"))
-				errorMsg.add("Keywords error: " + keywords.getString("message"));
-			JSONObject title = details.getJSONObject("title");
-			if (title.getBoolean("hard_validation_failure"))
-				errorMsg.add("Title error: " + title.getString("message"));
-			itemError.message = errorMsg.toString();
+			if (!errorObj.isNull("validation_errors")) {
+				JSONObject validation_errors = errorObj.getJSONObject("validation_errors");
+				JSONObject details = validation_errors.getJSONObject("details");
+				JSONObject keywords = details.getJSONObject("keywords");
+				StringJoiner  errorMsg =  new StringJoiner (", ");
+				if (keywords.getBoolean("hard_validation_failure"))
+					errorMsg.add("Keywords error: " + keywords.getString("message"));
+				JSONObject title = details.getJSONObject("title");
+				if (title.getBoolean("hard_validation_failure"))
+					errorMsg.add("Title error: " + title.getString("message"));
+				itemError.message = errorMsg.toString();
+			}
+			if (!errorObj.isNull("submit_error")) {
+				JSONObject submit_error = errorObj.getJSONObject("submit_error");
+				itemError.message = submit_error.getString("message");
+			}
+			else 
+				itemError.message = "Unknown error, see log file for full response text";
 		}
 		
 		

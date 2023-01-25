@@ -1,0 +1,87 @@
+<?xml version="1.0" ?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>CFBundleInfoDictionaryVersion</key>
+        <string>6.0</string>
+
+        <key>CFBundleIdentifier</key>
+        <string>com.ahmelevsky.submitmaster</string>
+
+        <key>CFBundleName</key>
+        <string>SubmitMaster</string>
+
+        <key>CFBundleDisplayName</key>
+        <string>SubmitMaster</string>
+
+        <key>CFBundleVersion</key>
+        <string>1.2.3</string>
+
+        <key>CFBundlePackageType</key>
+        <string>APPL</string>
+
+        <key>CFBundleExecutable</key>
+        <string>JavaMacLauncher</string>
+
+        <key>CFBundleIconFile</key>
+        <string>icon.icns</string>
+
+        <key>LSMinimumSystemVersion</key>
+        <string>10.9</string>
+
+        <!-- Configure JavaMacLauncher. -->
+        <key>JavaMacLauncher</key>
+        <dict>
+            
+            <!-- Set further java options. -->
+            <key>JavaOptions</key>
+            <array>
+                <string>-Dfile.encoding=UTF-8</string>
+            </array>
+
+            <!-- Set java class path entries. -->
+            <key>JavaClassPath</key>
+            <array>
+                <string>Contents/Resources/modules/SubmitMaster.jar</string>
+				 <string>Contents/Resources/modules/resources/*</string>
+				  <string>Contents/Resources/modules/lib/*</string>
+            </array>
+
+            <!-- Set application working directory. -->
+            <key>WorkingDirectory</key>
+            <string>Contents/Resources/modules</string>
+
+            <!-- Set application command. -->
+            <key>ApplicationCommand</key>
+            <string>Contents/Resources/modules/SubmitMaster.jar</string>
+
+            <!-- Set further application command line arguments. -->
+            <key>ApplicationArguments</key>
+            <array>
+                <string></string>
+            </array>
+
+            <!-- Set minimum reserved heap space. -->
+            <key>HeapMinimum</key>
+            <string>32m</string>
+
+            <!-- Set maximum used heap space. -->
+            <key>HeapMaximum</key>
+            <string>512m</string>
+          
+           
+            <!-- Set application name shown in the menu bar. -->
+            <key>DockName</key>
+            <dict>
+                <key>default</key>
+                <string>SubmitMaster</string>
+             </dict>
+
+            <!-- Set application icon shown in dock and menu bar. -->
+            <key>DockIcon</key>
+            <string>Contents/Resources/icon.icns</string>
+
+           </dict>
+    </dict>
+</plist>
+

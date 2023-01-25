@@ -6,8 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
@@ -474,6 +476,7 @@ public class MainController implements Initializable {
 			//writeToFile("D:\\Response.txt", rejectesString);
 		    System.out.println(filesList);
 		    
+		    
 		    List<ShutterImage> imagesTemp;
 		    imagesTemp = JsonParser.parseImagesData(filesList);
 			if (imagesTemp.isEmpty()) break;
@@ -487,6 +490,17 @@ public class MainController implements Initializable {
 		this.images.forEach(im->im.setStatus("Uploaded"));
 		correctFilename();
 		logGreen("Loaded");
+		
+		
+		Platform.runLater(new Runnable() {
+            public void run() {
+            	HashSet<String> seen=new HashSet<>();
+        		images.removeIf(e->!seen.add(e.getId()));
+            }
+		 });
+		
+
+		//this.images.forEach(im->System.out.println(im.getId() + "   " + im.getUploaded_filename()));
 		}
 		catch (JSONException e) {
 			if (filesList.contains("Redirecting to")) {
@@ -533,51 +547,106 @@ public class MainController implements Initializable {
 		
 			
 			List<ShutterImage> savedImages = new ArrayList<ShutterImage>();
+			
+			
+			for (ShutterImage im:this.images) {
+				if (response.saved.contains(im.getId())) {
+					System.out.println("FOUND IMAGE: " + im.getId());
+					im.setStatus("Saved...");
+					savedImages.add(im);
+				}
+			}
+			
+			/*
 			this.images.stream().filter(im -> response.saved.contains(im.getId())).forEach(im -> { 
 				im.setStatus("Saved...");
 				savedImages.add(im);
 			});
+			*/
+			
 			
 			this.images.stream().filter(im -> response.notSaved.contains(im.getId())).forEach(im -> im.setStatus("Not saved..."));
 			
 			logGreen("Content update done");
 			logGreen("Starting submit");
-			SubmitResponse sresponse = provider.submitPost(savedImages);
-			
-			if (sresponse.batch_error_code!=null) {
-				logError("Submit. Response has errors: " + sresponse.batch_error_message);
-				return -1;
-			}
-			
-			
-			if (sresponse.itemErrors.isEmpty())
-				log("Submit. Response: " + sresponse.toString());
-			else {
-				logError("Submit. Response has errors: " + sresponse.toString());
-				logError(String.join("; ", sresponse.itemErrors.stream().map(ItemError::getIdAndMessage).collect(Collectors.toList())));
-			}
-			System.out.println(sresponse.toString());
 			
 			List<ShutterImage> submittedImages = new ArrayList<ShutterImage>();
 			
-			for (ShutterImage image:savedImages) {
-				if (sresponse.successImages.stream().filter(o -> o.getUploadId().equals(image.getId())).findFirst().isPresent()) {
-					image.setStatus("Submitted!");
-					submittedImages.add(image);
+			int attempt = 0;
+			List<ShutterImage> imagesToSubmit =  new ArrayList<ShutterImage>();
+			imagesToSubmit.addAll(savedImages);
+			
+			while (!imagesToSubmit.isEmpty() && ++attempt<=20) {
+			
+				SubmitResponse sresponse = provider.submitPost(imagesToSubmit);
+				
+				LOGGER.fine("Subbmit attempt  " + attempt);
+				LOGGER.fine("Submitting " + imagesToSubmit.size() + " images");
+				log("Subbmit attempt  " + attempt);
+				log("Submitting " + imagesToSubmit.size() + " images");
+				
+				if (sresponse.batch_error_code!=null) {
+					logError("Submit. Response has errors: " + sresponse.batch_error_message);
+					return -1;
+				}
+			
+			
+				if (sresponse.itemErrors.isEmpty()) {
+					log("Submit. Response: " + sresponse.toString());
+				}
+				
+				
+				if (!sresponse.itemErrors.isEmpty()) {
+					
+					imagesToSubmit.clear();
+					
+					logError("Submit. Response has errors: " + sresponse.toString());
+					logError(String.join("; ", sresponse.itemErrors.stream().map(ItemError::getIdAndMessage).collect(Collectors.toList())));
+					for (ItemError err: sresponse.itemErrors){
+						String imId = err.getUploadId();
+						Optional<ShutterImage> im = this.images.stream().filter(o -> o.getId().equals(imId)).findFirst();
+					if (im.isPresent()) {
+						String m = im.get().getUploaded_filename() + " : " + err.getMessage();
+						log(m);
+						LOGGER.warning(m);
+						
+						
+						if (err.getMessage().equals("Media not found or wrong state")) 
+							imagesToSubmit.add(im.get());
+					}
+				}
+				System.out.println(sresponse.toString());
+			}
+			
+			
+				
+			
+				for (ShutterImage image:savedImages) {
+					if (sresponse.successImages.stream().filter(o -> o.getUploadId().equals(image.getId())).findFirst().isPresent()) {
+						image.setStatus("Submitted!");
+						submittedImages.add(image);
 				}
 				else {
 					image.setStatus("ERROR!");
 				}
 			}
-			
+				
 			
 			this.images.removeAll(submittedImages);
+			
 			this.images.forEach(im -> {
 				if (sresponse.itemErrors.stream().map(ItemError::getUploadId).collect(Collectors.toList()).contains(im.getId())) {
 					//im.setStatus(sresponse.itemErrors.stream().filter(er->er.upload_id.equals(im.getId())).findFirst().get().getMessage());
 					im.setStatus("ERROR");
 				}
 			});
+			
+			
+			if (sresponse.itemErrors.isEmpty()) 
+				break;
+			
+			}
+			
 			logGreen("Submit operation completed");
 			
 			return files.size() - submittedImages.size();

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>C:\Java\JavaFx\KeysFinder\build\dist\KeysFinder.jar</jar>
+  <outfile>c:\Java\JavaFx\KeysFinder\build\dist\KeysFinder.exe</outfile>
+  <errTitle>This application uses Java. Please install java first.</errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon>C:\Java\JavaFx\KeysFinder\build\KeysFinder.ico</icon>
+  <jre>
+    <path>JRE</path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <minVersion>1.8.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+  </jre>
+  <versionInfo>
+    <fileVersion>0.12.0.0</fileVersion>
+    <txtFileVersion>-</txtFileVersion>
+    <fileDescription>-</fileDescription>
+    <copyright>-</copyright>
+    <productVersion>0.12.0.0</productVersion>
+    <txtProductVersion>-</txtProductVersion>
+    <productName>KeysFinder</productName>
+    <companyName></companyName>
+    <internalName>AH</internalName>
+    <originalFilename>KeysFinder.exe</originalFilename>
+    <trademarks></trademarks>
+    <language>ENGLISH_US</language>
+  </versionInfo>
+</launch4jConfig>

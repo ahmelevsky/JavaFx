@@ -53,8 +53,10 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.StringConverter;
 import klt.Main;
 import klt.data.ImageData;
+import klt.data.JsonParser;
 import klt.data.KeyWord;
 import klt.data.KeywordsCache;
 import klt.web.ShutterProvider;
@@ -153,6 +155,9 @@ public class MainWindowController implements Initializable {
 	
 	@FXML
 	private Spinner<Integer> requestCountSpinner;
+	
+	@FXML
+	private Spinner<Integer> keywordsCountSpinner;
 	
 	@FXML
 	private TextField searchTxt;
@@ -319,6 +324,44 @@ public class MainWindowController implements Initializable {
 	     requestCountSpinner.setValueFactory(valueFactory);
 	     TextFormatter<Integer> integerFormatter = new TextFormatter<Integer>(valueFactory.getConverter(), valueFactory.getValue());
 	     requestCountSpinner.getEditor().setTextFormatter(integerFormatter);
+	     
+	     
+		 SpinnerValueFactory.IntegerSpinnerValueFactory valueFactory2 = //
+	                new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 50, 10);
+		 valueFactory2.amountToStepByProperty().set(1);
+	     keywordsCountSpinner.setValueFactory(valueFactory2);
+	     TextFormatter<Integer> integerFormatter2 = new TextFormatter<Integer>(valueFactory2.getConverter(), valueFactory2.getValue());
+	     keywordsCountSpinner.getEditor().setTextFormatter(integerFormatter2);
+	     
+	     keywordsCountSpinner.focusedProperty().addListener((s, ov, nv) -> {
+	    	   // if (nv) return;
+	    	    String text = keywordsCountSpinner.getEditor().getText();
+	    	    if (valueFactory2 != null) {
+	    	        StringConverter<Integer> converter = valueFactory2.getConverter();
+	    	        if (converter != null) {
+	    	        	Integer value = converter.fromString(text);
+	    	            valueFactory2.setValue(value);
+	    	        }
+	    	       ImageData.limit =  valueFactory2.getValue();
+	    	       recountKeywords();
+	    	    }
+	    	});
+	     
+	     keywordsCountSpinner.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
+	         if (!"".equals(newValue)) {
+	        	 String text = keywordsCountSpinner.getEditor().getText();
+		    	    if (valueFactory2 != null) {
+		    	        StringConverter<Integer> converter = valueFactory2.getConverter();
+		    	        if (converter != null) {
+		    	        	Integer value = converter.fromString(text);
+		    	            valueFactory2.setValue(value);
+		    	        }
+		    	       ImageData.limit =  valueFactory2.getValue();
+		    	       recountKeywords();
+		    	    }
+	         } 
+	     });
+	     
 	     searchIndicator.setVisible(false);
 	     searchTxt.textProperty().addListener(searchListener);
 	     editPaneSearchTxt.textProperty().addListener(searchListenerEditTab);
@@ -814,6 +857,13 @@ public class MainWindowController implements Initializable {
 		});
 	}
 	
+	private void recountKeywords() {
+		ImageData.limit = this.keywordsCountSpinner.getValue();
+		for (int i = 0; i < images.size(); i++) {
+			ImageData imData = images.get(i).imageData;
+			imData.limitKeywords();
+		}
+	}
 	
 	private void updateKeywords(ImageData image) {
 		if (image == null) {
@@ -827,7 +877,9 @@ public class MainWindowController implements Initializable {
 		} else {
 			Set<String> kwds = null;
 			try {
-				kwds = ShutterProvider.getKeywords(image.link);
+				String kwordsJson = ShutterProvider.getKeywordsJsonOldApi(image.id);
+				kwds = JsonParser.parseKeywords(kwordsJson);
+				
 			} catch (IOException e) {
 				System.out.println(
 						"updateKeywords methods error: Can't get Keywords data. IOException when requesting data");

@@ -21,7 +21,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox minWidth="1000.0" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="klt.ui.MainWindowController">
+<VBox minWidth="1000.0" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="klt.ui.MainWindowController">
   <children>
     <SplitPane dividerPositions="0.5" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
       <items>
@@ -47,6 +47,8 @@
                                  </HBox.margin>
                               </CheckBox>
                               <TextField fx:id="userIDTxt" />
+                              <Pane HBox.hgrow="ALWAYS" />
+                              <Spinner fx:id="keywordsCountSpinner" editable="true" prefHeight="26.0" prefWidth="100.0" />
                            </children>
                            <VBox.margin>
                               <Insets bottom="5.0" />

@@ -2,6 +2,7 @@ package klt.data;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -115,6 +116,20 @@ public class JsonParser {
 			return result;
 	}
 	
+
+	public static Set<String> parseKeywords(String jsonString) throws JSONException{
+		Set<String> result = new LinkedHashSet<String>();
+		JSONObject obj = new JSONObject(jsonString);
+		JSONObject imageobj = obj.getJSONObject("data");
+		JSONObject attrobj = imageobj.getJSONObject("attributes");	
+			if (!attrobj.isNull("keywords")) {
+				JSONArray kwds = attrobj.getJSONArray("keywords");
+				
+				for (int k = 0; k < kwds.length(); k++) 
+					   result.add(kwds.getString(k));
+				 	}
+		return result;
+	}
 	
 	
 	public static String parseContributorId(String jsonString){

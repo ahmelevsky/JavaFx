@@ -4,21 +4,24 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.MemoryUsage;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.xml.sax.SAXException;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -41,17 +44,10 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.ToggleGroup;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import org.xml.sax.SAXException;
-
 import te.Main;
 import te.MemoryLogger;
 import te.Settings;
@@ -60,9 +56,6 @@ import te.model.Target;
 import te.model.Variable;
 import te.util.DataException;
 import te.util.ExiftoolRunner;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class MainFrameController implements Initializable{
@@ -225,7 +218,12 @@ public class MainFrameController implements Initializable{
 			app.showAlert(Settings.bundle.getString("alert.error.nofolder"));
 			return;
 		}
-		 int allImagesCounter = 0;
+		 long allImagesCounter = 0;
+		 allImagesCounter =	 Files.find(Paths.get(rootFolder.toURI()),
+                 Integer.MAX_VALUE,
+                 (filePath, fileAttr) -> fileAttr.isRegularFile() && filePath.toString().toLowerCase().endsWith(ext))
+              .count();
+		 /*
 		 List<File> directoriesToWalk = new ArrayList<File>();
 		 directoriesToWalk.add(rootFolder);
 		 directoriesToWalk.addAll(Arrays.asList(rootFolder.listFiles(new FilenameFilter() {
@@ -243,6 +241,7 @@ public class MainFrameController implements Initializable{
               }
  	        }).length;
 		 }
+		 */
 		 
 		 if (allImagesCounter==0){
 				app.showAlert(Settings.bundle.getString("alert.error.nofiles") + this.ext);
@@ -269,7 +268,7 @@ public class MainFrameController implements Initializable{
 			return;
 		}
 		 task = new Task<String>() {
-			    @Override public String call() {
+			    @Override public String call() throws IOException {
 			    	AtomicInteger success = new AtomicInteger(0);
 			    	AtomicInteger failures = new AtomicInteger(0);
 			    	AtomicInteger done = new AtomicInteger(0);
@@ -291,16 +290,28 @@ public class MainFrameController implements Initializable{
 		             
 		           for (File dir:directories){
 			            currentFolder = app.getSavedFolderVariableData().stream().filter(t->t.getFolder().equals(dir)).findFirst().get();
-			   	        File[] images =	dir.listFiles(new FileFilter() {
-			                public boolean accept(File f) {
-			                	return f.isFile() && f.getName().toLowerCase().endsWith(ext);
-			                }
-			   	        });
-			
-			   	        if (images.length==0) {
-			   	        	LOGGER.warning("There is no " + ext + " files in the folder: " + dir.getAbsolutePath());
-			   	        }
-		    	    List<File> im = Arrays.asList(images);
+			            final List<File> im = new ArrayList<File>();
+			            
+			            //Если корневая берем только файлы одного уровня вложенности
+			            if (dir.equals(rootFolder)) {
+			            	File[] images =	dir.listFiles(new FileFilter() {
+				                public boolean accept(File f) {
+				                	return f.isFile() && f.getName().toLowerCase().endsWith(ext);
+				                }
+				   	        });
+				   	        if (images.length==0) {
+				   	        	LOGGER.warning("There is no " + ext + " files in the folder: " + dir.getAbsolutePath());
+				   	        }
+			    	        im.addAll(Arrays.asList(images));
+			            }
+			            //Если не корневая, берем файлы рекурсивно
+			            else 
+			            Files.find(Paths.get(dir.toURI()),
+			                    Integer.MAX_VALUE,
+			                    (filePath, fileAttr) -> fileAttr.isRegularFile() && filePath.toString().toLowerCase().endsWith(ext))
+			                 .forEach(f -> im.add(f.toFile()));
+			            
+			            
 		    	    im.parallelStream().forEach( image ->  {
 		    	    	try{
 		    	    		List<String> keywords = null;

@@ -6,27 +6,27 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="System.out.println" key="selection"/>
+		<item value="version" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="version"/>
+			<item value="sleep"/>
+			<item value="savedImages"/>
+			<item value="Submitting"/>
+			<item value="failed"/>
+			<item value="directoriesToWalk"/>
+			<item value="allImagesCounter"/>
+			<item value="progress"/>
+			<item value="imagesToSubmit"/>
+			<item value="sresponse"/>
+			<item value="sresponse.successImages"/>
+			<item value="submittedImages"/>
 			<item value="System.out.println"/>
 			<item value="tab"/>
 			<item value="keywords"/>
-			<item value="session"/>
-			<item value="libs"/>
-			<item value="spinner"/>
-			<item value="Can&apos;t add"/>
-			<item value=".jpg"/>
-			<item value="synchronized"/>
-			<item value="keysPane"/>
-			<item value="ToEditPane"/>
-			<item value="shiftTagPosition"/>
-			<item value="&#x09;&#x09;isSeparator = true;"/>
-			<item value="backgroundLoadTask"/>
-			<item value="createBackgroundLoadTask"/>
 		</list>
 		<list key="replacehistory">
 			<item value="shiftPostitionPointer"/>
@@ -39,10 +39,10 @@
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item value="305" key="DIALOG_WIDTH"/>
+		<item value="336" key="DIALOG_WIDTH"/>
 		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-		<item value="444" key="DIALOG_HEIGHT"/>
-		<item value="1344" key="DIALOG_X_ORIGIN"/>
-		<item value="185" key="DIALOG_Y_ORIGIN"/>
+		<item value="454" key="DIALOG_HEIGHT"/>
+		<item value="1327" key="DIALOG_X_ORIGIN"/>
+		<item value="575" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>

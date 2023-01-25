@@ -75,12 +75,13 @@
 		</section>
 	</section>
 	<section name="FatJarPackageWizard">
-		<item value="C:\Java\JavaFx\FileRename\build.xml" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
-		<item value="Main (28) - FileRename" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
-		<item value="FileRename\FileRename.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
+		<item value="C:\Java\JavaFx\OldMaster\build.xml" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
+		<item value="Main (30) - OldMaster" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
+		<item value="OldMaster\OldMaster.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
 		<item value="true" key="FatJarPackageWizardPage.ANTSCRIPT_SAVE"/>
 		<item value="2" key="FatJarPackageWizardPage.LIBRARY_HANDLING"/>
 		<list key="FatJarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="OldMaster/OldMaster.jar"/>
 			<item value="FileRename\FileRename.jar"/>
 			<item value="FileRename/FileRename.jar"/>
 			<item value="RenameForUmka/RenameForUmka.jar"/>
@@ -92,6 +93,7 @@
 			<item value="OddAndEven/OddAndEven.jar"/>
 		</list>
 		<list key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION_HISTORY">
+			<item value="C:\Java\JavaFx\OldMaster\build.xml"/>
 			<item value="C:\Java\JavaFx\FileRename\build.xml"/>
 			<item value="C:\Java\JavaFx\RenameForUmka\build.xml"/>
 			<item value="C:\Java\JavaFx\Mcat\build\build.xml"/>
@@ -154,10 +156,10 @@
 	</section>
 	<section name="DialogBounds_SuperInterfaceSelectionDialog">
 		<item value="478" key="DIALOG_WIDTH"/>
-		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|5|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 		<item value="681" key="DIALOG_HEIGHT"/>
 		<item value="111" key="DIALOG_X_ORIGIN"/>
-		<item value="-10" key="DIALOG_Y_ORIGIN"/>
+		<item value="-5" key="DIALOG_Y_ORIGIN"/>
 	</section>
 	<section name="GenerateConstructorUsingFieldsSelectionDialog">
 		<item value="false" key="OmitCallToSuper"/>
@@ -166,9 +168,9 @@
 		<item value="true" key="ShowStatusLine"/>
 		<item value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0D;&#x0A;&lt;History/&gt;" key="History"/>
 		<section name="DialogBoundsSettings">
-			<item value="600" key="DIALOG_WIDTH"/>
-			<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-			<item value="500" key="DIALOG_HEIGHT"/>
+			<item value="359" key="DIALOG_WIDTH"/>
+			<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|5|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+			<item value="650" key="DIALOG_HEIGHT"/>
 			<item value="50" key="DIALOG_X_ORIGIN"/>
 			<item value="46" key="DIALOG_Y_ORIGIN"/>
 		</section>
@@ -181,9 +183,9 @@
 		<item value="true" key="org.eclipse.jdt.ui.typecomment.deprecated"/>
 	</section>
 	<section name="DialogBounds_OverrideMethodDialog">
-		<item value="659" key="DIALOG_WIDTH"/>
-		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-		<item value="603" key="DIALOG_HEIGHT"/>
+		<item value="658" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|5|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="605" key="DIALOG_HEIGHT"/>
 		<item value="640" key="DIALOG_X_ORIGIN"/>
 		<item value="123" key="DIALOG_Y_ORIGIN"/>
 	</section>
