@@ -35,6 +35,9 @@ public class Main extends Application {
   		 mainStage = primaryStage;
   	     mainStage.setTitle("AnalMaster v0.1 alpha");
   	     mainController = organizeStage("ui/MainForm.fxml");
+  	     mainController.loadData();
+  	     
+  	     
   	     mainStage.show();
 	}
 

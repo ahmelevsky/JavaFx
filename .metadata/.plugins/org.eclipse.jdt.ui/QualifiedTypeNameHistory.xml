@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="javafx.scene.control.TextArea"/>
-<fullyQualifiedTypeName name="sm.ui.HelpController"/>
-<fullyQualifiedTypeName name="javafx.scene.image.ImageView"/>
-<fullyQualifiedTypeName name="sun.security.mscapi.KeyStore.MY"/>
-<fullyQualifiedTypeName name="sm.web.SubmitResponse.ItemError"/>
-<fullyQualifiedTypeName name="java.util.StringJoiner"/>
-<fullyQualifiedTypeName name="java.io.FilenameFilter"/>
-<fullyQualifiedTypeName name="java.util.Scanner"/>
-<fullyQualifiedTypeName name="java.lang.Exception"/>
 <fullyQualifiedTypeName name="java.util.ListIterator"/>
 <fullyQualifiedTypeName name="sm.Data"/>
 <fullyQualifiedTypeName name="sm.web.ShutterProvider"/>
@@ -60,4 +51,13 @@
 <fullyQualifiedTypeName name="java.io.FileOutputStream"/>
 <fullyQualifiedTypeName name="javafx.util.StringConverter"/>
 <fullyQualifiedTypeName name="java.util.Iterator"/>
+<fullyQualifiedTypeName name="javafx.beans.property.DoubleProperty"/>
+<fullyQualifiedTypeName name="javafx.beans.property.SimpleDoubleProperty"/>
+<fullyQualifiedTypeName name="javafx.scene.control.Label"/>
+<fullyQualifiedTypeName name="am.Main"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="java.util.Map"/>
+<fullyQualifiedTypeName name="java.lang.Integer"/>
+<fullyQualifiedTypeName name="am.db.SQLManager"/>
+<fullyQualifiedTypeName name="am.ShutterImage"/>
 </qualifiedTypeNameHistroy>

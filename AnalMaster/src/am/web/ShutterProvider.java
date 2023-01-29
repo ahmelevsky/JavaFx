@@ -14,8 +14,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.apache.http.HttpResponse;
@@ -40,7 +42,9 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.jsoup.Connection;
 import org.jsoup.Connection.KeyVal;
-
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.jsoup.Jsoup;
 
 public class ShutterProvider {
@@ -154,6 +158,56 @@ public class ShutterProvider {
 }
 	
 
+	
+
+	public Set<String> getKeywords(String link) throws IOException {
+	    	Set<String> result = new LinkedHashSet<String>();
+	    	/*
+	    	Document doc = Jsoup.connect(baseURL + link )
+			  .headers(headers)
+			  .followRedirects(false)
+			  .cookies(cookies)
+			  .method(Connection.Method.GET)
+			  .validateTLSCertificates(false)
+			  .ignoreContentType(true)
+			  .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36")
+			  .get();
+	    	 */
+			
+	    	String html = "";
+			try {
+				html = getApacheGETResponse(link);
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+	    	Document doc= Jsoup.parse(html);
+	    	//writeToFile("D:\\imagedata.html",html);
+	    	
+	    	//Elements elems = doc.select("div.MuiCollapse-root > div.MuiCollapse-wrapper > div.MuiCollapse-wrapperInner > div > a");
+	    	Elements elems = doc.select("div.MuiCollapse-root");
+	    	
+	    	for (Element el:elems) {
+	    		if (el.hasText())
+	    			result.add(el.ownText());
+	    	}
+	    	/*
+	    	Element elem = doc.select("[data-automation='ExpandableKeywordsList_container_div'] > div >div").first();
+	    	for (Element el:elem.children()) {
+	    		if (el.hasText())
+	    			result.add(el.ownText());
+	    	}
+	    	*/
+			//writeToFile("D:\\imagedata.txt",source);
+			
+			return result;
+	}
+	
+	
+	
+	
+	
 	
 	private String get(String url, Map<String,String> parameters) throws IOException{
 		Map<String,String> cookiesGet = new HashMap<String,String>(){{

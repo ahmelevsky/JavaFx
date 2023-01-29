@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javafx.collections.FXCollections;
@@ -28,11 +29,14 @@ import am.ShutterImage;
 
 public class SQLManager {
 
-	public final String fileLocation = System.getProperty("user.home") + File.separator + "SubmitMaster.db"; 
+	public final String fileLocation = System.getProperty("user.home") + File.separator + "AnalMaster_1.db"; 
 	private final Logger LOGGER;
 	public Main app;
 	public Connection connection;
-	public final String TABLENAME = "imagesdata";
+	public final String IMAGESTOPTABLE = "imagestopdata";
+	public final String IMAGESTABLE = "imagesdata";
+	public final String KEYSTABLE = "keysdata";
+	
 	
 	public SQLManager(Main application) {
 		this.app = application;
@@ -56,27 +60,40 @@ public class SQLManager {
 		
 	}
 
+	
+	
 	private void createTables(){
 		 try  {
 		  Statement statement = this.connection.createStatement();
           statement.setQueryTimeout(1); 
-          String sql = "CREATE TABLE IF NOT EXISTS " + this.TABLENAME + " (\n"
+          String sql = "CREATE TABLE IF NOT EXISTS " + this.IMAGESTOPTABLE + " (\n"
                   + "	media_id integer PRIMARY KEY,\n"
+                  + "	downloads integer,\n"
+                  + "	earnings real,\n"
+                  + "	image_url text NOT NULL\n"
+                  + ");";
+          statement.execute(sql);
+          
+          
+          sql = "CREATE TABLE IF NOT EXISTS " + this.IMAGESTABLE + " (\n"
+                  + "	media_id integer PRIMARY KEY,\n"
+                  + "	original_filename text,\n"
+                  + "	uploaded_date text,\n"
                   + "	upload_id integer,\n"
-                  + "	media_type text,\n"
-                  + "	status text NOT NULL,\n"
-                  + "	type text NOT NULL,\n"
-                  + "	reasons text,\n"
-                  + "	uploaded_date text NOT NULL,\n"
-                  + "	verdict_time text NOT NULL,\n"
-                  + "	original_filename text NOT NULL,\n"
-                  + "	previewPath text NOT NULL,\n"
+                  + "	preview_path text,\n"
                   + "	imagebinary blob,\n"
-                  + "	description text NOT NULL,\n"
-                  + "	submitter_note text NOT NULL,\n"
-                  + "	has_property_release integer,\n"
+                  + "	type text,\n"
+                  + "	description text,\n"
                   + "	is_illustration integer,\n"
                   + "	keywords text\n"
+                  + ");";
+          statement.execute(sql);
+          
+          sql = "CREATE TABLE IF NOT EXISTS " + this.KEYSTABLE + " (\n"
+                  + "	media_id integer,\n"
+                  + "	keyword text,\n"
+                  + "	rate integer,\n"
+                  + "	PRIMARY KEY (media_id, keyword)\n"
                   + ");";
           statement.execute(sql);
           
@@ -99,12 +116,11 @@ public class SQLManager {
         	}
         return false;
     }
+	 
 	
-	
-	/*
-	 public void insert(List<ShutterImage> images) {
-		   String sql = "INSERT INTO " + this.TABLENAME + "(media_id,upload_id,media_type,status,type,reasons,uploaded_date,verdict_time,"
-		   		+ "original_filename,previewPath,imagebinary,description,submitter_note,has_property_release,is_illustration,keywords) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+	 public void insertNewImages(List<ShutterImage> images) {
+		   String sql = "INSERT INTO " + this.IMAGESTABLE + "(media_id) VALUES(?)";
 		   int i = 0;
 
 	        try {
@@ -112,27 +128,148 @@ public class SQLManager {
 	        	for(ShutterImage image:images) {
 	        	
 	        		pstmt.setLong(1, image.getMedia_id());
-	        		pstmt.setLong(2, image.getUpload_id());
-	        		pstmt.setString(3, image.getMedia_type());
-	        		pstmt.setString(4, image.getStatus());
-	        		pstmt.setString(5, image.getType());
-	        		pstmt.setString(6, image.getReasonsString());
-	        		pstmt.setString(7, image.getUploaded_date());
-	        		pstmt.setString(8, image.getVerdict_time());
-	        		pstmt.setString(9, image.getOriginal_filename());
-	        		pstmt.setString(10, image.getPreviewPath());
-	        		pstmt.setBytes(11, image.getPreviewBytes());
-	        		pstmt.setString(12, image.getDescription());
-	        		pstmt.setString(13, image.getSubmitter_note());
-	        		if (image.getHas_property_release())
-	        			pstmt.setInt(14, 1);
-	        		else
-	        			pstmt.setInt(14, 0);
+	        		pstmt.addBatch();
+	        		
+	        		i++;
+	                if (i % 100 == 0 || i == images.size()) {
+	                	   pstmt.executeBatch(); // Execute every 100 items.
+	                   }
+	        	}
+	        }catch(SQLException e){ 
+	        	System.out.println(e.getMessage());
+	        	LOGGER.severe(e.getMessage());
+	        	}
+	    }
+	
+	 
+	 
+	 public void insertImageData(ShutterImage image) {
+		 
+		  String sql = "UPDATE "+ this.IMAGESTABLE + " SET original_filename = ? , "
+				    + "uploaded_date = ? , "
+				    + "upload_id = ? , "
+				    + "preview_path = ? , "
+				    + "imagebinary = ? , "
+				    + "type = ? , "
+				    + "description = ? , "
+				    + "is_illustration = ? , "
+	                + "keywords = ? "
+	                + "WHERE media_id = ?";
+		  
+		  try {
+	        	PreparedStatement pstmt = this.connection.prepareStatement(sql);
+	        		pstmt.setString(1, image.getOriginal_filename());
+	        		pstmt.setString(2, image.getUploaded_date());
+	        		pstmt.setLong(3, image.getUpload_id());
+	        		pstmt.setString(4, image.getPreviewPath());
+	        		pstmt.setBytes(5, image.getPreviewBytes());
+	        		pstmt.setString(6, image.getType());
+	        		pstmt.setString(7, image.getDescription());
 	        		if (image.getIs_illustration())
-	        			pstmt.setInt(15, 1);
+	        			pstmt.setInt(8, 1);
 	        		else
-	        			pstmt.setInt(15, 0);
-	        		pstmt.setString(16, String.join(",", image.keywords));
+	        			pstmt.setInt(8, 0);
+	        		pstmt.setString(9, String.join(",", image.keywords));
+	        		pstmt.setLong(10, image.getMedia_id());
+	        		pstmt.addBatch();
+	                pstmt.executeBatch();
+	        }catch(SQLException e){ 
+	        	System.out.println(e.getMessage());
+	        	LOGGER.severe(e.getMessage());
+	        	}
+		 
+		 
+	 }
+	 
+	 
+	 
+	 public void insertImagesData(List<ShutterImage> images) {
+		 
+		  String sql = "UPDATE "+ this.IMAGESTABLE + " SET original_filename = ? , "
+				    + "uploaded_date = ? , "
+				    + "upload_id = ? , "
+				    + "preview_path = ? , "
+				    + "imagebinary = ? , "
+				    + "type = ? , "
+				    + "description = ? , "
+				    + "is_illustration = ? , "
+	                + "keywords = ? "
+	                + "WHERE media_id = ?";
+		  
+		  try {
+	        	PreparedStatement pstmt = this.connection.prepareStatement(sql);
+	        	for(ShutterImage image:images) {
+	        		pstmt.setString(1, image.getOriginal_filename());
+	        		pstmt.setString(2, image.getUploaded_date());
+	        		pstmt.setLong(3, image.getUpload_id());
+	        		pstmt.setString(4, image.getPreviewPath());
+	        		pstmt.setBytes(5, image.getPreviewBytes());
+	        		pstmt.setString(6, image.getType());
+	        		pstmt.setString(7, image.getDescription());
+	        		if (image.getIs_illustration())
+	        			pstmt.setInt(8, 1);
+	        		else
+	        			pstmt.setInt(8, 0);
+	        		pstmt.setString(9, String.join(",", image.keywords));
+	        		pstmt.setLong(10, image.getMedia_id());
+	        		pstmt.addBatch();
+	                pstmt.executeBatch();
+	                   }
+	        }catch(SQLException e){ 
+	        	System.out.println(e.getMessage());
+	        	LOGGER.severe(e.getMessage());
+	        	}
+		 
+		 
+	 }
+	
+	
+	 public void insertImagesTop(List<ShutterImage> images) {
+		   String sql = "INSERT INTO " + this.IMAGESTOPTABLE + "(media_id,downloads,earnings,image_url) VALUES(?,?,?,?)";
+		   int i = 0;
+
+	        try {
+	        	PreparedStatement pstmt = this.connection.prepareStatement(sql);
+	        	for(ShutterImage image:images) {
+	        	
+	        		pstmt.setLong(1, image.getMedia_id());
+	        		pstmt.setInt(2, image.getDownloads());
+	        		pstmt.setDouble(3, image.getEarnings());
+	        		pstmt.setString(4, image.getImage_url());
+	        		pstmt.addBatch();
+	        		
+	        		i++;
+	                if (i % 100 == 0 || i == images.size()) {
+	                	   pstmt.executeBatch(); // Execute every 1000 items.
+	                   }
+	        	}
+	        }catch(SQLException e){ 
+	        	System.out.println(e.getMessage());
+	        	LOGGER.severe(e.getMessage());
+	        	}
+	    }
+	 
+	 public void insertImages(List<ShutterImage> images) {
+		   String sql = "INSERT INTO " + this.IMAGESTABLE + "(media_id,original_filename,uploaded_date,upload_id,preview_path,imagebinary,type,description,is_illustration,keywords) VALUES(?,?,?,?,?,?,?,?,?,?)";
+		   int i = 0;
+
+	        try {
+	        	PreparedStatement pstmt = this.connection.prepareStatement(sql);
+	        	for(ShutterImage image:images) {
+	        	
+	        		pstmt.setLong(1, image.getMedia_id());
+	        		pstmt.setString(2, image.getOriginal_filename());
+	        		pstmt.setString(3, image.getUploaded_date());
+	        		pstmt.setLong(4, image.getUpload_id());
+	        		pstmt.setString(5, image.getPreviewPath());
+	        		pstmt.setBytes(6, image.getPreviewBytes());
+	        		pstmt.setString(7, image.getType());
+	        		pstmt.setString(8, image.getDescription());
+	        		if (image.getIs_illustration())
+	        			pstmt.setInt(9, 1);
+	        		else
+	        			pstmt.setInt(9, 0);
+	        		pstmt.setString(10, String.join(",", image.keywords));
 	        		pstmt.addBatch();
 	        		
 	        		i++;
@@ -147,24 +284,47 @@ public class SQLManager {
 	    }
 	    
 	    
-	    */
+	 
+	 public void insertKeywords(long media_id, Map<String,Integer> keywords) {
+		   String sql = "INSERT INTO " + this.KEYSTABLE + "(media_id,keyword,rate) VALUES(?,?,?)";
+
+	        try {
+	        	PreparedStatement pstmt = this.connection.prepareStatement(sql);
+	        	  for (Map.Entry<String, Integer> entry : keywords.entrySet()) {
+	        	
+	        		pstmt.setLong(1, media_id);
+	        		pstmt.setString(2, entry.getKey());
+	        		pstmt.setInt(3, entry.getValue());
+	        		pstmt.addBatch();
+	        	  }
+	            
+	        	  pstmt.executeBatch(); 
+	        	
+	        }catch(SQLException e){ 
+	        	System.out.println(e.getMessage());
+	        	LOGGER.severe(e.getMessage());
+	        	}
+	    }
+	    
+	    
 	
 	
-	/*
 	public List<ShutterImage> getImagesFromDB(String sql){
 		List<ShutterImage> images = new ArrayList<ShutterImage>();
-		// String sql = "SELECT * FROM " + this.TABLENAME + " ORDER BY media_id DESC LIMIT " + limit;
 		 try {
 			 PreparedStatement pstmt  = this.connection.prepareStatement(sql);
 			 ResultSet rs  = pstmt.executeQuery();
 			 while (rs.next()) {
-				 ShutterImage image = new ShutterImage(rs.getInt("media_id"), rs.getString("original_filename"), 
-						 rs.getString("uploaded_date"), rs.getString("verdict_time"));
-				 image.setDescription(rs.getString("description"));
-				 image.setStatus(rs.getString("status"));
-				 image.keywords.addAll(rs.getString("keywords").split(","));
+				 ShutterImage image = new ShutterImage(rs.getInt("media_id"));
+				 image.setOriginal_filename(rs.getString("original_filename"));
+				 image.setUploaded_date(rs.getString("uploaded_date"));
+				 image.setUpload_id(rs.getLong("upload_id"));
+				 image.setPreviewPath(rs.getString("preview_path"));
 				 image.setPreviewBytes(rs.getBytes("imagebinary"));
-				 image.setReasonsString(rs.getString("reasons"));
+				 image.setType(rs.getString("type"));
+				 image.setDescription(rs.getString("description"));
+				 image.keywords.addAll(rs.getString("keywords").split(","));
+				 image.setIs_illustration(rs.getInt("is_illustration")==1);
 				 image.setImage();
 				 images.add(image);
 	            }
@@ -179,7 +339,6 @@ public class SQLManager {
      	}
 	}
 	
-	*/
 	
 	public int getImagesCount(String sql){
 		 try {
@@ -201,7 +360,7 @@ public class SQLManager {
 		 try {
 			 Statement statement = this.connection.createStatement();
 			 statement.setQueryTimeout(1);
-			 String sql = "SELECT MAX(verdict_time) FROM " + this.TABLENAME;
+			 String sql = "SELECT MAX(verdict_time) FROM " + this.IMAGESTABLE;
 			 ResultSet rs =  statement.executeQuery(sql);
 			 String value = rs.getString(1);
 			 DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -218,7 +377,47 @@ public class SQLManager {
 		 try {
 			 Statement statement = this.connection.createStatement();
 			 statement.setQueryTimeout(1);
-			 String sql = "SELECT EXISTS(SELECT 1 FROM " + this.TABLENAME + " WHERE media_id=" + id +");";
+			 String sql = "SELECT EXISTS(SELECT 1 FROM " + this.IMAGESTABLE + " WHERE media_id=" + id +");";
+			 ResultSet rs =  statement.executeQuery(sql);
+			 if (rs.getInt(1)==1) return true;
+			 else return false;
+		 }
+		 catch(SQLException e){ 
+			 System.out.println(e.getMessage());
+     		LOGGER.severe(e.getMessage());
+     		return false;
+     	}
+	 }
+	 
+	 public List<Integer> getEmptyImages(){
+		 List<Integer> list = new ArrayList<Integer>();
+		 
+		 try {
+			 Statement statement = this.connection.createStatement();
+			 statement.setQueryTimeout(1);
+			 String sql = "SELECT media_id FROM imagesdata WHERE upload_id is NULL";
+			 ResultSet rs =  statement.executeQuery(sql);
+			 
+			 while (rs.next()) {
+				list.add(rs.getInt("media_id"));
+	            }
+		 }
+		 catch(SQLException e){ 
+			 System.out.println(e.getMessage());
+     		 LOGGER.severe(e.getMessage());
+     	}
+		Collections.reverse(list);
+		return list;
+	 }
+	 
+	 
+	 
+	 
+	 public boolean isImageHasData(long id) {
+		 try {
+			 Statement statement = this.connection.createStatement();
+			 statement.setQueryTimeout(1);
+			 String sql = "SELECT EXISTS(SELECT 1 FROM " + this.IMAGESTABLE + " WHERE media_id=" + id +" AND upload_id is not NULL);";
 			 ResultSet rs =  statement.executeQuery(sql);
 			 if (rs.getInt(1)==1) return true;
 			 else return false;
