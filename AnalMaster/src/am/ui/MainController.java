@@ -10,12 +10,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
 
 import am.Main;
 import am.ShutterImage;
@@ -32,6 +35,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
@@ -43,8 +48,10 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
@@ -257,11 +264,56 @@ public class MainController implements Initializable {
 	    	 }
 	    	});    
 		
+	    
+	    tableView.setRowFactory( tv -> {
+		    TableRow<ShutterImage> row = new TableRow<>();
+		    row.setOnMouseClicked(event -> {
+		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+		        	ShutterImage rowData = row.getItem();
+		           if (rowData!=null) {
+						app.openLink(rowData.getImage_url());
+		           }
+		        }
+		    });
+		    return row ;
+		});
+	    
+	    
+	    tableView.setRowFactory(tv -> new TableRow<ShutterImage>() {
+            private Tooltip tooltip = new Tooltip();
+            @Override
+            public void updateItem(ShutterImage im, boolean empty) {
+              //  super.updateItem(person, empty);
+                if (im == null) {
+                    setTooltip(null);
+                } else {
+                	Map<String, Integer> keywords = sqlManager.getKeywordsMapForImage(im.getMedia_id());
+                	Map<String, Integer> keywordsSorted = 
+                			keywords.entrySet().stream()
+                		    .sorted(Entry.<String, Integer>comparingByValue().reversed())
+                		    .collect(Collectors.toMap(Entry<String, Integer>::getKey, Entry<String, Integer>::getValue,
+                		                              (e1, e2) -> e1, LinkedHashMap::new));
+                	  String mapAsString = keywordsSorted.keySet().stream()
+                		      .map(key -> key + "   " + keywordsSorted.get(key))
+                		      .collect(Collectors.joining("\n", "", "" ));                	
+                    tooltip.setText(mapAsString);
+                    setTooltip(tooltip);
+                }
+            }
+        });
+	    
+	    
+	}
+	
+	
+	@FXML
+	private void stopUpdating() {
+		fillDBWithTestData();
+	    loadData();
 	}
 	
 	
 	public void loadData() {
-		
 		Thread t1 = new Thread(new Runnable() {
 
 			@Override
@@ -284,7 +336,9 @@ public class MainController implements Initializable {
 	
 	
 	private void getAllImages() {
-		String sqldata = "SELECT * FROM " + this.sqlManager.IMAGESTABLE + " ORDER BY media_id DESC"; 
+		String sqldata = "SELECT * FROM " + this.sqlManager.IMAGESTABLE + " INNER JOIN " + this.sqlManager.IMAGESTOPTABLE
+	                      + " on " + this.sqlManager.IMAGESTOPTABLE + ".media_id = " + this.sqlManager.IMAGESTABLE + ".media_id "
+	                      + " ORDER BY media_id DESC"; 
 		String sqlcount = "SELECT COUNT(*) FROM " + sqlManager.IMAGESTABLE;
 		loadData(sqldata, sqlcount);
 	}
@@ -328,9 +382,10 @@ public class MainController implements Initializable {
 	
 	
 	
-	@FXML
-	private void stopUpdating() {
-		
+	
+	
+	
+	private void fillDBWithTestData() {
 		List<ShutterImage> testImages = createTestData(10);
 		List<ShutterImage> toRemove = new ArrayList<ShutterImage>();
 		for (ShutterImage im:testImages) {
@@ -353,11 +408,15 @@ public class MainController implements Initializable {
 			if (image!=null)
 				this.sqlManager.insertImageData(image);
 		}
+		
+		 testImages = createTestData(10);
+		 this.sqlManager.insertImagesTop(testImages);
+		 for (ShutterImage im:testImages) {
+			 this.sqlManager.insertKeywords(im.getMedia_id(), im.keywordsRate);
+		 }
+		
 			
 	}
-	
-	
-	
 	
 	
 	
@@ -408,28 +467,39 @@ public class MainController implements Initializable {
 
 	@FXML
 	private void updateDatabase() {
-		/*
+		getSession();
 		Thread t1 = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
 				disableControls();
-				ShutterProvider provider =  app.mainController.getSession();
 				if (provider==null || !provider.isConnection()) {
 					enableControls();
+					logError("Shutter provider is not ready");
 					return;
 				}
-				getRejectsForDatesAndWriteDB(provider, sqlmanager, sqlmanager.getLastUpdateDate());
+				//getRejectsForDatesAndWriteDB(provider, sqlManager, sqlmanager.getLastUpdateDate());
 				getAllImages();
-				//checkNewRejects();
-				//saveLastRejectDate();
 				enableControls();
 			}
 		});
 		t1.start();
-   */
 	}
 	
+	public ShutterProvider getSession() {
+		String sessionId = sessionIdText.getText().trim();
+		if (sessionId.isEmpty()) {
+			showAlert("Пустой sessionId");
+			return null;
+		}
+		saveSessionId();
+		ShutterProvider provider = new ShutterProvider(sessionId);
+		if (!provider.isConnection()) {
+			showAlert("Ошибка соединения");
+			return null;
+		}
+		return provider;
+	}
 	
 	private void setupTableViewColumn() {
 		columnPreview.setPrefWidth(200);
@@ -668,5 +738,38 @@ public class MainController implements Initializable {
 	    }
 	 }
 		
+		private void disableControls() {
+			Platform.runLater(new Runnable() {
+	            public void run() {
+	            	updateBtn.setDisable(true);
+	            	stopBtn.setDisable(true);
+	            	pagination.setDisable(true);
+	            }
+			 });
+	            	
+		}
+		
+		private void enableControls() {
+			Platform.runLater(new Runnable() {
+	            public void run() {
+	            	updateBtn.setDisable(false);
+	            	stopBtn.setDisable(false);
+	            	pagination.setDisable(false);
+	            }
+			 });
+	            	
+		}
+		
+		private void showAlert(String text) {
+			Platform.runLater(new Runnable() {
+	            public void run() {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("ERROR");
+			alert.setHeaderText("ERROR");
+			alert.setContentText(text);
+			alert.showAndWait();
+	            }
+			 });
+		}
 		
 }

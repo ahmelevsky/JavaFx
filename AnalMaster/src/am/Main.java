@@ -35,8 +35,8 @@ public class Main extends Application {
   		 mainStage = primaryStage;
   	     mainStage.setTitle("AnalMaster v0.1 alpha");
   	     mainController = organizeStage("ui/MainForm.fxml");
+	     mainController.app=this;
   	     mainController.loadData();
-  	     
   	     
   	     mainStage.show();
 	}
@@ -97,5 +97,9 @@ public class Main extends Application {
 			 });
 		}
 		
+		
+	  public void openLink(String link) {
+		  getHostServices().showDocument(link);
+	  }
 		
 }

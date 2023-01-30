@@ -6,8 +6,11 @@ import java.util.List;
 import am.Main;
 
 public class FilterConstructor {
-
-	public final String TABLENAME = "imagesdata";
+	
+	public final String IMAGESTOPTABLE = "imagestopdata";
+	public final String IMAGESTABLE = "imagesdata";
+	public final String KEYSTABLE = "keysdata";
+	
 	
 	Main app;
 	
@@ -55,12 +58,14 @@ public class FilterConstructor {
 	
 	public String getCountSQL() {
 		constructFilter();
-		return "SELECT Count(*) FROM " + this.TABLENAME + this.filterSQL;
+		return "SELECT Count(*) FROM " + this.IMAGESTABLE + this.filterSQL;
 	}
 	
 	public String getImagesSQL() {
 		constructFilter();
-		return "SELECT * FROM " + this.TABLENAME + this.filterSQL;
+		return "SELECT * FROM " + this.IMAGESTABLE + " INNER JOIN " + this.IMAGESTOPTABLE 
+				 + " on " + this.IMAGESTOPTABLE + ".media_id = " + this.IMAGESTABLE + ".media_id "
+				+ this.filterSQL;
 	}
 	
 	
