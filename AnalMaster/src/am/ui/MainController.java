@@ -9,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +24,9 @@ import am.ShutterImage;
 import am.db.FilterConstructor;
 import am.db.SQLManager;
 import am.web.ShutterProvider;
+import am.web.UpdateDBKeywordsThread;
+import am.web.UpdateDBThread;
+import am.web.UpdateDBTopThread;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -81,8 +83,10 @@ public class MainController implements Initializable {
 	private Button updateBtn;
 	
 	@FXML
-	private Button stopBtn;
+	private Button updateTopBtn;
 	
+	@FXML
+	private Button updateTopKeywordsBtn;
 	
 	@FXML
 	private TableView<ShutterImage> tableView;
@@ -160,6 +164,9 @@ public class MainController implements Initializable {
 	private ShutterProvider provider;
 	int rowsOnPage = 100;
 	private String lastQuery = ""; 
+	private UpdateDBThread updateDbThread;
+	private UpdateDBTopThread updateDbTopThread;
+	private UpdateDBKeywordsThread updateDbTopKeywordsThread;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -264,11 +271,32 @@ public class MainController implements Initializable {
 	    	 }
 	    	});    
 		
-	    
 	    tableView.setRowFactory( tv -> {
-		    TableRow<ShutterImage> row = new TableRow<>();
+		    TableRow<ShutterImage> row = new TableRow<ShutterImage>() {
+		    	 private Tooltip tooltip = new Tooltip();
+		            @Override
+		            public void updateItem(ShutterImage im, boolean empty) {
+		            	super.updateItem(im, empty);
+		                if (im == null) {
+		                    setTooltip(null);
+		                } else {
+		                	Map<String, Double> keywords = sqlManager.getKeywordsMapForImage(im.getMedia_id());
+		                	Map<String, Double> keywordsSorted = 
+		                			keywords.entrySet().stream()
+		                		    .sorted(Entry.<String, Double>comparingByValue().reversed())
+		                		    .collect(Collectors.toMap(Entry<String, Double>::getKey, Entry<String, Double>::getValue,
+		                		                              (e1, e2) -> e1, LinkedHashMap::new));
+		                	  String mapAsString = keywordsSorted.keySet().stream()
+		                		      .map(key -> key + "   " + keywordsSorted.get(key))
+		                		      .collect(Collectors.joining("\n", "", "" ));                	
+		                    tooltip.setText(mapAsString);
+		                    setTooltip(tooltip);
+		                }
+		            }
+		    };
+		    
 		    row.setOnMouseClicked(event -> {
-		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+		        if (event.getClickCount() == 2 && (! row.isEmpty())) { 
 		        	ShutterImage rowData = row.getItem();
 		           if (rowData!=null) {
 						app.openLink(rowData.getImage_url());
@@ -279,38 +307,59 @@ public class MainController implements Initializable {
 		});
 	    
 	    
-	    tableView.setRowFactory(tv -> new TableRow<ShutterImage>() {
-            private Tooltip tooltip = new Tooltip();
-            @Override
-            public void updateItem(ShutterImage im, boolean empty) {
-              //  super.updateItem(person, empty);
-                if (im == null) {
-                    setTooltip(null);
-                } else {
-                	Map<String, Integer> keywords = sqlManager.getKeywordsMapForImage(im.getMedia_id());
-                	Map<String, Integer> keywordsSorted = 
-                			keywords.entrySet().stream()
-                		    .sorted(Entry.<String, Integer>comparingByValue().reversed())
-                		    .collect(Collectors.toMap(Entry<String, Integer>::getKey, Entry<String, Integer>::getValue,
-                		                              (e1, e2) -> e1, LinkedHashMap::new));
-                	  String mapAsString = keywordsSorted.keySet().stream()
-                		      .map(key -> key + "   " + keywordsSorted.get(key))
-                		      .collect(Collectors.joining("\n", "", "" ));                	
-                    tooltip.setText(mapAsString);
-                    setTooltip(tooltip);
-                }
-            }
-        });
-	    
-	    
+
+	}
+	
+	
+	
+	
+	@FXML
+	private void updateDatabase() {
+		this.provider = getSession();
+		if (!UpdateDBThread.isStarted) {
+			UpdateDBThread.isStarted = true;
+			updateDbThread = new UpdateDBThread(this.app, provider, sqlManager);
+			disableControls();
+			updateDbThread.start();
+		}
+		else {
+			updateDbThread.isStop = true;
+			//updateDbThread.interrupt();
+			UpdateDBThread.isStarted = false;
+		}
 	}
 	
 	
 	@FXML
-	private void stopUpdating() {
-		fillDBWithTestData();
-	    loadData();
+	private void updateTopPerformance() {
+		this.provider = getSession();
+		if (!UpdateDBTopThread.isStarted) {
+			UpdateDBTopThread.isStarted = true;
+			updateDbTopThread = new UpdateDBTopThread(this.app, provider, sqlManager);
+			disableControlsTop();
+			updateDbTopThread.start();
+		}
+		else {
+			updateDbTopThread.isStop = true;
+			UpdateDBTopThread.isStarted = false;
+		}
 	}
+	
+	@FXML
+	private void updateTopKeywords() {
+		this.provider = getSession();
+		if (!UpdateDBKeywordsThread.isStarted) {
+			UpdateDBKeywordsThread.isStarted = true;
+			updateDbTopKeywordsThread = new UpdateDBKeywordsThread(this.app, provider, sqlManager);
+			disableControlsKeywords();
+			updateDbTopKeywordsThread.start();
+		}
+		else {
+			updateDbTopKeywordsThread.isStop = true;
+			UpdateDBKeywordsThread.isStarted = false;
+		}
+	}
+	
 	
 	
 	public void loadData() {
@@ -335,8 +384,8 @@ public class MainController implements Initializable {
 	}
 	
 	
-	private void getAllImages() {
-		String sqldata = "SELECT * FROM " + this.sqlManager.IMAGESTABLE + " INNER JOIN " + this.sqlManager.IMAGESTOPTABLE
+	public void getAllImages() {
+		String sqldata = "SELECT * FROM " + this.sqlManager.IMAGESTABLE + " LEFT JOIN " + this.sqlManager.IMAGESTOPTABLE
 	                      + " on " + this.sqlManager.IMAGESTOPTABLE + ".media_id = " + this.sqlManager.IMAGESTABLE + ".media_id "
 	                      + " ORDER BY media_id DESC"; 
 		String sqlcount = "SELECT COUNT(*) FROM " + sqlManager.IMAGESTABLE;
@@ -352,11 +401,11 @@ public class MainController implements Initializable {
 			im.setEarnings(ThreadLocalRandom.current().nextDouble());
 			im.setImage_url("https://www.shutterstock.com/pic-1594457860");
 
-			Map<String, Integer> k1 = new HashMap<String, Integer>() {{
-			    put("cat", 10);
-			    put("maau", 20);
-			    put("bob", 213);
-			    put("BOB", 0);
+			Map<String, Double> k1 = new LinkedHashMap<String, Double>() {{
+			    put("cat", 10.0);
+			    put("maau", 20.0);
+			    put("bob", 213.0);
+			    put("BOB", 0.0);
 			}};
 			im.keywordsRate.putAll(k1);
 			
@@ -378,9 +427,6 @@ public class MainController implements Initializable {
 		}
 		return list;
 	}
-	
-	
-	
 	
 	
 	
@@ -415,12 +461,9 @@ public class MainController implements Initializable {
 			 this.sqlManager.insertKeywords(im.getMedia_id(), im.keywordsRate);
 		 }
 		
-			
 	}
 	
 	
-	
-
 	private void getFilteredData() {
             FilterConstructor fc = new FilterConstructor(this.app);
             fc.name = filenameFilter.getText();
@@ -465,26 +508,7 @@ public class MainController implements Initializable {
 	
 	
 
-	@FXML
-	private void updateDatabase() {
-		getSession();
-		Thread t1 = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				disableControls();
-				if (provider==null || !provider.isConnection()) {
-					enableControls();
-					logError("Shutter provider is not ready");
-					return;
-				}
-				//getRejectsForDatesAndWriteDB(provider, sqlManager, sqlmanager.getLastUpdateDate());
-				getAllImages();
-				enableControls();
-			}
-		});
-		t1.start();
-	}
+	
 	
 	public ShutterProvider getSession() {
 		String sessionId = sessionIdText.getText().trim();
@@ -592,7 +616,7 @@ public class MainController implements Initializable {
 		public void log(String message) {
 			Platform.runLater(new Runnable() {
 	            public void run() {
-	            	 String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(Calendar.getInstance().getTime());
+	            	 String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS").format(Calendar.getInstance().getTime());
 	            	 Text t1 = new Text();
 	                 //t1.setStyle("-fx-fill: #4F8A10;-fx-font-weight:bold;");
 	                 t1.setText(timeStamp + "\t" + message + "\n");
@@ -738,29 +762,76 @@ public class MainController implements Initializable {
 	    }
 	 }
 		
-		private void disableControls() {
+		public void disableControls() {
 			Platform.runLater(new Runnable() {
 	            public void run() {
+	            	updateBtn.setText("STOP UPDATING");
+	            	pagination.setDisable(true);
+	            	updateTopKeywordsBtn.setDisable(true);
+	            	updateTopBtn.setDisable(true);
+	            }
+			 });
+		}
+		
+		public void disableControlsTop() {
+			Platform.runLater(new Runnable() {
+	            public void run() {
+	            	updateTopBtn.setText("STOP UPDATING");
 	            	updateBtn.setDisable(true);
-	            	stopBtn.setDisable(true);
+	            	updateTopKeywordsBtn.setDisable(true);
 	            	pagination.setDisable(true);
 	            }
 			 });
-	            	
 		}
 		
-		private void enableControls() {
+		public void enableControls() {
 			Platform.runLater(new Runnable() {
 	            public void run() {
-	            	updateBtn.setDisable(false);
-	            	stopBtn.setDisable(false);
+	            	updateBtn.setText("UPDATE DATABASE");
 	            	pagination.setDisable(false);
+	            	updateTopBtn.setDisable(false);
+	            	updateTopKeywordsBtn.setDisable(false);
 	            }
 			 });
 	            	
 		}
 		
-		private void showAlert(String text) {
+		public void enableControlsTop() {
+			Platform.runLater(new Runnable() {
+	            public void run() {
+	            	updateTopBtn.setText("UPDATE TOP PERFORMANCE");
+	            	pagination.setDisable(false);
+	            	updateBtn.setDisable(false);
+	            	updateTopKeywordsBtn.setDisable(false);
+	            }
+			 });
+	            	
+		}
+		
+		public void enableControlsKeywords() {
+			Platform.runLater(new Runnable() {
+	            public void run() {
+	            	updateTopKeywordsBtn.setText("UPDATE TOP KEYWORDS");
+	            	pagination.setDisable(false);
+	            	updateTopBtn.setDisable(false);
+	            	updateBtn.setDisable(false);
+	            }
+			 });
+	            	
+		}
+		
+		public void disableControlsKeywords() {
+			Platform.runLater(new Runnable() {
+	            public void run() {
+	            	updateTopKeywordsBtn.setText("STOP UPDATING");
+	            	updateBtn.setDisable(true);
+	            	updateTopBtn.setDisable(true);
+	            	pagination.setDisable(true);
+	            }
+			 });
+		}
+		
+		public void showAlert(String text) {
 			Platform.runLater(new Runnable() {
 	            public void run() {
 			Alert alert = new Alert(AlertType.ERROR);

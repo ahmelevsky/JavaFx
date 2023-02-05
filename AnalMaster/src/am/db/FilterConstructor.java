@@ -63,7 +63,7 @@ public class FilterConstructor {
 	
 	public String getImagesSQL() {
 		constructFilter();
-		return "SELECT * FROM " + this.IMAGESTABLE + " INNER JOIN " + this.IMAGESTOPTABLE 
+		return "SELECT * FROM " + this.IMAGESTABLE + " LEFT JOIN " + this.IMAGESTOPTABLE 
 				 + " on " + this.IMAGESTOPTABLE + ".media_id = " + this.IMAGESTABLE + ".media_id "
 				+ this.filterSQL;
 	}

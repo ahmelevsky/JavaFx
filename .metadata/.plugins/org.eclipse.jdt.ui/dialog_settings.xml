@@ -75,12 +75,13 @@
 		</section>
 	</section>
 	<section name="FatJarPackageWizard">
-		<item value="C:\Java\JavaFx\OldMaster\build.xml" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
-		<item value="Main (30) - OldMaster" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
-		<item value="OldMaster\OldMaster.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
+		<item value="C:\Java\JavaFx\AnalMaster\build.xml" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
+		<item value="Main (31) - AnalMaster" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
+		<item value="AnalMaster\AnalMaster.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
 		<item value="true" key="FatJarPackageWizardPage.ANTSCRIPT_SAVE"/>
 		<item value="2" key="FatJarPackageWizardPage.LIBRARY_HANDLING"/>
 		<list key="FatJarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="AnalMaster/AnalMaster.jar"/>
 			<item value="OldMaster/OldMaster.jar"/>
 			<item value="FileRename\FileRename.jar"/>
 			<item value="FileRename/FileRename.jar"/>
@@ -93,6 +94,7 @@
 			<item value="OddAndEven/OddAndEven.jar"/>
 		</list>
 		<list key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION_HISTORY">
+			<item value="C:\Java\JavaFx\AnalMaster\build.xml"/>
 			<item value="C:\Java\JavaFx\OldMaster\build.xml"/>
 			<item value="C:\Java\JavaFx\FileRename\build.xml"/>
 			<item value="C:\Java\JavaFx\RenameForUmka\build.xml"/>
@@ -113,8 +115,8 @@
 	</section>
 	<section name="DialogBounds_AddUnimplementedConstructorsDialog">
 		<item value="678" key="DIALOG_WIDTH"/>
-		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
-		<item value="804" key="DIALOG_HEIGHT"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|5|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="806" key="DIALOG_HEIGHT"/>
 		<item value="630" key="DIALOG_X_ORIGIN"/>
 		<item value="9" key="DIALOG_Y_ORIGIN"/>
 	</section>

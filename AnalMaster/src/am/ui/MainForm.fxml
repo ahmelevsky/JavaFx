@@ -33,7 +33,12 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="stopBtn" mnemonicParsing="false" onAction="#stopUpdating" text="STOP">
+            <Button fx:id="updateTopBtn" mnemonicParsing="false" onAction="#updateTopPerformance" text="UPDATE TOP PERFORMANCE">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="updateTopKeywordsBtn" mnemonicParsing="false" onAction="#updateTopKeywords" text="UPDATE TOP KEYWORDS">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
@@ -178,7 +183,7 @@
                                           <Insets />
                                        </VBox.margin>
                                     </Pane>
-                                    <TextField fx:id="keywordsFilter" />
+                                    <TextField fx:id="keywordsFilter" onAction="#updateTopKeywords" />
                                  </children>
                               </VBox>
                            </graphic>
@@ -190,7 +195,7 @@
                   </TableView>
                </children>
             </HBox>
-            <Pagination fx:id="pagination" maxPageIndicatorCount="30" />
+            <Pagination fx:id="pagination" maxPageIndicatorCount="40" />
             <AnchorPane minHeight="0.0" minWidth="0.0">
                <children>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

@@ -1,5 +1,6 @@
 package am.web;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,8 +10,14 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -45,6 +54,9 @@ import org.jsoup.Connection.KeyVal;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import am.ShutterImage;
+
 import org.jsoup.Jsoup;
 
 public class ShutterProvider {
@@ -67,68 +79,77 @@ public class ShutterProvider {
 			}};
 	}
 	
+	public String getImages(int per_page, int page_number) throws IOException {
+		Map<String,String> parameters = new HashMap<String,String>(){{
+			   put("sort", "newest");
+			   put("per_page", String.valueOf(per_page));
+			   put("page_number", String.valueOf(page_number));
+			}};
+			return get("/api/catalog_manager/media_types/all/items", parameters);
+	}
 	
-	public String getPropertyReleasesList(int per_page, int page) {
-		List<KeyVal> parameters = new ArrayList<KeyVal>();
-		
-		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("visible", "true"));
-		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("per_page", String.valueOf(per_page)));
-		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("page", String.valueOf(page)));
-		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("sort", "az"));
-		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("type", "both"));
-		
-		try {
-			String response = get("/api/releases", parameters);
-			LOGGER.fine("PROPERTY RELEASES: " + response);
-			return	response;
-		} catch (IOException e) {
-			LOGGER.severe(e.getMessage());
-			return null;
-		}
+	public String getImageDetails(long media_id) throws IOException {
+		String id = "P" + media_id;
+		Map<String,String> parameters = new HashMap<String,String>(){{
+			}};
+			return get("/api/content_editor/media/" + id, parameters);
 	}
 	
 	
-	public String getCategoriesList() {
-		try {
-			String json = 	get("/api/content_editor/categories/photo", new ArrayList<KeyVal>());
-			LOGGER.fine("CATEGORIES: " + json);
-			return json;
-		} catch (IOException e) {
-			LOGGER.severe(e.getMessage());
+	public List<ShutterImage> getTopPerformers(int per_page, int page_number) throws IOException{
+		List<ShutterImage> result = new ArrayList<ShutterImage>();
+		Map<String,String> parameters = new HashMap<String,String>(){{
+			   put("sort_direction", "desc");
+			   put("date_range", "0");
+			   put("per_page", String.valueOf(per_page));
+			   put("page", String.valueOf(page_number));
+			}};
+		String html = get("/earnings/top-performers", parameters);
+		if (html.contains("Found. Redirecting to")) {
 			return null;
 		}
-	}
-	
-	
-	public String getLoadedFilesList(int per_page, int page) {
-		List<KeyVal> parameters = new ArrayList<KeyVal>();
-		
-		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("order", "newest"));
-		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("per_page", String.valueOf(per_page)));
-		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("page", String.valueOf(page)));
-	//	parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("status", "edit"));
-		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("status", "edit"));
-		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("xhr_id", "1"));
-	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "keywords"));
-	    //parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "link"));
-	    //parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "src"));
-	    //parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "image_type"));
-	    //parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "displays"));
-	    //parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "alt"));
-	    //parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "has_model_release"));
-	    //parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "has_property_release"));
-	    //parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "aspect"));
-	    //parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "is_editorial"));
-		
-		try {
-			String response =	get("/api/content_editor/photo", parameters);
-			LOGGER.fine(response);
-			return	response;
-		} catch (IOException e) {
-			LOGGER.severe(e.getMessage());
-			return null;
+		Document doc = Jsoup.parse(html);
+		String s = "";
+		Elements elements = doc.body().getElementById("gallery-table").getElementsByTag("tr");
+		for (Element el:elements) {
+			if (el.hasAttr("class"))
+				continue;
+			else {
+			    
+				String id = el.getElementsByClass("media-description").first().getElementsByTag("a").first().text();
+				long media_id = Long.parseLong(id.split(" ")[1]);
+				ShutterImage im = new ShutterImage(media_id);
+				
+				Element downloadsEl = el.getElementsByClass("media-description").first().nextElementSibling();
+				String downloads = downloadsEl.text().trim().replaceAll("[^0-9.]", "");
+				Element earningsEl = downloadsEl.nextElementSibling();
+				String earnings = earningsEl.text().trim().replaceAll("[^0-9.]", "");
+				im.setDownloads(Integer.parseInt(downloads));
+				im.setEarnings(Double.parseDouble(earnings));
+				result.add(im);
+			}
 		}
+		
+		return result;
 	}
+	
+	public String getKeywordsTop(long media_id) throws IOException {
+			Map<String,String> parameters = new HashMap<String,String>(){{
+				   put("ids[]", String.valueOf(media_id));
+				}};
+			return get("/api/earnings/keywords", parameters);
+		}
+	
+	
+	public String getKeywordsTop(List<Long> ids) throws IOException {
+        List<KeyVal> parameters = new ArrayList<KeyVal>();
+		
+		for (long id:ids) {
+			parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("ids[]", String.valueOf(id)));
+		}
+		return get("/api/earnings/keywords", parameters);
+	}
+
 	
 	
 	public boolean isConnection() {
@@ -139,75 +160,6 @@ public class ShutterProvider {
 			return false;
 		}
 	}
-	private String get(String url, Collection<KeyVal> parameters) throws IOException{
-
-		if (parameters==null)
-			parameters = new ArrayList<KeyVal>();
-		return
-			  Jsoup.connect(this.baseURL + url )
-			  .headers(this.headers)
-			  .followRedirects(false)
-			  .cookies(this.cookies)
-			  .method(Connection.Method.GET)
-			  .validateTLSCertificates(false)
-			  .ignoreContentType(true)
-			  .data(parameters)
-			  .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36")
-			  .execute().body();
-		
-}
-	
-
-	
-
-	public Set<String> getKeywords(String link) throws IOException {
-	    	Set<String> result = new LinkedHashSet<String>();
-	    	/*
-	    	Document doc = Jsoup.connect(baseURL + link )
-			  .headers(headers)
-			  .followRedirects(false)
-			  .cookies(cookies)
-			  .method(Connection.Method.GET)
-			  .validateTLSCertificates(false)
-			  .ignoreContentType(true)
-			  .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36")
-			  .get();
-	    	 */
-			
-	    	String html = "";
-			try {
-				html = getApacheGETResponse(link);
-			} catch (URISyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-	    	Document doc= Jsoup.parse(html);
-	    	//writeToFile("D:\\imagedata.html",html);
-	    	
-	    	//Elements elems = doc.select("div.MuiCollapse-root > div.MuiCollapse-wrapper > div.MuiCollapse-wrapperInner > div > a");
-	    	Elements elems = doc.select("div.MuiCollapse-root");
-	    	
-	    	for (Element el:elems) {
-	    		if (el.hasText())
-	    			result.add(el.ownText());
-	    	}
-	    	/*
-	    	Element elem = doc.select("[data-automation='ExpandableKeywordsList_container_div'] > div >div").first();
-	    	for (Element el:elem.children()) {
-	    		if (el.hasText())
-	    			result.add(el.ownText());
-	    	}
-	    	*/
-			//writeToFile("D:\\imagedata.txt",source);
-			
-			return result;
-	}
-	
-	
-	
-	
-	
 	
 	private String get(String url, Map<String,String> parameters) throws IOException{
 		Map<String,String> cookiesGet = new HashMap<String,String>(){{
@@ -233,174 +185,23 @@ public class ShutterProvider {
 		 
 	}
 	
-	private String post(String url, String payload) throws IOException{
+	private String get(String url, Collection<KeyVal> parameters) throws IOException{
 
-			return  Jsoup.connect(this.baseURL + url ).timeout(60000)
+		if (parameters==null)
+			parameters = new ArrayList<KeyVal>();
+		return
+			  Jsoup.connect(this.baseURL + url )
 			  .headers(this.headers)
 			  .followRedirects(false)
 			  .cookies(this.cookies)
-			  .method(Connection.Method.POST)
+			  .method(Connection.Method.GET)
 			  .validateTLSCertificates(false)
 			  .ignoreContentType(true)
-			  .requestBody(payload)
+			  .data(parameters)
 			  .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36")
 			  .execute().body();
 		
 }
-	
-
-	public String getApachePatchResponse(String url, String payload) throws IOException {
-		
-		CookieStore cookieStore = new BasicCookieStore();
-		BasicClientCookie cookie = new BasicClientCookie("session", this.sessionId);
-		cookie.setPath("/");
-		cookie.setDomain(".shutterstock.com");
-		cookie.setAttribute(ClientCookie.DOMAIN_ATTR, "true");
-		cookieStore.addCookie(cookie);
-		HttpContext localContext = new BasicHttpContext();
-		localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
-
-		BufferedReader rd = null;
-		StringBuffer result = new StringBuffer();
-		String line = "";
-		HttpResponse response = null;
-
-		HttpClient httpclient = HttpClientBuilder.create().setUserAgent(
-				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36")
-				.build();
-		HttpPatch httpPatch = new HttpPatch(baseURL + url);
-
-		StringEntity params = new StringEntity(payload);
-		params.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-		httpPatch.setEntity(params);
-
-		response = httpclient.execute(httpPatch, localContext);
-
-		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
-		rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-		while ((line = rd.readLine()) != null) {
-			System.out.println(line);
-			result.append(line);
-		}
-
-		return result.toString();
-	}
-	
-
-	public String getApachePostResponse(String url, String payload) throws IOException {
-		
-		CookieStore cookieStore = new BasicCookieStore();
-		BasicClientCookie cookie = new BasicClientCookie("session", this.sessionId);
-		cookie.setPath("/");
-		cookie.setDomain(".shutterstock.com");
-		cookie.setAttribute(ClientCookie.DOMAIN_ATTR, "true");
-		cookieStore.addCookie(cookie);
-		HttpContext localContext = new BasicHttpContext();
-		localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
-
-		BufferedReader rd = null;
-		StringBuffer result = new StringBuffer();
-		String line = "";
-		HttpResponse response = null;
-
-		HttpClient httpclient = HttpClientBuilder.create().setUserAgent(
-				"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36")
-				.build();
-		HttpPost httpPost = new HttpPost(baseURL + url);
-
-		StringEntity params = new StringEntity(payload);
-		params.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
-		httpPost.setEntity(params);
-
-		response = httpclient.execute(httpPost, localContext);
-
-		System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
-		rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-		while ((line = rd.readLine()) != null) {
-			System.out.println(line);
-			result.append(line);
-		}
-
-		return result.toString();
-	}
-	
-		
-	
-public String getApacheGETResponse( String url) throws URISyntaxException{
-		
-		CookieStore cookieStore = new BasicCookieStore(); 
-		BasicClientCookie cookie = new BasicClientCookie("session", this.sessionId);
-		cookie.setPath("/");
-		cookie.setDomain(".shutterstock.com");
-		cookie.setAttribute(ClientCookie.DOMAIN_ATTR, "true");
-		cookieStore.addCookie(cookie); 
-		HttpContext localContext = new BasicHttpContext();
-		localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
-		
-		    BufferedReader rd = null;
-		    StringBuffer result = new StringBuffer();
-		    String line = "";
-		    HttpResponse response = null;
-		    
-		    HttpClient httpclient =  HttpClientBuilder.create()
-		    		.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36").build();
-		    
-		    URIBuilder builder = new URIBuilder(baseURL + url);
-		    builder.setParameter("order", "newest")
-		    	.setParameter("per_page", "100")
-		    	.setParameter("page", "1")
-		    	.setParameter("status", "edit")
-		    	.setParameter("xhr_id", "finish")
-		    	.setParameter("fields[images]", "keywords");
-		    HttpGet httpGet = new HttpGet(builder.build());
-		   
-		 
-		    try{            
-		        //Execute and get the response.
-		        response = httpclient.execute(httpGet,localContext);
-
-		        System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
-		        rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-		        while ((line = rd.readLine()) != null) {
-		                        System.out.println(line);
-		                        result.append(line);
-		        }
-
-		    }catch(Exception e){
-
-		    }
-	      return null;
-	  }
-	
-
-
-public String getRejects(int per_page, int page) {
-	Map<String,String> parameters = new HashMap<String,String>(){{
-		   put("order", "newest");
-		   put("per_page", String.valueOf(per_page));
-		   put("page", String.valueOf(page));
-		   put("xhr_id", "1");
-		  put("status", "reviewed");
-		}};
-	try {
-		return get("/api/content_editor/photo", parameters);
-	} catch (IOException e) {
-		return null;
-	}
-}
-
-
-public byte[] downloadImage(String url) throws IOException {
-	 return Jsoup.connect(url).headers(this.headers)
-	  .followRedirects(false)
-	  .cookies(this.cookies)
-	  .method(Connection.Method.GET)
-	  .validateTLSCertificates(false)
-	  .ignoreContentType(true)
-	  .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36")
-	  .execute().bodyAsBytes();
-}
-
 
 public byte[] downloadByteArray(String link) throws IOException {
 	URL url = new URL(link);
@@ -423,5 +224,27 @@ public byte[] downloadByteArray(String link) throws IOException {
 	  if (is != null) { is.close(); }
 	}
 }
+
+public byte[] downloadImage(String url) throws MalformedURLException, IOException {
+	BufferedImage bi = ImageIO.read(new URL(url));
+	return toByteArray(bi, "jpg");
+}
+
+public static byte[] toByteArray(BufferedImage bi, String format)
+        throws IOException {
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(bi, format, baos);
+        byte[] bytes = baos.toByteArray();
+        return bytes;
+
+    }
+
+public void saveStringToFile(String s, String filename) throws IOException {
+	Path path  = Paths.get(System.getProperty("user.home"), filename);
+	 Files.write(path, s.getBytes(), StandardOpenOption.CREATE);
+}
+
+
 
 }

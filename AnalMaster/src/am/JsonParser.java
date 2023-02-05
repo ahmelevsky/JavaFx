@@ -5,11 +5,23 @@ import java.util.Collection;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
 public class JsonParser {
 
+	
+	
+	public static long getTotalImagesCount(String jsonString) {
+		JSONObject obj = new JSONObject(jsonString);
+			long result = 0;
+			if (!obj.isNull("total"))
+				result = obj.getLong("total");
+		return result;
+	}
+	
+	
 	public static List<ShutterImage> parseImagesData(String jsonString) {
 		List<ShutterImage> result = new ArrayList<ShutterImage>();
 		JSONObject obj = new JSONObject(jsonString);
@@ -18,103 +30,116 @@ public class JsonParser {
 		for (int i = 0; i < arr.length(); i++) {
 			JSONObject imageobj = arr.getJSONObject(i);
 			
+			if (!imageobj.isNull("media_id"))
+				result.add(new ShutterImage(Long.parseLong(imageobj.getString("media_id"))));
+		}
+		return result;
+	}
+	
+	public static ShutterImage parseImageDataAndPaste(String jsonString, ShutterImage image) {
+		JSONObject obj = new JSONObject(jsonString);
+
+		JSONObject imageobj = obj.getJSONObject("data");
 			
-			String uploaded_filename = "";
-			if (!imageobj.isNull("uploaded_filename"))
-				uploaded_filename = imageobj.getString("uploaded_filename");
-			
-			String id = "";
-			if (!imageobj.isNull("id"))
-				id = imageobj.getString("id");
-			
-			
-			ShutterImage image = new ShutterImage(id, uploaded_filename);
-			
-			JSONArray keywordsarr = imageobj.getJSONArray("keywords");
-			for (int j = 0; j < keywordsarr.length(); j++) {
-				image.keywords.add(keywordsarr.getString(j));
+			if (!imageobj.isNull("id")) {
+				long id = Long.parseLong(imageobj.getString("id").substring(1));
+				if (image.getMedia_id()!=id)
+					throw new JSONException("Media_id is incorrect. Image media_id = " + image.getMedia_id() + " but json returns " + id);
 			}
 			
+
 			if (!imageobj.isNull("description"))
 				image.setDescription(imageobj.getString("description"));
 			else
 				image.setDescription("");
-		
-			
-			if (!imageobj.isNull("thumbnail_url_480"))
-				image.setPreviewPath(imageobj.getString("thumbnail_url_480"));
-			else 
-				image.setPreviewPath("");
 			
 			if (!imageobj.isNull("is_illustration"))
 				image.setIs_illustration(imageobj.getBoolean("is_illustration"));
 			else
 				image.setIs_illustration(false);
-		
+			
+			if (!imageobj.isNull("keywords")) {
+				JSONArray keywordsarr = imageobj.getJSONArray("keywords");
+				for (int j = 0; j < keywordsarr.length(); j++) {
+					image.keywords.add(keywordsarr.getString(j));
+				}
+			}
+			if (!imageobj.isNull("large_thumb")) {
+				JSONObject previewObject = imageobj.getJSONObject("large_thumb");
+				image.setPreviewPath(previewObject.getString("url"));
+			}
+
+			if (!imageobj.isNull("original_filename"))
+				image.setOriginal_filename(imageobj.getString("original_filename"));
+			else
+				image.setOriginal_filename("");
 			
 			
-			result.add(image);
-		}
-		return result;
+			if (!imageobj.isNull("upload_id"))
+				image.setUpload_id(imageobj.getLong("upload_id"));
+			else
+				image.setUpload_id(0);
+			
+			if (!imageobj.isNull("uploaded_date"))
+				image.setUploaded_date(imageobj.getString("uploaded_date"));
+			else
+				image.setUploaded_date("");
+			
+			
+		return image;
 	}
 	
-	 public static String createContentPayload(Collection<ShutterImage> files) {
-		   JSONArray data = new JSONArray();
-		   for (ShutterImage file:files) {
-			   JSONObject root = new JSONObject();
-			   root.put("description", file.getDescription());
-			   root.put("id", file.getId());
-			   root.put("is_illustration", file.getIs_illustration());
-			   root.put("keywords", file.keywords);
-			   root.put("location", new JSONObject()
-					   .put("collected_full_location_string", "")
-					   .put("english_full_location", "")
-					   .put("external_metadata", "")
-					   );
-			   root.put("submitter_note", "");
-			   data.put(root);
-		   }
-		   System.out.println("JSON CONTENT PAYLOAD: " +  data.toString());
-		  return data.toString();
-	   }
-	 
-   public static String createSubmitPayload(Collection<ShutterImage> files) {
-	   JSONObject root = new JSONObject();
-	   JSONArray media = new JSONArray();
-	   JSONArray notSpellCheckArray = new JSONArray();
-	   
-		   for (ShutterImage file:files) {
-			   JSONObject mediaObj = new JSONObject();
-			   mediaObj.put("media_type", "photo");
-			   mediaObj.put("media_id", file.getId());
-			   media.put(mediaObj);
-			//   for (String k:file.keywords)
-				 //  notSpellCheckArray.put(k);
-		   }
-		  root.put("media", media);
-		
-		  root.put("keywords_not_to_spellcheck", notSpellCheckArray);
-		  root.put("skip_spellcheck", "true");
-		  
-		  System.out.println("JSON SUBMIT PAYLOAD: " + root.toString());
-		  
-		  return root.toString();
-   }
+	
+	public static ShutterImage parseKeywordsTopAndPaste(String jsonString, ShutterImage image) {
+		JSONObject root = new JSONArray(jsonString).getJSONObject(0);
+		JSONArray arr = root.getJSONArray("keywords");
+		for (int i = 0; i < arr.length(); i++) {
+			JSONObject imageobj = arr.getJSONObject(i);
+			String keyword = null;
+			double percentage = 0.0;
+			
+			if (!imageobj.isNull("keyword"))
+				keyword = imageobj.getString("keyword");
+			if (!imageobj.isNull("percentage"))
+				percentage = imageobj.getDouble("percentage");
+			
+			if (keyword==null || percentage==0.0)
+				throw new JSONException("Can't get keywords data: " + jsonString);
+			else
+				image.keywordsRate.put(keyword, percentage);
+			}
+		return image;
+	}
+	
+	
+
+	public static List<ShutterImage> parseKeywordsTopAndPasteToMultiple(String jsonString) {
+		JSONArray rootArray = new JSONArray(jsonString);
+		List<ShutterImage> images = new ArrayList<ShutterImage>();
+        for (int a = 0; a < rootArray.length(); a++) {		
+        	JSONObject root = rootArray.getJSONObject(a);
+        	ShutterImage im = new ShutterImage(Long.parseLong(root.getString("media_id")));
+        			JSONArray arr = root.getJSONArray("keywords");
+        	for (int i = 0; i < arr.length(); i++) {
+        		JSONObject imageobj = arr.getJSONObject(i);
+        		String keyword = null;
+        		double percentage = 0.0;
+			
+        		if (!imageobj.isNull("keyword"))
+        			keyword = imageobj.getString("keyword");
+        		if (!imageobj.isNull("percentage"))
+        			percentage = imageobj.getDouble("percentage");
+			
+        		if (keyword==null || percentage==0.0)
+        			throw new JSONException("Can't get keywords data: " + jsonString);
+        		else
+        			im.keywordsRate.put(keyword, percentage);
+			}
+        	images.add(im);
+        }
+		return images;
+	}
    
-	
-	public static String joinJsonArrays(List<String> arrays) {
-		JSONArray destinationArray = new JSONArray();
-		for (String ar:arrays) {
-			JSONObject obj = new JSONObject(ar);
-			JSONArray data = obj.getJSONArray("data");
-			for (int i=0;i<data.length();i++)
-				destinationArray.put(data.get(i));
-		}
-		JSONObject root = new JSONObject();
-		root.put("data",destinationArray);
-		System.out.println("DESTINATION RELEASES JSON" + root.toString());
-		return root.toString();
-	}
 
 	public static List<String> getFileNames(String jsonString) {
 		List<String> result = new ArrayList<String>();

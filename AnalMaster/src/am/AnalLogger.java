@@ -32,8 +32,8 @@ public class AnalLogger {
         }
 
         logger.setLevel(Level.ALL);
-        fileTxt = new FileHandler(System.getProperty("user.home") + File.separator + "SubmitMaster.log" , true);
-        fileHTML = new FileHandler(System.getProperty("user.home") + File.separator + "SubmitMaster.html", true);
+        fileTxt = new FileHandler(System.getProperty("user.home") + File.separator + "AnalLogger_1.log" , true);
+        fileHTML = new FileHandler(System.getProperty("user.home") + File.separator + "AnalLogger_1.html", true);
         fileTxt.setLevel(Level.ALL);
         fileHTML.setLevel(Level.INFO);
         // create a TXT formatter
@@ -43,6 +43,6 @@ public class AnalLogger {
         // create an HTML formatter
         formatterHTML = new MyHtmlFormatter();
         fileHTML.setFormatter(formatterHTML);
-        logger.addHandler(fileHTML);
+       // logger.addHandler(fileHTML);
     }
 }

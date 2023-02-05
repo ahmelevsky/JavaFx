@@ -2,9 +2,8 @@ package am;
 
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javafx.beans.property.BooleanProperty;
@@ -30,7 +29,7 @@ public class ShutterImage {
 	private StringProperty image_url = new SimpleStringProperty();
 	
 	
-	public Map<String, Integer> keywordsRate = new HashMap<String,Integer>();
+	public Map<String, Double> keywordsRate = new LinkedHashMap<String,Double>();
 	
 	private LongProperty upload_id = new SimpleLongProperty();
 	private StringProperty id = new SimpleStringProperty();
@@ -54,25 +53,12 @@ public class ShutterImage {
 	
 	private ImageView image;
     
-   
     
-    
-	public ShutterImage(int media_id) {
+	public ShutterImage(long media_id) {
 		this.media_id.set(media_id);
+		this.image_url.set("https://www.shutterstock.com/pic-" + media_id);
 	}
     
-	
-	public ShutterImage(String id,	String uploaded_filename) {
-		this.id.set(id);
-		this.uploaded_filename.set(uploaded_filename);
-		this.original_filename_backup = uploaded_filename;
-		/*
-		keywords.addListener((ListChangeListener<String>) change -> {
-			keywordsCount.set(keywords.size());
-			System.out.println(getKeywordsCount());
-        });
-        */
-	}
 	
 	public ShutterImage(int media_id,	String uploaded_filename) {
 		this.media_id.set(media_id);
@@ -87,6 +73,7 @@ public class ShutterImage {
 
 	public void setMedia_id(long media_id) {
 		this.media_id.set(media_id);
+		this.image_url.set("https://www.shutterstock.com/pic-" + media_id);
 	}
 	
 	

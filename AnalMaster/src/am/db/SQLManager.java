@@ -2,7 +2,6 @@ package am.db;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -12,19 +11,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
-import javafx.collections.FXCollections;
 import am.Main;
 import am.ShutterImage;
 
@@ -56,12 +53,10 @@ public class SQLManager {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             LOGGER.severe(e.getMessage());
-            this.app.showAlert("Can't connect database: " + e.getMessage());
         }
 		
 	}
 
-	
 	
 	private void createTables(){
 		 try  {
@@ -95,7 +90,7 @@ public class SQLManager {
           sql = "CREATE TABLE IF NOT EXISTS " + this.KEYSTABLE + " (\n"
                   + "	media_id integer,\n"
                   + "	keyword text,\n"
-                  + "	rate integer,\n"
+                  + "	rate real,\n"
                   + "	PRIMARY KEY (media_id, keyword),\n"
                   + "   FOREIGN KEY (media_id)"
                   + "	REFERENCES " + this.IMAGESTABLE + " (media_id) "
@@ -254,7 +249,7 @@ public class SQLManager {
 	        		
 	        		i++;
 	                if (i % 100 == 0 || i == images.size()) {
-	                	   pstmt.executeBatch(); // Execute every 1000 items.
+	                	   pstmt.executeBatch(); // Execute every 100 items.
 	                   }
 	        	}
 	        }catch(SQLException e){ 
@@ -264,8 +259,51 @@ public class SQLManager {
 	    }
 	    
 	 
+	 
+	 
+	 
+	 public int insertImageTop(ShutterImage image) {
+		   String sql = "INSERT INTO " + this.IMAGESTOPTABLE + "(media_id,downloads,earnings,image_url) VALUES(?,?,?,?)";
+	        try {
+	        	PreparedStatement pstmt = this.connection.prepareStatement(sql);
+	        	
+	        		pstmt.setLong(1, image.getMedia_id());
+	        		pstmt.setInt(2, image.getDownloads());
+	        		pstmt.setDouble(3, image.getEarnings());
+	        		pstmt.setString(4, image.getImage_url());
+	        		
+	                pstmt.executeUpdate();
+	               // LOGGER.fine("SQL added imageTop " + image.getMedia_id());
+	                return 0;
+	        }catch(SQLException e){ 
+	        	//System.out.println(e.getMessage() + " media_id " + image.getMedia_id());
+	        	//LOGGER.severe(e.getMessage() + " media_id " + image.getMedia_id());
+	        	return -1;
+	        	}
+	    }
 	
 	 public void insertImagesTop(List<ShutterImage> images) {
+		   String sql = "INSERT INTO " + this.IMAGESTOPTABLE + "(media_id,downloads,earnings,image_url) VALUES(?,?,?,?)";
+		   for(ShutterImage image:images) {
+	        try {
+	        	PreparedStatement pstmt = this.connection.prepareStatement(sql);
+	        	
+	        		pstmt.setLong(1, image.getMedia_id());
+	        		pstmt.setInt(2, image.getDownloads());
+	        		pstmt.setDouble(3, image.getEarnings());
+	        		pstmt.setString(4, image.getImage_url());
+	        		
+	                pstmt.executeUpdate();
+	                LOGGER.fine("SQL added imageTop " + image.getMedia_id());
+	        }catch(SQLException e){ 
+	        	System.out.println(e.getMessage() + " media_id " + image.getMedia_id());
+	        	LOGGER.severe(e.getMessage() + " media_id " + image.getMedia_id());
+	        	}
+		   }
+	    }
+	 
+
+	 public void insertImagesTopBatch(List<ShutterImage> images) {
 		   String sql = "INSERT INTO " + this.IMAGESTOPTABLE + "(media_id,downloads,earnings,image_url) VALUES(?,?,?,?)";
 		   int i = 0;
 
@@ -290,23 +328,38 @@ public class SQLManager {
 	        	}
 	    }
 	 
-	 
-	 
-	 public void insertKeywords(long media_id, Map<String,Integer> keywords) {
-		   String sql = "INSERT INTO " + this.KEYSTABLE + "(media_id,keyword,rate) VALUES(?,?,?)";
-
+	 public void insertKeywords(long media_id, Map<String,Double> keywords) {
+		   String sql = "INSERT OR REPLACE INTO " + this.KEYSTABLE + "(media_id,keyword,rate) VALUES(?,?,?)";
+		   for (Map.Entry<String, Double> entry : keywords.entrySet()) {
 	        try {
 	        	PreparedStatement pstmt = this.connection.prepareStatement(sql);
-	        	  for (Map.Entry<String, Integer> entry : keywords.entrySet()) {
-	        	
 	        		pstmt.setLong(1, media_id);
 	        		pstmt.setString(2, entry.getKey());
-	        		pstmt.setInt(3, entry.getValue());
-	        		pstmt.addBatch();
-	        	  }
-	            
-	        	  pstmt.executeBatch(); 
+	        		pstmt.setDouble(3, entry.getValue());
+	        	  pstmt.executeUpdate(); 
 	        	
+	        }catch(SQLException e){ 
+	        	System.out.println(e.getMessage() + " media_id " + media_id);
+	        	LOGGER.severe(e.getMessage() + " media_id " + media_id);
+	        	}
+		   }
+	    }
+	 
+	 
+	 public void insertKeywordsBatch(List<ShutterImage> images) {
+		   String sql = "INSERT OR REPLACE INTO " + this.KEYSTABLE + "(media_id,keyword,rate) VALUES(?,?,?)";
+		   
+	        try {
+	        	PreparedStatement pstmt = this.connection.prepareStatement(sql);
+	        	for(ShutterImage image:images) {
+	        	  for (Map.Entry<String, Double> entry : image.keywordsRate.entrySet()) {
+	        		pstmt.setLong(1, image.getMedia_id());
+	        		pstmt.setString(2, entry.getKey());
+	        		pstmt.setDouble(3, entry.getValue());
+	        		pstmt.addBatch(); 
+	        	  }
+	        	  pstmt.executeBatch(); 
+	        	}
 	        }catch(SQLException e){ 
 	        	System.out.println(e.getMessage());
 	        	LOGGER.severe(e.getMessage());
@@ -315,14 +368,14 @@ public class SQLManager {
 	 
 	 
 	    
-	public  Map<String,Integer> getKeywordsMapForImage(long media_id) {
-		Map<String,Integer> keywords = new HashMap<String,Integer>();
+	public  Map<String,Double> getKeywordsMapForImage(long media_id) {
+		Map<String,Double> keywords = new LinkedHashMap<String,Double>();
 		String sql = "SELECT * FROM " + this.KEYSTABLE + " WHERE media_id=" + media_id;
 		  try {
 		 PreparedStatement pstmt  = this.connection.prepareStatement(sql);
 		 ResultSet rs  = pstmt.executeQuery();
 		 while (rs.next()) {
-			 keywords.put(rs.getString("keyword"), rs.getInt("rate"));
+			 keywords.put(rs.getString("keyword"), rs.getDouble("rate"));
             }
 		   }catch(SQLException e){ 
 	        	System.out.println(e.getMessage());
@@ -341,7 +394,7 @@ public class SQLManager {
 			 PreparedStatement pstmt  = this.connection.prepareStatement(sql);
 			 ResultSet rs  = pstmt.executeQuery();
 			 while (rs.next()) {
-				 ShutterImage image = new ShutterImage(rs.getInt("media_id"));
+				 ShutterImage image = new ShutterImage(rs.getLong("media_id"));
 				 image.setOriginal_filename(rs.getString("original_filename"));
 				 image.setUploaded_date(rs.getString("uploaded_date"));
 				 image.setUpload_id(rs.getLong("upload_id"));
@@ -355,7 +408,8 @@ public class SQLManager {
 				 images.add(image);
 				 image.setDownloads(rs.getInt("downloads"));
 				 image.setEarnings(rs.getDouble("earnings"));
-				 image.setImage_url(rs.getString("image_url"));
+				 if (image.getImage_url().isEmpty()) 
+					 image.setImage_url(rs.getString("image_url"));
 	            }
 			 Collections.reverse(images);
 			 return images;
@@ -367,6 +421,26 @@ public class SQLManager {
      		return null;
      	}
 	}
+	
+	
+	public List<Long> getTopImagesIds(){
+		List<Long> list = new ArrayList<Long>();
+		String sql = "SELECT media_id FROM " + this.IMAGESTOPTABLE;
+		 try {
+			 PreparedStatement pstmt  = this.connection.prepareStatement(sql);
+			 ResultSet rs  = pstmt.executeQuery();
+			 while (rs.next()) {
+				 list.add(rs.getLong("media_id"));
+			 }
+         }
+		 catch(SQLException e){ 
+			 System.out.println(e.getMessage());
+     		LOGGER.severe(e.getMessage());
+     		return null;
+     	}
+		 return list;
+	}
+	
 	
 	
 	public int getImagesCount(String sql){
@@ -384,23 +458,6 @@ public class SQLManager {
      	}
 	}
 	
-	 
-	 public LocalDateTime getLastUpdateDate() {
-		 try {
-			 Statement statement = this.connection.createStatement();
-			 statement.setQueryTimeout(1);
-			 String sql = "SELECT MAX(verdict_time) FROM " + this.IMAGESTABLE;
-			 ResultSet rs =  statement.executeQuery(sql);
-			 String value = rs.getString(1);
-			 DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-			 return LocalDateTime.parse(value, formatterTime);
-		 }
-		 catch(SQLException e){ 
-			 System.out.println(e.getMessage());
-     		LOGGER.severe(e.getMessage());
-     		return null;
-     	}
-	 }
 	 
 	 public boolean isInDB(long id) {
 		 try {

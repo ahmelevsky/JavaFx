@@ -6,12 +6,17 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="extension" key="selection"/>
+		<item value="HashMap" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="HashMap"/>
+			<item value="saveS"/>
+			<item value="save"/>
+			<item value="saves"/>
+			<item value="testBtn"/>
 			<item value="extension"/>
 			<item value="NOT NULL"/>
 			<item value="version"/>
@@ -22,11 +27,6 @@
 			<item value="directoriesToWalk"/>
 			<item value="allImagesCounter"/>
 			<item value="progress"/>
-			<item value="imagesToSubmit"/>
-			<item value="sresponse"/>
-			<item value="sresponse.successImages"/>
-			<item value="submittedImages"/>
-			<item value="System.out.println"/>
 		</list>
 		<list key="replacehistory">
 			<item value="shiftPostitionPointer"/>
