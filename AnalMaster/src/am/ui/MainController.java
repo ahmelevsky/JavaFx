@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,8 +48,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -74,7 +77,7 @@ import javafx.util.StringConverter;
 public class MainController implements Initializable {
 
 	
-	
+	public Tab tab;
 	@FXML
 	private TextField sessionIdText;
 	@FXML
@@ -154,13 +157,44 @@ public class MainController implements Initializable {
 	@FXML
 	private CheckBox selectVector;
 	
+	@FXML
+	private TextField downloadsLessFilter;
+	
+	@FXML
+	private TextField downloadsMoreFilter;
+	
+	@FXML
+	private TextField earningsLessFilter;
+	
+	@FXML
+	private TextField earningsMoreFilter;
+	
+	@FXML
+	private Button createSetBtn;
+	
+	@FXML
+	private TextField setNameField;
+	
+	
+	@FXML
+	private Label downloadsCountLbl;
+	
+	@FXML
+	private Label earningsSumLbl;
+	
+	@FXML
+	private CheckBox useFilterBtnBox;
+	
+	@FXML
+	private Button filterBtn;
+	
 	
 	public Main app;
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
 	public ObservableList<ShutterImage> images = FXCollections.observableArrayList();
 	
-	private SQLManager sqlManager = new SQLManager(app);
+	private SQLManager sqlManager;
 	private ShutterProvider provider;
 	int rowsOnPage = 100;
 	private String lastQuery = ""; 
@@ -173,27 +207,27 @@ public class MainController implements Initializable {
 		// TODO Auto-generated method stub
 		loadSessionId();
 		this.provider = new ShutterProvider("");
-		
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		tableView.setItems(images);
 		setupTableViewColumn();
 		tableView.getSelectionModel().setCellSelectionEnabled(true);
 	    tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 	    tableView.setOnKeyPressed(new TableKeyEventHandler());
-	    
 	    this.columnDescription.setVisible(false);
 	    this.columnKeywords.setVisible(false);
 	    
 	    
 	    filenameFilter.textProperty().addListener((observable, oldValue, newValue) -> {
-	    	if (!newValue.equals(oldValue))
+	    	if (!newValue.equals(oldValue) && !useFilterBtnBox.isSelected())
 	    		getFilteredData();
 	    });
 	    descriptionFilter.textProperty().addListener((observable, oldValue, newValue) -> {
-	    	getFilteredData();
+	    	if (!newValue.equals(oldValue) && !useFilterBtnBox.isSelected())
+	    		getFilteredData();
 	    });
 	    keywordsFilter.textProperty().addListener((observable, oldValue, newValue) -> {
-	    	getFilteredData();
+	    	if (!newValue.equals(oldValue) && !useFilterBtnBox.isSelected())
+	    		getFilteredData();
 	    });
 	    
 	    selectRaster.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -212,13 +246,50 @@ public class MainController implements Initializable {
 	    
 	    uploadDateFrom.valueProperty().addListener((ov, oldValue, newValue) -> {
 	    //	LocalDate localDate = uploadDateFrom.getValue();
-	    	getFilteredData();
+	    	if (!useFilterBtnBox.isSelected())
+	    		getFilteredData();
         });
 	    
 	    uploadDateTo.valueProperty().addListener((ov, oldValue, newValue) -> {
 		    //	LocalDate localDate = uploadDateFrom.getValue();
+	    	if (!useFilterBtnBox.isSelected())
 		    	getFilteredData();
 	        });
+	    
+	    
+
+	    downloadsLessFilter.textProperty().addListener((observable, oldValue, newValue) -> {
+	    	if (!newValue.matches("\\d*")) {
+	    		downloadsLessFilter.setText(newValue.replaceAll("[^\\d]", ""));
+	        }
+	    	if (!newValue.equals(oldValue) && !useFilterBtnBox.isSelected())
+	    		getFilteredData();
+	    });
+	    
+	    downloadsMoreFilter.textProperty().addListener((observable, oldValue, newValue) -> {
+	    	if (!newValue.matches("\\d*")) {
+	    		downloadsMoreFilter.setText(newValue.replaceAll("[^\\d]", ""));
+	        }
+	    	if (!newValue.equals(oldValue) && !useFilterBtnBox.isSelected())
+	    		getFilteredData();
+	    });
+	 
+	    
+	    earningsLessFilter.textProperty().addListener((observable, oldValue, newValue) -> {
+	    	if (!newValue.matches("[\\d*|\\d+\\.\\d*]")) {
+	    		earningsLessFilter.setText(newValue.replaceAll("[^\\d*|\\d+\\.\\d*]", ""));
+	        }
+	    	if (!newValue.equals(oldValue) && !useFilterBtnBox.isSelected())
+	    		getFilteredData();
+	    });
+	    
+	    earningsMoreFilter.textProperty().addListener((observable, oldValue, newValue) -> {
+	    	if (!newValue.matches("[\\d*|\\d+\\.\\d*]")) {
+	    		earningsMoreFilter.setText(newValue.replaceAll("[^\\d*|\\d+\\.\\d*]", ""));
+	        }
+	    	if (!newValue.equals(oldValue) && !useFilterBtnBox.isSelected())
+	    		getFilteredData();
+	    });
 		    
 	    uploadDateFrom.setConverter(new StringConverter<LocalDate>() {
 	    	 String pattern = "yyyy-MM-dd";
@@ -307,9 +378,27 @@ public class MainController implements Initializable {
 		});
 	    
 	    
-
+	    
+	    
+	    setNameField.textProperty().addListener(new ChangeListener<String>() {
+	        @Override
+	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
+	            String newValue) {
+	        	if (!newValue.matches("[a-zA-Z0-9]+")) {
+	        		setNameField.setText(newValue.replaceAll("[^a-zA-Z0-9]", ""));
+	            }
+	        	if (!setNameField.getText().isEmpty())
+	        		createSetBtn.setDisable(false);
+	        	else
+	        		createSetBtn.setDisable(true);
+	        }
+	    });
+	    
 	}
 	
+	public void setup() {
+		this.sqlManager = app.sqlManager;
+	}
 	
 	
 	
@@ -387,10 +476,23 @@ public class MainController implements Initializable {
 	public void getAllImages() {
 		String sqldata = "SELECT * FROM " + this.sqlManager.IMAGESTABLE + " LEFT JOIN " + this.sqlManager.IMAGESTOPTABLE
 	                      + " on " + this.sqlManager.IMAGESTOPTABLE + ".media_id = " + this.sqlManager.IMAGESTABLE + ".media_id "
-	                      + " ORDER BY media_id DESC"; 
+	                      + " ORDER BY uploaded_date DESC"; 
 		String sqlcount = "SELECT COUNT(*) FROM " + sqlManager.IMAGESTABLE;
 		loadData(sqldata, sqlcount);
 	}
+	
+	@FXML
+	private void createSet() {
+		String setName = setNameField.getText();
+		if (sqlManager.getSetsNames().contains(setName))
+			app.showAlert("Set with this name is already exists. Please choose another name.");
+		else {
+			String query = lastQuery.split("ORDER")[0].trim();
+			if (!sqlManager.createSet("CREATE VIEW " + setName + " AS  " + query))
+				app.showAlert("Error creating new set");
+		}
+	}
+	
 	
 	private List<ShutterImage> createTestData(int imagesCount) {
 		List<ShutterImage> list = new ArrayList<ShutterImage>();
@@ -463,7 +565,7 @@ public class MainController implements Initializable {
 		
 	}
 	
-	
+	@FXML
 	private void getFilteredData() {
             FilterConstructor fc = new FilterConstructor(this.app);
             fc.name = filenameFilter.getText();
@@ -477,6 +579,24 @@ public class MainController implements Initializable {
             	fc.keywords.clear();
             	fc.keywords.addAll(Arrays.asList(lines));	
             }
+            
+            if (!downloadsLessFilter.getText().trim().isEmpty()) {
+            	fc.downloadsLess = Integer.parseInt(downloadsLessFilter.getText().trim());
+            }
+            
+            if (!downloadsMoreFilter.getText().trim().isEmpty()) {
+            	fc.downloadsMore = Integer.parseInt(downloadsMoreFilter.getText().trim());
+            }
+            
+            if (!earningsLessFilter.getText().trim().isEmpty()) {
+            	fc.earningsLess = Double.parseDouble(earningsLessFilter.getText().trim());
+            }
+            
+            if (!earningsMoreFilter.getText().trim().isEmpty()) {
+            	fc.earningsMore = Double.parseDouble(earningsMoreFilter.getText().trim());
+            }
+            
+            
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate ld = uploadDateFrom.getValue();
             if (ld!=null) 
@@ -491,9 +611,12 @@ public class MainController implements Initializable {
 
 	
 	private void loadData(String sqldata, String sqlcount) {
-		int count = this.sqlManager.getImagesCount(sqlcount);
+		int count = this.sqlManager.executeRequestForInt(sqlcount);
 		updateFilesCount(count);
 		setupPagination(sqldata, count);
+		String requestDownloads = sqldata.replace("*", "SUM(downloads)").replace("ORDER BY uploaded_date DESC","");
+		String requestEarnings = sqldata.replace("*", "SUM(earnings)").replace("ORDER BY uploaded_date DESC","");;
+		updateDownloadsAndEarnings(requestDownloads, requestEarnings);
 	}
 	
 	
@@ -507,7 +630,16 @@ public class MainController implements Initializable {
 	}
 	
 	
-
+    private void updateDownloadsAndEarnings(String requestDownloads, String requestEarnings) {
+    	int downloadsCount = this.sqlManager.executeRequestForInt(requestDownloads);
+    	double earningsSum = this.sqlManager.executeRequestForDouble(requestEarnings);
+    	Platform.runLater(new Runnable() {
+            public void run() {
+            	downloadsCountLbl.setText(String.valueOf(downloadsCount));
+            	earningsSumLbl.setText("$" + String.format("%.2f", earningsSum));
+              }
+		});
+    }
 	
 	
 	public ShutterProvider getSession() {
@@ -663,6 +795,7 @@ public class MainController implements Initializable {
 		            	 selectImages(sqldata, pageIndex);
 		            	 Pane node = new Pane();
 		            	 node.setVisible(false);
+		            	 correctFilename();
 		            	 return node;
 		            }
 		        });
@@ -677,6 +810,9 @@ public class MainController implements Initializable {
 			System.out.println(sql);
 			this.images.clear();
 			this.images.addAll(this.sqlManager.getImagesFromDB(sql));
+			Comparator<ShutterImage> comparator = Comparator.comparing(ShutterImage::getUploaded_date); 
+			comparator = comparator.reversed();
+			FXCollections.sort(this.images, comparator);
 			bindSlider();
 		}
 		

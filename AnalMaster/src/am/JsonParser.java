@@ -13,11 +13,42 @@ public class JsonParser {
 
 	
 	
+	public static String getUserId(String jsonString) {
+		JSONObject obj = new JSONObject(jsonString);
+		JSONObject respHeader = obj.getJSONObject("responseHeader");
+		JSONObject params = respHeader.getJSONObject("params");
+		JSONArray fq = params.getJSONArray("fq");
+		return fq.getString(0).split(":")[1];
+	}
+	
+	public static long getTotalImagesCountFind(String jsonString) {
+		JSONObject obj = new JSONObject(jsonString);
+		JSONObject meta = obj.getJSONObject("meta");
+		JSONObject pagination = meta.getJSONObject("pagination");
+			long result = 0;
+			if (!pagination.isNull("total_records"))
+				result = pagination.getLong("total_records");
+		return result;
+	}
+	
+	
 	public static long getTotalImagesCount(String jsonString) {
 		JSONObject obj = new JSONObject(jsonString);
 			long result = 0;
 			if (!obj.isNull("total"))
 				result = obj.getLong("total");
+		return result;
+	}
+	
+	public static List<ShutterImage> parseImagesDataFind(String jsonString) {
+		List<ShutterImage> result = new ArrayList<ShutterImage>();
+		JSONObject obj = new JSONObject(jsonString);
+		JSONArray arr = obj.getJSONArray("data");
+		for (int i = 0; i < arr.length(); i++) {
+			JSONObject imageobj = arr.getJSONObject(i);
+			if (!imageobj.isNull("id"))
+				result.add(new ShutterImage(Long.parseLong(imageobj.getString("id"))));
+		}
 		return result;
 	}
 	

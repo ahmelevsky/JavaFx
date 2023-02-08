@@ -36,7 +36,7 @@ public class ShutterImage {
 	
 	private StringProperty original_filename = new SimpleStringProperty();
 	private String original_filename_backup;
-	private StringProperty uploaded_filename = new SimpleStringProperty();
+	//private StringProperty uploaded_filename = new SimpleStringProperty();
 	private StringProperty uploaded_date = new SimpleStringProperty();
 	public LocalDate uploadDate;
 	
@@ -59,13 +59,6 @@ public class ShutterImage {
 		this.image_url.set("https://www.shutterstock.com/pic-" + media_id);
 	}
     
-	
-	public ShutterImage(int media_id,	String uploaded_filename) {
-		this.media_id.set(media_id);
-		this.uploaded_filename.set(uploaded_filename);
-		this.original_filename_backup = uploaded_filename;
-		
-	}
 	
 	public long getMedia_id() {
 		return media_id.get();
@@ -112,6 +105,7 @@ public class ShutterImage {
 		this.upload_id.set(upload_id);
 	}
 	
+	/*
 	public String getUploaded_filename() {
 		return uploaded_filename.get();
 	}
@@ -123,12 +117,15 @@ public class ShutterImage {
 		} catch (IndexOutOfBoundsException e) {
 			this.extension = "";
 		}
+		
+		this.original_filename_backup = uploaded_filename;
 	}
 	
-	
+	*/
 	
 	public boolean isVector() {
-		return uploaded_filename.get().endsWith("eps");
+		return original_filename.get().endsWith("eps");
+		//return uploaded_filename.get().endsWith("eps");
 	}
 	
 	public void setImage(ImageView value) {
@@ -182,6 +179,7 @@ public class ShutterImage {
 
 	public void setOriginal_filename(String original_filename) {
 		this.original_filename.set(original_filename);
+		this.original_filename_backup = original_filename;
 	 if (original_filename.endsWith("eps"))
 			 setType("Vector");
 	 else 
@@ -229,19 +227,32 @@ public class ShutterImage {
 
 	public void correctName() {
 		int pos = this.original_filename_backup.indexOf('_');
-		if (pos > -1)
-			this.uploaded_filename.set(this.original_filename_backup.substring(pos + 1));
+		if (pos > -1) {
+			String prefix = this.original_filename_backup.split("_")[0];
+			if (prefix.length()==8 && !hasLowerCase(prefix))
+			  this.original_filename.set(this.original_filename_backup.substring(pos + 1));
+		}
 	}
 	
+	private boolean hasLowerCase(String s) {
+		 char[] ch = s.toCharArray();
+		for (char c:ch) {
+			if (Character.isLowerCase(c))
+				return true;
+		}
+		return false;
+	}
+	
+	
 	public void restoreName() {
-		this.uploaded_filename.set(this.original_filename_backup);
+		this.original_filename.set(this.original_filename_backup);
 	}
 	
 	
 
 	@Override
 	public String toString() {
-		return "ShutterImage [id=" + id + ", filename=" + uploaded_filename + "]";
+		return "ShutterImage [id=" + id + ", filename=" + original_filename.get() + "]";
 	}
 	
 	

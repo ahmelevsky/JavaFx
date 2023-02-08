@@ -21,6 +21,14 @@ public class FilterConstructor {
 	public String type = "";
 	public String uploadDateFrom = "";
 	public String uploadDateTo = "";
+	public int downloadsLess = Integer.MAX_VALUE;
+	public int downloadsMore = 0;
+	private final double doubleMax = Double.MAX_VALUE;
+	public double earningsLess = doubleMax;
+	public double earningsMore = -1;
+	
+	
+	
 	public List<String> keywords = new ArrayList<String>();
 	
 	public FilterConstructor(Main app) {
@@ -29,7 +37,7 @@ public class FilterConstructor {
 	
 	public void constructFilter() {
 	//	String escape = " ESCAPE '\\' ";
-		String orderby = "  ORDER BY \"media_id\" DESC ";
+	//	String orderby = "  ORDER BY \"media_id\" DESC ";
 		List<String> filters = new ArrayList<String>();
 		
 		if (!name.trim().isEmpty())
@@ -49,23 +57,35 @@ public class FilterConstructor {
 		else if (!uploadDateTo.isEmpty())
 			filters.add(" \"uploaded_date\" <= '" + uploadDateTo + "' ");
 		
+		if (downloadsLess<Integer.MAX_VALUE || downloadsMore>0) {
+			filters.add(" \"downloads\" BETWEEN  " + downloadsMore + " AND " + downloadsLess + " ");
+		}
+		
+		if (earningsLess<Double.MAX_VALUE || earningsMore>0) {
+			filters.add(" \"earnings\" BETWEEN  " + earningsMore + " AND " + earningsLess + " ");
+		}
+		
 		
 	    if (!filters.isEmpty())
-	    	this.filterSQL =" WHERE " + String.join(" AND ", filters) + orderby;
+	    	//this.filterSQL =" WHERE " + String.join(" AND ", filters) + orderby;
+	    	this.filterSQL =" WHERE " + String.join(" AND ", filters);	
 	    else 
-	    	this.filterSQL = orderby;
+	    	//this.filterSQL = orderby;
+	    	this.filterSQL = "";
 	}
 	
 	public String getCountSQL() {
 		constructFilter();
-		return "SELECT Count(*) FROM " + this.IMAGESTABLE + this.filterSQL;
+		return "SELECT Count(*) FROM " + this.IMAGESTABLE + " LEFT JOIN " + this.IMAGESTOPTABLE 
+				 + " on " + this.IMAGESTOPTABLE + ".media_id = " + this.IMAGESTABLE + ".media_id "
+				+ this.filterSQL;
 	}
 	
 	public String getImagesSQL() {
 		constructFilter();
 		return "SELECT * FROM " + this.IMAGESTABLE + " LEFT JOIN " + this.IMAGESTOPTABLE 
 				 + " on " + this.IMAGESTOPTABLE + ".media_id = " + this.IMAGESTABLE + ".media_id "
-				+ this.filterSQL;
+				+ this.filterSQL + " ORDER BY uploaded_date DESC";
 	}
 	
 	

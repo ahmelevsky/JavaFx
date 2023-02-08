@@ -27,7 +27,7 @@ import am.ShutterImage;
 
 public class SQLManager {
 
-	public final String fileLocation = System.getProperty("user.home") + File.separator + "AnalMaster_1.db"; 
+	public final String fileLocation = System.getProperty("user.home") + File.separator + "AnalMaster.db"; 
 	private final Logger LOGGER;
 	public Main app;
 	public Connection connection;
@@ -48,6 +48,7 @@ public class SQLManager {
                 LOGGER.fine("The driver name is " + meta.getDriverName());
                 LOGGER.fine("Connection success.");
                 createTables();
+                updateTables();
             }
 
         } catch (SQLException e) {
@@ -58,6 +59,21 @@ public class SQLManager {
 	}
 
 	
+	private void updateTables() {
+		 String sql = "CREATE  INDEX IF NOT EXISTS upload_date_index ON "
+				    + this.IMAGESTABLE    
+				    + " (uploaded_date DESC)";
+		 Statement statement;
+		try {
+			statement = this.connection.createStatement();
+    		 statement.execute(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		    
+	}
+
+
 	private void createTables(){
 		 try  {
 		  Statement statement = this.connection.createStatement();
@@ -441,9 +457,23 @@ public class SQLManager {
 		 return list;
 	}
 	
+	public int getImagesCount(){
+		 try {
+			 String sql = "SELECT COUNT(*) FROM " + this.IMAGESTABLE;
+			 Statement statement = this.connection.createStatement();
+			 statement.setQueryTimeout(1);
+			 ResultSet rs =  statement.executeQuery(sql);
+			 return rs.getInt(1);
+		 }
+		 
+		 catch(SQLException e){ 
+			 System.out.println(e.getMessage());
+    		LOGGER.severe(e.getMessage());
+    		return 0;
+    	}
+	}
 	
-	
-	public int getImagesCount(String sql){
+	public int executeRequestForInt(String sql){
 		 try {
 			 Statement statement = this.connection.createStatement();
 			 statement.setQueryTimeout(1);
@@ -457,6 +487,37 @@ public class SQLManager {
      		return 0;
      	}
 	}
+	
+	public double executeRequestForDouble(String sql){
+		 try {
+			 Statement statement = this.connection.createStatement();
+			 statement.setQueryTimeout(1);
+			 ResultSet rs =  statement.executeQuery(sql);
+			 return rs.getDouble(1);
+		 }
+		 
+		 catch(SQLException e){ 
+			 System.out.println(e.getMessage());
+    		LOGGER.severe(e.getMessage());
+    		return 0;
+    	}
+	}
+	
+	public String executeRequestForString(String sql){
+		 try {
+			 Statement statement = this.connection.createStatement();
+			 statement.setQueryTimeout(1);
+			 ResultSet rs =  statement.executeQuery(sql);
+			 return rs.getString(1);
+		 }
+		 
+		 catch(SQLException e){ 
+			 System.out.println(e.getMessage());
+   		LOGGER.severe(e.getMessage());
+   		return null;
+   	}
+	}
+	
 	
 	 
 	 public boolean isInDB(long id) {
@@ -527,5 +588,42 @@ public class SQLManager {
 	                }
 	                return bos.toByteArray();
 	 }
+	 
+	 
+	 public List<String> getSetsNames(){
+		 String sql = "SELECT name FROM sqlite_schema WHERE type = 'view';";
+		 List<String> list = new ArrayList<String>();
+		 try {
+			 Statement statement = this.connection.createStatement();
+			 statement.setQueryTimeout(1);
+			 ResultSet rs =  statement.executeQuery(sql);
+			 
+			 while (rs.next()) {
+				list.add(rs.getString("name"));
+	            }
+		 }
+		 catch(SQLException e){ 
+			 System.out.println(e.getMessage());
+     		 LOGGER.severe(e.getMessage());
+     	}
+		 return list;
+	 }
+	 
+	 public boolean createSet(String sql) {
+		 try {
+			 System.out.println(sql);
+			 Statement statement = this.connection.createStatement();
+			 statement.setQueryTimeout(1);
+			 statement.execute(sql);
+			 return true;
+		 }
+		 catch(SQLException e){ 
+			 System.out.println(e.getMessage());
+     		 LOGGER.severe(e.getMessage());
+     		 return false;
+     	}
+	 }
+	 
+	 
 	 
 }

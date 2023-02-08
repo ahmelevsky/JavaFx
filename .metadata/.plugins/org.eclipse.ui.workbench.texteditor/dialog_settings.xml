@@ -6,12 +6,18 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="HashMap" key="selection"/>
+		<item value="SELECT *" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="    tableView.setSortPolicy(t -&gt; {"/>
+			<item value="   tableView.setSortPolicy(t -&gt; {"/>
+			<item value="SELECT *"/>
+			<item value="SELECT"/>
+			<item value="ORDER"/>
+			<item value="libs"/>
 			<item value="HashMap"/>
 			<item value="saveS"/>
 			<item value="save"/>
@@ -21,12 +27,6 @@
 			<item value="NOT NULL"/>
 			<item value="version"/>
 			<item value="sleep"/>
-			<item value="savedImages"/>
-			<item value="Submitting"/>
-			<item value="failed"/>
-			<item value="directoriesToWalk"/>
-			<item value="allImagesCounter"/>
-			<item value="progress"/>
 		</list>
 		<list key="replacehistory">
 			<item value="shiftPostitionPointer"/>

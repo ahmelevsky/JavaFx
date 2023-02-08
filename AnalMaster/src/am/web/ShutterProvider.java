@@ -1,19 +1,11 @@
 package am.web;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,43 +13,20 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CookieStore;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.cookie.ClientCookie;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.protocol.HttpContext;
 import org.jsoup.Connection;
 import org.jsoup.Connection.KeyVal;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import am.ShutterImage;
-
-import org.jsoup.Jsoup;
 
 public class ShutterProvider {
 
@@ -65,6 +34,7 @@ public class ShutterProvider {
 	String sessionId;
 	Map<String,String> cookies;
     Map<String,String> headers;
+	private String baseURLShutter = "https://www.shutterstock.com";
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     
 	public ShutterProvider(String sessionId) {
@@ -147,9 +117,33 @@ public class ShutterProvider {
 		for (long id:ids) {
 			parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("ids[]", String.valueOf(id)));
 		}
-		return get("/api/earnings/keywords", parameters);
+		return get(this.baseURL + "/api/earnings/keywords", parameters);
 	}
 
+	
+
+	public String findImages(String userId, int page_size, int page) throws IOException {
+		List<KeyVal> parameters = new ArrayList<KeyVal>();
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[display_name]", "name"));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("q", "*"));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("language", "en"));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("page[size]", String.valueOf(page_size)));
+		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("page[number]", String.valueOf(page)));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "keywords"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "link"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "src"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "image_type"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "displays"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "alt"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("allow_inject", "true"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("include", "contributor-limited-meta"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("recordActivity", "true"));
+	    parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("sort", "newest"));
+        parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[submitter]", userId));
+		return get(this.baseURLShutter  + "/studioapi/images/search", parameters);
+	}
+	
+	
 	
 	
 	public boolean isConnection() {
@@ -190,7 +184,7 @@ public class ShutterProvider {
 		if (parameters==null)
 			parameters = new ArrayList<KeyVal>();
 		return
-			  Jsoup.connect(this.baseURL + url )
+			  Jsoup.connect(url)
 			  .headers(this.headers)
 			  .followRedirects(false)
 			  .cookies(this.cookies)
@@ -202,6 +196,7 @@ public class ShutterProvider {
 			  .execute().body();
 		
 }
+	
 
 public byte[] downloadByteArray(String link) throws IOException {
 	URL url = new URL(link);
