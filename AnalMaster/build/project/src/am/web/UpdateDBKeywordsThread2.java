@@ -28,10 +28,6 @@ public class UpdateDBKeywordsThread2 extends Thread {
 
 	@Override
 	public void run() {
-		if (provider==null || !provider.isConnection()) {
-			app.showAlert("Shutter provider is not ready");
-			return;
-		}
 		
 		List<Long> ids = sqlManager.getTopImagesIds();
 		app.mainController.log("Top Images in DB count: " + ids.size());

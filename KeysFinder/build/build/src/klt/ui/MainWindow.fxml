@@ -109,6 +109,20 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </VBox.margin>
                         </HBox>
+                        <HBox>
+                           <children>
+                              <CheckBox fx:id="useNewApi" mnemonicParsing="false" selected="true" text="New API">
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </HBox.margin>
+                              </CheckBox>
+                              <TextField fx:id="newApiString" HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets bottom="5.0" left="20.0" right="10.0" top="5.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
                   <HBox>

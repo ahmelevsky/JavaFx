@@ -275,4 +275,12 @@ public class Main extends Application {
 	            primaryStage.setTitle("BatchEditor");
 	        }
 	    }
+
+		public void setFilesCount() {
+			int count = 0;
+			for (BatchSource source : sources) {
+				count=count+source.getFilesCount();
+			}
+			rootController.setCount(count);
+		}
 }

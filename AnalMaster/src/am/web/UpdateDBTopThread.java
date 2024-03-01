@@ -33,11 +33,6 @@ public class UpdateDBTopThread extends Thread {
 
 	@Override
 	public void run() {
-		if (provider==null || !provider.isConnection()) {
-			app.showAlert("Shutter provider is not ready");
-			app.mainController.enableControls();
-			return;
-		}
 		LOGGER.fine("Start update TOP Performers ");
 		int per_page = 200;
 		int page_number = 1;
@@ -51,7 +46,7 @@ public class UpdateDBTopThread extends Thread {
 					List<ShutterImage> images = provider.getTopPerformers(per_page, page_number);
 					
 					if (images == null) {
-						LOGGER.info("No n ew images found. Page Number " + page_number + ", and per page " + per_page);
+						LOGGER.info("No new images found. Page Number " + page_number + ", and per page " + per_page);
 						app.mainController.getAllImages();
 						app.mainController.enableControls();
 						break;

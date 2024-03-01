@@ -1,10 +1,13 @@
 package am.web;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,6 +22,18 @@ import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.cookie.ClientCookie;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 import org.jsoup.Connection;
 import org.jsoup.Connection.KeyVal;
 import org.jsoup.Jsoup;
@@ -26,12 +41,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import am.Earning;
+import am.JsonParser;
 import am.ShutterImage;
 
 public class ShutterProvider {
 
 	String baseURL = "https://submit.shutterstock.com";
 	String sessionId;
+	public String nextc_sid = "";
 	Map<String,String> cookies;
     Map<String,String> headers;
 	private String baseURLShutter = "https://www.shutterstock.com";
@@ -39,7 +57,7 @@ public class ShutterProvider {
     
 	public ShutterProvider(String sessionId) {
 		this.sessionId = sessionId;
-		
+		System.out.println(sessionId);
 		this.headers = new HashMap<String,String>(){{
 			   put("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36");
 			}};
@@ -103,6 +121,68 @@ public class ShutterProvider {
 		return result;
 	}
 	
+	public List<Earning> getDayEarnings(String day) throws IOException{
+		List<Earning> earnings = new ArrayList<Earning>();
+		
+		for (String category:Earning.CATEGORIES) {
+			int per_page = 100;
+			int page_number = 1;
+			String jsonString = getDayEarningsApache(day, category, per_page, page_number);
+			if (jsonString.isEmpty())
+				continue;
+			System.out.println(jsonString);
+			int pagesCount = JsonParser.parseDayEarningsPages(jsonString);
+			LOGGER.fine("Category: " + category + ", pages=" + pagesCount);
+			earnings.addAll(JsonParser.parseDayEarnings(jsonString, day));
+			if (pagesCount>1) {
+				while (page_number<pagesCount) {
+					page_number++;
+					jsonString = getDayEarningsApache(day, category, per_page, page_number);
+					if (jsonString.isEmpty())
+						continue;
+					earnings.addAll(JsonParser.parseDayEarnings(jsonString, day));
+				}
+			}
+		}
+		LOGGER.fine("Found records for a day: " + earnings.size());
+		
+		return earnings;
+	}
+	
+	@Deprecated
+	private String getDayEarningsOld(String day, String category, int per_page, int page_number) throws IOException{
+		Map<String,String> parameters = new HashMap<String,String>(){{
+			   put("date", day);
+			   put("display_column", category);
+			   put("page", String.valueOf(page_number));
+			   put("per_page", String.valueOf(per_page));
+			}};
+			
+			this.cookies.put("", this.nextc_sid);
+		    String result = get("/api/next/v2/earnings/media_stats/day", parameters);
+		    if (result.contains("Found. Redirecting to <a href=\"https://contributor-accounts.shutterstock.com/oauth"))
+		    	throw new IOException("Incorrect nextc.sid");
+			return result;
+	}
+	
+	private String getDayEarningsApache(String day, String category, int per_page, int page_number) throws IOException{
+		Map<String,String> parameters = new HashMap<String,String>(){{
+			   put("date", day);
+			   put("display_column", category);
+			   put("page", String.valueOf(page_number));
+			   put("per_page", String.valueOf(per_page));
+			}};
+			
+		    String result = getApacheGETResponse("/api/next/v2/earnings/media_stats/day", parameters);
+		    if (result.isEmpty())
+		    	return "";
+		    if (result.contains("Found. Redirecting to <a href=\"https://contributor-accounts.shutterstock.com/oauth"))
+		    	throw new IOException("Incorrect nextc.sid");
+			return result;
+	}
+	
+	
+	
 	public String getKeywordsTop(long media_id) throws IOException {
 			Map<String,String> parameters = new HashMap<String,String>(){{
 				   put("ids[]", String.valueOf(media_id));
@@ -146,30 +226,20 @@ public class ShutterProvider {
 	
 	
 	
-	public boolean isConnection() {
-		try {
-			get("/upload/portfolio", new HashMap<String,String>());
+	public boolean isConnection() throws IOException {
+			String s = get("/upload/portfolio", new HashMap<String,String>());
+			if (s.contains("Found. Redirecting to <a href=\"https://contributor-accounts.shutterstock.com/oauth/authorize"))
+				throw new IOException ("Ошибка авторизации"); 
 		return true;
-		} catch (IOException e) {
-			return false;
-		}
 	}
 	
 	private String get(String url, Map<String,String> parameters) throws IOException{
-		Map<String,String> cookiesGet = new HashMap<String,String>(){{
-			   put("session", sessionId);
-			}};
-
-		Map<String,String> headersGet = new HashMap<String,String>(){{
-			}};
-			if (parameters==null)
-				parameters = new HashMap<String,String>();
 		
 			return
 				  Jsoup.connect(this.baseURL + url )
-				  .headers(headersGet)
+				  .headers(this.headers)
 				  .followRedirects(false)
-				  .cookies(cookiesGet)
+				  .cookies(this.cookies)
 				  .method(Connection.Method.GET)
 				  .validateTLSCertificates(false)
 				  .ignoreContentType(true)
@@ -241,5 +311,67 @@ public void saveStringToFile(String s, String filename) throws IOException {
 }
 
 
+public String getApacheGETResponse( String url, Map<String,String> parameters) throws IOException{
+		
+		CookieStore cookieStore = new BasicCookieStore(); 
+		BasicClientCookie cookie = new BasicClientCookie("", "");
+		cookie.setValue("; session= " +this.sessionId + "; nextc.sid=" + this.nextc_sid + "; ");
+		cookie.setPath("/");
+		cookie.setDomain(".shutterstock.com");
+		cookie.setAttribute(ClientCookie.DOMAIN_ATTR, "true");
+		cookieStore.addCookie(cookie); 
+		HttpContext localContext = new BasicHttpContext();
+		localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
+		
+		
+		    BufferedReader rd = null;
+		    StringBuffer result = new StringBuffer();
+		    String line = "";
+		    HttpResponse response = null;
+		    
+		    HttpClient httpclient =  HttpClientBuilder.create()
+		    		.setUserAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36")
+		    		.build();
+		    	
+		    
+		    
+		    URIBuilder builder;
+		    HttpGet httpGet;
+			try {
+				builder = new URIBuilder(baseURL + url);
+			
+				for (String key : parameters.keySet()) {
+					builder.setParameter(key,parameters.get(key));
+				}
+		    
+		    	httpGet = new HttpGet(builder.build());
+		    
+			} catch (URISyntaxException e1) {
+				return e1.getMessage();
+			}
+		    
+		        //Execute and get the response.
+			    System.out.println("SEND REQUEST: " + httpGet.toString());
+			    LOGGER.fine("SEND REQUEST: " + httpGet.toString());
+			   
+			
+		        response = httpclient.execute(httpGet,localContext);
+
+		        System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+		        LOGGER.fine("Response Code : " + response.getStatusLine().getStatusCode());
+		        
+		        if (response.getStatusLine().getStatusCode()==500) {
+		        	return "";
+		        }
+		        
+		        rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+		        while ((line = rd.readLine()) != null) {
+		                        System.out.println(line);
+		                        result.append(line);
+		        }
+
+	      return result.toString();
+	  }
+	
 
 }

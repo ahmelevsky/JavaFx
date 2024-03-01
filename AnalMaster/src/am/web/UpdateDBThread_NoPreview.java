@@ -31,10 +31,6 @@ public class UpdateDBThread_NoPreview extends Thread {
 
 	@Override
 	public void run() {
-		if (provider==null || !provider.isConnection()) {
-			app.showAlert("Shutter provider is not ready");
-			return;
-		}
 		
 		long total = 0;
 		int per_page = 100;

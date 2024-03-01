@@ -42,7 +42,7 @@ public class Main extends Application {
   		 this.sqlManager = new SQLManager(this);
   		
   		 mainStage = primaryStage;
-  	     mainStage.setTitle("AnalMaster v0.1 alpha");
+  	     mainStage.setTitle("AnalMaster v1.2 ");
   	     tabsController = organizeStage("ui/TabsForm.fxml");
   	     tabsController.app=this;
   	      
@@ -54,7 +54,6 @@ public class Main extends Application {
 	     setController = (SetController) addTab("Set Analitics", "ui/SetForm.fxml", SetController.class);
 	     setController.app = this;
 	     setController.setup();
-	     setController.loadData();
 	     
 	     
   	     mainStage.getIcons().add(new Image("file:resources/icon.png"));
@@ -110,7 +109,7 @@ public class Main extends Application {
 	
 	 
 	 
-		public Window getPrimaryStage() {
+		public Stage getPrimaryStage() {
 			return this.mainStage;
 		}
 

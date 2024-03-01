@@ -45,6 +45,7 @@ public class ShutterProvider {
 	static String baseURL = "https://www.shutterstock.com";
 	static Map<String,String> cookies;
 	static Map<String,String> headers;
+	private String newApiString;
 	
     
 	static {
@@ -56,12 +57,13 @@ public class ShutterProvider {
 	}
 	
 	
-	private ShutterProvider() {
+	public ShutterProvider(String string) {
 		super();
+		this.newApiString = string;
 	}
 
-	
-	public static String findImages(String query, String user, ImagesType type, int page) throws IOException {
+	/*
+	public String findImages(String query, String user, ImagesType type, int page) throws IOException {
 		List<KeyVal> parameters = new ArrayList<KeyVal>();
 		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[display_name]", "name"));
 		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("q", query));
@@ -108,9 +110,12 @@ public class ShutterProvider {
 			//System.out.println(get("/studioapi/images/search", parameters));
 			return get("/studioapi/images/search", parameters);
 	}
+	*/
 	
 	
-	public static String findImages(String query, String user, ImagesType type, int page, int recordsCount) throws IOException {
+	
+	
+	public String findImages(String query, String user, ImagesType type, int page, int recordsCount) throws IOException {
 		List<KeyVal> parameters = new ArrayList<KeyVal>();
 		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[display_name]", "name"));
 		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("q", query));
@@ -156,7 +161,7 @@ public class ShutterProvider {
 			return get("/studioapi/images/search", parameters);
 	}
 	
-	public static Set<String> getKeywords(String link) throws IOException {
+	public Set<String> getKeywords(String link) throws IOException {
 	    	Set<String> result = new LinkedHashSet<String>();
 	    	/*
 	    	Document doc = Jsoup.connect(baseURL + link )
@@ -202,7 +207,7 @@ public class ShutterProvider {
 	
 	
 
-	public static String getKeywordsJson(String id) throws IOException {
+	public String getKeywordsJson(String id) throws IOException {
 		List<KeyVal> parameters = new ArrayList<KeyVal>();
 		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("recordActivity", "false"));
 		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("include", "categories,contributor.categories,contained-in-collections.categories,same-model.categories,visually-similar.categories,visually-similar-videos.categories,image-scores,contributor-settings"));
@@ -213,7 +218,7 @@ public class ShutterProvider {
 }
 	
 	
-	public static String getKeywordsJsonOldApi(String id) throws IOException {
+	public String getKeywordsJsonOldApi(String id) throws IOException {
 		List<KeyVal> parameters = new ArrayList<KeyVal>();
 		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("fields[images]", "keywords"));
 		parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("language", "en"));
@@ -224,7 +229,7 @@ public class ShutterProvider {
 
 	
 	
-public static String getApacheGETResponse( String url) throws URISyntaxException{
+public String getApacheGETResponse( String url) throws URISyntaxException{
 		
 		
 		    BufferedReader rd = null;
@@ -265,7 +270,7 @@ public static String getApacheGETResponse( String url) throws URISyntaxException
 	
 	
 
-	  private static void writeToFile(String fileName, String data) {
+	  private void writeToFile(String fileName, String data) {
 		 File file = new File(fileName);
 		 if (file.exists()) file.delete();
 		 try {
@@ -280,10 +285,11 @@ public static String getApacheGETResponse( String url) throws URISyntaxException
 		}
 	  }
 	
-	private static String get(String url, Collection<KeyVal> parameters) throws IOException{
+	protected String get(String url, Collection<KeyVal> parameters) throws IOException{
 
 			if (parameters==null)
 				parameters = new ArrayList<KeyVal>();
+			
 			return
 				  Jsoup.connect(baseURL + url )
 				  .headers(headers)
@@ -298,14 +304,14 @@ public static String getApacheGETResponse( String url) throws URISyntaxException
 			
 	}
 	
-	public static String getUser(String name) throws IOException {
+	public String getUser(String name) throws IOException {
 		if (name==null) return null;
 		if (name.chars().allMatch(Character::isDigit)) return name;
 		else {
 			List<KeyVal> parameters = new ArrayList<KeyVal>();
 			parameters.add(org.jsoup.helper.HttpConnection.KeyVal.create("filter[display_name]", name));
 		    String response = get("/studioapi/contributors", parameters);
-		    return JsonParser.parseContributorId(response);
+		    return new JsonParser().parseContributorId(response);
 		}
 	}
 }

@@ -29,13 +29,8 @@ public class UpdateDBThread extends Thread {
 		this.sqlManager = sqlManager;
 	}
 
-	
-	public void run2() {
-		if (provider==null || !provider.isConnection()) {
-			app.showAlert("Shutter provider is not ready");
-			return;
-		}
-		
+	@Override
+	public void run() {
 		long total = 0;
 		String userId = null;
 		int per_page = 100;
@@ -80,9 +75,9 @@ public class UpdateDBThread extends Thread {
 				else {
 				    String jsonString = provider.getImageDetails(im.getMedia_id());
 				    im = JsonParser.parseImageDataAndPaste(jsonString, im);
-				   // LOGGER.fine("Start downloading preview");
-				   // im.setPreviewBytes(this.provider.downloadImage(im.getPreviewPath()));
-				  //  LOGGER.fine("End downloading preview");
+				    LOGGER.fine("Start downloading preview");
+				    im.setPreviewBytes(this.provider.downloadImage(im.getPreviewPath()));
+				    LOGGER.fine("End downloading preview");
 				}				
 			}
 			listFromShutter.removeAll(toRemove);
@@ -127,12 +122,8 @@ public class UpdateDBThread extends Thread {
 		}
 	}
 
-	@Override
-	public void run() {
-		if (provider==null || !provider.isConnection()) {
-			app.showAlert("Shutter provider is not ready");
-			return;
-		}
+	//@Override
+	public void run2() {
 		
 		long total = 0;
 		int per_page = 100;

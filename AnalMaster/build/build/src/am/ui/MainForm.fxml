@@ -28,6 +28,11 @@
                </HBox.margin>
             </TextField>
             <Pane HBox.hgrow="ALWAYS" />
+            <Button fx:id="chooseDatabaseBtn" mnemonicParsing="false" onAction="#chooseDatabase" text="Choose database">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </Button>
             <Button fx:id="updateBtn" mnemonicParsing="false" onAction="#updateDatabase" text="UPDATE DATABASE">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -39,6 +44,21 @@
                </HBox.margin>
             </Button>
             <Button fx:id="updateTopKeywordsBtn" mnemonicParsing="false" onAction="#updateTopKeywords" text="UPDATE TOP KEYWORDS">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <HBox>
+         <children>
+            <TextField fx:id="nextc_sidText" minWidth="400.0">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </TextField>
+            <Pane HBox.hgrow="ALWAYS" />
+            <Button fx:id="updateEarningsBtn" mnemonicParsing="false" onAction="#updateEarnings" text="UPDATE EARNINGS">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
@@ -58,16 +78,21 @@
                </HBox.margin>
             </CheckBox>
             <Pane HBox.hgrow="ALWAYS" />
+            <Button fx:id="buildGraphBtn" mnemonicParsing="false" onAction="#buildGraphForImages" text="Build Graph For Images">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="15.0" top="5.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="createSetBtn" disable="true" mnemonicParsing="false" onAction="#createSet" text="Create Set">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />
+               </HBox.margin>
+            </Button>
             <TextField fx:id="setNameField" prefWidth="400.0">
                <HBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </HBox.margin>
             </TextField>
-            <Button fx:id="createSetBtn" mnemonicParsing="false" onAction="#createSet" text="Create Set">
-               <HBox.margin>
-                  <Insets bottom="10.0" left="5.0" right="5.0" top="5.0" />
-               </HBox.margin>
-            </Button>
             <Label fx:id="filesCountTxt" text="Files Count: 0">
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="20.0" top="10.0" />
@@ -75,7 +100,7 @@
             </Label>
          </children>
       </HBox>
-      <SplitPane dividerPositions="0.8" orientation="VERTICAL" VBox.vgrow="ALWAYS">
+      <SplitPane dividerPositions="0.9" orientation="VERTICAL" VBox.vgrow="ALWAYS">
          <items>
             <VBox>
                <children>
@@ -90,7 +115,10 @@
                                           <HBox spacing="10.0">
                                              <children>
                                                 <Label text="Filename" />
-                                                <CheckBox fx:id="correctFilenameBox" mnemonicParsing="false" onAction="#correctFilename" selected="true" text="Correction SS" />
+                                                <CheckBox fx:id="correctFilenameBox" mnemonicParsing="false" onAction="#correctFilename" selected="true" text="Correction SS">
+                                                   <HBox.margin>
+                                                      <Insets left="5.0" right="5.0" />
+                                                   </HBox.margin></CheckBox>
                                              </children>
                                              <padding>
                                                 <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
@@ -98,6 +126,20 @@
                                              <VBox.margin>
                                                 <Insets top="5.0" />
                                              </VBox.margin>
+                                          </HBox>
+                                          <HBox>
+                                             <children>
+                                                <Button fx:id="filterBtn" mnemonicParsing="false" onAction="#getFilteredData" prefHeight="50.0" prefWidth="209.0" text="Filter">
+                                                   <HBox.margin>
+                                                      <Insets bottom="5.0" left="10.0" right="10.0" />
+                                                   </HBox.margin>
+                                                </Button>
+                                                <CheckBox fx:id="useFilterBtnBox" mnemonicParsing="false" selected="true" text="Apply on the button">
+                                                   <HBox.margin>
+                                                      <Insets left="10.0" top="10.0" />
+                                                   </HBox.margin>
+                                                </CheckBox>
+                                             </children>
                                           </HBox>
                                           <Pane VBox.vgrow="ALWAYS" />
                                           <TextField fx:id="filenameFilter" />
@@ -280,7 +322,7 @@
                <children>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <content>
-                        <TextFlow fx:id="logTxt" prefHeight="10.0" prefWidth="1196.0">
+                        <TextFlow fx:id="logTxt" prefHeight="79.0" prefWidth="1196.0">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>

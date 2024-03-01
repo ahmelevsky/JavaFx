@@ -33,11 +33,6 @@ public class UpdateDBTopThread3 extends Thread {
 
 	@Override
 	public void run() {
-		if (provider==null || !provider.isConnection()) {
-			app.showAlert("Shutter provider is not ready");
-			app.mainController.enableControls();
-			return;
-		}
 		LOGGER.fine("Start update TOP Performers ");
 		int per_page = 100;
 		int page_number = 1;

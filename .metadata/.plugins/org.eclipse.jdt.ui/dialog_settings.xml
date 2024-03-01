@@ -75,12 +75,15 @@
 		</section>
 	</section>
 	<section name="FatJarPackageWizard">
-		<item value="C:\Java\JavaFx\AnalMaster\build.xml" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
-		<item value="Main (31) - AnalMaster" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
-		<item value="AnalMaster\AnalMaster.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
+		<item value="C:\Java\JavaFx\CopyMetadata\build.xml" key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION"/>
+		<item value="Main (33) - CopyMetadata" key="FatJarPackageWizardPage.LAUNCH_CONFIGURATION_SELECTION_NAME"/>
+		<item value="CopyMetadata\CopyMetadata.jar" key="FatJarPackageWizardPage.DESTINATION_PATH_SELECTION"/>
 		<item value="true" key="FatJarPackageWizardPage.ANTSCRIPT_SAVE"/>
 		<item value="2" key="FatJarPackageWizardPage.LIBRARY_HANDLING"/>
 		<list key="FatJarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="CopyMetadata\CopyMetadata.jar"/>
+			<item value="CopyMetadata/CopyMetadata.jar"/>
+			<item value="MakeSCV/MakeCSV.jar"/>
 			<item value="AnalMaster/AnalMaster.jar"/>
 			<item value="OldMaster/OldMaster.jar"/>
 			<item value="FileRename\FileRename.jar"/>
@@ -94,6 +97,8 @@
 			<item value="OddAndEven/OddAndEven.jar"/>
 		</list>
 		<list key="FatJarPackageWizardPage.ANTSCRIPT_LOCATION_HISTORY">
+			<item value="C:\Java\JavaFx\CopyMetadata\build.xml"/>
+			<item value="C:\Java\JavaFx\MakeSCV\build.xml"/>
 			<item value="C:\Java\JavaFx\AnalMaster\build.xml"/>
 			<item value="C:\Java\JavaFx\OldMaster\build.xml"/>
 			<item value="C:\Java\JavaFx\FileRename\build.xml"/>
@@ -171,7 +176,7 @@
 		<item value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0D;&#x0A;&lt;History/&gt;" key="History"/>
 		<section name="DialogBoundsSettings">
 			<item value="359" key="DIALOG_WIDTH"/>
-			<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|5|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+			<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 			<item value="650" key="DIALOG_HEIGHT"/>
 			<item value="50" key="DIALOG_X_ORIGIN"/>
 			<item value="46" key="DIALOG_Y_ORIGIN"/>
@@ -193,7 +198,7 @@
 	</section>
 	<section name="DialogBounds_GetterSetterTreeSelectionDialog">
 		<item value="678" key="DIALOG_WIDTH"/>
-		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|5|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 		<item value="889" key="DIALOG_HEIGHT"/>
 		<item value="926" key="DIALOG_X_ORIGIN"/>
 		<item value="120" key="DIALOG_Y_ORIGIN"/>
@@ -256,10 +261,22 @@
 		<item value="false" key="create_package_info_java"/>
 	</section>
 	<section name="JavaSearchPage">
-		<item value="1" key="HISTORY_SIZE"/>
+		<item value="2" key="HISTORY_SIZE"/>
 		<item value="false" key="CASE_SENSITIVE"/>
-		<item value="11" key="INCLUDE_MASK"/>
+		<item value="15" key="INCLUDE_MASK"/>
 		<section name="HISTORY0">
+			<item value="false" key="isCaseSensitive"/>
+			<item value="" key="javaElement"/>
+			<item value="0" key="scope"/>
+			<item value="15" key="includeMask"/>
+			<item value="/api/next/v2/" key="pattern"/>
+			<item value="2" key="limitTo"/>
+			<item value="0" key="matchLocations"/>
+			<item value="0" key="searchFor"/>
+			<list key="workingSets">
+			</list>
+		</section>
+		<section name="HISTORY1">
 			<item value="false" key="isCaseSensitive"/>
 			<item value="" key="javaElement"/>
 			<item value="0" key="scope"/>

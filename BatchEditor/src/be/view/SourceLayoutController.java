@@ -90,8 +90,13 @@ public class SourceLayoutController {
 		filesCount.focusedProperty().addListener((observable, oldValue, newValue) -> {
 			  if (!newValue) {
 				  filesCount.increment(0); // won't change value, but will commit editor
+				  app.setFilesCount();
 			  }
 			});
+		
+		
+		
+	    
 	}
 
 	public void setMainApp(Main app) {
@@ -134,6 +139,7 @@ public class SourceLayoutController {
 														.then(Color.web("#36ed72")).otherwise(Color.BLACK))))));
 			Utils.hackTooltipStartTiming(tooltip);
 			countImages();
+			app.setFilesCount();
 	}
 	
 	

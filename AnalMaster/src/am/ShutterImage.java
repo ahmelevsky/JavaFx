@@ -255,5 +255,8 @@ public class ShutterImage {
 		return "ShutterImage [id=" + id + ", filename=" + original_filename.get() + "]";
 	}
 	
+	public LocalDate getUploadDate() {
+		return this.uploadDate;
+	}
 	
 }

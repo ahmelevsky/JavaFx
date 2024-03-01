@@ -13,21 +13,7 @@ import org.json.JSONObject;
 
 public class JsonParser {
 
-	public static List<String> getFileNames(String jsonString) throws JSONException {
-		List<String> result = new ArrayList<String>();
-		JSONObject obj = new JSONObject(jsonString);
-        String pageName = obj.getJSONObject("data").getString("pageName");
-
-		JSONArray arr = obj.getJSONArray("data");
-		for (int i = 0; i < arr.length(); i++) {
-			String filename = arr.getJSONObject(i).getString("original_filename");
-			result.add(filename);
-		}
-		return result;
-	}
-	
-	
-	public static List<String> getRelatedKeywords(String jsonString) throws JSONException{
+	public List<String> getRelatedKeywords(String jsonString) throws JSONException{
 		List<String> result = new ArrayList<String>();
 		JSONObject obj = new JSONObject(jsonString);
 		JSONObject meta = obj.getJSONObject("meta");
@@ -38,7 +24,7 @@ public class JsonParser {
 		return result;
 	}
 	
-    public static int getAllMatchesCount(String jsonString) throws JSONException{
+    public int getAllMatchesCount(String jsonString) throws JSONException{
     	JSONObject obj = new JSONObject(jsonString);
     	JSONObject meta = obj.getJSONObject("meta");
     	JSONObject pagination = meta.getJSONObject("pagination");
@@ -46,7 +32,7 @@ public class JsonParser {
 	}
 	
 	
-	public static List<ImageData> parseImagesData(String jsonString) throws JSONException{
+	public List<ImageData> parseImagesData(String jsonString) throws JSONException{
 		List<ImageData> result = new ArrayList<ImageData>();
 		JSONObject obj = new JSONObject(jsonString);
 
@@ -93,7 +79,7 @@ public class JsonParser {
 	}
 	
 	
-	public static List<String> parseKeywords(String jsonString, String imageId) throws JSONException{
+	public List<String> parseKeywords(String jsonString, String imageId) throws JSONException{
 		List<String> result = new ArrayList<String>();
 		JSONObject obj = new JSONObject(jsonString);
 		JSONArray arr = obj.getJSONArray("sameArtist");
@@ -117,7 +103,7 @@ public class JsonParser {
 	}
 	
 
-	public static Set<String> parseKeywords(String jsonString) throws JSONException{
+	public Set<String> parseKeywords(String jsonString) throws JSONException{
 		Set<String> result = new LinkedHashSet<String>();
 		JSONObject obj = new JSONObject(jsonString);
 		JSONObject imageobj = obj.getJSONObject("data");
@@ -132,7 +118,7 @@ public class JsonParser {
 	}
 	
 	
-	public static String parseContributorId(String jsonString){
+	public String parseContributorId(String jsonString){
 		try {
 		JSONObject obj = new JSONObject(jsonString);
 		JSONArray arr = obj.getJSONArray("data");

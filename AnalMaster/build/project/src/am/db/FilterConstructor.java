@@ -85,7 +85,7 @@ public class FilterConstructor {
 		constructFilter();
 		return "SELECT * FROM " + this.IMAGESTABLE + " LEFT JOIN " + this.IMAGESTOPTABLE 
 				 + " on " + this.IMAGESTOPTABLE + ".media_id = " + this.IMAGESTABLE + ".media_id "
-				+ this.filterSQL + " ORDER BY uploaded_date DESC";
+				+ this.filterSQL;
 	}
 	
 	

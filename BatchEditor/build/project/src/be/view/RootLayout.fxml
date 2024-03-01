@@ -4,25 +4,33 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="600.0" minHeight="150.0" minWidth="500.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.view.RootLayoutController">
+<VBox maxHeight="600.0" minHeight="150.0" minWidth="500.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="be.view.RootLayoutController">
    <children>
       <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
          <content>
             <VBox fx:id="sourceLayouts" prefWidth="1000.0" />
          </content>
       </ScrollPane>
-      <Button fx:id="addSourceBtn" mnemonicParsing="false" onAction="#addSourceLayout" text="+">
-         <VBox.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </VBox.margin>
-      </Button>
+      <HBox>
+         <children>
+            <Button fx:id="addSourceBtn" mnemonicParsing="false" onAction="#addSourceLayout" text="+" />
+            <Pane HBox.hgrow="ALWAYS" />
+            <Label fx:id="countLbl">
+               <HBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="20.0" top="5.0" />
+               </HBox.margin>
+            </Label>
+         </children>
+      </HBox>
       <HBox spacing="5.0">
          <children>
             <Hyperlink fx:id="batchesPath" onAction="#selectPath" text="&lt;SELECT BATCHES FOLDER&gt;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="5.0" />

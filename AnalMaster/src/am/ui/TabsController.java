@@ -22,15 +22,26 @@ public class TabsController implements Initializable {
 
 	public void setup() {
 		tabs.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
-			if (newTab.equals(app.mainController.tab))
-				app.mainController.loadData();
+			//if (newTab.equals(app.mainController.tab))
+				//app.mainController.loadData();
 			if (newTab.equals(app.setController.tab))
 				app.setController.loadData();
+			
+			if (oldTab.equals(app.setController.tab)) {
+				if (app.setController.loadThread != null)
+					app.setController.loadThread.interrupt();
+			}
+				
 		});
 	}
 	
 	public void addTab(Tab tab){
 		tabs.getTabs().add(tab);
+	}
+	
+	public void openTab(Tab tab) {
+		tabs.getSelectionModel().select(tab);
+		
 	}
 	
 }

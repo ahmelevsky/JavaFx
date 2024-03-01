@@ -183,6 +183,7 @@ public class MainFrameController implements Initializable{
 	    
 	    if (Settings.autosaveEnabled)
         	scheduleAutosave();
+	    
 	}
 	
 	

@@ -53,7 +53,26 @@
 				<filename name="json.jar"/>
 			</fileset>
 		</copy>
-	
+		<copy todir="externalLibs">
+				<fileset dir="C:\Java\JavaFx\AnalMaster\lib">
+					<filename name="commons-io-2.11.0.jar"/>
+				</fileset>
+		</copy>
+
+		
+			<copy todir="externalLibs">
+						<fileset dir="C:\Java\JavaFx\AnalMaster\lib">
+							<filename name="log4j-api-2.18.0.jar"/>
+						</fileset>
+					</copy>
+			
+			<copy todir="externalLibs">
+						<fileset dir="C:\Java\JavaFx\AnalMaster\lib">
+							<filename name="poi-5.2.3.jar"/>
+						</fileset>
+					</copy>
+		
+		
 		<mkdir dir="project" />
 		<copy todir="project">
 			<fileset dir="C:\Java\JavaFx\AnalMaster">
@@ -83,6 +102,10 @@
 				<include name="httpcore-4.4.14.jar"/>
 				<include name="jsoup-1.10.2.jar"/>
 				<include name="commons-logging-1.2.jar"/>
+				<include name="jsoup-1.10.2.jar"/>
+					<include name="log4j-api-2.18.0.jar"/>
+					<include name="commons-io-2.11.0.jar"/>
+				<include name="poi-5.2.3.jar"/>
 			</fileset>
 		</copy>
 	

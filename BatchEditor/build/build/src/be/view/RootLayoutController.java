@@ -19,6 +19,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
@@ -53,6 +54,8 @@ public class RootLayoutController {
 	private CheckBox isRandom;
 	@FXML
 	private Button loadBtn;
+	@FXML
+	private Label countLbl;
 	
 	@FXML
 	private Button createBtn;
@@ -173,7 +176,7 @@ public class RootLayoutController {
          File file = fileChooser.showOpenDialog(app.getPrimaryStage());
 
         if(file!=null  && file.getParentFile()!=null && file.getParentFile().exists()){
-        	showMessage("Start loading data from xml");
+        	//showMessage("Start loading data from xml");
        	 app.loadLastSources(file);
        	 this.clear();
        	 app.addSouceLayouts();
@@ -294,5 +297,9 @@ public class RootLayoutController {
     private void changedAlgorythm(){
 	    for (SourceLayoutController slc:app.sourceControllers)
 	    	slc.countImages();
+	}
+
+	public void setCount(int count) {
+		countLbl.setText(String.valueOf(count));
 	}
 }

@@ -3,4 +3,8 @@
 <typeInfo handle="=AnalMaster/C:\/Program Files\/Java\/jdk1.8.0_231\/jre\/lib\/ext\/jfxrt.jar&lt;javafx.application(Application.class[Application" modifiers="1057" timestamp="1573478261765"/>
 <typeInfo handle="=AnalMaster/C:\/Program Files\/Java\/jdk1.8.0_231\/jre\/lib\/rt.jar&lt;java.lang(Runnable.class[Runnable" modifiers="1537" timestamp="1573478265232"/>
 <typeInfo handle="=RejectFinder/C:\/Program Files\/Java\/jdk1.8.0_231\/jre\/lib\/ext\/jfxrt.jar&lt;javafx.fxml(Initializable.class[Initializable" modifiers="1537" timestamp="1573478261765"/>
+<typeInfo handle="=AnalMaster/C:\/Program Files\/Java\/jdk1.8.0_231\/jre\/lib\/ext\/jfxrt.jar&lt;javafx.util(StringConverter.class[StringConverter" modifiers="1057" timestamp="1573478261765"/>
+<typeInfo handle="=KeysFinder/src&lt;klt.web{ShutterProvider.java[ShutterProvider" modifiers="1" timestamp="1678566245175"/>
+<typeInfo handle="=KeysFinder/src&lt;klt.data{JsonParser.java[JsonParser" modifiers="1" timestamp="1678380289457"/>
+<typeInfo handle="=AnalMaster/C:\/Program Files\/Java\/jdk1.8.0_231\/jre\/lib\/ext\/jfxrt.jar&lt;javafx.scene.chart(LineChart.class[LineChart" modifiers="33" timestamp="1573478261765"/>
 </typeInfoHistroy>

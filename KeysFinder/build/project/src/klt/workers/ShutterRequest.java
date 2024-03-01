@@ -10,11 +10,13 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import klt.data.ImageData;
 import klt.data.JsonParser;
+import klt.data.JsonParserNewAPI;
 import klt.ui.MainWindowController;
 import klt.web.ShutterProvider;
+import klt.web.ShutterProviderNewApi;
 
 public class ShutterRequest {
-	private static ShutterRequest request;
+	//private static ShutterRequest request;
 	
 	public  WorkerStatus status;
 	private RequestData requestData;
@@ -23,8 +25,26 @@ public class ShutterRequest {
 	private String error;
 	//private int badCount;
 	
+	private boolean isNewApi;
+	private String newApiString = "";
+	Task<ResponseData> searchTask;
 	
-	Task<ResponseData> searchTask = new Task<ResponseData>() {
+	
+	private void createSearchTask() {
+	ShutterProvider providerTemp = null;
+	JsonParser parserTemp = null;
+	if (this.isNewApi) {
+		providerTemp = new ShutterProviderNewApi(this.newApiString);
+		parserTemp = new JsonParserNewAPI();
+	}
+	else { 
+		providerTemp = new ShutterProvider(this.newApiString);
+		parserTemp = new JsonParser();
+	}
+	final ShutterProvider provider = providerTemp;
+	final JsonParser parser = parserTemp;
+	
+	searchTask = new Task<ResponseData>() {
 		@Override
 		public ResponseData call()  {
 			status = WorkerStatus.PROGRESS;
@@ -32,9 +52,10 @@ public class ShutterRequest {
 			responseData = new ResponseData();
 			String result = null;
 			String user = null;
+			/*
 			if (requestData.user!=null) {
 				try {
-					user = ShutterProvider.getUser(requestData.user);
+					user = provider.getUser(requestData.user);
 					System.out.println(user);
 				} catch (IOException e) {
 					error = "No such UserId or UserName";
@@ -47,16 +68,20 @@ public class ShutterRequest {
 					return responseData;
 			    }
 			}
+			*/
+			user = requestData.user;
+			
+			
 			List<ImageData> templist = new ArrayList<ImageData>();
 			try {
 				int page = 1;
 				while (responseData.images.size() < requestData.requestCount) {
 					templist.clear();
 					if (((requestData.requestCount - responseData.images.size()) <100) && !requestData.type.equals(ImagesType.ILLUSTRATIONS))
-						result = ShutterProvider.findImages(requestData.query, user, requestData.type, page, requestData.requestCount - responseData.images.size());
+						result = provider.findImages(requestData.query, user, requestData.type, page, requestData.requestCount - responseData.images.size());
 					else
-						result = ShutterProvider.findImages(requestData.query, user, requestData.type, page, 100);
-					templist = JsonParser.parseImagesData(result);
+						result = provider.findImages(requestData.query, user, requestData.type, page, 100);
+					templist = parser.parseImagesData(result);
 					if (templist.isEmpty())
 						break;
 					if (requestData.requestCount<=100)
@@ -78,13 +103,13 @@ public class ShutterRequest {
 				}
 				
 			if (requestData.type.equals(ImagesType.ILLUSTRATIONS))  {
-				String resVectors = ShutterProvider.findImages(requestData.query, user, ImagesType.VECTORS, 1);
-				responseData.matchesCount = JsonParser.getAllMatchesCount(result) -  JsonParser.getAllMatchesCount(resVectors);
+				String resVectors = provider.findImages(requestData.query, user, ImagesType.VECTORS, 1, 100);
+				responseData.matchesCount = parser.getAllMatchesCount(result) -  parser.getAllMatchesCount(resVectors);
 			}
 			else
-				responseData.matchesCount = JsonParser.getAllMatchesCount(result);
+				responseData.matchesCount = parser.getAllMatchesCount(result);
 			
-			responseData.relatedKeywords = JsonParser.getRelatedKeywords(result);
+			responseData.relatedKeywords = parser.getRelatedKeywords(result);
 			
 			return responseData;
 			}
@@ -100,62 +125,63 @@ public class ShutterRequest {
 			}
 		}
 	};
+	}
 	
-	public static void execute(RequestData requestData, MainWindowController ui) {
+	public void execute() {
 		
-		if (request!=null )
-			request.cancel();
+		createSearchTask();
 		
-		request = new ShutterRequest(requestData);
-		request.ui = ui;
-		
-		request.searchTask.setOnRunning(new EventHandler<WorkerStateEvent>() {
+		this.searchTask.setOnRunning(new EventHandler<WorkerStateEvent>() {
 		    @Override
 		    public void handle(WorkerStateEvent t) {
-		    	request.ui.setSearchIndicator(true);
+		    	ui.setSearchIndicator(true);
 			}});
 		
 		
-		request.searchTask.setOnCancelled(new EventHandler<WorkerStateEvent>() {
+		this.searchTask.setOnCancelled(new EventHandler<WorkerStateEvent>() {
 		    @Override
 		    public void handle(WorkerStateEvent t) {
-		    	request.status = WorkerStatus.CANCELLED;
+		    	status = WorkerStatus.CANCELLED;
 		    	System.out.println("Search task cancelled");
-		    	request.ui.setSearchIndicator(false);
+		    	ui.setSearchIndicator(false);
 			}});
 		
-		request.searchTask.setOnFailed(new EventHandler<WorkerStateEvent>() {
+		this.searchTask.setOnFailed(new EventHandler<WorkerStateEvent>() {
 		    @Override
 		    public void handle(WorkerStateEvent t) {
-		    	request.ui.setSearchIndicator(false);
-		    	request.status = WorkerStatus.FAILED;
-		    	System.out.println("Search task faled " + request.error);
-		    	ui.app.showAlert("Error: search request failed: " + request.error);
+		    	ui.setSearchIndicator(false);
+		    	status = WorkerStatus.FAILED;
+		    	System.out.println("Search task faled " + error);
+		    	ui.app.showAlert("Error: search request failed: " + error);
 			}});
 		
-		request.searchTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+		this.searchTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
 		    @Override
 		    public void handle(WorkerStateEvent t) {
-		    	request.ui.setSearchIndicator(false);
-		    	request.status = WorkerStatus.DONE;
+		    	ui.setSearchIndicator(false);
+		    	status = WorkerStatus.DONE;
 		    	System.out.println("Search task succeed");
-		    	request.responseData = request.searchTask.getValue();
-		    	if (request.responseData!=null) {
-		    		request.publish();
+		    	responseData = searchTask.getValue();
+		    	if (responseData!=null) {
+		    		publish();
 		    	}
 		    	else {
-		    		request.status = WorkerStatus.FAILED;
-		    		request.showError();
+		    		status = WorkerStatus.FAILED;
+		    		showError();
 		    	}
 		    }
 		});
 		
-		request.exec();
+		this.exec();
 	}
 		
-	private ShutterRequest(RequestData requestData) {
+	public ShutterRequest(RequestData requestData, MainWindowController ui, boolean isNewApi, String newApiString) {
 		this.requestData = requestData;
+		this.ui = ui;
 		this.status = WorkerStatus.READY;
+		this.isNewApi = isNewApi;
+		if (!newApiString.isEmpty())
+			this.newApiString = newApiString;
 	}
 	
 	private void exec() {
@@ -164,7 +190,7 @@ public class ShutterRequest {
 		thr.start();
 	}
 	
-	private void cancel() {
+	public void cancel() {
 		if (this.searchTask.isRunning())
 			this.searchTask.cancel(true);
 	}

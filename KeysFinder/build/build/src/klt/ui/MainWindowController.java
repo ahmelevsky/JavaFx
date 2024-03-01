@@ -221,6 +221,12 @@ public class MainWindowController implements Initializable {
 	@FXML
 	private ScrollPane keysEditScrollPane;
 	
+	@FXML
+	private CheckBox useNewApi;
+	
+	@FXML
+	private TextField newApiString;
+	
     private int shiftTagPosition;
     private int shiftTagPositionEditPane;
 
@@ -243,6 +249,8 @@ public class MainWindowController implements Initializable {
 	Task<Void> backgroundLoadTask;
 
 	Task<Void> processingTask;
+	
+	ShutterRequest request;
 	
 	private final ChangeListener<String> searchListener  = new ChangeListener<String>(){
 		@Override
@@ -365,7 +373,15 @@ public class MainWindowController implements Initializable {
 	     searchIndicator.setVisible(false);
 	     searchTxt.textProperty().addListener(searchListener);
 	     editPaneSearchTxt.textProperty().addListener(searchListenerEditTab);
-	    
+	    /*
+	     useNewApi.selectedProperty().addListener(
+	    	      (ObservableValue<? extends Boolean> ov, Boolean old_val, Boolean new_val) -> {
+	    	         if (new_val)
+	    	        	 requestCountSpinner.setDisable(true);
+	    	         else
+	    	        	 requestCountSpinner.setDisable(false);
+	    	      });
+	     */
 	}
 
 	private void createProcessingTask() {
@@ -877,8 +893,8 @@ public class MainWindowController implements Initializable {
 		} else {
 			Set<String> kwds = null;
 			try {
-				String kwordsJson = ShutterProvider.getKeywordsJsonOldApi(image.id);
-				kwds = JsonParser.parseKeywords(kwordsJson);
+				String kwordsJson = new ShutterProvider("").getKeywordsJsonOldApi(image.id);
+				kwds = new JsonParser().parseKeywords(kwordsJson);
 				
 			} catch (IOException e) {
 				System.out.println(
@@ -917,7 +933,10 @@ public class MainWindowController implements Initializable {
 		if (backgroundLoadTask != null && backgroundLoadTask.isRunning())
 			backgroundLoadTask.cancel(true);
 		cleanResults();
-		ShutterRequest.execute(requestData, this);
+		if (this.request!=null)
+			request.cancel();
+		request = new ShutterRequest(requestData, this, this.isNewApi(), this.getNewApiString());
+		request.execute();
 		this.tabPane.getSelectionModel().select(tabSearch);
 	}
 
@@ -1066,6 +1085,15 @@ public class MainWindowController implements Initializable {
 	 
 	 public void gotoSearchTab() {
 		 this.tabPane.getSelectionModel().select(tabSearch);
+	 }
+	 
+	 
+	 public boolean isNewApi() {
+		 return this.useNewApi.isSelected();
+	 }
+	 
+	 public String getNewApiString() {
+		 return this.newApiString.getText().trim();
 	 }
 	 
 }

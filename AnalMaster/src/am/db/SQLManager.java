@@ -22,18 +22,20 @@ import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import am.Earning;
 import am.Main;
 import am.ShutterImage;
 
 public class SQLManager {
 
-	public final String fileLocation = System.getProperty("user.home") + File.separator + "AnalMaster.db"; 
+	public String fileLocation = System.getProperty("user.home") + File.separator + "AnalMaster.db"; 
 	private final Logger LOGGER;
 	public Main app;
 	public Connection connection;
 	public final String IMAGESTOPTABLE = "imagestopdata";
 	public final String IMAGESTABLE = "imagesdata";
 	public final String KEYSTABLE = "keysdata";
+	public final String EARNINGSTABLE = "earningsdata";
 	
 	
 	public SQLManager(Main application) {
@@ -55,6 +57,28 @@ public class SQLManager {
             System.out.println(e.getMessage());
             LOGGER.severe(e.getMessage());
         }
+		
+	}
+	
+	public void changeDB(String dbPath) {
+		try {
+			if (!this.connection.isClosed()){
+				this.connection.close();
+				this.fileLocation = dbPath;
+				this.connection = DriverManager.getConnection("jdbc:sqlite:" + this.fileLocation);
+	            if (this.connection != null) {
+	                DatabaseMetaData meta = connection.getMetaData();
+	                System.out.println("The driver name is " + meta.getDriverName());
+	                System.out.println("Connection success.");
+	                LOGGER.fine("The driver name is " + meta.getDriverName());
+	                LOGGER.fine("Connection success.");
+	            }
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			LOGGER.severe(e.getMessage());
+		}
 		
 	}
 
@@ -111,6 +135,18 @@ public class SQLManager {
                   + "   FOREIGN KEY (media_id)"
                   + "	REFERENCES " + this.IMAGESTABLE + " (media_id) "
                   + ");";
+          
+          sql = "CREATE TABLE IF NOT EXISTS " + this.EARNINGSTABLE + " (\n"
+        		  + "	date text,\n"
+                  + "	media_id integer,\n"
+                  + "	category text,\n"
+                  + "	count integer,\n"
+                  + "	total real,\n"
+                  + "   FOREIGN KEY (media_id)"
+                  + "	REFERENCES " + this.IMAGESTABLE + " (media_id) "
+                  + ");";
+          
+          
           statement.execute(sql);
           
 		 } catch (SQLException e) {
@@ -157,6 +193,33 @@ public class SQLManager {
 	        	}
 	    }
 	
+	 
+	 public void insertNewEarnings(List<Earning> earnings) {
+		 String sql = "INSERT INTO " + this.EARNINGSTABLE + "(date,media_id,category,count,total) VALUES(?,?,?,?,?)";
+		   int i = 0;
+
+	        try {
+	        	PreparedStatement pstmt = this.connection.prepareStatement(sql);
+	        	for(Earning earning:earnings) {
+	        	
+	        		pstmt.setString(1, earning.getEarn_date());
+	        		pstmt.setLong(2, earning.getMedia_id());
+	        		pstmt.setString(3, earning.getCategory());
+	        		pstmt.setInt(4, earning.getCount());
+	        		pstmt.setDouble(5, earning.getTotal());
+	        		pstmt.addBatch();
+	        		
+	        		i++;
+	                if (i % 100 == 0 || i == earnings.size()) {
+	                	   pstmt.executeBatch(); // Execute every 100 items.
+	                   }
+	        	}
+	        }catch(SQLException e){ 
+	        	System.out.println(e.getMessage());
+	        	LOGGER.severe(e.getMessage());
+	        	}
+	    }
+	 
 	 
 	 
 	 public void insertImageData(ShutterImage image) {
@@ -279,7 +342,7 @@ public class SQLManager {
 	 
 	 
 	 public int insertImageTop(ShutterImage image) {
-		   String sql = "INSERT INTO " + this.IMAGESTOPTABLE + "(media_id,downloads,earnings,image_url) VALUES(?,?,?,?)";
+		   String sql = "INSERT OR REPLACE INTO " + this.IMAGESTOPTABLE + "(media_id,downloads,earnings,image_url) VALUES(?,?,?,?)";
 	        try {
 	        	PreparedStatement pstmt = this.connection.prepareStatement(sql);
 	        	
@@ -292,14 +355,14 @@ public class SQLManager {
 	               // LOGGER.fine("SQL added imageTop " + image.getMedia_id());
 	                return 0;
 	        }catch(SQLException e){ 
-	        	//System.out.println(e.getMessage() + " media_id " + image.getMedia_id());
-	        	//LOGGER.severe(e.getMessage() + " media_id " + image.getMedia_id());
+	        	System.out.println(e.getMessage() + " media_id " + image.getMedia_id());
+	        	LOGGER.severe(e.getMessage() + " media_id " + image.getMedia_id());
 	        	return -1;
 	        	}
 	    }
 	
 	 public void insertImagesTop(List<ShutterImage> images) {
-		   String sql = "INSERT INTO " + this.IMAGESTOPTABLE + "(media_id,downloads,earnings,image_url) VALUES(?,?,?,?)";
+		   String sql = "INSERT OR REPLACE INTO " + this.IMAGESTOPTABLE + "(media_id,downloads,earnings,image_url) VALUES(?,?,?,?)";
 		   for(ShutterImage image:images) {
 	        try {
 	        	PreparedStatement pstmt = this.connection.prepareStatement(sql);
@@ -320,7 +383,7 @@ public class SQLManager {
 	 
 
 	 public void insertImagesTopBatch(List<ShutterImage> images) {
-		   String sql = "INSERT INTO " + this.IMAGESTOPTABLE + "(media_id,downloads,earnings,image_url) VALUES(?,?,?,?)";
+		   String sql = "INSERT OR REPLACE INTO " + this.IMAGESTOPTABLE + "(media_id,downloads,earnings,image_url) VALUES(?,?,?,?)";
 		   int i = 0;
 
 	        try {
@@ -400,9 +463,38 @@ public class SQLManager {
 		return keywords;
 	}
 	
+	
+	
+	public String getLastEarningsUpdateDate() {
+		return executeRequestForString("SELECT MAX(date) FROM " + this.EARNINGSTABLE + ";");
+	}
 	 
+	public String getFirstUploadDate() {
+		return executeRequestForString("SELECT MIN(uploaded_date) FROM " + this.IMAGESTABLE + ";");
+	}
 	 
+	public String getImageUploadDate(int media_id) {
+		return executeRequestForString("SELECT uploaded_date FROM " + this.IMAGESTABLE + " WHERE media_id=" + media_id + ";");
+	}
 	 
+	
+	
+	
+	public int deleteEarningsForDate(String date) {
+		  String sql = "DELETE FROM " + this.EARNINGSTABLE + " WHERE date='" + date + "'";
+		  try {
+				 Statement statement = this.connection.createStatement();
+				 statement.setQueryTimeout(1);
+				 return statement.executeUpdate(sql);
+			 }
+			 
+			 catch(SQLException e){ 
+				 System.out.println(e.getMessage());
+	    		LOGGER.severe(e.getMessage());
+	    		return 0;
+	    	}
+	}
+	
 	
 	public List<ShutterImage> getImagesFromDB(String sql){
 		List<ShutterImage> images = new ArrayList<ShutterImage>();
@@ -456,6 +548,60 @@ public class SQLManager {
      	}
 		 return list;
 	}
+	
+	
+	
+	public int getDownloadsCount(String viewName, String startDate, String endDate){
+	    String sql = "SELECT SUM(count) FROM " + this.EARNINGSTABLE + " INNER JOIN " + viewName + " ON " 
+	                 + this.EARNINGSTABLE  + ".media_id = " + viewName + ".media_id WHERE date BETWEEN '" + startDate + "' AND '" + endDate + "'";
+		 System.out.println(sql);
+   		return executeRequestForInt(sql);
+	}
+	
+	public int getSoldCount(String viewName, String startDate, String endDate){
+	    String sql = "SELECT count(DISTINCT " +  this.EARNINGSTABLE+ ".media_id)  FROM " + this.EARNINGSTABLE + " INNER JOIN " + viewName + " ON " 
+	                 + this.EARNINGSTABLE  + ".media_id = " + viewName + ".media_id WHERE date BETWEEN '" + startDate + "' AND '" + endDate + "'";
+		 
+   		return executeRequestForInt(sql);
+	}
+	
+	
+	public int getDownloadsCountForImagesUploadetInPeriod(String viewName, String startDate, String endDate, String startUpload, String endUpload){
+	    String sql = "SELECT SUM(count) FROM " + this.EARNINGSTABLE + " INNER JOIN " + viewName + " ON " 
+	                 + this.EARNINGSTABLE  + ".media_id = " + viewName + ".media_id WHERE date BETWEEN '" + startDate + "' AND '" + endDate + "' AND "
+	    		     + viewName + ".uploaded_date BETWEEN '"  + startUpload + "' AND '" + endUpload + "'";
+		 
+   		return executeRequestForInt(sql);
+	}
+	public double getEarningsCountForImagesUploadetInPeriod(String viewName, String startDate, String endDate, String startUpload, String endUpload){
+	    String sql = "SELECT SUM(total) FROM " + this.EARNINGSTABLE + " INNER JOIN " + viewName + " ON " 
+	                 + this.EARNINGSTABLE  + ".media_id = " + viewName + ".media_id WHERE date BETWEEN '" + startDate + "' AND '" + endDate + "' AND "
+	    		     + viewName + ".uploaded_date BETWEEN '"  + startUpload + "' AND '" + endUpload + "'";
+		 
+   		return executeRequestForInt(sql);
+	}
+	
+	
+	public double getEarningsCount(String viewName, String startDate, String endDate) {
+		 String sql = "SELECT SUM(total) FROM " + this.EARNINGSTABLE + " INNER JOIN " + viewName + " ON " 
+                 + this.EARNINGSTABLE  + ".media_id = " + viewName + ".media_id WHERE date BETWEEN '" + startDate + "' AND '" + endDate + "'";
+	 
+		return executeRequestForDouble(sql);
+	}
+	
+	
+	public double getEarningsCountForImage(long mediaId, String startDate, String endDate) {
+		 String sql = "SELECT SUM(total) FROM " + this.EARNINGSTABLE + "  WHERE media_id = " + mediaId 
+				      + " AND (date BETWEEN '" + startDate + "' AND '" + endDate + "')";
+		return executeRequestForDouble(sql);
+	}
+
+	public int getDownloadsCountForImage(long mediaId, String startDate, String endDate) {
+		 String sql = "SELECT SUM(count) FROM " + this.EARNINGSTABLE + "  WHERE media_id = " + mediaId 
+			      + " AND (date BETWEEN '" + startDate + "' AND '" + endDate + "')";
+		return executeRequestForInt(sql);
+	}
+	
 	
 	public int getImagesCount(){
 		 try {
@@ -624,6 +770,71 @@ public class SQLManager {
      	}
 	 }
 	 
+	 public boolean deleteSet(String sql) {
+		 try {
+			 System.out.println(sql);
+			 Statement statement = this.connection.createStatement();
+			 statement.setQueryTimeout(1);
+			 statement.execute(sql);
+			 return true;
+		 }
+		 catch(SQLException e){ 
+			 System.out.println(e.getMessage());
+     		 LOGGER.severe(e.getMessage());
+     		 return false;
+     	}
+	 }
 	 
 	 
+	 public String getSetSQL(String name) {
+		 try {
+			Statement statement = this.connection.createStatement();
+			statement.setQueryTimeout(1);
+		 	ResultSet rs =  statement.executeQuery("SELECT sql FROM sqlite_schema WHERE type = 'view' and name = '" + name + "';");
+		 	return rs.getString("sql");
+		 }
+		 catch(SQLException e){ 
+			 System.out.println(e.getMessage());
+     		 LOGGER.severe(e.getMessage());
+     		 return "";
+     	}
+	 }
+
+	 
+	 public String getImagesSalesGoodAndBadSQL2(String viewName, String dateBetween, String dateBefore, String dateAfter, int salesBefore, int salesAfter){
+			
+			String sql = "SELECT * FROM " + this.IMAGESTABLE + " LEFT JOIN " + this.IMAGESTOPTABLE
+                    + " on " + this.IMAGESTOPTABLE + ".media_id = " + this.IMAGESTABLE + ".media_id "
+                    + " WHERE " + this.IMAGESTABLE + ".media_id IN (SELECT media_id FROM " + this.EARNINGSTABLE + " WHERE date(" + this.EARNINGSTABLE 
+                    + ".date) BETWEEN date('" + dateBefore + "') and  date('" + dateBetween + "') GROUP BY media_id HAVING sum(count) > " + salesBefore  
+                    + ") AND " +this.IMAGESTABLE + ".media_id IN (SELECT media_id FROM " + this.EARNINGSTABLE + " WHERE date(" + this.EARNINGSTABLE  
+                    + ".date) BETWEEN date('" + dateBetween + "') and  date('" + dateAfter + "') GROUP BY media_id HAVING sum(count) < " + salesAfter + ") " 
+                    + " ORDER BY uploaded_date DESC"; 
+			System.out.println(sql);
+			return sql;
+			
+		}
+	 
+	 
+	 public String getImagesSalesGoodAndBadSQL(String viewName, String dateBetween, String dateBefore,
+			 String dateAfter, int salesBefore, int salesAfter, boolean isLessBefore, boolean isLessAfter, boolean isAnd){
+			
+		    String isLB = isLessBefore ? "<" : ">";
+		    String isLA = isLessAfter ? "<" : ">";
+		    String isAND = isAnd ? "AND" : "OR";
+		   
+		 
+			String sql = "SELECT * FROM " + viewName
+                 + " WHERE " + viewName + ".media_id IN (SELECT media_id FROM " + this.EARNINGSTABLE + " WHERE date(" + this.EARNINGSTABLE 
+                 + ".date) BETWEEN date('" + dateBefore + "') and  date('" + dateBetween + "') GROUP BY media_id HAVING sum(count) " + isLB + salesBefore  
+                 + ") " + isAND + " " + viewName + ".media_id IN (SELECT media_id FROM " + this.EARNINGSTABLE + " WHERE date(" + this.EARNINGSTABLE  
+                 + ".date) BETWEEN date('" + dateBetween + "') and  date('" + dateAfter + "') GROUP BY media_id HAVING sum(count) " + isLA + salesAfter + ") " 
+                 + " ORDER BY uploaded_date DESC"; 
+			System.out.println(sql);
+			return sql;
+			
+		}
+
+
+	
 }

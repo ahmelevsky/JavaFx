@@ -185,4 +185,25 @@ public class JsonParser {
 		return result;
 	}
 	
+	
+	public static int parseDayEarningsPages(String jsonString) {
+		JSONObject obj = new JSONObject(jsonString);
+		return obj.getInt("pages");
+	}
+	
+	
+	public static List<Earning> parseDayEarnings(String jsonString, String day) {
+		List<Earning> result = new ArrayList<Earning>();
+		JSONObject obj = new JSONObject(jsonString);
+		JSONArray arr = obj.getJSONArray("media");
+		for (int i = 0; i < arr.length(); i++) {
+			String category = arr.getJSONObject(i).getString("category");
+			long media_id = arr.getJSONObject(i).getLong("mediaId");
+			int count =  arr.getJSONObject(i).getInt("count");
+			double total =  arr.getJSONObject(i).getDouble("total");
+			result.add(new Earning(media_id, day, category, count, total));
+		}
+		return result;
+	}
+	
 }

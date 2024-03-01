@@ -1,5 +1,6 @@
 package am.ui;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +27,7 @@ import am.ShutterImage;
 import am.db.FilterConstructor;
 import am.db.SQLManager;
 import am.web.ShutterProvider;
+import am.web.UpdateDBEarningsThread;
 import am.web.UpdateDBKeywordsThread;
 import am.web.UpdateDBThread;
 import am.web.UpdateDBTopThread;
@@ -41,6 +44,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.DatePicker;
@@ -68,6 +72,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.stage.FileChooser;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
@@ -80,16 +85,30 @@ public class MainController implements Initializable {
 	public Tab tab;
 	@FXML
 	private TextField sessionIdText;
+	
+	@FXML
+	private TextField nextc_sidText;
+	
 	@FXML
 	private Slider slider;
 	@FXML
 	private Button updateBtn;
 	
 	@FXML
+	private Button chooseDatabaseBtn;
+	
+	@FXML
 	private Button updateTopBtn;
 	
 	@FXML
 	private Button updateTopKeywordsBtn;
+	
+	@FXML
+	private Button updateEarningsBtn;
+	
+	@FXML
+	private Button buildGraphBtn;
+	
 	
 	@FXML
 	private TableView<ShutterImage> tableView;
@@ -201,11 +220,14 @@ public class MainController implements Initializable {
 	private UpdateDBThread updateDbThread;
 	private UpdateDBTopThread updateDbTopThread;
 	private UpdateDBKeywordsThread updateDbTopKeywordsThread;
+	private UpdateDBEarningsThread updateDBEarningsThread;
+	public Thread loadDataThread;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub
 		loadSessionId();
+		loadNextcId();
 		this.provider = new ShutterProvider("");
 		tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		tableView.setItems(images);
@@ -384,8 +406,8 @@ public class MainController implements Initializable {
 	        @Override
 	        public void changed(ObservableValue<? extends String> observable, String oldValue, 
 	            String newValue) {
-	        	if (!newValue.matches("[a-zA-Z0-9]+")) {
-	        		setNameField.setText(newValue.replaceAll("[^a-zA-Z0-9]", ""));
+	        	if (!newValue.matches("[a-zA-Z0-9-_]+")) {
+	        		setNameField.setText(newValue.replaceAll("[^a-zA-Z0-9-_]", ""));
 	            }
 	        	if (!setNameField.getText().isEmpty())
 	        		createSetBtn.setDisable(false);
@@ -399,12 +421,39 @@ public class MainController implements Initializable {
 	public void setup() {
 		this.sqlManager = app.sqlManager;
 	}
+
 	
+	public void restoreFilter(String sql) {
+		sql = sql.split("FROM")[1].trim();
+		sql = "SELECT * FROM " + sql + " ORDER BY uploaded_date DESC";
+		String sqlCount = "SELECT Count(*) FROM " + sql;
+		System.out.println(sql);
+		loadData(sql, sqlCount);
+		
+		
+		if (sql.contains("WHERE")) {
+			String conditions = sql.split("WHERE")[1].trim();
+			//System.out.println(conditions);
+					
+		}
+	}
 	
+	@FXML
+	private void chooseDatabase(){
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Database File");
+		File db = fileChooser.showOpenDialog(app.getPrimaryStage());
+		if (db!=null) {
+			sqlManager.changeDB(db.getAbsolutePath());
+			app.getPrimaryStage().setTitle(app.getPrimaryStage().getTitle() + "   " + db.getName());
+			loadData();
+		}
+	}
 	
 	@FXML
 	private void updateDatabase() {
 		this.provider = getSession();
+		if (this.provider==null) return;
 		if (!UpdateDBThread.isStarted) {
 			UpdateDBThread.isStarted = true;
 			updateDbThread = new UpdateDBThread(this.app, provider, sqlManager);
@@ -422,6 +471,7 @@ public class MainController implements Initializable {
 	@FXML
 	private void updateTopPerformance() {
 		this.provider = getSession();
+		if (this.provider==null) return;
 		if (!UpdateDBTopThread.isStarted) {
 			UpdateDBTopThread.isStarted = true;
 			updateDbTopThread = new UpdateDBTopThread(this.app, provider, sqlManager);
@@ -437,6 +487,7 @@ public class MainController implements Initializable {
 	@FXML
 	private void updateTopKeywords() {
 		this.provider = getSession();
+		if (this.provider==null) return;
 		if (!UpdateDBKeywordsThread.isStarted) {
 			UpdateDBKeywordsThread.isStarted = true;
 			updateDbTopKeywordsThread = new UpdateDBKeywordsThread(this.app, provider, sqlManager);
@@ -450,9 +501,29 @@ public class MainController implements Initializable {
 	}
 	
 	
+	@FXML
+	private void updateEarnings() {
+		this.provider = getSession();
+		if (this.provider==null) return;
+		this.provider.nextc_sid = getNextc_sid();
+		if (this.provider.nextc_sid==null) return;
+		
+		if (!UpdateDBEarningsThread.isStarted) {
+			UpdateDBEarningsThread.isStarted = true;
+			updateDBEarningsThread = new UpdateDBEarningsThread(this.app, provider, sqlManager);
+			disableControlsEarnings();
+			updateDBEarningsThread.start();
+		}
+		else {
+			updateDBEarningsThread.isStop = true;
+			UpdateDBEarningsThread.isStarted = false;
+		}
+		
+	}
+	
 	
 	public void loadData() {
-		Thread t1 = new Thread(new Runnable() {
+		 loadDataThread = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -468,9 +539,35 @@ public class MainController implements Initializable {
 				
 			}
 		});
-		t1.start();
+		loadDataThread.setDaemon(true);
+		loadDataThread.start();
             	
 	}
+	
+	
+	public void loadDataByRequest(String sqldata) {
+		String sqlcount = sqldata.replace("*", "COUNT(*)").replace("ORDER BY uploaded_date DESC","");
+		
+		loadDataThread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+        			if (sqlManager==null || sqlManager.connection.isClosed() || !sqlManager.connection.isValid(1)) {
+        				sqlManager = new SQLManager(app);
+        			}
+        			loadData(sqldata, sqlcount);
+        		} catch (SQLException e) {
+        			LOGGER.severe(e.getMessage());
+        			System.out.println(e.getMessage());
+        		}
+				
+			}
+		});
+		loadDataThread.setDaemon(true);
+		loadDataThread.start();
+	}
+	
 	
 	
 	public void getAllImages() {
@@ -481,16 +578,29 @@ public class MainController implements Initializable {
 		loadData(sqldata, sqlcount);
 	}
 	
+	
+
+	
+	
 	@FXML
 	private void createSet() {
 		String setName = setNameField.getText();
-		if (sqlManager.getSetsNames().contains(setName))
-			app.showAlert("Set with this name is already exists. Please choose another name.");
-		else {
-			String query = lastQuery.split("ORDER")[0].trim();
+		if (sqlManager.getSetsNames().contains(setName)) {
+			Alert alert = new Alert(AlertType.CONFIRMATION, "Set with this name already exist, rewrite?", ButtonType.YES, ButtonType.NO);
+			alert.showAndWait();
+
+			if (alert.getResult() == ButtonType.YES) {
+				if (!sqlManager.deleteSet("DROP VIEW " + setName)) {
+            		app.showAlert("Can't drop rename Set " + setName);
+            		return;
+            	}
+			}
+			else 
+				return;
+		}
+		String query = lastQuery.split("ORDER")[0].trim();
 			if (!sqlManager.createSet("CREATE VIEW " + setName + " AS  " + query))
 				app.showAlert("Error creating new set");
-		}
 	}
 	
 	
@@ -605,8 +715,27 @@ public class MainController implements Initializable {
             ld = uploadDateTo.getValue();
             if (ld!=null) 
             	fc.uploadDateTo = ld.format(formatter);
+            String sortType;
+            String sorting = " ORDER BY uploaded_date DESC";
+            if (!tableView.getSortOrder().isEmpty()) {
+            	TableColumn<ShutterImage, ?> column = tableView.getSortOrder().get(0);
             
-            loadData(fc.getImagesSQL(), fc.getCountSQL());
+            	if (column.getSortType().equals(SortType.ASCENDING))
+            			sortType = "ASC";
+            	else
+            		sortType = "DESC";
+            	if (column.equals(columnDownloads)) 
+            		sorting = " ORDER BY downloads " + sortType;
+            	else if (column.equals(columnEarnings)) 
+            		sorting = " ORDER BY earnings " + sortType;
+            	else if (column.equals(columnName)) 
+            		sorting = " ORDER BY original_filename " + sortType;
+            	else if (column.equals(columnDate)) 
+            		sorting = " ORDER BY uploaded_date " + sortType;
+            }
+            
+            loadData(fc.getImagesSQL() + sorting, fc.getCountSQL());
+           
 	}
 
 	
@@ -624,7 +753,7 @@ public class MainController implements Initializable {
 	private void updateFilesCount(int count) {
 		Platform.runLater(new Runnable() {
             public void run() {
-            	filesCountTxt.setText("Files count: " + count);
+            	filesCountTxt.setText("Files Count: " + count);
               }
 		});
 	}
@@ -642,6 +771,19 @@ public class MainController implements Initializable {
     }
 	
 	
+    public String getNextc_sid() {
+		String nextc_sid = nextc_sidText.getText().trim();
+		if (nextc_sid.isEmpty()) {
+			showAlert("Пустой nextc.sid");
+			return null;
+		}
+		saveNextcId();
+		return nextc_sid;
+	}
+	
+    
+    
+    
 	public ShutterProvider getSession() {
 		String sessionId = sessionIdText.getText().trim();
 		if (sessionId.isEmpty()) {
@@ -650,7 +792,14 @@ public class MainController implements Initializable {
 		}
 		saveSessionId();
 		ShutterProvider provider = new ShutterProvider(sessionId);
-		if (!provider.isConnection()) {
+		boolean isConnection = false;
+		try {
+			isConnection = provider.isConnection();
+		} catch (IOException e) {
+			showAlert(e.getMessage());
+			return null;
+		}
+		if (!isConnection) {
 			showAlert("Ошибка соединения");
 			return null;
 		}
@@ -660,10 +809,14 @@ public class MainController implements Initializable {
 	private void setupTableViewColumn() {
 		columnPreview.setPrefWidth(200);
 		columnDate.setCellValueFactory(new PropertyValueFactory<>("uploaded_date"));
+		columnDate.setSortable(true);
 		columnType.setCellValueFactory(new PropertyValueFactory<>("type"));
 		columnName.setCellValueFactory(new PropertyValueFactory<>("original_filename"));
+		columnName.setSortable(true);
 		columnDownloads.setCellValueFactory(new PropertyValueFactory<>("downloads"));
+		columnDownloads.setSortable(true);
 		columnEarnings.setCellValueFactory(new PropertyValueFactory<>("earnings"));
+		columnEarnings.setSortable(true);
 		columnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
 		columnDescription.setCellFactory(tc -> {
 		    TableCell<ShutterImage, String> cell = new TableCell<>();
@@ -729,6 +882,26 @@ public class MainController implements Initializable {
            this.sessionIdText.setText(sessionId);
         }
 	}
+	
+	
+	
+	private void saveNextcId() {
+		  Preferences prefs = Preferences.userNodeForPackage(Main.class);
+	      if (!this.nextc_sidText.getText().trim().isEmpty()) {
+	          prefs.put("nextc.sid", this.nextc_sidText.getText());
+	      } else {
+	          prefs.remove("nextc.sid");
+	      }
+		}
+	
+	private void loadNextcId() {
+		Preferences prefs = Preferences.userNodeForPackage(Main.class);
+      String sessionId = prefs.get("nextc.sid", null);
+      if (sessionId != null) {
+         this.nextc_sidText.setText(sessionId);
+      }
+	}
+	
 	
 	private void saveString(String key, String data) {
 		  Preferences prefs = Preferences.userNodeForPackage(Main.class);
@@ -807,12 +980,18 @@ public class MainController implements Initializable {
 			sql = sql + " LIMIT " +  + this.rowsOnPage + " OFFSET " + this.rowsOnPage*page;
 			if (this.lastQuery.equals(sql)) return;
 			this.lastQuery = sql;
-			System.out.println(sql);
+			System.out.println("LAST QUERY: " +sql);
 			this.images.clear();
 			this.images.addAll(this.sqlManager.getImagesFromDB(sql));
-			Comparator<ShutterImage> comparator = Comparator.comparing(ShutterImage::getUploaded_date); 
-			comparator = comparator.reversed();
-			FXCollections.sort(this.images, comparator);
+			
+			if ( tableView.getSortOrder().isEmpty()) {
+				Comparator<ShutterImage> comparator = Comparator.comparing(ShutterImage::getUploaded_date); 
+				comparator = comparator.reversed();
+				FXCollections.sort(this.images, comparator);
+			}
+			else 
+				tableView.sort();
+			
 			bindSlider();
 		}
 		
@@ -967,6 +1146,33 @@ public class MainController implements Initializable {
 			 });
 		}
 		
+		
+		
+		public void enableControlsEarnings() {
+			Platform.runLater(new Runnable() {
+	            public void run() {
+	            	updateEarningsBtn.setText("UPDATE TOP KEYWORDS");
+	            	updateTopKeywordsBtn.setDisable(false);
+	            	pagination.setDisable(false);
+	            	updateTopBtn.setDisable(false);
+	            	updateBtn.setDisable(false);
+	            }
+			 });
+	            	
+		}
+		
+		public void disableControlsEarnings() {
+			Platform.runLater(new Runnable() {
+	            public void run() {
+	            	updateEarningsBtn.setText("STOP UPDATING");
+	            	updateTopKeywordsBtn.setDisable(true);
+	            	updateBtn.setDisable(true);
+	            	updateTopBtn.setDisable(true);
+	            	pagination.setDisable(true);
+	            }
+			 });
+		}
+		
 		public void showAlert(String text) {
 			Platform.runLater(new Runnable() {
 	            public void run() {
@@ -978,5 +1184,22 @@ public class MainController implements Initializable {
 	            }
 			 });
 		}
+		
+		@FXML
+		private void buildGraphForImages() {
+			List<ShutterImage> images = new ArrayList<ShutterImage>();
+			//ObservableList<ShutterImage> items = tableView.getItems();
+			ObservableList<ShutterImage> items = tableView.getSelectionModel().getSelectedItems();
+			int index = 0;
+			int maxCount = 20;
+			for (Iterator<ShutterImage> it = items.iterator(); it.hasNext(); index++)
+			{
+                if (index == maxCount) break; 
+                images.add(it.next());
+			}
+			
+			app.setController.drawLineChartForImages(images);
+		}
+		
 		
 }

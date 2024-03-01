@@ -6,29 +6,30 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="SELECT *" key="selection"/>
+		<item value="Format" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="    tableView.setSortPolicy(t -&gt; {"/>
-			<item value="   tableView.setSortPolicy(t -&gt; {"/>
-			<item value="SELECT *"/>
-			<item value="SELECT"/>
-			<item value="ORDER"/>
-			<item value="libs"/>
-			<item value="HashMap"/>
-			<item value="saveS"/>
-			<item value="save"/>
-			<item value="saves"/>
-			<item value="testBtn"/>
-			<item value="extension"/>
-			<item value="NOT NULL"/>
-			<item value="version"/>
-			<item value="sleep"/>
+			<item value="TODO Auto-generated method stub"/>
+			<item value="format"/>
+			<item value="sqldata"/>
+			<item value="Join"/>
+			<item value="api/next/v2/"/>
+			<item value="oldTxtData"/>
+			<item value="matches"/>
+			<item value="regexp"/>
+			<item value="Hide"/>
+			<item value="купучз"/>
+			<item value="DPI"/>
+			<item value="ignore"/>
+			<item value="compare"/>
+			<item value="AAA"/>
+			<item value="Files count"/>
 		</list>
 		<list key="replacehistory">
+			<item value="data.add(new Data("/>
 			<item value="shiftPostitionPointer"/>
 			<item value="&lt;TableColumn"/>
 			<item value="KeysFinder"/>
@@ -40,7 +41,7 @@
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="336" key="DIALOG_WIDTH"/>
-		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|5|0|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI" key="DIALOG_FONT_NAME"/>
 		<item value="454" key="DIALOG_HEIGHT"/>
 		<item value="1327" key="DIALOG_X_ORIGIN"/>
 		<item value="575" key="DIALOG_Y_ORIGIN"/>

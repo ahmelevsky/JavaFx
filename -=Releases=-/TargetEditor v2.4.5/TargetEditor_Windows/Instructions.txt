@@ -1,0 +1,16 @@
+﻿_____Для MacOS_____
+
+ - Сначала установите ExifTool
+   с официального сайта разработчика: https://www.sno.phy.queensu.ca/~phil/exiftool/
+ - Распакуйте TargetEditor.app.zip
+ - Запускайте TargetEditor.app
+ Если ничего не запустилось - убедитесь что у вас установлена java не старше версии 1.8. Установите отсюда https://java.com/ или отсюда https://www.oracle.com/technetwork/java/javase/downloads/index.html
+ 
+ 
+_____Для Windows____
+
+ - Если у вас установлена java, используйте легкий вариант из папки TargetEditor.zip
+ - Если java не установлена и вы не хотите устанавливать, попробуйте вариант TargetEditorNoJavaNeeded.zip (тяжелее, java внутри).
+ - Распаковывайте архив и запускайте TargetEditor\TargetEditor.exe
+ (В отличие от MacOS exiftool не надо устанавливать, он входит в состав программы)
+  
